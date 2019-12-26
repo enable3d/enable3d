@@ -101,4 +101,7 @@ export interface BoxConfig extends XYZ, WH, Mass, CollisionFlag {
   depth?: number
 }
 
-export interface GroundConfig extends BoxConfig {}
+export interface GroundConfig extends BoxConfig {
+  width: number
+  height: number
+}

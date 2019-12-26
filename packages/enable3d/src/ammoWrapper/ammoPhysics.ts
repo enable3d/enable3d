@@ -92,7 +92,7 @@ class AmmoPhysics extends EventEmitter {
       existing: (object: ExtendedObject3D, config?: any) => this.addExisting(object, config),
       sphere: (sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.addSphere(sphereConfig, materialConfig),
-      ground: (groundConfig: GroundConfig = {}, materialConfig: MaterialConfig = {}) =>
+      ground: (groundConfig: GroundConfig, materialConfig: MaterialConfig = {}) =>
         this.addGround({ ...groundConfig, mass: 0 }, materialConfig),
       box: (boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}) => this.addBox(boxConfig, materialConfig)
     }
@@ -315,13 +315,13 @@ class AmmoPhysics extends EventEmitter {
     return box
   }
 
-  private addGround(boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}) {
-    const ground = this.phaser3D.add.ground(boxConfig, materialConfig)
+  private addGround(groundConfig: GroundConfig, materialConfig: MaterialConfig = {}) {
+    const ground = this.phaser3D.add.ground(groundConfig, materialConfig)
 
     // @ts-ignore
     const { width, height, depth } = ground.geometry.parameters
     const { position: pos, quaternion: quat } = ground
-    const { mass = 1 } = boxConfig
+    const { mass = 1 } = groundConfig
 
     const boxShape = new Ammo.btBoxShape(new Ammo.btVector3(width / 2, height / 2, depth / 2))
     boxShape.setMargin(0.05)

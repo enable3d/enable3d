@@ -139,7 +139,7 @@ class ThreeWrapper {
       existing: (object: ExtendedObject3D | Mesh | Line | Points) => this.addExisting(object),
       //  Geometry
       box: (boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}) => this.addBox(boxConfig, materialConfig),
-      ground: (groundConfig: GroundConfig = {}, materialConfig: MaterialConfig = {}) =>
+      ground: (groundConfig: GroundConfig, materialConfig: MaterialConfig = {}) =>
         this.addGround(groundConfig, materialConfig),
       //...
       sphere: (sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}) =>
