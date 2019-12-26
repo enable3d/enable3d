@@ -1,0 +1,34 @@
+{
+  "name": "enable3d",
+  "version": "1.0.0",
+  "description": "3D extension for Phaser 3",
+  "main": "dist/index.js",
+  "author": "Yannick Deubel",
+  "license": "GNU GPLv3",
+  "scripts": {
+    "build": "tsc --build tsconfig.json",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "phaser",
+    "threejs",
+    "ammojs",
+    "game",
+    "3d",
+    "framework"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yandeu/enable3d.git",
+    "directory": "packages/enable3d"
+  },
+  "bugs": {
+    "url": "https://github.com/yandeu/enable3d/issues"
+  },
+  "homepage": "https://github.com/yandeu/enable3d#readme",
+  "dependencies": {
+    "eventemitter3": "^4.0.0",
+    "phaser": "^3.21.0",
+    "three": "^0.111.0"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    // "module": "ES2015",
+    "lib": ["DOM", "ESNext", "ScriptHost"],
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "removeComments": false,
+    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true
+  }
+}

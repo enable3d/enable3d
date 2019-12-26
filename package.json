@@ -1,0 +1,31 @@
+{
+  "name": "enable3d",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "start": "npm-run-all --parallel start:*",
+    "start:enable3d": "cd packages/enable3d && tsc --watch",
+    "start:dev": "cd packages/dev && npm start",
+    "build": "npm-run-all build:*",
+    "build:enable3d": "cd packages/enable3d && tsc",
+    "build:dev": "cd packages/dev && npm run build",
+    "postinstall": "lerna bootstrap --no-ci",
+    "lerna-version": "lerna version --no-commit-hooks --no-git-tag-version",
+    "publish": "cd packages/enable3d/ && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yandeu/enable3d.git"
+  },
+  "keywords": [],
+  "author": "Yannick Deubel",
+  "license": "GNU GPLv3",
+  "bugs": {
+    "url": "https://github.com/yandeu/enable3d/issues"
+  },
+  "homepage": "https://github.com/yandeu/enable3d#readme",
+  "devDependencies": {
+    "lerna": "^3.19.0",
+    "npm-run-all": "^4.1.5"
+  }
+}
