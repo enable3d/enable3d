@@ -5,6 +5,7 @@
  */
 
 import AmmoPhysics from './ammoPhysics'
+import { ExtendedObject3D } from '../types'
 
 class PhysicsBody {
   offset = { x: 0, y: 0, z: 0 }
@@ -16,14 +17,14 @@ class PhysicsBody {
 
   public get on() {
     return {
-      collision: (cb: Function) => this.onCollision(cb)
+      collision: (collisionCallback: (otherObject: ExtendedObject3D) => void) => this.onCollision(collisionCallback)
     }
   }
 
-  private onCollision(cb: Function) {
+  private onCollision(collisionCallback: (otherObject: ExtendedObject3D) => void) {
     this.ammoPhysics.on('collision', bodies => {
-      if (bodies[0].name === this.name) cb(bodies[1])
-      else if (bodies[1].name === this.name) cb(bodies[0])
+      if (bodies[0].name === this.name) collisionCallback(bodies[1])
+      else if (bodies[1].name === this.name) collisionCallback(bodies[0])
     })
   }
 
