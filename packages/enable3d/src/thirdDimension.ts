@@ -90,22 +90,13 @@ class ThirdDimension extends ThreeWrapper {
 
     if (features.includes('ground')) {
       // ground
-      const grass = this.getTexture('grass')
-      grass.wrapS = grass.wrapT = 1000
-      grass.offset.set(0, 0)
-      grass.repeat.set(10, 10)
-      this.ground = this.physics.add.ground(
-        {
-          name: 'ground',
-          width: 50,
-          height: 50,
-          depth: 1,
-          y: 0
-        },
-        {
-          phong: { map: grass }
-        }
-      )
+      this.ground = this.physics.add.ground({
+        name: 'ground',
+        width: 50,
+        height: 50,
+        depth: 1,
+        y: 0
+      })
       // @ts-ignore
       this.ground.body.setRestitution(1)
     }
