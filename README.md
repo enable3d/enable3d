@@ -21,6 +21,7 @@ Written in TypeScript, uses three.js and ammo.js, brings the third dimension to 
   <a href="#get-started">Get Started</a> •
   <a href="#key-features">Key Features</a> •
   <a href="#how-to-use">How To Use</a> •
+  <a href="#documentation">Documentation</a> •
   <a href="#license">License</a>
 </p>
 
@@ -94,6 +95,74 @@ class MainScene extends Scene3D {
     this.third.haveSomeFun()
   }
 }
+```
+
+## Documentation
+
+### Object Factory
+
+#### Adding objects
+
+```ts
+// Make the sphere object.
+const sphere = this.third.make.sphere()
+// Add the sphere to the scene.
+this.third.add.existing(sphere)
+// Add physics to the sphere.
+this.third.physics.add.existing(sphere)
+
+// The three lines above do the same thing as this:
+this.third.physics.add.sphere()
+```
+
+#### Object types
+
+For now you can use the following objects: Sphere, Box, Ground (which is a extended box).
+
+```ts
+// Adds a simple box.
+this.third.add.box()
+// Adds a simple sphere.
+this.third.add.sphere()
+// Width and height are required for the ground object.
+this.third.add.ground({ width: 10, height: 10 })
+```
+
+#### Object Configuration and Material
+
+Each geometry receives 2 objects. The first for the configuration of the shape, the second for its material.
+
+```ts
+this.third.add.box({ x: 10, y: 10, z: -25, width: 2 }, { standard: { color: 0xff00ff, metalness: 0.7 } })
+
+this.third.add.sphere({ radius: 2 }, { phong: { color: 0xff00ff, wireframe: true } })
+```
+
+#### Object with textures
+
+```ts
+const grass = this.third.getTexture('grass')
+this.third.physics.add.ground({ width: 50, height: 50, y: -5 }, { phong: { map: grass } })
+```
+
+### Collisions
+
+```ts
+const ground = this.third.physics.add.ground({ name: 'ground', width: 10, height: 10 })
+const redBall = this.third.physics.add.sphere({ y: 10 }, { standard: { color: 0xff0000 } })
+const blueBall = this.third.physics.add.sphere({ y: 15 }, { standard: { color: 0x0000ff } })
+const greenBall = this.third.physics.add.sphere({ y: 20 }, { standard: { color: 0x00ff00 } })
+
+// Check collision between the red and the blue ball.
+this.third.physics.add.collider(redBall, blueBall, () => {
+  console.log('redBall and blueBall are colliding')
+})
+
+// Detect all collisions of the green ball.
+greenBall.body.on.collision(otherObject => {
+  if (otherObject.name === 'ground') console.log('The green ball collides with the ground')
+  else console.log('The green ball collides with another ball')
+})
 ```
 
 ## License
