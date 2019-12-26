@@ -102,8 +102,17 @@ class ThirdDimension extends ThreeWrapper {
     }
 
     if (features.includes('orbitControls')) {
-      ThreeWrapper.OrbitControls(this.camera, this.root.scale.parent)
+      ThirdDimension.OrbitControls(this.camera, this.root.scale.parent)
     }
+  }
+
+  /**
+   * Add OrbitControls to your scene
+   * @param camera Pass the current camera (this.three.camera)
+   * @param parent Pass the parent object of the Canvas (this.scale.parent)
+   */
+  static OrbitControls(camera: any, parent: any) {
+    return ThreeWrapper.OrbitControls(camera, parent)
   }
 
   public get on() {
