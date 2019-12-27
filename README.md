@@ -19,6 +19,7 @@ Written in TypeScript, uses three.js and ammo.js, brings the third dimension to 
   <a href="#get-started">Get Started</a> •
   <a href="#key-features">Key Features</a> •
   <a href="#how-to-use">How To Use</a> •
+  <a href="#phaser-starter-template">Phaser Starter Template</a> •
   <a href="#documentation">Documentation</a> •
   <a href="#license">License</a>
 </p>
@@ -94,6 +95,12 @@ class MainScene extends Scene3D {
   }
 }
 ```
+
+## Phaser Starter Template
+
+Looking for a powerful Phaser Starter Template?
+
+Try [phaser-project-template](https://github.com/yandeu/phaser-project-template) or [phaser-project-template-es6](https://github.com/yandeu/phaser-project-template-es6)
 
 ## Documentation
 
