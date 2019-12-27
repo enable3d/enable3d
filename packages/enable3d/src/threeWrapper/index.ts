@@ -22,7 +22,8 @@ import {
   Vector3,
   Object3D,
   Line,
-  Points
+  Points,
+  Color
 } from 'three/src/Three'
 
 import {
@@ -86,6 +87,7 @@ class ThreeWrapper {
       object3D: () => new Object3D(),
       /** An extended THREE.js Object3D with useful properties and methods. */
       extendedObject3D: () => new ExtendedObject3D(),
+      color: (color?: string | number | Color | undefined) => new Color(color),
       box3: () => new Box3(),
       box3Helper: (box3: Box3) => new Box3Helper(box3),
       boxHelper: (mesh: Mesh) => new BoxHelper(mesh),
@@ -119,6 +121,7 @@ class ThreeWrapper {
   public get add(): {
     directionalLight: any
     hemisphereLight: any
+    ambientLight: any
     mesh: any
     existing: any
     box: BoxObject
@@ -130,6 +133,7 @@ class ThreeWrapper {
       // ambientLight: config => this.addAmbientLight(config),
       directionalLight: (config: any = {}) => this.addDirectionalLight(config),
       hemisphereLight: (config: any = {}) => this.addHemisphereLight(config),
+      ambientLight: (config: any = {}) => this.addAmbientLight(config),
       // pointLight: config => this.addPointLight(config),
       // spotLight: config => this.addSpotLight(config),
 
