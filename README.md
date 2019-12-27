@@ -1,7 +1,5 @@
 <h1 align="center">
-  <br>
-  <a href="https://github.com/yandeu/enable3d#readme"><img src="readme/enable3d-logo.png" alt="header" width="400" alt="enable3d logo"></a>
-  <br>
+  <a href="https://github.com/yandeu/enable3d#readme"><img src="readme/enable3d-logo-square.png" alt="enable3d logo" width="300"></a>
   <br>
   3D extension for Phaser 3
   <br>
