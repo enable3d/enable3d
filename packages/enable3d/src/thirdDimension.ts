@@ -7,11 +7,11 @@
 import ThreeWrapper from './threeWrapper'
 import AmmoPhysics from './ammoWrapper/ammoPhysics'
 import { Phaser3DConfig } from './types'
-import { Vector2, Vector3 } from 'three'
+import { Vector2, Vector3, RepeatWrapping } from 'three'
 import ExtendedObject3D from './extendedObject3D'
 import logger from './helpers/logger'
 
-type WarpedStartFeatures = 'light' | 'lookAt' | 'ground' | 'orbitControls' | 'fog'
+type WarpedStartFeatures = 'light' | 'camera' | 'lookAtCenter' | 'ground' | 'grid' | 'orbitControls' | 'fog' | 'sky'
 
 class ThirdDimension extends ThreeWrapper {
   ground: ExtendedObject3D
@@ -74,30 +74,54 @@ class ThirdDimension extends ThreeWrapper {
 
   /**
    * It takes took long to setup the third dimension your self? Get started with warp speed by using this function.
-   * @param features Pass the features you want to setup: "light", "lookAt", "ground", "orbitControls", "fog"
+   * @param features Pass the features you want to setup.
    */
   warpSpeed(...features: WarpedStartFeatures[]) {
-    if (features.length === 0) features = ['light', 'lookAt', 'ground', 'orbitControls', 'fog']
+    if (features.length === 0)
+      features = ['light', 'camera', 'lookAtCenter', 'ground', 'grid', 'orbitControls', 'fog', 'sky']
 
-    if (features.includes('light')) {
-      this.add.hemisphereLight({ skyColor: 0xddeeff, groundColor: 0x808080, intensity: 1 })
-      this.add.directionalLight({ intensity: 1, x: 100, y: 100, z: 100 })
+    // TODO: add fog
+    if (features.includes('fog')) {
     }
 
-    if (features.includes('lookAt')) {
+    if (features.includes('sky')) {
+      this.scene.background = this.new.color(0xbfd1e5)
+    }
+
+    if (features.includes('camera')) {
+      this.camera.position.set(25, 25, 50)
+    }
+
+    if (features.includes('light')) {
+      this.add.ambientLight({ color: 0x707070 })
+      this.add.directionalLight({ skyColor: 0xffffff, intensity: 0.8, x: -10, y: 18, z: 5 })
+    }
+
+    if (features.includes('lookAtCenter')) {
       this.camera.lookAt(this.scene.position)
     }
 
     if (features.includes('ground')) {
+      // grid (texture)
+      const addGrid = features.includes('grid')
+      const gridData =
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOnAAADusBZ+q87AAAAJtJREFUeJzt0EENwDAAxLDbNP6UOxh+NEYQ5dl2drFv286598GrA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAu37AD8eaBH5JQdVbAAAAAElFTkSuQmCC'
+      const texture = this.load.texture(gridData)
+      texture.wrapS = texture.wrapT = RepeatWrapping
+      texture.repeat.set(25, 25)
+
       // ground
-      this.ground = this.physics.add.ground({
-        name: 'ground',
-        width: 50,
-        height: 50,
-        depth: 1,
-        y: 0
-      })
-      // @ts-ignore
+      this.ground = this.physics.add.ground(
+        {
+          name: 'ground',
+          width: 50,
+          height: 50,
+          depth: 1,
+          y: 0
+        },
+        { phong: { map: addGrid ? texture : null, transparent: true, opacity: 0.8, color: 0xffffff } }
+      )
+
       this.ground.body.setRestitution(1)
     }
 
