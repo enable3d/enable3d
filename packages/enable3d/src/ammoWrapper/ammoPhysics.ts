@@ -177,48 +177,40 @@ class AmmoPhysics extends EventEmitter {
     this.physicsWorld.stepSimulation(deltaTime)
 
     // Collision
+    const detectedCollisions: string[] = []
     const num = this.dispatcher.getNumManifolds()
     for (let i = 0; i < num; i++) {
       const manifold = this.dispatcher.getManifoldByIndexInternal(i)
-
+      // gets all contact points (edges)
       const num_contacts = manifold.getNumContacts()
       if (num_contacts === 0) {
         continue
       }
 
       for (let j = 0; j < num_contacts; j++) {
-        const flag0 = manifold.getBody0().getCollisionFlags()
-        const flag1 = manifold.getBody1().getCollisionFlags()
+        // const flag0 = manifold.getBody0().getCollisionFlags()
+        // const flag1 = manifold.getBody1().getCollisionFlags()
 
         // @ts-ignore
         const Xx0 = manifold.getBody0().Xx
         // @ts-ignore
         const Xx1 = manifold.getBody1().Xx
-
-        // @ts-ignore
-        // console.log(manifold.getBody0().body)
-
         // @ts-ignore
         const obj0 = Xx0 in this.objectsAmmo ? this.objectsAmmo[Xx0] : manifold.getBody0()
         // @ts-ignore
         const obj1 = Xx0 in this.objectsAmmo ? this.objectsAmmo[Xx1] : manifold.getBody1()
 
-        //@ts-ignore
-        // console.log(body0, body1)
-        /**
-         * TEST
-         */
-        // @ts-ignore
-        if (obj0.name === 'ground' || obj1.name === 'ground') {
-          // @ts-ignore
-          if (obj0.name === 'hero' || obj1.name === 'hero') {
-            // const a = manifold.getContactPoint(num_contacts).getPositionWorldOnA()
-            // const b = manifold.getContactPoint(num_contacts).getPositionWorldOnB()
-            // console.log(a.x(), a.y(), a.z())
-            // console.log(b.x(), b.y(), b.z())
-            // console.log('hero on ground')
-          }
+        // check if a collision between these object has already been processed
+        const combinedName = `${obj0.name}_${obj1.name}`
+        if (detectedCollisions.includes(combinedName)) {
+          continue
         }
+        detectedCollisions.push(combinedName)
+
+        // const a = manifold.getContactPoint(num_contacts).getPositionWorldOnA()
+        // const b = manifold.getContactPoint(num_contacts).getPositionWorldOnB()
+        // console.log(a.x(), a.y(), a.z())
+        // console.log(b.x(), b.y(), b.z())
 
         // console.log(pt)
         // console.log(pt.getAppliedImpulse())
