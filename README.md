@@ -16,20 +16,25 @@ Written in TypeScript, uses three.js and ammo.js, brings the third dimension to 
 </p>
 
 <p align="center">
-  <a href="#get-started">Get Started</a> •
   <a href="#key-features">Key Features</a> •
+  <a href="#examples">Examples</a> •
+  <a href="#get-started">Get Started</a> •
   <a href="#how-to-use">How To Use</a> •
   <a href="#phaser-starter-template">Phaser Starter Template</a> •
   <a href="#documentation">Documentation</a> •
   <a href="#license">License</a>
 </p>
 
-## Key Feature
+## Key Features
 
 - Convert coordinates between Phaser 2D and three.js 3D elements
 - Constraints
 - Collision and Overlap detection
 - and more...
+
+## Examples
+
+Find some nice examples on [enable3d.io](https://enable3d.io/examples.html)
 
 ## Get Started
 
