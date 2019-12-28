@@ -30,7 +30,7 @@ export default class MainScene extends Scene3D {
     this.third.warpSpeed()
     // camera fadeIn effect
     this.cameras.main.fadeIn(2000, 255, 250, 250)
-    this.third.haveSomeFun()
+    // this.third.haveSomeFun()
 
     // this.third.warpedStart({ quickStart: true, orbitControls: true })
 
@@ -38,8 +38,6 @@ export default class MainScene extends Scene3D {
     // this.third = new ThirdDimension(this, { quickStart: true, orbitControls: true })
 
     this.robot = Robot(this)
-
-    this.third.add.box({})
 
     // add hero
     this.third.load.gltf('hero', object => {
@@ -76,13 +74,13 @@ export default class MainScene extends Scene3D {
     })
 
     // make the sphere
-    let S = this.third.make.sphere({ radius: 4, x: -10, z: -10, y: 15 }, { standard: { color: 0xff00ff } })
+    let S = this.third.make.sphere({ radius: 2, x: -10, z: -10, y: 15 }, { standard: { color: 0xff00ff } })
     // add the sphere to the scene
     this.third.add.existing(S)
     // add physics to the sphere
     this.third.physics.add.existing(S)
 
-    this.third.physics.add.sphere({ radius: 4, x: 10, z: -10, y: 15 }, { standard: { color: 0xff00ff } })
+    this.third.physics.add.sphere({ radius: 2, x: 10, z: -10, y: 15 }, { standard: { color: 0xff00ff } })
 
     // collider between 2 objects
     // it only works once the hero and robots are loaded
