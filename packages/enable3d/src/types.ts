@@ -94,11 +94,18 @@ export interface SphereConfig extends XYZ, Mass, CollisionFlag {
   radius?: number
   widthSegments?: number
   heightSegments?: number
+  phiStart?: number
+  phiLength?: number
+  thetaStart?: number
+  thetaLength?: number
 }
 
 export interface BoxConfig extends XYZ, WH, Mass, CollisionFlag {
   name?: string
   depth?: number
+  widthSegments?: number
+  heightSegments?: number
+  depthSegments?: number
 }
 
 export interface GroundConfig extends BoxConfig {

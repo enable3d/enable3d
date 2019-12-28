@@ -59,10 +59,30 @@ export default class Factories extends Textures {
     return obj
   }
   protected makeSphere(
-    { radius = 1, widthSegments = 16, heightSegments = 12, x = 0, y = 0, z = 0, name = undefined }: SphereConfig,
+    {
+      radius = 1,
+      widthSegments = 16,
+      heightSegments = 12,
+      x = 0,
+      y = 0,
+      z = 0,
+      name = undefined,
+      phiStart = undefined,
+      phiLength = undefined,
+      thetaStart = undefined,
+      thetaLength = undefined
+    }: SphereConfig,
     materialConfig: MaterialConfig
   ): ExtendedObject3D {
-    const geometry = new SphereGeometry(radius, widthSegments, heightSegments)
+    const geometry = new SphereGeometry(
+      radius,
+      widthSegments,
+      heightSegments,
+      phiStart,
+      phiLength,
+      thetaStart,
+      thetaLength
+    )
     const material = this.createMaterialNEW(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
@@ -77,10 +97,21 @@ export default class Factories extends Textures {
   }
 
   protected makeBox(
-    { width = 1, height = 1, depth = 1, x = 0, y = 0, z = 0, name = undefined }: BoxConfig,
+    {
+      width = 1,
+      height = 1,
+      depth = 1,
+      x = 0,
+      y = 0,
+      z = 0,
+      name = undefined,
+      widthSegments = undefined,
+      heightSegments = undefined,
+      depthSegments = undefined
+    }: BoxConfig,
     materialConfig: MaterialConfig
   ): ExtendedObject3D {
-    const geometry = new BoxGeometry(width, height, depth)
+    const geometry = new BoxGeometry(width, height, depth, widthSegments, heightSegments, depthSegments)
     const material = this.createMaterialNEW(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
