@@ -59,37 +59,37 @@ export default class Factories extends Textures {
     return obj
   }
   protected makeSphere(
-    { radius = 1, widthSegments = 16, heightSegments = 12, x = 0, y = 0, z = 0 }: SphereConfig,
+    { radius = 1, widthSegments = 16, heightSegments = 12, x = 0, y = 0, z = 0, name = undefined }: SphereConfig,
     materialConfig: MaterialConfig
   ): ExtendedObject3D {
     const geometry = new SphereGeometry(radius, widthSegments, heightSegments)
     const material = this.createMaterialNEW(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
+    mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'sphere'
     return mesh
   }
 
   protected addSphere(sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const obj = this.makeSphere(sphereConfig, materialConfig)
-    obj.name = sphereConfig.name || `body_id_${obj.id}`
     this.scene.add(obj)
     return obj
   }
 
   protected makeBox(
-    { width = 1, height = 1, depth = 1, x = 0, y = 0, z = 0 }: BoxConfig,
+    { width = 1, height = 1, depth = 1, x = 0, y = 0, z = 0, name = undefined }: BoxConfig,
     materialConfig: MaterialConfig
   ): ExtendedObject3D {
     const geometry = new BoxGeometry(width, height, depth)
     const material = this.createMaterialNEW(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
+    mesh.name = name || `body_id_${mesh.id}`
     mesh.type = 'box'
     return mesh
   }
 
   protected addBox(boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const obj = this.makeBox(boxConfig, materialConfig)
-    obj.name = boxConfig.name || `body_id_${obj.id}`
     this.scene.add(obj)
     return obj
   }
