@@ -28,36 +28,6 @@ class AmmoPhysics extends EventEmitter {
     this.start()
   }
 
-  // https://github.com/donmccurdy/aframe-physics-system/blob/master/AmmoDriver.md#ammo-constraint
-  // https://github.com/donmccurdy/aframe-physics-system/blob/master/src/components/ammo-constraint.js
-  public constraintTest(object: ExtendedObject3D, targetObject: ExtendedObject3D) {
-    const body = object.body.ammoBody
-    const targetBody = targetObject.body.ammoBody
-
-    const bodyTransform = body
-      .getCenterOfMassTransform()
-      .inverse()
-      .op_mul(targetBody.getWorldTransform())
-    const targetTransform = new Ammo.btTransform()
-    targetTransform.setIdentity()
-
-    // LOCK
-    const constraint = new Ammo.btGeneric6DofConstraint(body, targetBody, bodyTransform, targetTransform, true)
-    const zero = new Ammo.btVector3(0, 0, 0)
-    constraint.setLinearLowerLimit(zero)
-    constraint.setLinearUpperLimit(zero)
-    constraint.setAngularLowerLimit(zero)
-    constraint.setAngularUpperLimit(zero)
-    Ammo.destroy(zero)
-
-    // FIXED
-    // bodyTransform.setRotation(body.getWorldTransform().getRotation())
-    // targetTransform.setRotation(targetBody.getWorldTransform().getRotation())
-    // const constraint = new Ammo.btFixedConstraint(body, targetBody, bodyTransform, targetTransform)
-
-    this.physicsWorld.addConstraint(constraint)
-  }
-
   private start() {
     if (typeof Ammo === 'undefined') {
       logger('Are you sure you included ammo.js?')

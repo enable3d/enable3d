@@ -171,9 +171,15 @@ export default class MainScene extends Scene3D {
 
   update(time, delta) {
     if (this.robot?.body) {
-      // @ts-ignore
-      if (this.robot.goRight) this.robot.body.setVelocityX(5)
-      else this.robot.body.setVelocityX(-5)
+      const speed = 7
+      const rotation = this.robot.getWorldDirection(this.robot.rotation.toVector3())
+      const theta = Math.atan2(rotation.x, rotation.z)
+
+      const x = Math.sin(theta) * speed,
+        y = this.robot.body.velocity.y,
+        z = Math.cos(theta) * speed
+
+      this.robot.body.setVelocity(x, y, z)
     }
 
     if (this.hero && this.hero.body) {
@@ -211,20 +217,14 @@ export default class MainScene extends Scene3D {
 
       if (this.keys.w.isDown) {
         const speed = 3
+        const rotation = this.hero.getWorldDirection(this.hero.rotation.toVector3())
+        const theta = Math.atan2(rotation.x, rotation.z)
 
-        this.hero.body.ammoBody.getMotionState().getWorldTransform(this.third.physics.tmpTrans)
-
-        // -1 to 1
-        const eulerRotationY = this.third.physics.tmpTrans.getRotation().y()
-
-        // 0 to 2*PI
-        const radRotationY = (eulerRotationY + 1) * Math.PI
-
-        const x = Math.sin(radRotationY) * speed,
+        const x = Math.sin(theta) * speed,
           y = this.hero.body.velocity.y,
-          z = Math.cos(radRotationY) * speed
+          z = Math.cos(theta) * speed
 
-        this.hero.body.setVelocity(-x, y, -z)
+        this.hero.body.setVelocity(x, y, z)
       }
 
       if (this.keys.a.isDown) this.hero.body.setAngularVelocityY(3)
