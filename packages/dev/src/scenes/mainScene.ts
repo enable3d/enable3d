@@ -109,10 +109,14 @@ export default class MainScene extends Scene3D {
       }
     })
 
-    // constraint test
-    let box1 = this.third.physics.add.box({ z: 16, y: 3 }, { standard: { color: 0xff00ff } })
-    let box2 = this.third.physics.add.box({ z: 17, y: 8, x: 1, collisionFlag: 4 }, { standard: { color: 0xffff00 } })
-    this.third.physics.constraintTest(box1, box2)
+    // constraint test (spring)
+    let box1 = this.third.physics.add.box({ x: 10, z: 16, y: 20 }, { standard: { color: 0xff00ff } })
+    let box2 = this.third.physics.add.box(
+      { x: 10, z: 17, y: 15, collisionFlag: 4, mass: 5 },
+      { standard: { color: 0xffff00 } }
+    )
+    this.third.physics.add.constraints.spring(box1.body, box2.body, { angularLock: false })
+
     this.third.physics.add.collider(this.third.ground, box2, event => {
       // console.log('YELLOW_BLOCK overlaps GROUND', event)
     })

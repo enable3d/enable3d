@@ -8,13 +8,17 @@ import logger from '../helpers/logger'
 import PhysicsBody from './physicsBody'
 import ThreeWrapper from '../threeWrapper'
 import { SphereConfig, GroundConfig, MaterialConfig, BoxConfig } from '../types'
+import applyMixins from '../helpers/applyMixins'
 import ExtendedObject3D from '../extendedObject3D'
 import EventEmitter from 'eventemitter3'
+import Constraints from './constraints'
+
+interface AmmoPhysics extends Constraints {}
 
 class AmmoPhysics extends EventEmitter {
   private rigidBodies: ExtendedObject3D[] = []
   public tmpTrans: Ammo.btTransform
-  private physicsWorld: Ammo.btSoftRigidDynamicsWorld
+  // private physicsWorld: Ammo.btSoftRigidDynamicsWorld
   private dispatcher: Ammo.btCollisionDispatcher
   private objectsAmmo: { [ptr: number]: any } = {}
   private earlierDetectedCollisions: { combinedName: string; collision: boolean }[] = []
@@ -93,6 +97,7 @@ class AmmoPhysics extends EventEmitter {
         object2: ExtendedObject3D,
         eventCallback: (event: 'start' | 'collision' | 'end') => void
       ) => this.addCollider(object1, object2, eventCallback),
+      constraints: this.addConstraints,
       existing: (object: ExtendedObject3D, config?: any) => this.addExisting(object, config),
       sphere: (sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.addSphere(sphereConfig, materialConfig),
@@ -358,5 +363,7 @@ class AmmoPhysics extends EventEmitter {
     return ground
   }
 }
+
+applyMixins(AmmoPhysics, [Constraints])
 
 export default AmmoPhysics
