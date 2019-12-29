@@ -127,7 +127,6 @@ export default class Factories extends Textures {
 
   protected addGround(groundConfig: GroundConfig, materialConfig: MaterialConfig): ExtendedObject3D {
     const obj = this.makeBox(groundConfig, materialConfig)
-    obj.name = groundConfig.name || `body_id_${obj.id}`
     obj.rotateX(THREE_Math.degToRad(90))
     this.scene.add(obj)
     return obj
