@@ -44,6 +44,15 @@ Install phaser and enable3d via npm:
 npm i phaser enable3d
 ```
 
+Or download the UMD bundle in [/bundles](https://github.com/yandeu/enable3d/tree/master/bundles)
+If you use the bundle, you have to prefix all exports with THIRD.
+
+```ts
+THIRD.Scene3d
+THIRD.enable3d
+// etc ..
+```
+
 ## How to use
 
 ```ts
