@@ -97,11 +97,14 @@ export default class MainScene extends Scene3D {
 
     // ground without physics
     // this.third.add.ground({ width: 25, height: 10, depth: 1, y: 5 }, { standard: { color: 0xff00ff } })
-    this.third.on.collision((obj0, obj1) => {
-      if (obj0.name === 'ground' || obj1.name === 'ground') {
-        if (obj0.name === 'hero' || obj1.name === 'hero') {
+    this.third.on.collision(data => {
+      const { event, bodies } = data
+      if (bodies[0].name === 'ground' || bodies[1].name === 'ground') {
+        if (bodies[0].name === 'hero' || bodies[1].name === 'hero') {
           // the player is on the ground and can jump
-          if (!this.playerCanJump) this.playerCanJump = true
+          if (!this.playerCanJump && event !== 'end') this.playerCanJump = true
+          if (event === 'start') console.log('Hero "starts" colliding with ground')
+          if (event === 'end') console.log('Hero "ended" colliding with ground')
         }
       }
     })
@@ -110,8 +113,13 @@ export default class MainScene extends Scene3D {
     let box1 = this.third.physics.add.box({ z: 16, y: 3 }, { standard: { color: 0xff00ff } })
     let box2 = this.third.physics.add.box({ z: 17, y: 8, x: 1, collisionFlag: 4 }, { standard: { color: 0xffff00 } })
     this.third.physics.constraintTest(box1, box2)
-    this.third.physics.add.collider(this.third.ground, box2, () => {
-      console.log('YELLOW_BLOCK overlaps GROUND')
+    this.third.physics.add.collider(this.third.ground, box2, event => {
+      // console.log('YELLOW_BLOCK overlaps GROUND', event)
+    })
+
+    box1.body.on.collision((otherObject, event) => {
+      // if (otherObject.name === 'ground') console.log('The green ball collides with the ground')
+      // else console.log('The green ball collides with another ball')
     })
 
     // 3 spheres with physics

@@ -164,12 +164,15 @@ const blueBall = this.third.physics.add.sphere({ y: 15 }, { standard: { color: 0
 const greenBall = this.third.physics.add.sphere({ y: 20 }, { standard: { color: 0x00ff00 } })
 
 // Check collision between the red and the blue ball.
-this.third.physics.add.collider(redBall, blueBall, () => {
-  console.log('redBall and blueBall are colliding')
+this.third.physics.add.collider(redBall, blueBall, event => {
+  // event will be 'start', 'collision' or 'end'
+  if (event === 'start') {
+    console.log('redBall and blueBall start colliding')
+  }
 })
 
 // Detect all collisions of the green ball.
-greenBall.body.on.collision(otherObject => {
+greenBall.body.on.collision((otherObject, event) => {
   if (otherObject.name === 'ground') console.log('The green ball collides with the ground')
   else console.log('The green ball collides with another ball')
 })

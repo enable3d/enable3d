@@ -17,14 +17,18 @@ class PhysicsBody {
 
   public get on() {
     return {
-      collision: (collisionCallback: (otherObject: ExtendedObject3D) => void) => this.onCollision(collisionCallback)
+      collision: (collisionCallback: (otherObject: ExtendedObject3D, event: 'start' | 'collision' | 'end') => void) =>
+        this.onCollision(collisionCallback)
     }
   }
 
-  private onCollision(collisionCallback: (otherObject: ExtendedObject3D) => void) {
-    this.ammoPhysics.on('collision', bodies => {
-      if (bodies[0].name === this.name) collisionCallback(bodies[1])
-      else if (bodies[1].name === this.name) collisionCallback(bodies[0])
+  private onCollision(
+    collisionCallback: (otherObject: ExtendedObject3D, event: 'start' | 'collision' | 'end') => void
+  ) {
+    this.ammoPhysics.on('collision', (data: { bodies: ExtendedObject3D[]; event: 'start' | 'collision' | 'end' }) => {
+      const { bodies, event } = data
+      if (bodies[0].name === this.name) collisionCallback(bodies[1], event)
+      else if (bodies[1].name === this.name) collisionCallback(bodies[0], event)
     })
   }
 

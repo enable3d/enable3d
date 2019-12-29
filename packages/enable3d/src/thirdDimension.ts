@@ -144,9 +144,11 @@ class ThirdDimension extends ThreeWrapper {
       /**
        * This returns all collisions of all object. Maybe you are looking for 'this.third.physics.add.collider(body1, body2, callback)' instead?
        */
-      collision: (cb: any) => {
-        this.physics.on('collision', bodies => {
-          cb(bodies[0], bodies[1])
+      collision: (
+        eventCallback: (data: { bodies: ExtendedObject3D[]; event: 'start' | 'collision' | 'end' }) => void
+      ) => {
+        this.physics.on('collision', (data: { bodies: ExtendedObject3D[]; event: 'start' | 'collision' | 'end' }) => {
+          eventCallback(data)
         })
       }
     }

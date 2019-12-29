@@ -36,7 +36,6 @@ const Robot = (scene: MainScene) => {
     const animations = ['Walking']
     animations.forEach(key => {
       scene.third.load.fbx(`assets/${key}.fbx`, (object: any) => {
-        console.log(object)
         robot.anims[key] = object.animations[0]
       })
     })

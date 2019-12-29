@@ -17,6 +17,7 @@ class AmmoPhysics extends EventEmitter {
   private physicsWorld: Ammo.btSoftRigidDynamicsWorld
   private dispatcher: Ammo.btCollisionDispatcher
   private objectsAmmo: { [ptr: number]: any } = {}
+  private earlierDetectedCollisions: { combinedName: string; collision: boolean }[] = []
 
   constructor(private phaser3D: ThreeWrapper, private scene: Phaser.Scene) {
     super()
@@ -87,8 +88,11 @@ class AmmoPhysics extends EventEmitter {
 
   public get add() {
     return {
-      collider: (object1: ExtendedObject3D, object2: ExtendedObject3D, cb?: any) =>
-        this.addCollider(object1, object2, cb),
+      collider: (
+        object1: ExtendedObject3D,
+        object2: ExtendedObject3D,
+        eventCallback: (event: 'start' | 'collision' | 'end') => void
+      ) => this.addCollider(object1, object2, eventCallback),
       existing: (object: ExtendedObject3D, config?: any) => this.addExisting(object, config),
       sphere: (sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.addSphere(sphereConfig, materialConfig),
@@ -99,10 +103,15 @@ class AmmoPhysics extends EventEmitter {
   }
 
   // TODO this is not finished yet
-  private addCollider(object1: ExtendedObject3D, object2: ExtendedObject3D, cb?: any) {
-    this.on('collision', bodies => {
-      if (bodies[0].name === object1.name && bodies[1].name === object2.name) cb(object1, object2)
-      else if (bodies[1].name === object1.name && bodies[0].name === object2.name) cb(object2, object1)
+  private addCollider(
+    object1: ExtendedObject3D,
+    object2: ExtendedObject3D,
+    eventCallback: (event: 'start' | 'collision' | 'end') => void
+  ) {
+    this.on('collision', data => {
+      const { bodies, event } = data
+      if (bodies[0].name === object1.name && bodies[1].name === object2.name) eventCallback(event)
+      else if (bodies[1].name === object1.name && bodies[0].name === object2.name) eventCallback(event)
     })
   }
 
@@ -177,7 +186,7 @@ class AmmoPhysics extends EventEmitter {
     this.physicsWorld.stepSimulation(deltaTime)
 
     // Collision
-    const detectedCollisions: string[] = []
+    const detectedCollisions: { combinedName: string; collision: boolean }[] = []
     const num = this.dispatcher.getNumManifolds()
     for (let i = 0; i < num; i++) {
       const manifold = this.dispatcher.getManifoldByIndexInternal(i)
@@ -201,11 +210,18 @@ class AmmoPhysics extends EventEmitter {
         const obj1 = Xx0 in this.objectsAmmo ? this.objectsAmmo[Xx1] : manifold.getBody1()
 
         // check if a collision between these object has already been processed
-        const combinedName = `${obj0.name}_${obj1.name}`
-        if (detectedCollisions.includes(combinedName)) {
+        const combinedName = `${obj0.name}__${obj1.name}`
+        if (detectedCollisions.find(el => el.combinedName === combinedName)) {
           continue
         }
-        detectedCollisions.push(combinedName)
+
+        let event
+        if (this.earlierDetectedCollisions.find(el => el.combinedName === combinedName)) {
+          event = 'colliding'
+        } else {
+          event = 'start'
+        }
+        detectedCollisions.push({ combinedName, collision: true })
 
         // const a = manifold.getContactPoint(num_contacts).getPositionWorldOnA()
         // const b = manifold.getContactPoint(num_contacts).getPositionWorldOnB()
@@ -215,7 +231,7 @@ class AmmoPhysics extends EventEmitter {
         // console.log(pt)
         // console.log(pt.getAppliedImpulse())
 
-        this.emit('collision', [obj0, obj1])
+        this.emit('collision', { bodies: [obj0, obj1], event })
 
         // https://stackoverflow.com/questions/31991267/bullet-physicsammo-js-in-asm-js-how-to-get-collision-impact-force
         // console.log('COLLISION DETECTED!')
@@ -224,6 +240,21 @@ class AmmoPhysics extends EventEmitter {
         // pt.getAppliedImpulse() is not working
       }
     }
+    // Check which collision ended
+    this.earlierDetectedCollisions.forEach(el => {
+      const { combinedName } = el
+      if (!detectedCollisions.find(el => el.combinedName === combinedName)) {
+        const split = combinedName.split('__')
+        // console.log(split[0], split[1])
+        const obj0 = this.rigidBodies.find(obj => obj.name === split[0])
+        const obj1 = this.rigidBodies.find(obj => obj.name === split[1])
+        // console.log(obj0, obj1)
+        if (obj0 && obj1) this.emit('collision', { bodies: [obj0, obj1], event: 'end' })
+      }
+    })
+    // Update earlierDetectedCollisions
+    this.earlierDetectedCollisions = [...detectedCollisions]
+
     // Update rigid bodies
     for (let i = 0; i < this.rigidBodies.length; i++) {
       let objThree = this.rigidBodies[i]
@@ -259,10 +290,13 @@ class AmmoPhysics extends EventEmitter {
     // object will not be updated in update()
     if (mass > 0) {
       // @ts-ignore
-      this.rigidBodies.push(threeObject)
+      // this.rigidBodies.push(threeObject)
       // Disable deactivation
       rigidBody.setActivationState(4)
     }
+    // @ts-ignore
+    this.rigidBodies.push(threeObject)
+
     this.physicsWorld.addRigidBody(rigidBody)
     // @ts-ignore
     const Xx = rigidBody.Xx
