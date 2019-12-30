@@ -23,7 +23,9 @@ import {
   Object3D,
   Line,
   Points,
-  Color
+  Color,
+  Euler,
+  Quaternion
 } from 'three/src/Three'
 
 import {
@@ -93,7 +95,9 @@ class ThreeWrapper {
       boxHelper: (mesh: Mesh) => new BoxHelper(mesh),
       animationMixer: (root: Object3D) => this.animationMixer(root),
       vector2: (x: number, y: number) => new Vector2(x, y),
-      vector3: (x: number, y: number, z: number) => new Vector3(x, y, z)
+      vector3: (x: number, y: number, z: number) => new Vector3(x, y, z),
+      euler: (x: number, y: number, z: number) => new Euler(x, y, z, 'XYZ'),
+      quaternion: (x?: number, y?: number, z?: number, w?: number) => new Quaternion(x, y, z, w)
     }
   }
 
