@@ -3,7 +3,7 @@
  * https://medium.com/@bluemagnificent/intro-to-javascript-3d-physics-using-ammo-js-and-three-js-dd48df81f591
  */
 
-import { Object3D, Scene3D, ExtendedObject3D, Cameras } from 'enable3d'
+import { Object3D, Scene3D, ExtendedObject3D } from 'enable3d'
 import Robot from '../objects/robot'
 
 export default class MainScene extends Scene3D {
@@ -43,10 +43,14 @@ export default class MainScene extends Scene3D {
     this.third.load.gltf('hero', object => {
       // get hero from object
       const hero = object.scene.children[0] as Object3D
-      hero.castShadow = hero.receiveShadow = true
+
       this.hero = this.third.new.extendedObject3D()
       this.hero.name = 'hero'
       this.hero.add(hero)
+
+      this.hero.traverse((child: any) => {
+        if (child.isMesh) child.castShadow = child.receiveShadow = true
+      })
 
       // animation
       let mixer = this.third.new.animationMixer(hero)

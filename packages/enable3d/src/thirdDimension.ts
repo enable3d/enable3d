@@ -121,7 +121,7 @@ class ThirdDimension extends ThreeWrapper {
         },
         { phong: { map: addGrid ? texture : null, transparent: true, opacity: 0.8, color: 0xffffff } }
       )
-
+      this.ground.receiveShadow = true
       this.ground.body.setRestitution(1)
     }
 

@@ -25,7 +25,8 @@ import {
   Points,
   Color,
   Euler,
-  Quaternion
+  Quaternion,
+  PCFSoftShadowMap
 } from 'three/src/Three'
 
 import {
@@ -67,6 +68,10 @@ class ThreeWrapper {
       context: root.sys.game.context as WebGLRenderingContext,
       antialias: true
     })
+
+    // shadow
+    this.renderer.shadowMap.enabled = true
+    this.renderer.shadowMap.type = PCFSoftShadowMap
 
     this.composer = null
     //  We don't want three.js to wipe our gl context!
