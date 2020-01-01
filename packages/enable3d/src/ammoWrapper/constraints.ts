@@ -1,6 +1,3 @@
-import PhysicsBody from './physicsBody'
-import { XYZ } from '../types'
-
 /**
  * @author       Yannick Deubel (https://github.com/yandeu)
  * @copyright    Copyright (c) 2019 Yannick Deubel; Project Url: https://github.com/yandeu/enable3d
@@ -8,6 +5,9 @@ import { XYZ } from '../types'
  */
 
 // Inspired by https://github.com/donmccurdy/aframe-physics-system/blob/master/src/components/ammo-constraint.js
+
+import PhysicsBody from './physicsBody'
+import { XYZ } from '../types'
 
 export default class Constraints {
   // public tmpTrans: Ammo.btTransform

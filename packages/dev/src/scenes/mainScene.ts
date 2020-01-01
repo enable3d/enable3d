@@ -32,6 +32,10 @@ export default class MainScene extends Scene3D {
     this.cameras.main.fadeIn(2000, 255, 250, 250)
     // this.third.haveSomeFun()
 
+    // enable physics debugging
+    // this.third.physics.debug.enable()
+    // this.third.physics.debug.mode(3) // 1, 2 or 3
+
     // this.third.warpedStart({ quickStart: true, orbitControls: true })
 
     // start Phaser3D

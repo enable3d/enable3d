@@ -12,6 +12,7 @@ import applyMixins from '../helpers/applyMixins'
 import ExtendedObject3D from '../extendedObject3D'
 import EventEmitter from 'eventemitter3'
 import Constraints from './constraints'
+import DebugDrawer from './debugDrawer'
 
 interface AmmoPhysics extends Constraints {}
 
@@ -22,10 +23,25 @@ class AmmoPhysics extends EventEmitter {
   private dispatcher: Ammo.btCollisionDispatcher
   private objectsAmmo: { [ptr: number]: any } = {}
   private earlierDetectedCollisions: { combinedName: string; collision: boolean }[] = []
+  private debugDrawer: DebugDrawer
 
-  constructor(private phaser3D: ThreeWrapper, private scene: Phaser.Scene) {
+  constructor(protected phaser3D: ThreeWrapper, private scene: Phaser.Scene) {
     super()
     this.start()
+  }
+
+  public get debug() {
+    return {
+      enable: () => {
+        this.debugDrawer.enable()
+      },
+      mode: (debugMode: number = 1) => {
+        this.debugDrawer.setDebugMode(debugMode)
+      },
+      disable: () => {
+        this.debugDrawer.disable()
+      }
+    }
   }
 
   private start() {
@@ -45,6 +61,8 @@ class AmmoPhysics extends EventEmitter {
     // setup ammo physics
     this.setupPhysicsWorld()
 
+    this.debugDrawer = new DebugDrawer(this.phaser3D.scene, this.physicsWorld, {})
+
     /**
      * TODO add ghost object
      */
@@ -57,6 +75,7 @@ class AmmoPhysics extends EventEmitter {
     // run the phaser update method
     this.scene.events.on('update', (_time: number, delta: number) => {
       this.update(delta / 1000)
+      if (this.debugDrawer && this.debugDrawer.enabled) this.debugDrawer.update()
     })
   }
 
