@@ -45,12 +45,11 @@ npm i phaser enable3d
 ```
 
 Or download the UMD bundle in [/bundles](https://github.com/yandeu/enable3d/tree/master/bundles)
-If you use the bundle, you have to prefix all exports with THIRD.
+The bundle exports "ENABLE3D".
 
 ```ts
-THIRD.Scene3d
-THIRD.enable3d
-// etc ..
+const { enable3d, Scene3d } = ENABLE3D
+// now use enable3d and Scene3d in your project
 ```
 
 ## How to use

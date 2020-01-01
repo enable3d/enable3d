@@ -10,7 +10,7 @@ module.exports = (env, argv) => {
     output: {
       path: path.resolve(__dirname, `${argv.path}`),
       filename: `enable3d.${argv.packageVersion}.min.js`,
-      library: 'THIRD',
+      library: 'ENABLE3D',
       libraryTarget: 'umd'
     },
     resolve: {
