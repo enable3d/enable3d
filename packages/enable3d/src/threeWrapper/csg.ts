@@ -148,7 +148,7 @@ class CSG {
     return m
   }
 
-  static iEval(tokens: Mesh, index = 0) {
+  static iEval(tokens: Mesh, _index = 0) {
     if (typeof tokens === 'string') {
       CSG.currentOp = tokens
     } else if (tokens instanceof Array) {

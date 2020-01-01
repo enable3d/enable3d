@@ -144,7 +144,7 @@ class DebugDrawer {
   }
 
   //TODO: figure out how to make lifeTime work
-  drawContactPoint(pointOnB: any, normalOnB: any, distance: any, lifeTime: any, color: any) {
+  drawContactPoint(pointOnB: any, normalOnB: any, distance: any, _lifeTime: any, color: any) {
     // @ts-ignore
     const heap = Ammo.HEAPF32
     const r = heap[(color + 0) / 4]
@@ -174,7 +174,7 @@ class DebugDrawer {
     }
   }
 
-  draw3dText(location: any, textString: any) {
+  draw3dText(_location: any, _textString: any) {
     //TODO
     console.warn('TODO: draw3dText')
   }
