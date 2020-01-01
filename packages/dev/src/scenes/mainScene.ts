@@ -3,8 +3,9 @@
  * https://medium.com/@bluemagnificent/intro-to-javascript-3d-physics-using-ammo-js-and-three-js-dd48df81f591
  */
 
-import { Object3D, Scene3D, ExtendedObject3D } from 'enable3d'
+import { Object3D, Scene3D, ExtendedObject3D, Mesh } from 'enable3d'
 import Robot from '../objects/robot'
+import CSG from 'enable3d/dist/threeWrapper/csg'
 
 export default class MainScene extends Scene3D {
   sphere: Object3D
@@ -40,6 +41,23 @@ export default class MainScene extends Scene3D {
 
     // start Phaser3D
     // this.third = new ThirdDimension(this, { quickStart: true, orbitControls: true })
+
+    // test CSG (Constructive Solid Geometry)
+    const box = this.third.make.box({ x: 0.75, y: 1.75, z: -0.25 })
+    const sphere = this.third.make.sphere({ radius: 0.5, x: 1, y: 2 })
+
+    const int = this.third.mesh.intersect(box, sphere)
+    const sub = this.third.mesh.subtract(box, sphere)
+    const uni = this.third.mesh.union(box, sphere)
+
+    const mat = this.third.new.standardMaterial()
+
+    const geometries = [int, sub, uni]
+    geometries.forEach((geo, i) => {
+      geo.position.setX((i - 1) * 2)
+      geo.material = mat
+      geo.castShadow = geo.receiveShadow = true
+    })
 
     this.robot = Robot(this)
 

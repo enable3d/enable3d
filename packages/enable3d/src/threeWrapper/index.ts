@@ -26,7 +26,9 @@ import {
   Color,
   Euler,
   Quaternion,
-  PCFSoftShadowMap
+  PCFSoftShadowMap,
+  MeshStandardMaterial,
+  MeshStandardMaterialParameters
 } from 'three/src/Three'
 
 import {
@@ -46,8 +48,9 @@ import Cameras from './cameras'
 import Textures from './textures'
 import Lights from './lights'
 import Factories from './factories'
+import CSG from './csg'
 
-interface ThreeWrapper extends Loaders, Cameras, Textures, Lights, Factories {}
+interface ThreeWrapper extends Loaders, Cameras, Textures, Lights, Factories, CSG {}
 
 class ThreeWrapper {
   public scene: Scene
@@ -102,7 +105,8 @@ class ThreeWrapper {
       vector2: (x: number, y: number) => new Vector2(x, y),
       vector3: (x: number, y: number, z: number) => new Vector3(x, y, z),
       euler: (x: number, y: number, z: number) => new Euler(x, y, z, 'XYZ'),
-      quaternion: (x?: number, y?: number, z?: number, w?: number) => new Quaternion(x, y, z, w)
+      quaternion: (x?: number, y?: number, z?: number, w?: number) => new Quaternion(x, y, z, w),
+      standardMaterial: (parameters?: MeshStandardMaterialParameters) => new MeshStandardMaterial(parameters)
     }
   }
 
@@ -182,6 +186,6 @@ class ThreeWrapper {
   }
 }
 
-applyMixins(ThreeWrapper, [Loaders, Cameras, Textures, Lights, Factories])
+applyMixins(ThreeWrapper, [Loaders, Cameras, Textures, Lights, Factories, CSG])
 
 export default ThreeWrapper
