@@ -80,10 +80,10 @@ export interface MaterialConfig {
 }
 
 export interface SphereObject {
-  (sphereConfig: SphereConfig, materialConfig?: MaterialConfig): ExtendedObject3D
+  (sphereConfig?: SphereConfig, materialConfig?: MaterialConfig): ExtendedObject3D
 }
 export interface BoxObject {
-  (boxConfig: BoxConfig, materialConfig?: MaterialConfig): ExtendedObject3D
+  (boxConfig?: BoxConfig, materialConfig?: MaterialConfig): ExtendedObject3D
 }
 export interface GroundObject {
   (groundConfig: GroundConfig, materialConfig?: MaterialConfig): ExtendedObject3D
