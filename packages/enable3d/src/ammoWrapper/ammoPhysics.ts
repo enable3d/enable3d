@@ -301,37 +301,44 @@ class AmmoPhysics extends EventEmitter {
     this.objectsAmmo[Xx] = threeObject
   }
 
+  private addBodyProperties(obj: ExtendedObject3D, config: any) {
+    const { friction = 0.5, collisionFlag = 0 } = config
+
+    obj.body.ammoBody.setCollisionFlags(collisionFlag)
+    obj.body.ammoBody.setFriction(friction)
+  }
+
   private addSphere(sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}) {
     const sphere = this.phaser3D.add.sphere(sphereConfig, materialConfig)
-    const { position: pos, quaternion: quat, geometry } = sphere
+
     // @ts-ignore
-    const { radius } = geometry.parameters
-    const mass = 1
+    const { radius } = sphere.geometry.parameters
+    const { position: pos, quaternion: quat } = sphere
+    const { mass = 1 } = sphereConfig
 
     const ballShape = new Ammo.btSphereShape(radius)
     ballShape.setMargin(0.05)
 
     this.addRigidBody(sphere, ballShape, mass, pos, quat)
+    this.addBodyProperties(sphere, sphereConfig)
 
     return sphere
   }
 
   private addBox(boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}) {
     const box = this.phaser3D.add.box(boxConfig, materialConfig)
-    // let debug = this.phaser3D.add.box(boxConfig, { line: { color: 0x000000 } })
 
     // @ts-ignore
     const { width, height, depth } = box.geometry.parameters
     const { position: pos, quaternion: quat } = box
-    const { mass = 1, collisionFlag = 0 } = boxConfig
+    const { mass = 1 } = boxConfig
 
     const boxShape = new Ammo.btBoxShape(new Ammo.btVector3(width / 2, height / 2, depth / 2))
-    // console.log('boxShape', boxShape.getLocalScaling())
     boxShape.setMargin(0.05)
 
     this.addRigidBody(box, boxShape, mass, pos, quat)
-    box.body.ammoBody.setCollisionFlags(collisionFlag)
-    // body.setFriction( 0.5 );
+    this.addBodyProperties(box, boxConfig)
+
     return box
   }
 
@@ -347,7 +354,7 @@ class AmmoPhysics extends EventEmitter {
     boxShape.setMargin(0.05)
 
     this.addRigidBody(ground, boxShape, mass, pos, quat)
-    // body.setFriction( 0.5 );
+    this.addBodyProperties(ground, groundConfig)
 
     return ground
   }

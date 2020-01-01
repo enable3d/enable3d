@@ -98,6 +98,8 @@ export interface SphereConfig extends XYZ, Mass, CollisionFlag {
   phiLength?: number
   thetaStart?: number
   thetaLength?: number
+  friction?: number
+  collisionFlag?: number
 }
 
 export interface BoxConfig extends XYZ, WH, Mass, CollisionFlag {
@@ -106,6 +108,8 @@ export interface BoxConfig extends XYZ, WH, Mass, CollisionFlag {
   widthSegments?: number
   heightSegments?: number
   depthSegments?: number
+  friction?: number
+  collisionFlag?: number
 }
 
 export interface GroundConfig extends BoxConfig {
