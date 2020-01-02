@@ -13,6 +13,7 @@ import ExtendedObject3D from '../extendedObject3D'
 import EventEmitter from 'eventemitter3'
 import Constraints from './constraints'
 import DebugDrawer from './debugDrawer'
+import { Vector3, Matrix4, BufferGeometry } from 'three'
 
 interface AmmoPhysics extends Constraints {}
 
@@ -111,7 +112,7 @@ class AmmoPhysics extends EventEmitter {
 
   private addExisting(object: ExtendedObject3D, config: any = {}): void {
     const { position: pos, quaternion: quat, shape, hasBody } = object
-    const { width = 2, height = 2, depth = 2 } = config
+    const { width = 1, height = 1, depth = 1 } = config
     // @ts-ignore
     const params = object?.geometry?.parameters
     const hasShape = object.hasOwnProperty('shape')
@@ -125,13 +126,19 @@ class AmmoPhysics extends EventEmitter {
     }
 
     let Shape
-    if (hasShape && params) {
+    if (hasShape) {
       switch (shape) {
         case 'box':
           Shape = new Ammo.btBoxShape(new Ammo.btVector3(params.width, params.height, params.depth))
           break
         case 'sphere':
           Shape = new Ammo.btSphereShape(params.radius)
+          break
+        case 'convex':
+          Shape = this.addTriMeshShape(object, config)
+          break
+        case 'concave':
+          Shape = this.addTriMeshShape(object, config)
           break
         default:
           Shape = defaultShape()
@@ -144,6 +151,7 @@ class AmmoPhysics extends EventEmitter {
     Shape.setMargin(0.05)
 
     this.addRigidBody(object, Shape, mass, pos, quat)
+    this.addBodyProperties(object, config)
 
     if (!hasShape) {
       // this will make sure the body will be aligned to the bottom
@@ -289,6 +297,93 @@ class AmmoPhysics extends EventEmitter {
     threeObject.body = new PhysicsBody(this, rigidBody)
     threeObject.hasBody = true
     this.objectsAmmo[zs] = threeObject
+  }
+
+  // originally copied from https://github.com/InfiniteLee/three-to-ammo
+  private iterateGeometries(root: any, options = {}, cb: any) {
+    const transform = new Matrix4()
+    const inverse = new Matrix4()
+    const bufferGeometry = new BufferGeometry()
+
+    inverse.getInverse(root.matrixWorld)
+    root.traverse((mesh: any) => {
+      if (
+        mesh.isMesh &&
+        // @ts-ignore
+        (options.includeInvisible || (mesh.el && mesh.el.object3D.visible) || mesh.visible)
+      ) {
+        if (mesh === root) {
+          transform.identity()
+        } else {
+          // @ts-ignore
+          if (hasUpdateMatricesFunction) mesh.updateMatrices()
+          transform.multiplyMatrices(inverse, mesh.matrixWorld)
+        }
+        // todo: might want to return null xform if this is the root so that callers can avoid multiplying
+        // things by the identity matrix
+        cb(mesh.geometry.isBufferGeometry ? mesh.geometry : bufferGeometry.fromGeometry(mesh.geometry), transform)
+      }
+    })
+    // }
+  }
+
+  /** Add a custom convex or concave shape. (Concave shapes can only be static) */
+  // originally copied from https://github.com/InfiniteLee/three-to-ammo
+  private addTriMeshShape(mesh: ExtendedObject3D, meshConfig: any = {}) {
+    const va = new Vector3()
+    const vb = new Vector3()
+    const vc = new Vector3()
+
+    meshConfig.type = 'mesh'
+    const shape = mesh.shape || 'convex' //  or 'concave'
+
+    const bta = new Ammo.btVector3()
+    const btb = new Ammo.btVector3()
+    const btc = new Ammo.btVector3()
+    const triMesh = new Ammo.btTriangleMesh(true, false)
+
+    this.iterateGeometries(mesh, meshConfig, (geo: any, transform: any) => {
+      const components = geo.attributes.position.array
+      if (geo.index) {
+        for (let i = 0; i < geo.index.count; i += 3) {
+          const ai = geo.index.array[i] * 3
+          const bi = geo.index.array[i + 1] * 3
+          const ci = geo.index.array[i + 2] * 3
+          va.set(components[ai], components[ai + 1], components[ai + 2]).applyMatrix4(transform)
+          vb.set(components[bi], components[bi + 1], components[bi + 2]).applyMatrix4(transform)
+          vc.set(components[ci], components[ci + 1], components[ci + 2]).applyMatrix4(transform)
+          bta.setValue(va.x, va.y, va.z)
+          btb.setValue(vb.x, vb.y, vb.z)
+          btc.setValue(vc.x, vc.y, vc.z)
+          triMesh.addTriangle(bta, btb, btc, false)
+        }
+      } else {
+        for (let i = 0; i < components.length; i += 9) {
+          va.set(components[i + 0], components[i + 1], components[i + 2]).applyMatrix4(transform)
+          vb.set(components[i + 3], components[i + 4], components[i + 5]).applyMatrix4(transform)
+          vc.set(components[i + 6], components[i + 7], components[i + 8]).applyMatrix4(transform)
+          bta.setValue(va.x, va.y, va.z)
+          btb.setValue(vb.x, vb.y, vb.z)
+          btc.setValue(vc.x, vc.y, vc.z)
+          triMesh.addTriangle(bta, btb, btc, false)
+        }
+      }
+    })
+
+    // btBvhTriangleMeshShape can be used for static objects only.
+    // https://stackoverflow.com/questions/32668218/concave-collision-detection-in-bullet
+
+    const collisionShape =
+      shape === 'convex'
+        ? new Ammo.btConvexTriangleMeshShape(triMesh, true)
+        : new Ammo.btBvhTriangleMeshShape(triMesh, true)
+
+    // Will be done by the addExisting method
+    // collisionShape.setMargin(0.05)
+    // this.addRigidBody(mesh, collisionShape, mass, pos, quat)
+    // this.addBodyProperties(mesh, meshConfig)
+
+    return collisionShape
   }
 
   private addBodyProperties(obj: ExtendedObject3D, config: any) {

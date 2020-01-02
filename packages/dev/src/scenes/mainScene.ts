@@ -3,9 +3,8 @@
  * https://medium.com/@bluemagnificent/intro-to-javascript-3d-physics-using-ammo-js-and-three-js-dd48df81f591
  */
 
-import { Object3D, Scene3D, ExtendedObject3D, Mesh } from 'enable3d'
+import { Object3D, Scene3D, ExtendedObject3D } from 'enable3d'
 import Robot from '../objects/robot'
-import CSG from 'enable3d/dist/threeWrapper/csg'
 
 export default class MainScene extends Scene3D {
   sphere: Object3D
@@ -34,29 +33,37 @@ export default class MainScene extends Scene3D {
     // this.third.haveSomeFun()
 
     // enable physics debugging
-    // this.third.physics.debug.enable()
-    // this.third.physics.debug.mode(3) // 1, 2 or 3
+    this.third.physics.debug.enable()
+    this.third.physics.debug.mode(3) // 1, 2 or 3
 
     // this.third.warpedStart({ quickStart: true, orbitControls: true })
 
     // start Phaser3D
     // this.third = new ThirdDimension(this, { quickStart: true, orbitControls: true })
 
-    // test CSG (Constructive Solid Geometry)
-    const box = this.third.make.box({ x: 0.75, y: 1.75, z: -0.25 })
-    const sphere = this.third.make.sphere({ radius: 0.5, x: 1, y: 2 })
+    // test CSG (Constructive Solid Geometry) with physics
+    const box = this.third.make.box({ x: 0.75, y: 2.75, z: -0.25 })
+    const sphere = this.third.make.sphere({ radius: 0.5, x: 1, y: 3 })
 
-    const int = this.third.mesh.intersect(box, sphere)
-    const sub = this.third.mesh.subtract(box, sphere)
-    const uni = this.third.mesh.union(box, sphere)
+    const int = this.third.mesh.intersect(box, sphere) as ExtendedObject3D
+    const sub = this.third.mesh.subtract(box, sphere) as ExtendedObject3D
+    const uni = this.third.mesh.union(box, sphere) as ExtendedObject3D
+    int.name = 'int'
+    sub.name = 'sub'
+    uni.name = 'uni'
 
     const mat = this.third.new.standardMaterial()
 
     const geometries = [int, sub, uni]
     geometries.forEach((geo, i) => {
       geo.position.setX((i - 1) * 2)
+      geo.position.setY(5)
+      geo.rotateX(10)
       geo.material = mat
       geo.castShadow = geo.receiveShadow = true
+      // Can be 'convex' or 'concave' (concave shapes are always static)
+      geo.shape = 'convex'
+      this.third.physics.add.existing(geo)
     })
 
     this.robot = Robot(this)
