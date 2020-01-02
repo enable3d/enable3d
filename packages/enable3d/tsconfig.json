@@ -18,6 +18,8 @@
     "noUnusedLocals": false,
     "noImplicitThis": true,
     "noImplicitAny": true,
-    "noImplicitReturns": true
-  }
+    "noImplicitReturns": true,
+    "allowJs": true
+  },
+  "include": ["./src/**/*", "./types/**/*"]
 }
