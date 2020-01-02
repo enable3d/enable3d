@@ -154,24 +154,14 @@ class AmmoPhysics extends EventEmitter {
   private setupPhysicsWorld() {
     var gravityConstant = -20
 
-    const collisionConfiguration = new Ammo.btSoftBodyRigidBodyCollisionConfiguration()
+    const collisionConfiguration = new Ammo.btDefaultCollisionConfiguration()
     const dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration)
     const broadphase = new Ammo.btDbvtBroadphase()
     const solver = new Ammo.btSequentialImpulseConstraintSolver()
-    const softBodySolver = new Ammo.btDefaultSoftBodySolver()
+    this.physicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration)
+    this.physicsWorld.setGravity(new Ammo.btVector3(0, gravityConstant, 0))
 
     this.dispatcher = dispatcher
-
-    this.physicsWorld = new Ammo.btSoftRigidDynamicsWorld(
-      dispatcher,
-      broadphase,
-      solver,
-      collisionConfiguration,
-      softBodySolver
-    )
-    this.physicsWorld.setGravity(new Ammo.btVector3(0, gravityConstant, 0))
-    this.physicsWorld.getWorldInfo().set_m_gravity(new Ammo.btVector3(0, gravityConstant, 0))
-
     this.tmpTrans = new Ammo.btTransform()
   }
 
@@ -195,13 +185,13 @@ class AmmoPhysics extends EventEmitter {
         // const flag1 = manifold.getBody1().getCollisionFlags()
 
         // @ts-ignore
-        const Xx0 = manifold.getBody0().Xx
+        const zs0 = manifold.getBody0().zs
         // @ts-ignore
-        const Xx1 = manifold.getBody1().Xx
+        const zs1 = manifold.getBody1().zs
         // @ts-ignore
-        const obj0 = Xx0 in this.objectsAmmo ? this.objectsAmmo[Xx0] : manifold.getBody0()
+        const obj0 = zs0 in this.objectsAmmo ? this.objectsAmmo[zs0] : manifold.getBody0()
         // @ts-ignore
-        const obj1 = Xx0 in this.objectsAmmo ? this.objectsAmmo[Xx1] : manifold.getBody1()
+        const obj1 = zs0 in this.objectsAmmo ? this.objectsAmmo[zs1] : manifold.getBody1()
 
         // check if a collision between these object has already been processed
         const combinedName = `${obj0.name}__${obj1.name}`
@@ -292,13 +282,13 @@ class AmmoPhysics extends EventEmitter {
     this.rigidBodies.push(threeObject)
 
     this.physicsWorld.addRigidBody(rigidBody)
-    // @ts-ignore
-    const Xx = rigidBody.Xx
+
+    const zs = Object.values(rigidBody)[0]
     // @ts-ignore
     rigidBody.name = threeObject.name
     threeObject.body = new PhysicsBody(this, rigidBody)
     threeObject.hasBody = true
-    this.objectsAmmo[Xx] = threeObject
+    this.objectsAmmo[zs] = threeObject
   }
 
   private addBodyProperties(obj: ExtendedObject3D, config: any) {

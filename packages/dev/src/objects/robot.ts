@@ -19,6 +19,7 @@ const Robot = (scene: MainScene) => {
         child.receiveShadow = true
       }
     })
+    robot.name = 'robot'
     robot.scale.set(0.05, 0.05, 0.05)
     robot.position.set(pos.x, pos.y, pos.z)
     robot.rotation.set(0, -Math.PI / 2, 0)
@@ -34,6 +35,7 @@ const Robot = (scene: MainScene) => {
       x: pos.x - 8,
       y: pos.y - 2,
       z: pos.z - 4,
+      name: 'ghost',
       collisionFlag: 4,
       mass: 0.0001
     })

@@ -11,7 +11,7 @@ import { XYZ } from '../types'
 
 export default class Constraints {
   // public tmpTrans: Ammo.btTransform
-  protected physicsWorld: Ammo.btSoftRigidDynamicsWorld
+  protected physicsWorld: Ammo.btDiscreteDynamicsWorld
 
   constructor() {}
   protected get addConstraints() {
