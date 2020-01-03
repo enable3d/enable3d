@@ -57,7 +57,7 @@ const { enable3d, Scene3d } = ENABLE3D
 ```ts
 // STEP 1: Add the libraries with "npm install phaser enable3d"
 import Phaser from 'phaser'
-import enable3d, { Scene3D } from 'enable3d'
+import enable3d, { Scene3D, Canvas } from 'enable3d'
 
 const config = {
   // STEP 2: Set type to Phaser.WEBGL
@@ -70,40 +70,43 @@ const config = {
     width: 1280,
     height: 720
   },
-  scene: [MainScene]
+  scene: [MainScene],
+  // STEP 3: Add a custom canvas
+  // The default Phaser canvas is not compatible with three.js
+  ...Canvas
 }
 
 window.addEventListener('load', () => {
-  // STEP 3: Wrap enable3d around your Phaser game.
+  // STEP 4: Wrap enable3d around your Phaser game.
   // (First copy all ammo file from 'node_modules/enable3d/lib/ammo' to your public folder.)
   enable3d(() => new Phaser.Game(config)).withPhysics('/js/ammo')
 })
 
-// STEP 4: Extend your Scene with Scene3D instead of Phaser.Scene
+// STEP 5: Extend your Scene with Scene3D instead of Phaser.Scene
 class MainScene extends Scene3D {
   constructor() {
     super({ key: 'MainScene' })
   }
 
   init() {
-    // STEP 5: Request a worm whole to the third dimension.
+    // STEP 6: Request a worm whole to the third dimension.
     this.requestThirdDimension()
   }
 
   create() {
-    // STEP 6: Drive through the hole into the third dimension.
+    // STEP 7: Drive through the hole into the third dimension.
     this.accessThirdDimension()
 
-    // STEP 7: Journey through the third dimension at warp speed.
+    // STEP 8: Journey through the third dimension at warp speed.
     this.third.warpSpeed()
 
-    // STEP 8: Add your first 3d object.
+    // STEP 9: Add your first 3d object.
     this.third.add.box()
 
-    // STEP 9: Add another box with physics enabled.
+    // STEP 10: Add another box with physics enabled.
     this.third.physics.add.box()
 
-    // STEP 10: Have fun using the third dimension in your awesome Phaser game.
+    // STEP 11: Have fun using the third dimension in your awesome Phaser game.
     this.third.haveSomeFun()
   }
 }
