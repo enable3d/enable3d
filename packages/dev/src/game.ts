@@ -13,7 +13,7 @@ const config: Phaser.Types.Core.GameConfig = {
     height: window.innerHeight // * window.devicePixelRatio
   },
   scene: [PreloadScene, MainScene],
-  ...Canvas
+  ...Canvas()
 }
 
 window.addEventListener('load', () => {

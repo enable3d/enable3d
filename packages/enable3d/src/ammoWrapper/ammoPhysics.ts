@@ -433,8 +433,6 @@ class AmmoPhysics extends EventEmitter {
   private addGround(groundConfig: GroundConfig, materialConfig: MaterialConfig = {}) {
     const ground = this.phaser3D.add.ground(groundConfig, materialConfig)
 
-    console.log(groundConfig, ground)
-
     // @ts-ignore
     const { width, height, depth } = ground.geometry.parameters
     const { position: pos, quaternion: quat } = ground

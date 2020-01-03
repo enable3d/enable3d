@@ -7,8 +7,6 @@
 // copied from https://phaser.io/examples/v3/view/game-config/custom-webgl-canvas
 // copied from https://github.com/mrdoob/three.js/blob/dev/src/renderers/WebGLRenderer.js
 
-import { WEBGL } from 'phaser'
-
 /**
  * The WebGL context created by Phaser does not meed the requirements of three.js.
  * So we create a custom canvas and merge the default contextAttributes from three.js into Phaser’s default contextAttributes.
@@ -73,4 +71,4 @@ const customCanvas = (): { canvas: HTMLCanvasElement; context: CanvasRenderingCo
   }
 }
 
-export default customCanvas()
+export default customCanvas

@@ -73,7 +73,7 @@ const config = {
   scene: [MainScene],
   // STEP 3: Add a custom canvas
   // The default Phaser canvas is not compatible with three.js
-  ...Canvas
+  ...Canvas()
 }
 
 window.addEventListener('load', () => {
