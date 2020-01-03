@@ -121,6 +121,7 @@ export interface GroundConfig extends BoxConfig {
 }
 
 export interface CylinderConfig extends XYZ, WH, Mass, CollisionFlag {
+  name?: string
   radiusTop?: number
   radiusBottom?: number
   height?: number

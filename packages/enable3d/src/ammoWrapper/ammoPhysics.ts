@@ -205,6 +205,7 @@ class AmmoPhysics extends EventEmitter {
 
         // check if a collision between these object has already been processed
         const combinedName = `${obj0.name}__${obj1.name}`
+        // console.log(combinedName)
         if (detectedCollisions.find(el => el.combinedName === combinedName)) {
           continue
         }
@@ -431,6 +432,8 @@ class AmmoPhysics extends EventEmitter {
 
   private addGround(groundConfig: GroundConfig, materialConfig: MaterialConfig = {}) {
     const ground = this.phaser3D.add.ground(groundConfig, materialConfig)
+
+    console.log(groundConfig, ground)
 
     // @ts-ignore
     const { width, height, depth } = ground.geometry.parameters

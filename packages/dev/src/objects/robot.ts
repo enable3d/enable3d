@@ -24,21 +24,25 @@ const Robot = (scene: MainScene) => {
     robot.position.set(pos.x, pos.y, pos.z)
     robot.rotation.set(0, -Math.PI / 2, 0)
     scene.third.add.existing(robot)
-    scene.third.physics.add.existing(robot)
+    scene.third.physics.add.existing(robot, { width: 3, depth: 3 })
 
     // not 100% sure how this works :/
     // robot.body.setAngularFactor(0, 1, 0)
 
     // sensor
-    let sensor = scene.third.physics.add.box({
-      ...pos,
-      x: pos.x - 8,
-      y: pos.y - 2,
-      z: pos.z - 4,
-      name: 'ghost',
-      collisionFlag: 4,
-      mass: 0.0001
-    })
+    let sensor = scene.third.physics.add.box(
+      {
+        ...pos,
+        x: pos.x - 8,
+        y: pos.y,
+        z: pos.z - 4,
+        height: 5,
+        name: 'ghost',
+        collisionFlag: 4,
+        mass: 0.0001
+      },
+      { standard: { transparent: true, opacity: 0.2 } }
+    )
 
     // This does not work :/
     // sensor.body.ammoBody.setAngularLowerLimit(0, 0, 0)

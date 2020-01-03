@@ -98,7 +98,7 @@ export default class Factories extends Textures {
   }
 
   protected makeBox(boxConfig: BoxConfig, materialConfig: MaterialConfig): ExtendedObject3D {
-    const { x, y, z, ...rest } = boxConfig
+    const { x, y, z, name, ...rest } = boxConfig
     const geometry = new BoxGeometry(
       rest.width || 1,
       rest.height || 1,
@@ -128,7 +128,7 @@ export default class Factories extends Textures {
   }
 
   protected makeCylinder(cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
-    const { x, y, z, ...rest } = cylinderConfig
+    const { x, y, z, name, ...rest } = cylinderConfig
     const geometry = new CylinderGeometry(
       rest.radiusTop || undefined,
       rest.radiusBottom || undefined,
