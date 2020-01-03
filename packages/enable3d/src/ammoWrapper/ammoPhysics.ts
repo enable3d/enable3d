@@ -193,18 +193,20 @@ class AmmoPhysics extends EventEmitter {
       for (let j = 0; j < num_contacts; j++) {
         // const flag0 = manifold.getBody0().getCollisionFlags()
         // const flag1 = manifold.getBody1().getCollisionFlags()
+        const key = Object.keys(manifold.getBody0())[0]
 
         // @ts-ignore
-        const zs0 = manifold.getBody0().zs
+        const ptr0 = manifold.getBody0()[key]
         // @ts-ignore
-        const zs1 = manifold.getBody1().zs
+        const ptr1 = manifold.getBody1()[key]
         // @ts-ignore
-        const obj0 = zs0 in this.objectsAmmo ? this.objectsAmmo[zs0] : manifold.getBody0()
+        const obj0 = ptr0 in this.objectsAmmo ? this.objectsAmmo[ptr0] : manifold.getBody0()
         // @ts-ignore
-        const obj1 = zs0 in this.objectsAmmo ? this.objectsAmmo[zs1] : manifold.getBody1()
+        const obj1 = ptr0 in this.objectsAmmo ? this.objectsAmmo[ptr1] : manifold.getBody1()
 
         // check if a collision between these object has already been processed
         const combinedName = `${obj0.name}__${obj1.name}`
+
         // console.log(combinedName)
         if (detectedCollisions.find(el => el.combinedName === combinedName)) {
           continue
@@ -294,12 +296,12 @@ class AmmoPhysics extends EventEmitter {
 
     this.physicsWorld.addRigidBody(rigidBody)
 
-    const zs = Object.values(rigidBody)[0]
+    const ptr = Object.values(rigidBody)[0]
     // @ts-ignore
     rigidBody.name = threeObject.name
     threeObject.body = new PhysicsBody(this, rigidBody)
     threeObject.hasBody = true
-    this.objectsAmmo[zs] = threeObject
+    this.objectsAmmo[ptr] = threeObject
   }
 
   // originally copied from https://github.com/InfiniteLee/three-to-ammo
