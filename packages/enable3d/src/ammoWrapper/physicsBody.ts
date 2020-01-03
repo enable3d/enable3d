@@ -89,6 +89,19 @@ class PhysicsBody {
   }
 
   /**
+   * Add the collision flags
+   * @param value 0 is DYNAMIC, 1 is STATIC, 2 is KINEMATIC, 4 GHOST
+   */
+  // https://github.com/bulletphysics/bullet3/blob/aae8048722f2596f7e2bdd52d2a1dcb52a218f2b/src/BulletCollision/CollisionDispatch/btCollisionObject.h#L128
+  public setCollisionFlags(value: number) {
+    this.ammoBody.setCollisionFlags(value)
+  }
+
+  public getCollisionFlags() {
+    this.ammoBody.getCollisionFlags()
+  }
+
+  /**
    * Set the restitution (bounciness)
    * @param value A number from 0 to 1.
    */
