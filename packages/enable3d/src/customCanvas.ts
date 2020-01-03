@@ -7,14 +7,15 @@
 // copied from https://phaser.io/examples/v3/view/game-config/custom-webgl-canvas
 // copied from https://github.com/mrdoob/three.js/blob/dev/src/renderers/WebGLRenderer.js
 
+import { WEBGL } from 'three/examples/jsm/WebGL'
+
 /**
  * The WebGL context created by Phaser does not meed the requirements of three.js.
  * So we create a custom canvas and merge the default contextAttributes from three.js into Phaser’s default contextAttributes.
  */
 const customCanvas = (): { canvas: HTMLCanvasElement; context: CanvasRenderingContext2D } => {
   // create canvas
-  // @ts-ignore
-  var myCustomCanvas: HTMLCanvasElement = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas')
+  const myCustomCanvas: any = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas')
   myCustomCanvas.id = 'myCustomCanvas'
 
   document.body.appendChild(myCustomCanvas)
@@ -35,7 +36,7 @@ const customCanvas = (): { canvas: HTMLCanvasElement; context: CanvasRenderingCo
 
   // threejs's context attributes
   // https://github.com/mrdoob/three.js/blob/9549909d9c631aaa20d81c2fec863a470fa2e3f0/src/renderers/WebGLRenderer.js#L192
-  var contextAttributes = {
+  const contextAttributes = {
     alpha: _alpha,
     depth: _depth,
     stencil: _stencil,
@@ -48,7 +49,7 @@ const customCanvas = (): { canvas: HTMLCanvasElement; context: CanvasRenderingCo
   }
 
   //  default context config for phaser
-  var contextCreationConfig = {
+  const contextCreationConfig = {
     alpha: false,
     depth: false,
     antialias: true,
@@ -61,9 +62,10 @@ const customCanvas = (): { canvas: HTMLCanvasElement; context: CanvasRenderingCo
     ...contextAttributes
   }
 
+  const webgl = WEBGL.isWebGL2Available() ? 'webgl2' : 'webgl'
+
   // create context
-  // @ts-ignore
-  var myCustomContext: CanvasRenderingContext2D = myCustomCanvas.getContext('webgl', contextCreationConfig)
+  const myCustomContext: any = myCustomCanvas.getContext(webgl, contextCreationConfig)
 
   return {
     canvas: myCustomCanvas,
