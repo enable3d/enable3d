@@ -88,6 +88,9 @@ export interface BoxObject {
 export interface GroundObject {
   (groundConfig: GroundConfig, materialConfig?: MaterialConfig): ExtendedObject3D
 }
+export interface CylinderObject {
+  (cylinderConfig?: CylinderConfig, materialConfig?: MaterialConfig): ExtendedObject3D
+}
 
 export interface SphereConfig extends XYZ, Mass, CollisionFlag {
   name?: string
@@ -115,4 +118,15 @@ export interface BoxConfig extends XYZ, WH, Mass, CollisionFlag {
 export interface GroundConfig extends BoxConfig {
   width: number
   height: number
+}
+
+export interface CylinderConfig extends XYZ, WH, Mass, CollisionFlag {
+  radiusTop?: number
+  radiusBottom?: number
+  height?: number
+  radiusSegments?: number
+  heightSegments?: number
+  openEnded?: boolean
+  thetaStart?: number
+  thetaLength?: number
 }

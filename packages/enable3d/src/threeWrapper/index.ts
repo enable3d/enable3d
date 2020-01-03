@@ -38,8 +38,10 @@ import {
   BoxObject,
   SphereObject,
   GroundObject,
+  CylinderObject,
   Phaser3DConfig,
-  MaterialConfig
+  MaterialConfig,
+  CylinderConfig
 } from '../types'
 import ExtendedObject3D from '../extendedObject3D'
 import applyMixins from '../helpers/applyMixins'
@@ -140,6 +142,7 @@ class ThreeWrapper {
     box: BoxObject
     ground: GroundObject
     sphere: SphereObject
+    cylinder: CylinderObject
   } {
     return {
       //  Lights
@@ -160,7 +163,9 @@ class ThreeWrapper {
         this.addGround(groundConfig, materialConfig),
       //...
       sphere: (sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}) =>
-        this.addSphere(sphereConfig, materialConfig)
+        this.addSphere(sphereConfig, materialConfig),
+      cylinder: (cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}) =>
+        this.addCylinder(cylinderConfig, materialConfig)
       //...
     }
   }
@@ -173,11 +178,13 @@ class ThreeWrapper {
     return THREE_Math.radToDeg(number)
   }
 
-  public get make(): { box: BoxObject; sphere: SphereObject } {
+  public get make(): { box: BoxObject; sphere: SphereObject; cylinder: CylinderObject } {
     return {
       box: (boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}) => this.makeBox(boxConfig, materialConfig),
       sphere: (sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}) =>
-        this.makeSphere(sphereConfig, materialConfig)
+        this.makeSphere(sphereConfig, materialConfig),
+      cylinder: (cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}) =>
+        this.makeCylinder(cylinderConfig, materialConfig)
     }
   }
 

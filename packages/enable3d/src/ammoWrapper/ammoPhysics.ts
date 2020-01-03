@@ -7,7 +7,7 @@
 import logger from '../helpers/logger'
 import PhysicsBody from './physicsBody'
 import ThreeWrapper from '../threeWrapper'
-import { SphereConfig, GroundConfig, MaterialConfig, BoxConfig } from '../types'
+import { SphereConfig, GroundConfig, MaterialConfig, BoxConfig, CylinderConfig } from '../types'
 import applyMixins from '../helpers/applyMixins'
 import ExtendedObject3D from '../extendedObject3D'
 import EventEmitter from 'eventemitter3'
@@ -93,7 +93,9 @@ class AmmoPhysics extends EventEmitter {
         this.addSphere(sphereConfig, materialConfig),
       ground: (groundConfig: GroundConfig, materialConfig: MaterialConfig = {}) =>
         this.addGround({ ...groundConfig, mass: 0 }, materialConfig),
-      box: (boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}) => this.addBox(boxConfig, materialConfig)
+      box: (boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}) => this.addBox(boxConfig, materialConfig),
+      cylinder: (cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}) =>
+        this.addCylinder(cylinderConfig, materialConfig)
     }
   }
 
@@ -442,6 +444,24 @@ class AmmoPhysics extends EventEmitter {
     this.addBodyProperties(ground, groundConfig)
 
     return ground
+  }
+
+  private addCylinder(cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}) {
+    const cylinder = this.phaser3D.add.cylinder(cylinderConfig, materialConfig)
+
+    // @ts-ignore
+    const { radiusTop = 1, radiusBottom = 1, height = 1 } = cylinder.geometry.parameters
+    const { position: pos, quaternion: quat } = cylinder
+    const { mass = 1 } = cylinderConfig
+
+    const btHalfExtents = new Ammo.btVector3(radiusTop, height * 0.5, radiusBottom)
+    const ballShape = new Ammo.btCylinderShape(btHalfExtents)
+    ballShape.setMargin(0.05)
+
+    this.addRigidBody(cylinder, ballShape, mass, pos, quat)
+    this.addBodyProperties(cylinder, cylinderConfig)
+
+    return cylinder
   }
 }
 

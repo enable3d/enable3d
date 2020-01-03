@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { MaterialConfig, SphereConfig, BoxConfig, GroundConfig, XYZ } from '../types'
+import { MaterialConfig, SphereConfig, BoxConfig, GroundConfig, XYZ, CylinderConfig } from '../types'
 import {
   SphereGeometry,
   BoxGeometry,
@@ -20,7 +20,8 @@ import {
   MeshPhongMaterial,
   LineBasicMaterial,
   PointsMaterial,
-  MeshBasicMaterial
+  MeshBasicMaterial,
+  CylinderGeometry
 } from 'three'
 import Textures from './textures'
 import ExtendedObject3D from '../extendedObject3D'
@@ -83,7 +84,7 @@ export default class Factories extends Textures {
       thetaStart,
       thetaLength
     )
-    const material = this.createMaterialNEW(materialConfig)
+    const material = this.createMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'sphere'
@@ -96,23 +97,17 @@ export default class Factories extends Textures {
     return obj
   }
 
-  protected makeBox(
-    {
-      width = 1,
-      height = 1,
-      depth = 1,
-      x = 0,
-      y = 0,
-      z = 0,
-      name = undefined,
-      widthSegments = undefined,
-      heightSegments = undefined,
-      depthSegments = undefined
-    }: BoxConfig,
-    materialConfig: MaterialConfig
-  ): ExtendedObject3D {
-    const geometry = new BoxGeometry(width, height, depth, widthSegments, heightSegments, depthSegments)
-    const material = this.createMaterialNEW(materialConfig)
+  protected makeBox(boxConfig: BoxConfig, materialConfig: MaterialConfig): ExtendedObject3D {
+    const { x, y, z, ...rest } = boxConfig
+    const geometry = new BoxGeometry(
+      rest.width || 1,
+      rest.height || 1,
+      rest.depth || 1,
+      rest.widthSegments || undefined,
+      rest.heightSegments || undefined,
+      rest.depthSegments || undefined
+    )
+    const material = this.createMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
     mesh.type = 'box'
@@ -125,13 +120,39 @@ export default class Factories extends Textures {
     return obj
   }
 
-  protected addGround(groundConfig: GroundConfig, materialConfig: MaterialConfig): ExtendedObject3D {
+  protected addGround(groundConfig: GroundConfig, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const obj = this.makeBox(groundConfig, materialConfig)
     obj.rotateX(THREE_Math.degToRad(90))
     this.scene.add(obj)
     return obj
   }
-  protected createMaterialNEW(materialConfig: MaterialConfig = {}) {
+
+  protected makeCylinder(cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+    const { x, y, z, ...rest } = cylinderConfig
+    const geometry = new CylinderGeometry(
+      rest.radiusTop || undefined,
+      rest.radiusBottom || undefined,
+      rest.height || undefined,
+      rest.radiusSegments || undefined,
+      rest.heightSegments || undefined,
+      rest.openEnded || undefined,
+      rest.thetaStart || undefined,
+      rest.thetaLength || undefined
+    )
+    const material = this.createMaterial(materialConfig)
+    const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
+    mesh.name = name || `body_id_${mesh.id}`
+    mesh.shape = 'cylinder'
+    return mesh
+  }
+
+  protected addCylinder(cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+    const obj = this.makeCylinder(cylinderConfig, materialConfig)
+    this.scene.add(obj)
+    return obj
+  }
+
+  protected createMaterial(materialConfig: MaterialConfig = {}) {
     const type = Object.keys(materialConfig)[0]
     let material: Material
 
