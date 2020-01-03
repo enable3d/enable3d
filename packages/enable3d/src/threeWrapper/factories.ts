@@ -40,7 +40,7 @@ export default class Factories extends Textures {
   }
 
   protected createMesh(geometry: any, material: Material, position: XYZ): Line | Points | Mesh {
-    const { x = 1, y = 1, z = 1 } = position
+    const { x = 0, y = 0, z = 0 } = position
 
     let obj
     switch (material.type) {
@@ -59,30 +59,16 @@ export default class Factories extends Textures {
 
     return obj
   }
-  protected makeSphere(
-    {
-      radius = 1,
-      widthSegments = 16,
-      heightSegments = 12,
-      x = 0,
-      y = 0,
-      z = 0,
-      name = undefined,
-      phiStart = undefined,
-      phiLength = undefined,
-      thetaStart = undefined,
-      thetaLength = undefined
-    }: SphereConfig,
-    materialConfig: MaterialConfig
-  ): ExtendedObject3D {
+  protected makeSphere(sphereConfig: SphereConfig, materialConfig: MaterialConfig): ExtendedObject3D {
+    const { x, y, z, name, ...rest } = sphereConfig
     const geometry = new SphereGeometry(
-      radius,
-      widthSegments,
-      heightSegments,
-      phiStart,
-      phiLength,
-      thetaStart,
-      thetaLength
+      rest.radius || 1,
+      rest.widthSegments || 16,
+      rest.heightSegments || 12,
+      rest.phiStart || undefined,
+      rest.phiLength || undefined,
+      rest.thetaStart || undefined,
+      rest.thetaLength || undefined
     )
     const material = this.createMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
