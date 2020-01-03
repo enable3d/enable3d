@@ -13,15 +13,6 @@ export default class Lights {
     const light = new DirectionalLight(color, intensity)
     light.position.set(x, y, z)
     light.castShadow = true
-
-    const d = 50
-    light.shadow.camera.top = d
-    light.shadow.camera.bottom = -d
-    light.shadow.camera.left = -d
-    light.shadow.camera.right = d
-
-    light.shadow.mapSize.set(4096, 4096)
-
     this.scene.add(light)
     return light
   }

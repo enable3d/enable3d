@@ -94,7 +94,14 @@ class ThirdDimension extends ThreeWrapper {
 
     if (features.includes('light')) {
       this.add.ambientLight({ color: 0x707070 })
-      this.add.directionalLight({ skyColor: 0xffffff, intensity: 0.8, x: -10, y: 18, z: 5 })
+      const light = this.add.directionalLight({ skyColor: 0xffffff, intensity: 0.8, x: -10, y: 18, z: 5 })
+      const d = 50
+      light.shadow.camera.top = d
+      light.shadow.camera.bottom = -d
+      light.shadow.camera.left = -d
+      light.shadow.camera.right = d
+
+      light.shadow.mapSize.set(1024, 1024)
     }
 
     if (features.includes('lookAtCenter')) {
