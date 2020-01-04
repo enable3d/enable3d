@@ -62,10 +62,12 @@ export default class Factories extends Textures {
   }
 
   protected makeExtrude(extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig) {
-    const { x, y, z, name, shape, ...rest } = extrudeConfig
+    const { x, y, z, name, shape, autoCenter = true, ...rest } = extrudeConfig
     const geometry = new ExtrudeGeometry(shape, rest)
     const material = this.createMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
+    // auto adjust the center for custom shapes
+    if (autoCenter) mesh.geometry.center()
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'extrude'
     return mesh

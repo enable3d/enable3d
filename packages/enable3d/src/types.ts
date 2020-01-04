@@ -140,4 +140,5 @@ export interface CylinderConfig extends XYZ, WH, Mass, CollisionFlag {
 export interface ExtrudeConfig extends XYZ, Mass, CollisionFlag, ExtrudeGeometryOptions {
   name?: string
   shape: Shape
+  autoCenter?: boolean
 }

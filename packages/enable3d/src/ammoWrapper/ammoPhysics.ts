@@ -116,7 +116,7 @@ class AmmoPhysics extends EventEmitter {
 
   private addExisting(object: ExtendedObject3D, config: any = {}): void {
     const { position: pos, quaternion: quat, shape, hasBody } = object
-    const { width = 1, height = 1, depth = 1 } = config
+    const { width = 1, height = 1, depth = 1, autoCenter = true } = config
     // @ts-ignore
     const params = object?.geometry?.parameters
     const hasShape = object.hasOwnProperty('shape')
@@ -128,6 +128,9 @@ class AmmoPhysics extends EventEmitter {
       logger(`Object "${object.name}" already has a physical body!`)
       return
     }
+
+    // auto adjust the center for custom shapes
+    if (autoCenter && (shape === 'convex' || shape === 'concave')) object.geometry.center()
 
     let Shape
     if (hasShape) {
