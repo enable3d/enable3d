@@ -38,6 +38,13 @@ export default class MainScene extends Scene3D {
 
     // this.third.warpedStart({ quickStart: true, orbitControls: true })
 
+    // test extrude
+    const shape = this.third.new.shape()
+    shape.arc(0, 0, 4, 0, Math.PI, false)
+    shape.arc(4, 0, 3, Math.PI, 2 * Math.PI, true)
+    const curve1 = this.third.add.extrude({ y: 2, shape, curveSegments: 10, depth: 1, bevelEnabled: false })
+    const curve2 = this.third.physics.add.extrude({ y: 10, shape, curveSegments: 10, depth: 1, bevelEnabled: false })
+
     // start Phaser3D
     // this.third = new ThirdDimension(this, { quickStart: true, orbitControls: true })
 

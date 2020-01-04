@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { MaterialConfig, SphereConfig, BoxConfig, GroundConfig, XYZ, CylinderConfig } from '../types'
+import { MaterialConfig, SphereConfig, BoxConfig, GroundConfig, XYZ, CylinderConfig, ExtrudeConfig } from '../types'
 import {
   SphereGeometry,
   BoxGeometry,
@@ -21,7 +21,8 @@ import {
   LineBasicMaterial,
   PointsMaterial,
   MeshBasicMaterial,
-  CylinderGeometry
+  CylinderGeometry,
+  ExtrudeGeometry
 } from 'three'
 import Textures from './textures'
 import ExtendedObject3D from '../extendedObject3D'
@@ -59,6 +60,23 @@ export default class Factories extends Textures {
 
     return obj
   }
+
+  protected makeExtrude(extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig) {
+    const { x, y, z, name, shape, ...rest } = extrudeConfig
+    const geometry = new ExtrudeGeometry(shape, rest)
+    const material = this.createMaterial(materialConfig)
+    const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
+    mesh.name = name || `body_id_${mesh.id}`
+    mesh.shape = 'extrude'
+    return mesh
+  }
+
+  protected addExtrude(extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+    const obj = this.makeExtrude(extrudeConfig, materialConfig)
+    this.scene.add(obj)
+    return obj
+  }
+
   protected makeSphere(sphereConfig: SphereConfig, materialConfig: MaterialConfig): ExtendedObject3D {
     const { x, y, z, name, ...rest } = sphereConfig
     const geometry = new SphereGeometry(

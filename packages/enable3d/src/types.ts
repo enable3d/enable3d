@@ -12,7 +12,9 @@ import {
   PointsMaterialParameters,
   MeshNormalMaterialParameters,
   PerspectiveCamera as THREE_PerspectiveCamera,
-  OrthographicCamera as THREE_OrthographicCamera
+  OrthographicCamera as THREE_OrthographicCamera,
+  Shape,
+  ExtrudeGeometryOptions
 } from 'three'
 import ExtendedObject3D from './extendedObject3D'
 
@@ -91,6 +93,9 @@ export interface GroundObject {
 export interface CylinderObject {
   (cylinderConfig?: CylinderConfig, materialConfig?: MaterialConfig): ExtendedObject3D
 }
+export interface ExtrudeObject {
+  (extrudeConfig: ExtrudeConfig, materialConfig?: MaterialConfig): ExtendedObject3D
+}
 
 export interface SphereConfig extends XYZ, Mass, CollisionFlag {
   name?: string
@@ -130,4 +135,9 @@ export interface CylinderConfig extends XYZ, WH, Mass, CollisionFlag {
   openEnded?: boolean
   thetaStart?: number
   thetaLength?: number
+}
+
+export interface ExtrudeConfig extends XYZ, Mass, CollisionFlag, ExtrudeGeometryOptions {
+  name?: string
+  shape: Shape
 }

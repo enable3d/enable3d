@@ -7,7 +7,7 @@
 import logger from '../helpers/logger'
 import PhysicsBody from './physicsBody'
 import ThreeWrapper from '../threeWrapper'
-import { SphereConfig, GroundConfig, MaterialConfig, BoxConfig, CylinderConfig } from '../types'
+import { SphereConfig, GroundConfig, MaterialConfig, BoxConfig, CylinderConfig, ExtrudeConfig } from '../types'
 import applyMixins from '../helpers/applyMixins'
 import ExtendedObject3D from '../extendedObject3D'
 import EventEmitter from 'eventemitter3'
@@ -95,7 +95,9 @@ class AmmoPhysics extends EventEmitter {
         this.addGround({ ...groundConfig, mass: 0 }, materialConfig),
       box: (boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}) => this.addBox(boxConfig, materialConfig),
       cylinder: (cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}) =>
-        this.addCylinder(cylinderConfig, materialConfig)
+        this.addCylinder(cylinderConfig, materialConfig),
+      extrude: (extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig = {}) =>
+        this.addExtrude(extrudeConfig, materialConfig)
     }
   }
 
@@ -396,6 +398,21 @@ class AmmoPhysics extends EventEmitter {
 
     obj.body.ammoBody.setCollisionFlags(collisionFlag)
     obj.body.ammoBody.setFriction(friction)
+  }
+
+  private addExtrude(extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig = {}) {
+    const object = this.phaser3D.add.extrude(extrudeConfig, materialConfig)
+
+    const { position: pos, quaternion: quat } = object
+    const { mass = 1 } = extrudeConfig
+
+    const shape = this.addTriMeshShape(object, extrudeConfig)
+    shape.setMargin(0.05)
+
+    this.addRigidBody(object, shape, mass, pos, quat)
+    this.addBodyProperties(object, extrudeConfig)
+
+    return object
   }
 
   private addSphere(sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}) {

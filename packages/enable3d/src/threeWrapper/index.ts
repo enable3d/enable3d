@@ -28,7 +28,8 @@ import {
   Quaternion,
   PCFSoftShadowMap,
   MeshStandardMaterial,
-  MeshStandardMaterialParameters
+  MeshStandardMaterialParameters,
+  Shape
 } from 'three/src/Three'
 
 import {
@@ -41,7 +42,9 @@ import {
   CylinderObject,
   Phaser3DConfig,
   MaterialConfig,
-  CylinderConfig
+  CylinderConfig,
+  ExtrudeConfig,
+  ExtrudeObject
 } from '../types'
 import ExtendedObject3D from '../extendedObject3D'
 import applyMixins from '../helpers/applyMixins'
@@ -99,6 +102,8 @@ class ThreeWrapper {
       object3D: () => new Object3D(),
       /** An extended THREE.js Object3D with useful properties and methods. */
       extendedObject3D: () => new ExtendedObject3D(),
+      /** Create a Path Shape */
+      shape: () => new Shape(),
       color: (color?: string | number | Color | undefined) => new Color(color),
       box3: () => new Box3(),
       box3Helper: (box3: Box3) => new Box3Helper(box3),
@@ -143,6 +148,7 @@ class ThreeWrapper {
     ground: GroundObject
     sphere: SphereObject
     cylinder: CylinderObject
+    extrude: ExtrudeObject
   } {
     return {
       //  Lights
@@ -165,7 +171,9 @@ class ThreeWrapper {
       sphere: (sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.addSphere(sphereConfig, materialConfig),
       cylinder: (cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}) =>
-        this.addCylinder(cylinderConfig, materialConfig)
+        this.addCylinder(cylinderConfig, materialConfig),
+      extrude: (extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig = {}) =>
+        this.addExtrude(extrudeConfig, materialConfig)
       //...
     }
   }
@@ -178,13 +186,15 @@ class ThreeWrapper {
     return THREE_Math.radToDeg(number)
   }
 
-  public get make(): { box: BoxObject; sphere: SphereObject; cylinder: CylinderObject } {
+  public get make(): { box: BoxObject; sphere: SphereObject; cylinder: CylinderObject; extrude: ExtrudeObject } {
     return {
       box: (boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}) => this.makeBox(boxConfig, materialConfig),
       sphere: (sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.makeSphere(sphereConfig, materialConfig),
       cylinder: (cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}) =>
-        this.makeCylinder(cylinderConfig, materialConfig)
+        this.makeCylinder(cylinderConfig, materialConfig),
+      extrude: (extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig = {}) =>
+        this.makeExtrude(extrudeConfig, materialConfig)
     }
   }
 
