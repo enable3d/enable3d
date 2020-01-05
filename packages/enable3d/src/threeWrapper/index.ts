@@ -29,7 +29,8 @@ import {
   PCFSoftShadowMap,
   MeshStandardMaterial,
   MeshStandardMaterialParameters,
-  Shape
+  Shape,
+  Group
 } from 'three/src/Three'
 
 import {
@@ -104,13 +105,14 @@ class ThreeWrapper {
       extendedObject3D: () => new ExtendedObject3D(),
       /** Create a Path Shape */
       shape: () => new Shape(),
+      group: () => new Group(),
       color: (color?: string | number | Color | undefined) => new Color(color),
       box3: () => new Box3(),
       box3Helper: (box3: Box3) => new Box3Helper(box3),
       boxHelper: (mesh: Mesh) => new BoxHelper(mesh),
       animationMixer: (root: Object3D) => this.animationMixer(root),
-      vector2: (x: number, y: number) => new Vector2(x, y),
-      vector3: (x: number, y: number, z: number) => new Vector3(x, y, z),
+      vector2: (x?: number, y?: number) => new Vector2(x, y),
+      vector3: (x?: number, y?: number, z?: number) => new Vector3(x, y, z),
       euler: (x: number, y: number, z: number) => new Euler(x, y, z, 'XYZ'),
       quaternion: (x?: number, y?: number, z?: number, w?: number) => new Quaternion(x, y, z, w),
       standardMaterial: (parameters?: MeshStandardMaterialParameters) => new MeshStandardMaterial(parameters)

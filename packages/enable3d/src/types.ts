@@ -20,7 +20,7 @@ import ExtendedObject3D from './extendedObject3D'
 
 export { ExtendedObject3D }
 export { AnimationAction } from 'three/src/animation/AnimationAction'
-export { AnimationMixer, AnimationClip, Object3D, Mesh, Line, Points } from 'three'
+export { AnimationMixer, AnimationClip, Object3D, Mesh, Line, Points, Group } from 'three'
 
 export interface Phaser3DConfig {
   anisotropy?: number
