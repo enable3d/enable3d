@@ -348,6 +348,7 @@ class AmmoPhysics extends EventEmitter {
 
     meshConfig.type = 'mesh'
     const shape = mesh.shape || 'convex' //  or 'concave'
+    const { scale } = mesh
 
     const bta = new Ammo.btVector3()
     const btb = new Ammo.btVector3()
@@ -381,6 +382,8 @@ class AmmoPhysics extends EventEmitter {
         }
       }
     })
+
+    triMesh.setScaling(new Ammo.btVector3(scale.x, scale.y, scale.z))
 
     // btBvhTriangleMeshShape can be used for static objects only.
     // https://stackoverflow.com/questions/32668218/concave-collision-detection-in-bullet
