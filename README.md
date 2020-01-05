@@ -19,7 +19,8 @@ Written in TypeScript, uses three.js and ammo.js, brings the third dimension to 
   <a href="#key-features">Key Features</a> •
   <a href="#examples">Examples</a> •
   <a href="#get-started">Get Started</a> •
-  <a href="#how-to-use">How To Use</a> •
+  <a href="#how-to-use-with-phaser">Use with Phaser</a> •
+  <a href="#standalone-mode">Standalone Mode</a> •
   <a href="#phaser-starter-template">Phaser Starter Template</a> •
   <a href="#documentation">Documentation</a> •
   <a href="#license">License</a>
@@ -52,7 +53,7 @@ const { enable3d, Scene3d } = ENABLE3D
 // now use enable3d and Scene3d in your project
 ```
 
-## How to use
+## How to use with Phaser
 
 ```ts
 // STEP 1: Add the libraries with "npm install phaser enable3d"
@@ -111,6 +112,10 @@ class MainScene extends Scene3D {
   }
 }
 ```
+
+## Standalone Mode
+
+At the moment enable3d can only be used together with Phaser.
 
 ## Phaser Starter Template
 
