@@ -51,7 +51,6 @@ class PhysicsBody {
   public setVelocity(x: number, y: number, z: number) {
     this.ammoBody.setLinearVelocity(new Ammo.btVector3(x, y, z))
   }
-
   public setVelocityX(value: number) {
     this.ammoBody.setLinearVelocity(new Ammo.btVector3(value, this.velocity.y, this.velocity.z))
   }
@@ -62,6 +61,9 @@ class PhysicsBody {
     this.ammoBody.setLinearVelocity(new Ammo.btVector3(this.velocity.x, this.velocity.y, value))
   }
 
+  public setAngularVelocity(x: number, y: number, z: number) {
+    this.ammoBody.setAngularVelocity(new Ammo.btVector3(x, y, z))
+  }
   public setAngularVelocityX(value: number) {
     this.ammoBody.setAngularVelocity(new Ammo.btVector3(value, this.angularVelocity.y, this.angularVelocity.z))
   }
@@ -75,15 +77,12 @@ class PhysicsBody {
   public applyForce(x: number, y: number, z: number) {
     this.ammoBody.applyCentralImpulse(new Ammo.btVector3(x, y, z))
   }
-
   public applyForceX(value: number) {
     this.ammoBody.applyCentralImpulse(new Ammo.btVector3(value, 0, 0))
   }
-
   public applyForceY(value: number) {
     this.ammoBody.applyCentralImpulse(new Ammo.btVector3(0, value, 0))
   }
-
   public applyForceZ(value: number) {
     this.ammoBody.applyCentralImpulse(new Ammo.btVector3(0, 0, value))
   }
@@ -96,21 +95,38 @@ class PhysicsBody {
   public setCollisionFlags(value: number) {
     this.ammoBody.setCollisionFlags(value)
   }
-
+  /**
+   * Get the collision flags
+   * @param value 0 is DYNAMIC, 1 is STATIC, 2 is KINEMATIC, 4 GHOST
+   */
   public getCollisionFlags() {
     this.ammoBody.getCollisionFlags()
   }
 
   /**
-   * Set the restitution (bounciness)
+   * Set the restitution (same as bounciness)
    * @param value A number from 0 to 1.
    */
   public setRestitution(value: number) {
     this.ammoBody.setRestitution(value)
   }
+  /**
+   * Set the bounciness (same as restitution)
+   * @param value A number from 0 to 1.
+   */
+  public setBounciness(value: number) {
+    this.setRestitution(value)
+  }
 
+  public setLinearFactor(x: number, y: number, z: number) {
+    this.ammoBody.setLinearFactor(new Ammo.btVector3(x, y, z))
+  }
   public setAngularFactor(x: number, y: number, z: number) {
     this.ammoBody.setAngularFactor(new Ammo.btVector3(x, y, z))
+  }
+
+  public setFriction(value: number) {
+    this.ammoBody.setFriction(value)
   }
 }
 
