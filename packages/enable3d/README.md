@@ -23,6 +23,10 @@ Install phaser and enable3d via npm:
 npm i phaser enable3d
 ```
 
-## Use
+## How to use
 
 Read more on [github.com](https://github.com/yandeu/enable3d#readme)
+
+## Examples
+
+Take a look at [enable3d.io](https://enable3d.io/examples.html)
