@@ -116,7 +116,7 @@ class AmmoPhysics extends EventEmitter {
 
   private addExisting(object: ExtendedObject3D, config: any = {}): void {
     const { position: pos, quaternion: quat, shape, hasBody } = object
-    const { width = 1, height = 1, depth = 1, autoCenter = true } = config
+    const { width = 1, height = 1, depth = 1, autoCenter = true, offset = undefined } = config
     // @ts-ignore
     const params = object?.geometry?.parameters
     const hasShape = object.hasOwnProperty('shape')
@@ -161,8 +161,10 @@ class AmmoPhysics extends EventEmitter {
     this.addBodyProperties(object, config)
 
     if (!hasShape) {
+      const defaultOffset = { x: 0, y: 0, z: 0 }
+      if (offset) object.body.offset = { ...defaultOffset, ...offset }
       // this will make sure the body will be aligned to the bottom
-      object.body.offset = { x: 0, y: -height / 2, z: 0 }
+      else object.body.offset = { ...defaultOffset, y: -height / 2 }
     }
   }
 
