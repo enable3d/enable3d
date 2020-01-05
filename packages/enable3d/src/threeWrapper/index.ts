@@ -6,6 +6,7 @@
 
 import { Scene as PhaserScene } from 'phaser'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js'
 
 import {
   PerspectiveCamera as THREE_PerspectiveCamera,
@@ -30,7 +31,9 @@ import {
   MeshStandardMaterial,
   MeshStandardMaterialParameters,
   Shape,
-  Group
+  Group,
+  ShapePath,
+  Path
 } from 'three/src/Three'
 
 import {
@@ -105,6 +108,10 @@ class ThreeWrapper {
       extendedObject3D: () => new ExtendedObject3D(),
       /** Create a Path Shape */
       shape: () => new Shape(),
+      shapePath: () => new ShapePath(),
+      path: () => new Path(),
+      svgLoader: () => new SVGLoader(),
+
       group: () => new Group(),
       color: (color?: string | number | Color | undefined) => new Color(color),
       box3: () => new Box3(),

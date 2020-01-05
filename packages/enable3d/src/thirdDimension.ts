@@ -7,7 +7,7 @@
 import ThreeWrapper from './threeWrapper'
 import AmmoPhysics from './ammoWrapper/ammoPhysics'
 import { Phaser3DConfig } from './types'
-import { Vector2, Vector3, RepeatWrapping } from 'three'
+import { Vector2, Vector3, RepeatWrapping, Shape } from 'three'
 import ExtendedObject3D from './extendedObject3D'
 import logger from './helpers/logger'
 
@@ -175,9 +175,29 @@ class ThirdDimension extends ThreeWrapper {
 
   get transform() {
     return {
+      fromSVGtoShape: (key: string, isCCW?: boolean, noHoles?: boolean) =>
+        this.transformFromSVGtoShape(key, isCCW, noHoles),
       from3dto2d: (position: Vector3) => this.transformFrom3dto2d(position),
       from2dto3d: (x: number, y: number, z: number = 0) => this.transformFrom2dto3d(x, y, z)
     }
+  }
+
+  /**
+   * Transforms your svg files to paths. First load your svg files using 'this.load.html(path_to_file)' in preload().
+   */
+  private transformFromSVGtoShape(key: string, isCCW: boolean = false, noHoles?: boolean) {
+    const svg = this.root.cache.html.get(key)
+    if (svg) {
+      const svgLoader = this.new.svgLoader()
+      const shapes: Shape[] = []
+      svgLoader.parse(svg).paths.forEach(path => {
+        path.toShapes(isCCW, noHoles).forEach(shape => {
+          shapes.push(shape)
+        })
+      })
+      return shapes
+    }
+    return []
   }
 
   private transformFrom3dto2d(position: Vector3): Vector2 {
