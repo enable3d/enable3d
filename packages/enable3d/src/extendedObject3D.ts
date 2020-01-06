@@ -28,6 +28,7 @@ class ExtendedObject3D extends Object3D {
   mixer?: AnimationMixer
   anims: { [key: string]: AnimationClip } = {}
   action: AnimationAction
+  currentAnimation: string = ''
 
   setAction(name: string) {
     if (this.mixer && this.anims.hasOwnProperty(name)) {
@@ -36,6 +37,7 @@ class ExtendedObject3D extends Object3D {
       this.mixer.stopAllAction()
       action.fadeIn(0.5)
       action.play()
+      this.currentAnimation = name
     } else {
       logger(`[Phaser3D] Can't set animation ${name}`)
     }
