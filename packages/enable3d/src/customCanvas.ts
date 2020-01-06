@@ -9,18 +9,26 @@
 
 import { WEBGL } from 'three/examples/jsm/WebGL'
 
+interface CustomCanvasConfig {
+  antialias?: boolean
+}
+
 /**
  * The WebGL context created by Phaser does not meed the requirements of three.js.
  * So we create a custom canvas and merge the default contextAttributes from three.js into Phaser’s default contextAttributes.
  */
-const customCanvas = (): { canvas: HTMLCanvasElement; context: CanvasRenderingContext2D } => {
+const customCanvas = (
+  customCanvasConfig: CustomCanvasConfig = {}
+): { canvas: HTMLCanvasElement; context: CanvasRenderingContext2D } => {
+  const { antialias = true } = customCanvasConfig
+
   // create canvas
   const myCustomCanvas: any = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas')
   myCustomCanvas.id = 'myCustomCanvas'
 
   document.body.appendChild(myCustomCanvas)
 
-  const parameters: any = { antialias: true }
+  const parameters: any = { antialias }
 
   // https://github.com/mrdoob/three.js/blob/9549909d9c631aaa20d81c2fec863a470fa2e3f0/src/renderers/WebGLRenderer.js#L58
   const _alpha = parameters.alpha !== undefined ? parameters.alpha : false
