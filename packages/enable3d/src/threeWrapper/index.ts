@@ -58,6 +58,7 @@ import Textures from './textures'
 import Lights from './lights'
 import Factories from './factories'
 import CSG from './csg'
+import JoyStick from '../utils/joystick'
 
 interface ThreeGraphics extends Loaders, Cameras, Textures, Lights, Factories, CSG {}
 
@@ -98,6 +99,18 @@ class ThreeGraphics {
     root.events.on('update', (_time: number, delta: number) => {
       this.mixers?.forEach(mixer => mixer.update(delta / 1000))
     })
+  }
+
+  get controls() {
+    return {
+      add: this.addControls
+    }
+  }
+
+  private get addControls() {
+    return {
+      joystick: () => new JoyStick()
+    }
   }
 
   get new() {
