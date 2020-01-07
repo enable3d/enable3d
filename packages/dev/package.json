@@ -1,7 +1,7 @@
 {
   "name": "dev",
   "private": true,
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
   "dependencies": {
-    "enable3d": "^0.0.7",
+    "enable3d": "^0.0.8",
     "phaser": "^3.21.0"
   },
   "devDependencies": {
