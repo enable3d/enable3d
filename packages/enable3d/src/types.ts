@@ -16,7 +16,7 @@ import {
   Shape,
   ExtrudeGeometryOptions
 } from 'three'
-import ExtendedObject3D from './extendedObject3D'
+import ExtendedObject3D from './threeWrapper/extendedObject3D'
 
 export { ExtendedObject3D }
 export { AnimationAction } from 'three/src/animation/AnimationAction'

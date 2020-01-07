@@ -9,7 +9,7 @@
 // which as originally written by Copyright (c) 2011 Evan Wallace (http://madebyevan.com/), under the MIT license.
 
 import { Vector3, Geometry, Matrix3, Face3, Mesh, Matrix4 } from 'three'
-import ThreeWrapper from '.'
+import ThreeGraphics from '.'
 
 /**
  * CSG wrapper for enable3d

@@ -50,7 +50,7 @@ import {
   ExtrudeConfig,
   ExtrudeObject
 } from '../types'
-import ExtendedObject3D from '../extendedObject3D'
+import ExtendedObject3D from './extendedObject3D'
 import applyMixins from '../helpers/applyMixins'
 import Loaders from './loaders'
 import Cameras from './cameras'
@@ -59,9 +59,9 @@ import Lights from './lights'
 import Factories from './factories'
 import CSG from './csg'
 
-interface ThreeWrapper extends Loaders, Cameras, Textures, Lights, Factories, CSG {}
+interface ThreeGraphics extends Loaders, Cameras, Textures, Lights, Factories, CSG {}
 
-class ThreeWrapper {
+class ThreeGraphics {
   public scene: Scene
   private view: any
   protected renderer: WebGLRenderer
@@ -212,6 +212,6 @@ class ThreeWrapper {
   }
 }
 
-applyMixins(ThreeWrapper, [Loaders, Cameras, Textures, Lights, Factories, CSG])
+applyMixins(ThreeGraphics, [Loaders, Cameras, Textures, Lights, Factories, CSG])
 
-export default ThreeWrapper
+export default ThreeGraphics

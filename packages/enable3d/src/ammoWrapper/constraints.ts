@@ -61,10 +61,10 @@ export default class Constraints {
   }
 
   private lock(body: PhysicsBody, targetBody: PhysicsBody) {
-    const transform = this.getTransform(body.ammoBody, targetBody.ammoBody)
+    const transform = this.getTransform(body.ammo, targetBody.ammo)
     const constraint = new Ammo.btGeneric6DofConstraint(
-      body.ammoBody,
-      targetBody.ammoBody,
+      body.ammo,
+      targetBody.ammo,
       transform.body,
       transform.target,
       true
@@ -79,10 +79,10 @@ export default class Constraints {
   }
 
   private fixed(body: PhysicsBody, targetBody: PhysicsBody) {
-    const transform = this.getTransform(body.ammoBody, targetBody.ammoBody)
-    transform.body.setRotation(body.ammoBody.getWorldTransform().getRotation())
-    transform.target.setRotation(targetBody.ammoBody.getWorldTransform().getRotation())
-    const constraint = new Ammo.btFixedConstraint(body.ammoBody, targetBody.ammoBody, transform.body, transform.target)
+    const transform = this.getTransform(body.ammo, targetBody.ammo)
+    transform.body.setRotation(body.ammo.getWorldTransform().getRotation())
+    transform.target.setRotation(targetBody.ammo.getWorldTransform().getRotation())
+    const constraint = new Ammo.btFixedConstraint(body.ammo, targetBody.ammo, transform.body, transform.target)
     this.physicsWorld.addConstraint(constraint)
   }
 
@@ -97,10 +97,10 @@ export default class Constraints {
   ) {
     const { stiffness = 50, damping = 0.01, angularLock = false } = config
 
-    const transform = this.getTransform(body.ammoBody, targetBody.ammoBody)
+    const transform = this.getTransform(body.ammo, targetBody.ammo)
     const constraint = new Ammo.btGeneric6DofSpringConstraint(
-      body.ammoBody,
-      targetBody.ammoBody,
+      body.ammo,
+      targetBody.ammo,
       transform.body,
       transform.target,
       true
@@ -125,11 +125,11 @@ export default class Constraints {
   }
 
   private slider(body: PhysicsBody, targetBody: PhysicsBody) {
-    const transform = this.getTransform(body.ammoBody, targetBody.ammoBody)
+    const transform = this.getTransform(body.ammo, targetBody.ammo)
     //TODO: support setting linear and angular limits
     const constraint = new Ammo.btSliderConstraint(
-      body.ammoBody,
-      targetBody.ammoBody,
+      body.ammo,
+      targetBody.ammo,
       transform.body,
       transform.target,
       true
@@ -157,8 +157,8 @@ export default class Constraints {
     const axisV3 = new Ammo.btVector3(axis?.x || 0, axis?.y || 0, axis?.z || 1)
     const targetAxisV3 = new Ammo.btVector3(targetAxis?.x || 0, targetAxis?.y || 0, targetAxis?.z || 1)
     const constraint = new Ammo.btHingeConstraint(
-      body.ammoBody,
-      targetBody.ammoBody,
+      body.ammo,
+      targetBody.ammo,
       pivotV3,
       targetPivotV3,
       axisV3,
@@ -172,7 +172,7 @@ export default class Constraints {
     const pivotTransform = new Ammo.btTransform()
     pivotTransform.setIdentity()
     pivotTransform.getOrigin().setValue(targetPivot?.x || 0, targetPivot?.y || 0, targetPivot?.z || 0)
-    const constraint = new Ammo.btConeTwistConstraint(body.ammoBody, pivotTransform)
+    const constraint = new Ammo.btConeTwistConstraint(body.ammo, pivotTransform)
     this.physicsWorld.addConstraint(constraint)
   }
 
@@ -187,7 +187,7 @@ export default class Constraints {
     const { pivot, targetPivot } = config
     const pivotV3 = new Ammo.btVector3(pivot?.x || 0, pivot?.y || 0, pivot?.z || 0)
     const targetPivotV3 = new Ammo.btVector3(targetPivot?.x || 0, targetPivot?.y || 0, targetPivot?.z || 0)
-    const constraint = new Ammo.btPoint2PointConstraint(body.ammoBody, targetBody.ammoBody, pivotV3, targetPivotV3)
+    const constraint = new Ammo.btPoint2PointConstraint(body.ammo, targetBody.ammo, pivotV3, targetPivotV3)
     this.physicsWorld.addConstraint(constraint)
   }
 }

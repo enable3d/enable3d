@@ -5,9 +5,9 @@
  */
 
 import { AnimationClip, AnimationMixer, Mesh, Line, Points, Object3D } from 'three'
-import PhysicsBody from './ammoWrapper/physicsBody'
+import PhysicsBody from '../ammoWrapper/physicsBody'
 import { AnimationAction } from 'three/src/animation/AnimationAction'
-import logger from './helpers/logger'
+import logger from '../helpers/logger'
 
 interface ExtendedObject3D extends Line, Mesh, Points {
   isLine: any

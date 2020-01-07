@@ -4,15 +4,15 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import ThirdDimension from './thirdDimension'
+import Third from './third'
 import Cameras from './threeWrapper/cameras'
 import loadAmmoModule from './helpers/wasmLoader'
-import Canvas from './customCanvas'
+import Canvas from './utils/customCanvas'
 import { Phaser3DConfig } from './types'
 
 export * from './types'
 export { Cameras }
-export { ThirdDimension }
+export { Third }
 export { Canvas }
 
 export class Scene3D extends Phaser.Scene {
@@ -21,7 +21,7 @@ export class Scene3D extends Phaser.Scene {
   }
 
   /** Access the Third Dimension */
-  public third: ThirdDimension
+  public third: Third
 
   /** Place this in the init() function */
   public requestThirdDimension() {
@@ -31,7 +31,7 @@ export class Scene3D extends Phaser.Scene {
   }
   /** Place this in the init() function */
   public accessThirdDimension(config: Phaser3DConfig = {}) {
-    this.third = new ThirdDimension(this, config)
+    this.third = new Third(this, config)
   }
 }
 

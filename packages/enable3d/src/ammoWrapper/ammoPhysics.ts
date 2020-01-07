@@ -6,10 +6,10 @@
 
 import logger from '../helpers/logger'
 import PhysicsBody from './physicsBody'
-import ThreeWrapper from '../threeWrapper'
+import ThreeGraphics from '../threeWrapper'
 import { SphereConfig, GroundConfig, MaterialConfig, BoxConfig, CylinderConfig, ExtrudeConfig } from '../types'
 import applyMixins from '../helpers/applyMixins'
-import ExtendedObject3D from '../extendedObject3D'
+import ExtendedObject3D from '../threeWrapper/extendedObject3D'
 import EventEmitter from 'eventemitter3'
 import Constraints from './constraints'
 import DebugDrawer from './debugDrawer'
@@ -26,7 +26,7 @@ class AmmoPhysics extends EventEmitter {
   private earlierDetectedCollisions: { combinedName: string; collision: boolean }[] = []
   private debugDrawer: DebugDrawer
 
-  constructor(protected phaser3D: ThreeWrapper, private scene: Phaser.Scene) {
+  constructor(protected phaser3D: ThreeGraphics, private scene: Phaser.Scene) {
     super()
     this.start()
   }
@@ -265,7 +265,7 @@ class AmmoPhysics extends EventEmitter {
     for (let i = 0; i < this.rigidBodies.length; i++) {
       let objThree = this.rigidBodies[i]
       // console.log(objThree)
-      let objAmmo = objThree.body.ammoBody
+      let objAmmo = objThree.body.ammo
       let ms = objAmmo.getMotionState()
       if (ms) {
         ms.getWorldTransform(this.tmpTrans)
@@ -406,8 +406,8 @@ class AmmoPhysics extends EventEmitter {
   private addBodyProperties(obj: ExtendedObject3D, config: any) {
     const { friction = 0.5, collisionFlag = 0 } = config
 
-    obj.body.ammoBody.setCollisionFlags(collisionFlag)
-    obj.body.ammoBody.setFriction(friction)
+    obj.body.ammo.setCollisionFlags(collisionFlag)
+    obj.body.ammo.setFriction(friction)
   }
 
   private addExtrude(extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig = {}) {

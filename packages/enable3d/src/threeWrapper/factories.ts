@@ -25,7 +25,7 @@ import {
   ExtrudeGeometry
 } from 'three'
 import Textures from './textures'
-import ExtendedObject3D from '../extendedObject3D'
+import ExtendedObject3D from './extendedObject3D'
 
 export default class Factories extends Textures {
   scene: Scene

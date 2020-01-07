@@ -4,17 +4,17 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import ThreeWrapper from './threeWrapper'
+import ThreeGraphics from './threeWrapper'
 import AmmoPhysics from './ammoWrapper/ammoPhysics'
 import { Phaser3DConfig } from './types'
 import { Vector2, Vector3, RepeatWrapping, Shape } from 'three'
-import ExtendedObject3D from './extendedObject3D'
+import ExtendedObject3D from './threeWrapper/extendedObject3D'
 import logger from './helpers/logger'
 
 type WarpedStartFeatures = 'light' | 'camera' | 'lookAtCenter' | 'ground' | 'grid' | 'orbitControls' | 'fog' | 'sky'
 
-class ThirdDimension extends ThreeWrapper {
-  ground: ExtendedObject3D
+class Third extends ThreeGraphics {
+  public ground: ExtendedObject3D
   public physics: AmmoPhysics
 
   /**
@@ -27,7 +27,7 @@ class ThirdDimension extends ThreeWrapper {
 
     if (window.__loadPhysics) this.physics = new AmmoPhysics(this, scene)
 
-    // remove the update event which is used by ThreeWrapper.ts and AmmoPhysics.ts
+    // remove the update event which is used by ThreeGraphics.ts and AmmoPhysics.ts
     scene.events.once('shutdown', () => {
       scene.events.removeListener('update')
     })
@@ -133,7 +133,7 @@ class ThirdDimension extends ThreeWrapper {
     }
 
     if (features.includes('orbitControls')) {
-      ThirdDimension.OrbitControls(this.camera, this.root.scale.parent)
+      Third.OrbitControls(this.camera, this.root.scale.parent)
     }
   }
 
@@ -143,7 +143,7 @@ class ThirdDimension extends ThreeWrapper {
    * @param parent Pass the parent object of the Canvas (this.scale.parent)
    */
   static OrbitControls(camera: any, parent: any) {
-    return ThreeWrapper.OrbitControls(camera, parent)
+    return ThreeGraphics.OrbitControls(camera, parent)
   }
 
   public get on() {
@@ -231,4 +231,4 @@ class ThirdDimension extends ThreeWrapper {
   }
 }
 
-export default ThirdDimension
+export default Third

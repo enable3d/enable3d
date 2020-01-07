@@ -45,8 +45,8 @@ const Robot = (scene: MainScene) => {
     )
 
     // This does not work :/
-    // sensor.body.ammoBody.setAngularLowerLimit(0, 0, 0)
-    // sensor.body.ammoBody.setAngularUpperLimit(0, 0, 0)
+    // sensor.body.ammo.setAngularLowerLimit(0, 0, 0)
+    // sensor.body.ammo.setAngularUpperLimit(0, 0, 0)
 
     scene.third.physics.add.constraints.lock(robot.body, sensor.body)
     scene.third.physics.add.collider(sensor, scene.third.ground, event => {
