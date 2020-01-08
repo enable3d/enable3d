@@ -15,8 +15,6 @@ interface JoyStickButton {
   }
 }
 
-// This is based on a file I found online called toon3d.js
-// Unfortunately I could not find its license or author.
 interface JoyStickAxis extends JoyStickButton {
   maxRadius: number
   maxRadiusSquared: number
@@ -27,9 +25,12 @@ interface JoyStickAxis extends JoyStickButton {
   rotationDamping: number
   moveDamping: number
 }
+
+// This class is based on a file I found online called toon3d.js
+// Unfortunately I could not find its license or author.
+// I just ported it to TypeScript and improved the code.
 export default class JoyStick extends EventEmitter {
   id = -1
-  enable() {}
 
   get add() {
     return {
@@ -38,105 +39,11 @@ export default class JoyStick extends EventEmitter {
     }
   }
 
-  private circle(config: any = {}) {
-    const { styles = { bottom: 35, left: 35 } } = config
-    const { top, right, bottom, left } = styles
-
-    const circle = document.createElement('div')
-
-    let css =
-      'position:absolute; width:80px; height:80px; background:rgba(126, 126, 126, 0.5); border:#444 solid medium; border-radius:50%; cursor: pointer; '
-
-    if (top) css += `top:${top}px; `
-    if (right) css += `right:${right}px; `
-    if (bottom) css += `bottom:${bottom}px; `
-    if (left) css += `left:${left}px; `
-
-    circle.style.cssText = css
-    return circle
-  }
-
-  private thumb() {
-    const thumb = document.createElement('div')
-    thumb.style.cssText =
-      'position: absolute; left: 20px; top: 20px; width: 40px; height: 40px; border-radius: 50%; background: #fff;'
-    return thumb
-  }
-
-  private letter(config: any = {}) {
-    const { letter: l } = config
-    const letter = document.createElement('span')
-    letter.innerText = l
-    letter.style.cssText =
-      'position: absolute; text-align: center; top: 4px; width: 80px; height: 80px; font-size: 64px; color: #fff; '
-    return letter
-  }
-
-  private addButton(config: any = {}) {
-    this.id++
-    const { styles, letter: l = 'A' } = config
-    const circle = this.circle({ styles })
-    const letter = this.letter({ letter: l })
-
-    circle.appendChild(letter)
-    document.body.appendChild(circle)
-
-    // element
-    const element: JoyStickButton = {
-      id: this.id,
-      domElement: circle,
-      offset: { x: 0, y: 0 }
-    }
-
-    if (element?.domElement) {
-      this.setupClickEvents(element)
-    }
-
-    return {
-      onClick: (event: (data: { top: number; right: number }) => void) => {
-        this.on(`button_onclick_${element.id}`, data => {
-          event(data)
-        })
-      },
-      onRelease: (event: (data: { top: number; right: number }) => void) => {
-        this.on(`button_onrelease_${element.id}`, data => {
-          event(data)
-        })
-      }
-    }
-  }
-
-  private setupClickEvents(element: JoyStickButton) {
-    const { id, domElement } = element
-
-    if ('ontouchstart' in window) {
-      domElement.addEventListener('touchstart', evt => {
-        evt.preventDefault()
-        this.emit(`button_onclick_${id}`)
-      })
-      domElement.addEventListener('touchend', evt => {
-        evt.preventDefault()
-        this.emit(`button_onrelease_${id}`)
-      })
-    } else {
-      domElement.addEventListener('mousedown', evt => {
-        evt.preventDefault()
-        this.emit(`button_onclick_${id}`)
-        evt.stopPropagation()
-      })
-      domElement.addEventListener('mouseup', evt => {
-        evt.preventDefault()
-        this.emit(`button_onrelease_${id}`)
-        evt.stopPropagation()
-      })
-    }
-  }
-
   private addAxis(config: any = {}) {
     this.id++
-    const { styles } = config
+    const { styles = { left: 35, bottom: 35, size: 100 } } = config
     const circle = this.circle({ styles })
-    const thumb = this.thumb()
+    const thumb = this.thumb({ styles })
 
     circle.appendChild(thumb)
     document.body.appendChild(circle)
@@ -181,12 +88,100 @@ export default class JoyStick extends EventEmitter {
     }
   }
 
-  private getMousePosition(evt: MouseEvent | TouchEvent) {
-    // @ts-ignore
-    let clientX = evt.targetTouches ? evt.targetTouches[0].pageX : evt.clientX
-    // @ts-ignore
-    let clientY = evt.targetTouches ? evt.targetTouches[0].pageY : evt.clientY
-    return { x: clientX, y: clientY }
+  private addButton(config: any = {}) {
+    this.id++
+    const { styles = { right: 35, bottom: 35, size: 80 }, letter: l = 'A' } = config
+    const circle = this.circle({ styles })
+    const letter = this.letter({ letter: l })
+
+    circle.appendChild(letter)
+    document.body.appendChild(circle)
+
+    // element
+    const element: JoyStickButton = {
+      id: this.id,
+      domElement: circle,
+      offset: { x: 0, y: 0 }
+    }
+
+    if (element?.domElement) {
+      this.click(element)
+    }
+
+    return {
+      onClick: (event: (data: { top: number; right: number }) => void) => {
+        this.on(`button_onclick_${element.id}`, data => {
+          event(data)
+        })
+      },
+      onRelease: (event: (data: { top: number; right: number }) => void) => {
+        this.on(`button_onrelease_${element.id}`, data => {
+          event(data)
+        })
+      }
+    }
+  }
+
+  private circle(config: any = {}) {
+    const { styles } = config
+    const { top, right, bottom, left, size } = styles
+
+    const circle = document.createElement('div')
+
+    let css = `position:absolute; width:${size}px; height:${size}px; background:rgba(126, 126, 126, 0.5); border:#444 solid medium; border-radius:50%; cursor: pointer; `
+
+    if (top) css += `top:${top}px; `
+    if (right) css += `right:${right}px; `
+    if (bottom) css += `bottom:${bottom}px; `
+    if (left) css += `left:${left}px; `
+
+    circle.style.cssText = css
+    return circle
+  }
+
+  private thumb(config: any = {}) {
+    const { styles } = config
+    const { size } = styles
+
+    const thumb = document.createElement('div')
+    thumb.style.cssText = `position: absolute; left: ${size / 4}px; top: ${size / 4}px; width: ${size /
+      2}px; height: ${size / 2}px; border-radius: 50%; background: #fff; `
+    return thumb
+  }
+
+  private letter(config: any = {}) {
+    const { letter: l } = config
+    const letter = document.createElement('span')
+    letter.innerText = l
+    letter.style.cssText =
+      'position: absolute; text-align: center; top: 4px; width: 80px; height: 80px; font-size: 64px; color: #fff; '
+    return letter
+  }
+
+  private click(element: JoyStickButton) {
+    const { id, domElement } = element
+
+    if ('ontouchstart' in window) {
+      domElement.addEventListener('touchstart', evt => {
+        evt.preventDefault()
+        this.emit(`button_onclick_${id}`)
+      })
+      domElement.addEventListener('touchend', evt => {
+        evt.preventDefault()
+        this.emit(`button_onrelease_${id}`)
+      })
+    } else {
+      domElement.addEventListener('mousedown', evt => {
+        evt.preventDefault()
+        this.emit(`button_onclick_${id}`)
+        evt.stopPropagation()
+      })
+      domElement.addEventListener('mouseup', evt => {
+        evt.preventDefault()
+        this.emit(`button_onrelease_${id}`)
+        evt.stopPropagation()
+      })
+    }
   }
 
   private tap(evt: MouseEvent | TouchEvent, element: JoyStickAxis) {
@@ -197,20 +192,20 @@ export default class JoyStick extends EventEmitter {
     if ('ontouchstart' in window) {
       document.ontouchmove = evt => {
         evt.preventDefault()
-        this.move(evt, element)
+        if (evt.target === element.domElement) this.move(evt, element)
       }
       document.ontouchend = evt => {
         evt.preventDefault()
-        this.up(element)
+        if (evt.target === element.domElement) this.up(element)
       }
     } else {
       document.onmousemove = evt => {
         evt.preventDefault()
-        this.move(evt, element)
+        if (evt.target === element.domElement) this.move(evt, element)
       }
       document.onmouseup = evt => {
         evt.preventDefault()
-        this.up(element)
+        if (evt.target === element.domElement) this.up(element)
       }
     }
   }
@@ -257,5 +252,13 @@ export default class JoyStick extends EventEmitter {
     domElement.style.left = `${origin.left}px`
 
     this.emit(`axis_onmove_${id}`, { top: 0, right: 0 })
+  }
+
+  private getMousePosition(evt: MouseEvent | TouchEvent) {
+    // @ts-ignore
+    let clientX = evt.targetTouches ? evt.targetTouches[0].pageX : evt.clientX
+    // @ts-ignore
+    let clientY = evt.targetTouches ? evt.targetTouches[0].pageY : evt.clientY
+    return { x: clientX, y: clientY }
   }
 }
