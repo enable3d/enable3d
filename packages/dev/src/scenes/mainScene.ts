@@ -111,6 +111,11 @@ export default class MainScene extends Scene3D {
           // console.log('the hero collides with another object than the ground')
         }
       })
+
+      // Add 3rd Person controls
+      this.third.controls.add.thirdPerson(this.hero, {
+        offset: this.third.new.vector3(0, 3, 0)
+      })
     })
 
     // make the sphere

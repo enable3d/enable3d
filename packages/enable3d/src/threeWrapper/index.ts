@@ -59,6 +59,8 @@ import Lights from './lights'
 import Factories from './factories'
 import CSG from './csg'
 import JoyStick from '../utils/joystick'
+import { ThirdPersonControls, ThirdPersonControlsConfig } from '../utils/thirdPersonControls'
+import { Scene3D } from '..'
 
 interface ThreeGraphics extends Loaders, Cameras, Textures, Lights, Factories, CSG {}
 
@@ -70,7 +72,7 @@ class ThreeGraphics {
   private mixers: AnimationMixer[] = []
   public camera: THREE_PerspectiveCamera | THREE_OrthographicCamera
 
-  constructor(public root: PhaserScene, config: Phaser3DConfig = {}) {
+  constructor(public root: Scene3D, config: Phaser3DConfig = {}) {
     const { anisotropy = 1, camera = Cameras.PerspectiveCamera(root, { z: 25, y: 5 }) } = config
     this.camera = camera
     this.view = root.add.extern()
@@ -109,6 +111,8 @@ class ThreeGraphics {
 
   private get addControls() {
     return {
+      thirdPerson: (target: Object3D, config: ThirdPersonControlsConfig) =>
+        new ThirdPersonControls(this.root, target, config),
       joystick: () => new JoyStick()
     }
   }
