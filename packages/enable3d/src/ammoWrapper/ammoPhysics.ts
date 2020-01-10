@@ -14,6 +14,7 @@ import EventEmitter from 'eventemitter3'
 import Constraints from './constraints'
 import DebugDrawer from './debugDrawer'
 import { Vector3, Matrix4, BufferGeometry } from 'three'
+import { Scene3D } from '..'
 
 interface AmmoPhysics extends Constraints {}
 
@@ -26,7 +27,7 @@ class AmmoPhysics extends EventEmitter {
   private earlierDetectedCollisions: { combinedName: string; collision: boolean }[] = []
   private debugDrawer: DebugDrawer
 
-  constructor(protected phaser3D: ThreeGraphics, private scene: Phaser.Scene) {
+  constructor(protected phaser3D: ThreeGraphics, private scene: Scene3D) {
     super()
     this.start()
   }
@@ -74,10 +75,11 @@ class AmmoPhysics extends EventEmitter {
     // this.physicsWorld.addCollisionObject(ghost)
 
     // run the phaser update method
-    this.scene.events.on('update', (_time: number, delta: number) => {
-      this.update(delta / 1000)
-      if (this.debugDrawer && this.debugDrawer.enabled) this.debugDrawer.update()
-    })
+    if (!this.phaser3D.isXrEnabled)
+      this.scene.events.on('update', (_time: number, delta: number) => {
+        this.update(delta)
+        this.updateDebugger()
+      })
   }
 
   public get add() {
@@ -184,7 +186,13 @@ class AmmoPhysics extends EventEmitter {
     this.tmpTrans = new Ammo.btTransform()
   }
 
-  private update(deltaTime: number) {
+  public updateDebugger() {
+    if (this.debugDrawer && this.debugDrawer.enabled) this.debugDrawer.update()
+  }
+
+  public update(delta: number) {
+    const deltaTime = delta / 1000
+
     // Step world
     this.physicsWorld.stepSimulation(deltaTime)
 

@@ -10,6 +10,7 @@ import { Phaser3DConfig } from './types'
 import { Vector2, Vector3, RepeatWrapping, Shape } from 'three'
 import ExtendedObject3D from './threeWrapper/extendedObject3D'
 import logger from './helpers/logger'
+import { Scene3D } from '.'
 
 type WarpedStartFeatures = 'light' | 'camera' | 'lookAtCenter' | 'ground' | 'grid' | 'orbitControls' | 'fog' | 'sky'
 
@@ -22,7 +23,7 @@ class Third extends ThreeGraphics {
    * @param scene Add the current Phaser Scene
    * @param config Phaser3D Config
    */
-  constructor(scene: Phaser.Scene, config: Phaser3DConfig) {
+  constructor(scene: Scene3D, config: Phaser3DConfig) {
     super(scene, config)
 
     if (window.__loadPhysics) this.physics = new AmmoPhysics(this, scene)
@@ -34,14 +35,14 @@ class Third extends ThreeGraphics {
   }
 
   // Todo: Add something awesome here
-  public haveSomeFun() {
+  public haveSomeFun(numberOfElements: number = 20) {
     if (!window.__loadPhysics) {
       logger('There is not much fun without physics enabled!')
       return
     }
 
     // adding some boxes (with physics)
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < numberOfElements; i++) {
       let materials = ['standard', 'basic', 'normal', 'phong', 'line', 'points']
       this.physics.add
         .box(

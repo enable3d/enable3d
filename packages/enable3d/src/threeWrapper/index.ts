@@ -4,9 +4,9 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Scene as PhaserScene } from 'phaser'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js'
+import { VRButton } from 'three/examples/jsm/webxr/VRButton.js'
 
 import {
   PerspectiveCamera as THREE_PerspectiveCamera,
@@ -61,46 +61,92 @@ import CSG from './csg'
 import JoyStick from '../utils/joystick'
 import { ThirdPersonControls, ThirdPersonControlsConfig } from '../utils/thirdPersonControls'
 import { Scene3D } from '..'
+import WebXR from './webxr'
 
-interface ThreeGraphics extends Loaders, Cameras, Textures, Lights, Factories, CSG {}
+interface ThreeGraphics extends Loaders, Cameras, Textures, Lights, Factories, CSG, WebXR {}
 
 class ThreeGraphics {
   public scene: Scene
   private view: any
-  protected renderer: WebGLRenderer
+  public renderer: WebGLRenderer
   private composer: null
-  private mixers: AnimationMixer[] = []
+  private _mixers: AnimationMixer[] = []
   public camera: THREE_PerspectiveCamera | THREE_OrthographicCamera
+  public readonly isXrEnabled: boolean
 
   constructor(public root: Scene3D, config: Phaser3DConfig = {}) {
-    const { anisotropy = 1, camera = Cameras.PerspectiveCamera(root, { z: 25, y: 5 }) } = config
+    const { anisotropy = 1, enableXR = false, camera = Cameras.PerspectiveCamera(root, { z: 25, y: 5 }) } = config
     this.camera = camera
+    this.isXrEnabled = enableXR
     this.view = root.add.extern()
     this.scene = new Scene()
     this.textureAnisotropy = anisotropy
+
     this.renderer = new WebGLRenderer({
       canvas: root.sys.game.canvas as HTMLCanvasElement,
       context: root.sys.game.context as WebGLRenderingContext,
-      antialias: true
+      antialias: false
     })
+
+    // the vr renderer is always window.innerWidth and window.innerHeight
+    this.renderer.vr.enabled = true
+
+    // this.renderer.setPixelRatio(1)
+    // this.renderer.setSize(window.innerWidth, window.innerHeight)
 
     // shadow
     this.renderer.shadowMap.enabled = true
     this.renderer.shadowMap.type = PCFSoftShadowMap
 
+    // no implemented yet
     this.composer = null
+
     //  We don't want three.js to wipe our gl context!
     this.renderer.autoClear = false
-    //  Create our Extern render callback
-    this.view.render = () => {
-      //  This is important to retain GL state between renders
-      this.renderer.state.reset()
-      this.renderer.render(this.scene, this.camera)
+
+    // add vr camera
+    if (enableXR) this.addXRCamera()
+
+    // phaser renderer
+    this.view.render = (_renderer: WebGLRenderer) => {
+      if (!this.renderer.vr.isPresenting()) {
+        this.root.updateLoopXR(this.root.sys.game.loop.time, this.root.sys.game.loop.delta)
+        this.renderer.state.reset()
+        this.renderer.render(this.scene, this.camera)
+      }
     }
 
-    root.events.on('update', (_time: number, delta: number) => {
-      this.mixers?.forEach(mixer => mixer.update(delta / 1000))
-    })
+    // vr renderer
+    if (enableXR) {
+      let lastTime = 0
+      this.renderer.setAnimationLoop((time: number) => {
+        if (this.renderer.vr.isPresenting()) {
+          const delta = time - lastTime
+          lastTime = time
+          this.root.updateLoopXR(time, delta)
+          this.renderer.state.reset()
+          this.renderer.render(this.scene, this.camera)
+        }
+      })
+      // add vr button
+      const vrButton = VRButton.createButton(this.renderer)
+      vrButton.style.cssText += 'background: rgba(0, 0, 0, 0.8); '
+      document.body.appendChild(vrButton)
+    }
+
+    if (!enableXR) {
+      root.events.on('update', (_time: number, delta: number) => {
+        this.mixers.update(delta)
+      })
+    }
+  }
+
+  get mixers() {
+    return {
+      add: (animationMixer: AnimationMixer) => this._mixers.push(animationMixer),
+      get: () => this._mixers,
+      update: (delta: number) => this._mixers?.forEach(mixer => mixer.update(delta / 1000))
+    }
   }
 
   get controls() {
@@ -143,9 +189,12 @@ class ThreeGraphics {
     }
   }
 
+  /**
+   * Create an Animation Mixer and ads it to the mixers array
+   */
   private animationMixer(root: Object3D) {
     const mixer = new AnimationMixer(root)
-    this.mixers.push(mixer)
+    this.mixers.add(mixer)
     return mixer
   }
 
@@ -229,6 +278,6 @@ class ThreeGraphics {
   }
 }
 
-applyMixins(ThreeGraphics, [Loaders, Cameras, Textures, Lights, Factories, CSG])
+applyMixins(ThreeGraphics, [Loaders, Cameras, Textures, Lights, Factories, CSG, WebXR])
 
 export default ThreeGraphics

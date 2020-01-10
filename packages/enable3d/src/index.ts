@@ -33,6 +33,35 @@ export class Scene3D extends Phaser.Scene {
   public accessThirdDimension(config: Phaser3DConfig = {}) {
     this.third = new Third(this, config)
   }
+
+  /** Combines the 3 XR update methods */
+  public updateLoopXR(time: number, delta: number) {
+    this.preUpdateXR(time, delta)
+    this.updateXR(time, delta)
+    this.postUpdateXR(time, delta)
+  }
+
+  /** Pre-Update the WebXR */
+  private preUpdateXR(_time: number, _delta: number) {}
+
+  /** Update the WebXR. Use this to update your game loop in XR mode instead the normal update method provided by phaser.
+   * It will overwrite the default Phaser clock and do some other things behind the scene for you.
+   */
+  public updateXR(_time: number, _delta: number) {}
+
+  /** Post-Update the WebXR */
+  private postUpdateXR(_time: number, _delta: number) {
+    if (this.third.isXrEnabled) {
+      // overwrite the default phaser clock
+      this.time.update(_time, _delta)
+      // manually update the physics
+      this.third.physics.update(_delta)
+      // manually update physics debugger
+      this.third.physics.updateDebugger()
+      // manually update the mixers
+      this.third.mixers.update(_delta)
+    }
+  }
 }
 
 window.__loadPhysics = false

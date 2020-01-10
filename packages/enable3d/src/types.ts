@@ -27,6 +27,7 @@ export interface Phaser3DConfig {
   anisotropy?: number
   /** Add your own THREE.js camera */
   camera?: THREE_PerspectiveCamera | THREE_OrthographicCamera
+  enableXR?: boolean
 }
 
 export interface XYZ {
