@@ -26,6 +26,32 @@ class Shapes {
 
   constructor(protected phaser3D: ThreeGraphics) {}
 
+  // originally copied from https://github.com/InfiniteLee/three-to-ammo
+  protected addHullShape(mesh: ExtendedObject3D, meshConfig: any = {}) {
+    const center = new Vector3()
+    const vertex = new Vector3()
+    const btVertex = new Ammo.btVector3()
+    const originalHull = new Ammo.btConvexHullShape()
+
+    meshConfig.type = 'mesh'
+    const { scale } = mesh
+
+    this.iterateGeometries(mesh, meshConfig, (geo: any, transform: any) => {
+      const components = geo.attributes.position.array
+      for (let i = 0; i < components.length; i += 3) {
+        vertex
+          .set(components[i], components[i + 1], components[i + 2])
+          .applyMatrix4(transform)
+          .sub(center)
+        btVertex.setValue(vertex.x, vertex.y, vertex.z)
+        originalHull.addPoint(btVertex, i === components.length - 3)
+      }
+    })
+    originalHull.setLocalScaling(new Ammo.btVector3(scale.x, scale.y, scale.z))
+
+    return originalHull
+  }
+
   /** Add a custom convex or concave shape. (Concave shapes can only be static) */
   // originally copied from https://github.com/InfiniteLee/three-to-ammo
   protected addTriMeshShape(mesh: ExtendedObject3D, meshConfig: any = {}) {
