@@ -10,8 +10,8 @@ import PhysicsBody from './physicsBody'
 import { XYZ } from '../types'
 
 export default class Constraints {
-  // public tmpTrans: Ammo.btTransform
-  protected physicsWorld: Ammo.btDiscreteDynamicsWorld
+  public tmpTrans: Ammo.btTransform
+  public physicsWorld: Ammo.btDiscreteDynamicsWorld
 
   constructor() {}
   protected get addConstraints() {
@@ -127,13 +127,7 @@ export default class Constraints {
   private slider(body: PhysicsBody, targetBody: PhysicsBody) {
     const transform = this.getTransform(body.ammo, targetBody.ammo)
     //TODO: support setting linear and angular limits
-    const constraint = new Ammo.btSliderConstraint(
-      body.ammo,
-      targetBody.ammo,
-      transform.body,
-      transform.target,
-      true
-    )
+    const constraint = new Ammo.btSliderConstraint(body.ammo, targetBody.ammo, transform.body, transform.target, true)
     constraint.setLowerLinLimit(-1)
     constraint.setUpperLinLimit(1)
     // constraint.setLowerAngLimit();

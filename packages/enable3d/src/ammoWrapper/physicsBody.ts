@@ -4,13 +4,14 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import AmmoPhysics from './ammoPhysics'
+import AmmoPhysics from '.'
 import { ExtendedObject3D } from '../types'
+import Physics from './physics'
 
 class PhysicsBody {
   offset = { x: 0, y: 0, z: 0 }
   name: string
-  constructor(private ammoPhysics: AmmoPhysics, public ammo: Ammo.btRigidBody) {
+  constructor(private physics: Physics, public ammo: Ammo.btRigidBody) {
     // @ts-ignore
     this.name = ammo.name
   }
@@ -25,7 +26,7 @@ class PhysicsBody {
   private onCollision(
     collisionCallback: (otherObject: ExtendedObject3D, event: 'start' | 'collision' | 'end') => void
   ) {
-    this.ammoPhysics.on('collision', (data: { bodies: ExtendedObject3D[]; event: 'start' | 'collision' | 'end' }) => {
+    this.physics.on('collision', (data: { bodies: ExtendedObject3D[]; event: 'start' | 'collision' | 'end' }) => {
       const { bodies, event } = data
       if (bodies[0].name === this.name) collisionCallback(bodies[1], event)
       else if (bodies[1].name === this.name) collisionCallback(bodies[0], event)

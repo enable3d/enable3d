@@ -5,7 +5,7 @@
  */
 
 import ThreeGraphics from './threeWrapper'
-import AmmoPhysics from './ammoWrapper/ammoPhysics'
+import AmmoPhysics from './ammoWrapper'
 import { Phaser3DConfig } from './types'
 import { Vector2, Vector3, RepeatWrapping, Shape } from 'three'
 import ExtendedObject3D from './threeWrapper/extendedObject3D'
