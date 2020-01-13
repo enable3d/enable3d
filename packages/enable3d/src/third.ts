@@ -60,32 +60,35 @@ class Third extends ThreeGraphics {
     // adding some boxes (with physics)
     for (let i = 0; i < numberOfElements; i++) {
       let materials = ['standard', 'basic', 'normal', 'phong', 'line', 'points']
-      this.physics.add
-        .box(
-          {
-            x: Phaser.Math.Between(-20, 20),
-            y: Phaser.Math.Between(5, 20),
-            z: Phaser.Math.Between(-20, 20),
-            width: Phaser.Math.Between(1, 2),
-            height: Phaser.Math.Between(1, 2),
-            depth: Phaser.Math.Between(1, 2),
-            mass: 1
-          },
-          { [Phaser.Math.RND.pick(materials)]: { color: Math.floor(Math.random() * 0xffffff) } }
-        )
-        .body.setRestitution(Math.floor(Math.random() * 10) / 10)
-      this.physics.add
-        .sphere(
-          {
-            x: Phaser.Math.Between(-20, 20),
-            y: Phaser.Math.Between(5, 20),
-            z: Phaser.Math.Between(-20, 20),
-            radius: Phaser.Math.Between(1, 2),
-            mass: 1
-          },
-          { [Phaser.Math.RND.pick(materials)]: { color: Math.floor(Math.random() * 0xffffff) } }
-        )
-        .body.setRestitution(Math.floor(Math.random() * 10) / 10)
+      if (Math.random() > 0.5) {
+        this.physics.add
+          .box(
+            {
+              x: Phaser.Math.Between(-20, 20),
+              y: Phaser.Math.Between(20, 40),
+              z: Phaser.Math.Between(-20, 20),
+              width: Phaser.Math.Between(1, 2),
+              height: Phaser.Math.Between(1, 2),
+              depth: Phaser.Math.Between(1, 2),
+              mass: 1
+            },
+            { [Phaser.Math.RND.pick(materials)]: { color: Math.floor(Math.random() * 0xffffff) } }
+          )
+          .body.setRestitution(Math.floor(Math.random() * 10) / 10)
+      } else {
+        this.physics.add
+          .sphere(
+            {
+              x: Phaser.Math.Between(-20, 20),
+              y: Phaser.Math.Between(20, 40),
+              z: Phaser.Math.Between(-20, 20),
+              radius: Phaser.Math.Between(1, 2),
+              mass: 1
+            },
+            { [Phaser.Math.RND.pick(materials)]: { color: Math.floor(Math.random() * 0xffffff) } }
+          )
+          .body.setRestitution(Math.floor(Math.random() * 10) / 10)
+      }
     }
   }
 
