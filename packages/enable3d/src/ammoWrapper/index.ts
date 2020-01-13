@@ -101,7 +101,7 @@ class AmmoPhysics extends EventEmitter {
     if (hasShape) {
       switch (shape) {
         case 'box':
-          Shape = new Ammo.btBoxShape(new Ammo.btVector3(params.width, params.height, params.depth))
+          Shape = new Ammo.btBoxShape(new Ammo.btVector3(params.width / 2, params.height / 2, params.depth / 2))
           break
         case 'sphere':
           Shape = new Ammo.btSphereShape(params.radius)

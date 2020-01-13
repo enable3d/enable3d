@@ -118,7 +118,7 @@ export default class Factories extends Textures {
     const material = this.createMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
-    mesh.type = 'box'
+    mesh.shape = 'box'
     return mesh
   }
 
