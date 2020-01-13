@@ -59,7 +59,7 @@ export default class MainScene extends Scene3D {
     sub.name = 'sub'
     uni.name = 'uni'
 
-    const mat = this.third.new.standardMaterial()
+    const mat = this.third.new.defaultMaterial()
 
     const geometries = [int, sub, uni]
     geometries.forEach((geo, i) => {

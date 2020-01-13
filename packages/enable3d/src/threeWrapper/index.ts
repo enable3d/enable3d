@@ -34,7 +34,8 @@ import {
   Group,
   ShapePath,
   Path,
-  Texture
+  Texture,
+  MeshLambertMaterial
 } from 'three/src/Three'
 
 import {
@@ -191,8 +192,12 @@ class ThreeGraphics {
       vector3: (x?: number, y?: number, z?: number) => new Vector3(x, y, z),
       euler: (x: number, y: number, z: number) => new Euler(x, y, z, 'XYZ'),
       quaternion: (x?: number, y?: number, z?: number, w?: number) => new Quaternion(x, y, z, w),
-      standardMaterial: (parameters?: MeshStandardMaterialParameters) => new MeshStandardMaterial(parameters)
+      defaultMaterial: () => this.getDefaultMaterial()
     }
+  }
+
+  protected getDefaultMaterial() {
+    return new MeshLambertMaterial({ color: 0xcccccc })
   }
 
   /**

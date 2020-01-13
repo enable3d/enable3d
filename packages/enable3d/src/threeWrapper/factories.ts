@@ -29,7 +29,9 @@ import Textures from './textures'
 import ExtendedObject3D from './extendedObject3D'
 
 export default class Factories extends Textures {
-  scene: Scene
+  public scene: Scene
+  protected getDefaultMaterial: () => MeshLambertMaterial
+
   protected addMesh(mesh: Object3D) {
     if (Array.isArray(mesh)) {
       for (let i = 0; i < mesh.length; i++) {
@@ -192,7 +194,7 @@ export default class Factories extends Textures {
         material = new PointsMaterial(materialConfig.points)
         break
       default:
-        material = new MeshLambertMaterial({ color: 0xcccccc })
+        material = this.getDefaultMaterial()
         break
     }
 
