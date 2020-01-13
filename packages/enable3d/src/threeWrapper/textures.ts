@@ -9,7 +9,9 @@ import { Scene } from 'phaser'
 
 export default class Textures {
   protected textureAnisotropy: number
+
   constructor(public root: Scene) {}
+
   public getTexture(key: string) {
     let texture = new Texture()
 

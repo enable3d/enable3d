@@ -28,11 +28,13 @@
   },
   "homepage": "https://github.com/yandeu/enable3d#readme",
   "dependencies": {
+    "chroma-js": "^2.1.0",
     "eventemitter3": "^4.0.0",
     "phaser": "^3.21.0",
     "three": "^0.111.0"
   },
   "devDependencies": {
+    "@types/chroma-js": "^1.4.3",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.4",
     "webpack": "^4.41.4",

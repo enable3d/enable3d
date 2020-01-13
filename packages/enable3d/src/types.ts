@@ -15,7 +15,8 @@ import {
   OrthographicCamera as THREE_OrthographicCamera,
   Shape,
   ExtrudeGeometryOptions,
-  MeshLambertMaterialParameters
+  MeshLambertMaterialParameters,
+  Texture
 } from 'three'
 import ExtendedObject3D from './threeWrapper/extendedObject3D'
 
@@ -103,6 +104,9 @@ export interface CylinderObject {
 export interface ExtrudeObject {
   (extrudeConfig: ExtrudeConfig, materialConfig?: MaterialConfig): ExtendedObject3D
 }
+export interface HeightMapObject {
+  (texture: Texture, config?: HeightMapConfig): ExtendedObject3D | undefined
+}
 
 export interface SphereConfig extends XYZ, Mass, CollisionFlag {
   name?: string
@@ -148,4 +152,9 @@ export interface ExtrudeConfig extends XYZ, Mass, CollisionFlag, ExtrudeGeometry
   name?: string
   shape: Shape
   autoCenter?: boolean
+}
+
+export interface HeightMapConfig {
+  material?: MaterialConfig
+  colorScale?: chroma.Scale<chroma.Color>
 }

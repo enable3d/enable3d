@@ -33,7 +33,8 @@ import {
   Shape,
   Group,
   ShapePath,
-  Path
+  Path,
+  Texture
 } from 'three/src/Three'
 
 import {
@@ -48,7 +49,9 @@ import {
   MaterialConfig,
   CylinderConfig,
   ExtrudeConfig,
-  ExtrudeObject
+  ExtrudeObject,
+  HeightMapObject,
+  HeightMapConfig
 } from '../types'
 import ExtendedObject3D from './extendedObject3D'
 import applyMixins from '../helpers/applyMixins'
@@ -62,8 +65,11 @@ import JoyStick from '../utils/joystick'
 import { ThirdPersonControls, ThirdPersonControlsConfig } from '../utils/thirdPersonControls'
 import { Scene3D } from '..'
 import WebXR from './webxr'
+import HeightMap from './heightmap'
 
-interface ThreeGraphics extends Loaders, Cameras, Textures, Lights, Factories, CSG, WebXR {}
+import chroma from 'chroma-js'
+
+interface ThreeGraphics extends Loaders, Cameras, Textures, Lights, Factories, CSG, WebXR, HeightMap {}
 
 class ThreeGraphics {
   public scene: Scene
@@ -219,6 +225,7 @@ class ThreeGraphics {
     ambientLight: any
     mesh: any
     existing: any
+    heightMap: HeightMapObject
     box: BoxObject
     ground: GroundObject
     sphere: SphereObject
@@ -238,6 +245,7 @@ class ThreeGraphics {
       mesh: (mesh: any) => this.addMesh(mesh),
       // group: (...children) => this.addGroup(children),
       existing: (object: ExtendedObject3D | Mesh | Line | Points) => this.addExisting(object),
+      heightMap: (texture: Texture, config: HeightMapConfig = {}) => this.addHeightMap(texture, config),
       //  Geometry
       box: (boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}) => this.addBox(boxConfig, materialConfig),
       ground: (groundConfig: GroundConfig, materialConfig: MaterialConfig = {}) =>
@@ -253,6 +261,13 @@ class ThreeGraphics {
     }
   }
 
+  /**
+   * Powered by Chroma.js (https://github.com/gka/chroma.js/)
+   */
+  public get chroma() {
+    return chroma
+  }
+
   private addExisting(object: ExtendedObject3D | Mesh | Line | Points) {
     this.scene.add(object)
   }
@@ -261,7 +276,13 @@ class ThreeGraphics {
     return THREE_Math.radToDeg(number)
   }
 
-  public get make(): { box: BoxObject; sphere: SphereObject; cylinder: CylinderObject; extrude: ExtrudeObject } {
+  public get make(): {
+    box: BoxObject
+    sphere: SphereObject
+    cylinder: CylinderObject
+    extrude: ExtrudeObject
+    heightMap: HeightMapObject
+  } {
     return {
       box: (boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}) => this.makeBox(boxConfig, materialConfig),
       sphere: (sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}) =>
@@ -269,7 +290,8 @@ class ThreeGraphics {
       cylinder: (cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.makeCylinder(cylinderConfig, materialConfig),
       extrude: (extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig = {}) =>
-        this.makeExtrude(extrudeConfig, materialConfig)
+        this.makeExtrude(extrudeConfig, materialConfig),
+      heightMap: (texture: Texture, config: HeightMapConfig = {}) => this.makeHeightMap(texture, config)
     }
   }
 
@@ -278,6 +300,6 @@ class ThreeGraphics {
   }
 }
 
-applyMixins(ThreeGraphics, [Loaders, Cameras, Textures, Lights, Factories, CSG, WebXR])
+applyMixins(ThreeGraphics, [Loaders, Cameras, Textures, Lights, Factories, CSG, WebXR, HeightMap])
 
 export default ThreeGraphics
