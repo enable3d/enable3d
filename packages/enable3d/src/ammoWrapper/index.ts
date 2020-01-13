@@ -85,7 +85,7 @@ class AmmoPhysics extends EventEmitter {
     // @ts-ignore
     const params = object?.geometry?.parameters
     const hasShape = object.hasOwnProperty('shape')
-    const mass = 1
+    const { mass = 1 } = config
 
     const defaultShape = () => new Ammo.btBoxShape(new Ammo.btVector3(width / 2, height / 2, depth / 2))
 
