@@ -159,7 +159,7 @@ class Third extends ThreeGraphics {
           width: 50,
           height: 50,
           depth: 1,
-          y: 0
+          y: -0.5
         },
         { phong: { map: addGrid ? texture : null, transparent: true, opacity: 0.8, color: 0xffffff } }
       )
