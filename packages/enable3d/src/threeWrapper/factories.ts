@@ -22,7 +22,8 @@ import {
   PointsMaterial,
   MeshBasicMaterial,
   CylinderGeometry,
-  ExtrudeGeometry
+  ExtrudeGeometry,
+  MeshLambertMaterial
 } from 'three'
 import Textures from './textures'
 import ExtendedObject3D from './extendedObject3D'
@@ -169,14 +170,17 @@ export default class Factories extends Textures {
     }
 
     switch (type) {
-      case 'standard':
-        material = new MeshStandardMaterial(materialConfig.standard)
-        break
       case 'basic':
         material = new MeshBasicMaterial(materialConfig.basic)
         break
       case 'normal':
         material = new MeshNormalMaterial(materialConfig.normal)
+        break
+      case 'standard':
+        material = new MeshStandardMaterial(materialConfig.standard)
+        break
+      case 'lambert':
+        material = new MeshLambertMaterial(materialConfig.lambert)
         break
       case 'phong':
         material = new MeshPhongMaterial(materialConfig.phong)
@@ -188,7 +192,7 @@ export default class Factories extends Textures {
         material = new PointsMaterial(materialConfig.points)
         break
       default:
-        material = new MeshStandardMaterial(materialConfig.standard)
+        material = new MeshLambertMaterial({ color: 0xcccccc })
         break
     }
 

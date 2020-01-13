@@ -14,7 +14,8 @@ import {
   PerspectiveCamera as THREE_PerspectiveCamera,
   OrthographicCamera as THREE_OrthographicCamera,
   Shape,
-  ExtrudeGeometryOptions
+  ExtrudeGeometryOptions,
+  MeshLambertMaterialParameters
 } from 'three'
 import ExtendedObject3D from './threeWrapper/extendedObject3D'
 
@@ -73,10 +74,14 @@ export interface OrthographicCamera extends XYZ {
   far?: number
 }
 
+/**
+ * Choose your preferred material. The default is MeshLambertMaterial with a color of 0xcccccc.
+ */
 export interface MaterialConfig {
-  standard?: MeshStandardMaterialParameters
   basic?: MeshBasicMaterialParameters
   normal?: MeshNormalMaterialParameters
+  standard?: MeshStandardMaterialParameters
+  lambert?: MeshLambertMaterialParameters
   phong?: MeshPhongMaterialParameters
   line?: LineBasicMaterialParameters
   points?: PointsMaterialParameters
