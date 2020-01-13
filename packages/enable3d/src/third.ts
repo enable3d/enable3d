@@ -12,7 +12,23 @@ import ExtendedObject3D from './threeWrapper/extendedObject3D'
 import logger from './helpers/logger'
 import { Scene3D } from '.'
 
-type WarpedStartFeatures = 'light' | 'camera' | 'lookAtCenter' | 'ground' | 'grid' | 'orbitControls' | 'fog' | 'sky'
+type WarpedStartFeatures =
+  | 'light'
+  | 'camera'
+  | 'lookAtCenter'
+  | 'ground'
+  | 'grid'
+  | 'orbitControls'
+  | 'fog'
+  | 'sky'
+  | '-light'
+  | '-camera'
+  | '-lookAtCenter'
+  | '-ground'
+  | '-grid'
+  | '-orbitControls'
+  | '-fog'
+  | '-sky'
 
 class Third extends ThreeGraphics {
   public ground: ExtendedObject3D
@@ -78,8 +94,23 @@ class Third extends ThreeGraphics {
    * @param features Pass the features you want to setup.
    */
   warpSpeed(...features: WarpedStartFeatures[]) {
-    if (features.length === 0)
+    // test for negative features
+    const negativeFeatures = features.filter(feature => /^-\w+/.test(feature))
+    const hasNegativeFeatures = negativeFeatures.length > 0 ? true : false
+
+    // add all features
+    if (features.length === 0 || hasNegativeFeatures)
       features = ['light', 'camera', 'lookAtCenter', 'ground', 'grid', 'orbitControls', 'fog', 'sky']
+
+    // remove the negative features
+    if (hasNegativeFeatures) {
+      const featuresToRemove = negativeFeatures.map(feature => feature.substr(1))
+      featuresToRemove.forEach(feature => {
+        // @ts-ignore
+        const index = features.indexOf(feature)
+        features.splice(index, 1)
+      })
+    }
 
     // TODO: add fog
     if (features.includes('fog')) {
