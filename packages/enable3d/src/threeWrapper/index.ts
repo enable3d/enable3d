@@ -35,7 +35,8 @@ import {
   ShapePath,
   Path,
   Texture,
-  MeshLambertMaterial
+  MeshLambertMaterial,
+  Raycaster
 } from 'three/src/Three'
 
 import {
@@ -181,7 +182,7 @@ class ThreeGraphics {
       shapePath: () => new ShapePath(),
       path: () => new Path(),
       svgLoader: () => new SVGLoader(),
-
+      raycaster: () => new Raycaster(),
       group: () => new Group(),
       color: (color?: string | number | Color | undefined) => new Color(color),
       box3: () => new Box3(),

@@ -4,13 +4,15 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import EventEmitter = require('eventemitter3')
-import { ExtendedObject3D } from '../types'
-import ThreeGraphics from '../threeWrapper'
 import { Scene3D } from '..'
 import DebugDrawer from './debugDrawer'
+import EventEmitter from 'eventemitter3'
+import ThreeGraphics from '../threeWrapper'
+import { ExtendedObject3D } from '../types'
+import { Vector3, MeshLambertMaterial } from 'three'
+import { ConvexObjectBreaker } from 'three/examples/jsm/misc/ConvexObjectBreaker'
 
-export default class Physics extends EventEmitter {
+class Physics extends EventEmitter {
   public tmpTrans: Ammo.btTransform
   public physicsWorld: Ammo.btDiscreteDynamicsWorld
   protected dispatcher: Ammo.btCollisionDispatcher
@@ -18,12 +20,25 @@ export default class Physics extends EventEmitter {
   protected objectsAmmo: { [ptr: number]: any } = {}
   protected earlierDetectedCollisions: { combinedName: string; collision: boolean }[] = []
   protected debugDrawer: DebugDrawer
+  private convexBreaker: ConvexObjectBreaker
+  protected addRigidBody: (threeObject: ExtendedObject3D, physicsShape: any, mass: any, pos: any, quat: any) => void
+  private objectsToRemove: any[]
+  private numObjectsToRemove: number
 
   constructor(protected phaser3D: ThreeGraphics, protected scene: Scene3D) {
     super()
   }
 
   protected setup() {
+    // Initialize convexBreaker
+    this.convexBreaker = new ConvexObjectBreaker()
+
+    this.objectsToRemove = []
+    this.numObjectsToRemove = 0
+    for (var i = 0; i < 500; i++) {
+      this.objectsToRemove[i] = null
+    }
+
     // setup ammo physics
     this.setupPhysicsWorld()
 
@@ -64,100 +79,224 @@ export default class Physics extends EventEmitter {
     this.tmpTrans = new Ammo.btTransform()
   }
 
+  private createDebrisFromBreakableObject(object: ExtendedObject3D, parent: ExtendedObject3D) {
+    object.material = new MeshLambertMaterial({ color: 0xcccccc })
+    object.shape = 'hull'
+    object.breakable = false
+    object.fragmentDepth = parent.fragmentDepth + 1
+
+    // make this fragment breakable in 2.5seconds
+    setTimeout(() => {
+      object.breakable = true
+    }, 2500)
+
+    // Add the object to the scene
+    this.phaser3D.scene.add(object)
+
+    // Add physics to the object
+    // @ts-ignore
+    this.addExisting(object)
+  }
+
+  private removeDebris(object: any) {
+    this.phaser3D.scene.remove(object)
+    this.physicsWorld.removeRigidBody(object.body.ammo)
+    delete this.objectsAmmo[object.ptr]
+  }
+
   public update(delta: number) {
-    const deltaTime = delta / 1000
+    const impactPoint = new Vector3()
+    const impactNormal = new Vector3()
+    const detectedCollisions: { combinedName: string; collision: boolean }[] = []
 
     // Step world
+    const deltaTime = delta / 1000
     this.physicsWorld.stepSimulation(deltaTime)
 
-    // Collision
-    const detectedCollisions: { combinedName: string; collision: boolean }[] = []
-    const num = this.dispatcher.getNumManifolds()
-    for (let i = 0; i < num; i++) {
-      const manifold = this.dispatcher.getManifoldByIndexInternal(i)
-      // gets all contact points (edges)
-      const num_contacts = manifold.getNumContacts()
-      if (num_contacts === 0) {
-        continue
-      }
+    /**
+     * Update rigid bodies
+     */
+    for (var i = 0, il = this.rigidBodies.length; i < il; i++) {
+      var objThree = this.rigidBodies[i]
+      var objPhys = objThree.body.ammo
+      var ms = objPhys.getMotionState()
 
-      for (let j = 0; j < num_contacts; j++) {
-        // const flag0 = manifold.getBody0().getCollisionFlags()
-        // const flag1 = manifold.getBody1().getCollisionFlags()
-        const key = Object.keys(manifold.getBody0())[0]
-
-        // @ts-ignore
-        const ptr0 = manifold.getBody0()[key]
-        // @ts-ignore
-        const ptr1 = manifold.getBody1()[key]
-        // @ts-ignore
-        const obj0 = ptr0 in this.objectsAmmo ? this.objectsAmmo[ptr0] : manifold.getBody0()
-        // @ts-ignore
-        const obj1 = ptr0 in this.objectsAmmo ? this.objectsAmmo[ptr1] : manifold.getBody1()
-
-        // check if a collision between these object has already been processed
-        const combinedName = `${obj0.name}__${obj1.name}`
-
-        // console.log(combinedName)
-        if (detectedCollisions.find(el => el.combinedName === combinedName)) {
-          continue
-        }
-
-        let event
-        if (this.earlierDetectedCollisions.find(el => el.combinedName === combinedName)) {
-          event = 'colliding'
-        } else {
-          event = 'start'
-        }
-        detectedCollisions.push({ combinedName, collision: true })
-
-        // const a = manifold.getContactPoint(num_contacts).getPositionWorldOnA()
-        // const b = manifold.getContactPoint(num_contacts).getPositionWorldOnB()
-        // console.log(a.x(), a.y(), a.z())
-        // console.log(b.x(), b.y(), b.z())
-
-        // console.log(pt)
-        // console.log(pt.getAppliedImpulse())
-
-        this.emit('collision', { bodies: [obj0, obj1], event })
-
-        // https://stackoverflow.com/questions/31991267/bullet-physicsammo-js-in-asm-js-how-to-get-collision-impact-force
-        // console.log('COLLISION DETECTED!')
-        // HERE: how to get impact force details?
-        // const pt = manifold.getContactPoint(j)
-        // pt.getAppliedImpulse() is not working
-      }
-    }
-    // Check which collision ended
-    this.earlierDetectedCollisions.forEach(el => {
-      const { combinedName } = el
-      if (!detectedCollisions.find(el => el.combinedName === combinedName)) {
-        const split = combinedName.split('__')
-        // console.log(split[0], split[1])
-        const obj0 = this.rigidBodies.find(obj => obj.name === split[0])
-        const obj1 = this.rigidBodies.find(obj => obj.name === split[1])
-        // console.log(obj0, obj1)
-        if (obj0 && obj1) this.emit('collision', { bodies: [obj0, obj1], event: 'end' })
-      }
-    })
-    // Update earlierDetectedCollisions
-    this.earlierDetectedCollisions = [...detectedCollisions]
-
-    // Update rigid bodies
-    for (let i = 0; i < this.rigidBodies.length; i++) {
-      let objThree = this.rigidBodies[i]
-      // console.log(objThree)
-      let objAmmo = objThree.body.ammo
-      let ms = objAmmo.getMotionState()
       if (ms) {
         ms.getWorldTransform(this.tmpTrans)
-        let p = this.tmpTrans.getOrigin()
-        let q = this.tmpTrans.getRotation()
+        var p = this.tmpTrans.getOrigin()
+        var q = this.tmpTrans.getRotation()
         // body offset
         let o = objThree.body.offset
         objThree.position.set(p.x() + o.x, p.y() + o.y, p.z() + o.z)
         objThree.quaternion.set(q.x(), q.y(), q.z(), q.w())
+
+        objThree.collided = false
       }
     }
+
+    /**
+     * Check collisions
+     */
+    for (var i = 0, il = this.dispatcher.getNumManifolds(); i < il; i++) {
+      const contactManifold = this.dispatcher.getManifoldByIndexInternal(i)
+      const key = Object.keys(contactManifold.getBody0())[0]
+
+      // @ts-ignore
+      const body0 = Ammo.castObject(contactManifold.getBody0(), Ammo.btRigidBody)
+      // @ts-ignore
+      const body1 = Ammo.castObject(contactManifold.getBody1(), Ammo.btRigidBody)
+
+      // do not check collision for 2 unnamed objects
+      // (fragments do not have a name, for example)
+      if (body0.name === '' && body1.name === '') continue
+
+      // @ts-ignore
+      const ptr0 = body0[key]
+      // @ts-ignore
+      const ptr1 = body1[key]
+      const threeObject0 = this.objectsAmmo[ptr0]
+      const threeObject1 = this.objectsAmmo[ptr1]
+
+      if (!threeObject0 && !threeObject1) {
+        continue
+      }
+
+      /**
+       * Handle collision events
+       */
+      // check if a collision between these object has already been processed
+      const combinedName = `${threeObject0.name}__${threeObject1.name}`
+      let event
+      if (this.earlierDetectedCollisions.find(el => el.combinedName === combinedName)) event = 'colliding'
+      else event = 'start'
+      detectedCollisions.push({ combinedName, collision: true })
+      this.emit('collision', { bodies: [threeObject0, threeObject1], event })
+
+      /**
+       * Get some information
+       */
+      const breakable0 = threeObject0.breakable
+      const breakable1 = threeObject1.breakable
+
+      const collided0 = threeObject0.collided
+      const collided1 = threeObject1.collided
+
+      if ((!breakable0 && !breakable1) || (collided0 && collided1)) {
+        continue
+      }
+
+      let contact = false
+      let maxImpulse = 0
+      for (var j = 0, jl = contactManifold.getNumContacts(); j < jl; j++) {
+        var contactPoint = contactManifold.getContactPoint(j)
+
+        if (contactPoint.getDistance() < 0) {
+          contact = true
+          var impulse = contactPoint.getAppliedImpulse()
+
+          if (impulse > maxImpulse) {
+            maxImpulse = impulse
+            var pos = contactPoint.get_m_positionWorldOnB()
+            var normal = contactPoint.get_m_normalWorldOnB()
+            impactPoint.set(pos.x(), pos.y(), pos.z())
+            impactNormal.set(normal.x(), normal.y(), normal.z())
+          }
+
+          break
+        }
+      }
+
+      // If no point has contact, abort
+      if (!contact) continue
+
+      /**
+       * Check for breakable objects (subdivision)
+       */
+      const fractureImpulse = 5 //250
+      const MAX_FRAGMENT_DEPTH = 2
+
+      // since the library convexBreaker makes use of three's userData
+      // we have to clone the necessary params to threeObjectX.userData
+      // TODO improve this
+      const emptyV3 = new Vector3(0, 0, 0)
+      threeObject0.userData = {
+        mass: 1,
+        velocity: emptyV3,
+        angularVelocity: emptyV3,
+        breakable: breakable0,
+        physicsBody: body0
+      }
+      threeObject1.userData = {
+        mass: 1,
+        velocity: emptyV3,
+        angularVelocity: emptyV3,
+        breakable: breakable1,
+        physicsBody: body1
+      }
+      if (typeof threeObject0.fragmentDepth === 'undefined') threeObject0.fragmentDepth = 0
+      if (typeof threeObject1.fragmentDepth === 'undefined') threeObject1.fragmentDepth = 0
+
+      // threeObject0
+      if (breakable0 && !collided0 && maxImpulse > fractureImpulse && threeObject0.fragmentDepth < MAX_FRAGMENT_DEPTH) {
+        var debris = this.convexBreaker.subdivideByImpact(threeObject0, impactPoint, impactNormal, 1, 2) //, 1.5)
+
+        var numObjects = debris.length
+        for (var j = 0; j < numObjects; j++) {
+          var vel = body0.getLinearVelocity()
+          var angVel = body0.getAngularVelocity()
+          var fragment = debris[j] as ExtendedObject3D
+          fragment.userData.velocity.set(vel.x(), vel.y(), vel.z())
+          fragment.userData.angularVelocity.set(angVel.x(), angVel.y(), angVel.z())
+
+          this.createDebrisFromBreakableObject(fragment, threeObject0)
+        }
+
+        this.objectsToRemove[this.numObjectsToRemove++] = threeObject0
+        threeObject0.collided = true
+      }
+
+      // threeObject1
+      if (breakable1 && !collided1 && maxImpulse > fractureImpulse && threeObject1.fragmentDepth < MAX_FRAGMENT_DEPTH) {
+        var debris = this.convexBreaker.subdivideByImpact(threeObject1, impactPoint, impactNormal, 1, 2) //, 1.5)
+
+        var numObjects = debris.length
+        for (var j = 0; j < numObjects; j++) {
+          var vel = body1.getLinearVelocity()
+          var angVel = body1.getAngularVelocity()
+          var fragment = debris[j] as ExtendedObject3D
+          fragment.userData.velocity.set(vel.x(), vel.y(), vel.z())
+          fragment.userData.angularVelocity.set(angVel.x(), angVel.y(), angVel.z())
+
+          this.createDebrisFromBreakableObject(fragment, threeObject1)
+        }
+
+        this.objectsToRemove[this.numObjectsToRemove++] = threeObject1
+        threeObject1.collided = true
+      }
+    }
+
+    /**
+     * Remove objects
+     */
+    for (var i = 0; i < this.numObjectsToRemove; i++) {
+      this.removeDebris(this.objectsToRemove[i])
+    }
+    this.numObjectsToRemove = 0
+
+    /**
+     * Handle collision end events
+     */
+    this.earlierDetectedCollisions.forEach(el => {
+      const { combinedName } = el
+      if (!detectedCollisions.find(el => el.combinedName === combinedName)) {
+        const split = combinedName.split('__')
+        const obj0 = this.rigidBodies.find(obj => obj.name === split[0])
+        const obj1 = this.rigidBodies.find(obj => obj.name === split[1])
+        if (obj0 && obj1) this.emit('collision', { bodies: [obj0, obj1], event: 'end' })
+      }
+    })
+    this.earlierDetectedCollisions = [...detectedCollisions]
   }
 }
+
+export default Physics

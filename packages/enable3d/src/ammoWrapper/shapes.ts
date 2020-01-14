@@ -36,15 +36,28 @@ class Shapes {
     meshConfig.type = 'mesh'
     const { scale } = mesh
 
+    let vertexCount = 0
+    this.iterateGeometries(mesh, meshConfig, (geo: any) => {
+      vertexCount += geo.attributes.position.array.length / 3
+    })
+
+    const maxVertices = 1000
+    if (vertexCount > maxVertices) {
+      // console.warn(`too many vertices for hull shape; sampling ~${maxVertices} from ~${vertexCount} vertices`)
+    }
+    const p = Math.min(1, maxVertices / vertexCount)
+
     this.iterateGeometries(mesh, meshConfig, (geo: any, transform: any) => {
       const components = geo.attributes.position.array
       for (let i = 0; i < components.length; i += 3) {
-        vertex
-          .set(components[i], components[i + 1], components[i + 2])
-          .applyMatrix4(transform)
-          .sub(center)
-        btVertex.setValue(vertex.x, vertex.y, vertex.z)
-        originalHull.addPoint(btVertex, i === components.length - 3)
+        if (Math.random() <= p) {
+          vertex
+            .set(components[i], components[i + 1], components[i + 2])
+            .applyMatrix4(transform)
+            .sub(center)
+          btVertex.setValue(vertex.x, vertex.y, vertex.z)
+          originalHull.addPoint(btVertex, i === components.length - 3)
+        }
       }
     })
     originalHull.setLocalScaling(new Ammo.btVector3(scale.x, scale.y, scale.z))

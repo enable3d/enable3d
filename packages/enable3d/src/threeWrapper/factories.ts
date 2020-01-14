@@ -23,7 +23,11 @@ import {
   MeshBasicMaterial,
   CylinderGeometry,
   ExtrudeGeometry,
-  MeshLambertMaterial
+  MeshLambertMaterial,
+  BoxBufferGeometry,
+  SphereBufferGeometry,
+  ExtrudeBufferGeometry,
+  CylinderBufferGeometry
 } from 'three'
 import Textures from './textures'
 import ExtendedObject3D from './extendedObject3D'
@@ -65,15 +69,16 @@ export default class Factories extends Textures {
   }
 
   protected makeExtrude(extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig) {
-    const { x, y, z, name, shape, autoCenter = true, ...rest } = extrudeConfig
+    const { x, y, z, name, shape, autoCenter = true, breakable = false, ...rest } = extrudeConfig
     const { depth = 1, bevelEnabled = false } = rest
-    const geometry = new ExtrudeGeometry(shape, { depth, bevelEnabled, ...rest })
+    const geometry = new ExtrudeBufferGeometry(shape, { depth, bevelEnabled, ...rest })
     const material = this.createMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     // auto adjust the center for custom shapes
     if (autoCenter) mesh.geometry.center()
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'extrude'
+    mesh.breakable = breakable
     return mesh
   }
 
@@ -84,8 +89,8 @@ export default class Factories extends Textures {
   }
 
   protected makeSphere(sphereConfig: SphereConfig, materialConfig: MaterialConfig): ExtendedObject3D {
-    const { x, y, z, name, ...rest } = sphereConfig
-    const geometry = new SphereGeometry(
+    const { x, y, z, name, breakable = false, ...rest } = sphereConfig
+    const geometry = new SphereBufferGeometry(
       rest.radius || 1,
       rest.widthSegments || 16,
       rest.heightSegments || 12,
@@ -98,6 +103,7 @@ export default class Factories extends Textures {
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'sphere'
+    mesh.breakable = breakable
     return mesh
   }
 
@@ -108,8 +114,8 @@ export default class Factories extends Textures {
   }
 
   protected makeBox(boxConfig: BoxConfig, materialConfig: MaterialConfig): ExtendedObject3D {
-    const { x, y, z, name, ...rest } = boxConfig
-    const geometry = new BoxGeometry(
+    const { x, y, z, name, breakable = false, ...rest } = boxConfig
+    const geometry = new BoxBufferGeometry(
       rest.width || 1,
       rest.height || 1,
       rest.depth || 1,
@@ -121,6 +127,7 @@ export default class Factories extends Textures {
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'box'
+    mesh.breakable = breakable
     return mesh
   }
 
@@ -138,8 +145,8 @@ export default class Factories extends Textures {
   }
 
   protected makeCylinder(cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
-    const { x, y, z, name, ...rest } = cylinderConfig
-    const geometry = new CylinderGeometry(
+    const { x, y, z, name, breakable = false, ...rest } = cylinderConfig
+    const geometry = new CylinderBufferGeometry(
       rest.radiusTop || undefined,
       rest.radiusBottom || undefined,
       rest.height || undefined,
@@ -153,6 +160,7 @@ export default class Factories extends Textures {
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'cylinder'
+    mesh.breakable = breakable
     return mesh
   }
 

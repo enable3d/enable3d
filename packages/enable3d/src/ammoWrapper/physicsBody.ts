@@ -11,7 +11,7 @@ import Physics from './physics'
 class PhysicsBody {
   offset = { x: 0, y: 0, z: 0 }
   name: string
-  constructor(private physics: Physics, public ammo: Ammo.btRigidBody) {
+  constructor(private physics: AmmoPhysics, public ammo: Ammo.btRigidBody) {
     // @ts-ignore
     this.name = ammo.name
   }

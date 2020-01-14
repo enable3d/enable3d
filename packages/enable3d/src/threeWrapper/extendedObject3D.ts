@@ -29,6 +29,9 @@ class ExtendedObject3D extends Object3D {
   anims: { [key: string]: AnimationClip } = {}
   action: AnimationAction
   currentAnimation: string = ''
+  breakable: boolean
+  fragmentDepth: number
+  collided: boolean
 
   setAction(name: string) {
     if (this.mixer && this.anims.hasOwnProperty(name)) {

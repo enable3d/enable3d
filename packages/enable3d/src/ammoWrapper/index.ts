@@ -12,7 +12,6 @@ import applyMixins from '../helpers/applyMixins'
 import ExtendedObject3D from '../threeWrapper/extendedObject3D'
 import Shapes from './shapes'
 import Constraints from './constraints'
-import DebugDrawer from './debugDrawer'
 import { Scene3D } from '..'
 import Events from './events'
 import EventEmitter = require('eventemitter3')
@@ -112,6 +111,9 @@ class AmmoPhysics extends EventEmitter {
         case 'concave':
           Shape = this.addTriMeshShape(object, config)
           break
+        case 'hull':
+          Shape = this.addHullShape(object, config)
+          break
         default:
           Shape = defaultShape()
           break
@@ -164,6 +166,8 @@ class AmmoPhysics extends EventEmitter {
     rigidBody.name = threeObject.name
     threeObject.body = new PhysicsBody(this, rigidBody)
     threeObject.hasBody = true
+    // @ts-ignore
+    threeObject.ptr = ptr
     this.objectsAmmo[ptr] = threeObject
   }
 }
