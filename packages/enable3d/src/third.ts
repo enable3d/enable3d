@@ -7,7 +7,7 @@
 import ThreeGraphics from './threeWrapper'
 import AmmoPhysics from './ammoWrapper'
 import { Phaser3DConfig } from './types'
-import { Vector2, Vector3, RepeatWrapping, Shape } from 'three'
+import { Vector2, Vector3, RepeatWrapping, Shape, Geometry, BufferGeometry } from 'three'
 import ExtendedObject3D from './threeWrapper/extendedObject3D'
 import logger from './helpers/logger'
 import { Scene3D } from '.'
@@ -210,6 +210,16 @@ class Third extends ThreeGraphics {
 
   get transform() {
     return {
+      geometryToBufferGeometry: (geometry: Geometry | BufferGeometry) => {
+        // @ts-ignore
+        if (geometry.isGeometry) return new BufferGeometry().fromGeometry(geometry)
+        else return geometry as BufferGeometry
+      },
+      bufferGeometryToGeometry: (bufferGeometry: Geometry | BufferGeometry) => {
+        // @ts-ignore
+        if (bufferGeometry.isBufferGeometry) return new Geometry().fromBufferGeometry(bufferGeometry)
+        else return bufferGeometry as Geometry
+      },
       fromSVGtoShape: (key: string, isCCW?: boolean, noHoles?: boolean) =>
         this.transformFromSVGtoShape(key, isCCW, noHoles),
       from3dto2d: (position: Vector3) => this.transformFrom3dto2d(position),

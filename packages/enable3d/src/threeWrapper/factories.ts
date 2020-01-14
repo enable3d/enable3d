@@ -69,17 +69,7 @@ export default class Factories extends Textures {
   }
 
   protected makeExtrude(extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig) {
-    const {
-      x,
-      y,
-      z,
-      name,
-      shape,
-      autoCenter = true,
-      breakable = false,
-      bufferGeometry = false,
-      ...rest
-    } = extrudeConfig
+    const { x, y, z, name, shape, autoCenter = true, breakable = false, bufferGeometry = true, ...rest } = extrudeConfig
     const { depth = 1, bevelEnabled = false } = rest
     const geometry =
       bufferGeometry || breakable
@@ -102,7 +92,7 @@ export default class Factories extends Textures {
   }
 
   protected makeSphere(sphereConfig: SphereConfig, materialConfig: MaterialConfig): ExtendedObject3D {
-    const { x, y, z, name, breakable = false, bufferGeometry = false, ...rest } = sphereConfig
+    const { x, y, z, name, breakable = false, bufferGeometry = true, ...rest } = sphereConfig
     const geometry =
       bufferGeometry || breakable
         ? new SphereBufferGeometry(
@@ -138,7 +128,7 @@ export default class Factories extends Textures {
   }
 
   protected makeBox(boxConfig: BoxConfig, materialConfig: MaterialConfig): ExtendedObject3D {
-    const { x, y, z, name, breakable = false, bufferGeometry = false, ...rest } = boxConfig
+    const { x, y, z, name, breakable = false, bufferGeometry = true, ...rest } = boxConfig
     const geometry =
       bufferGeometry || breakable
         ? new BoxBufferGeometry(
@@ -179,7 +169,7 @@ export default class Factories extends Textures {
   }
 
   protected makeCylinder(cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
-    const { x, y, z, name, breakable = false, bufferGeometry = false, ...rest } = cylinderConfig
+    const { x, y, z, name, breakable = false, bufferGeometry = true, ...rest } = cylinderConfig
     const geometry =
       bufferGeometry || breakable
         ? new CylinderBufferGeometry(
