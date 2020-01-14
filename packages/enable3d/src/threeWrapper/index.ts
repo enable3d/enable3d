@@ -53,7 +53,8 @@ import {
   ExtrudeConfig,
   ExtrudeObject,
   HeightMapObject,
-  HeightMapConfig
+  HeightMapConfig,
+  AddMaterial
 } from '../types'
 import ExtendedObject3D from './extendedObject3D'
 import applyMixins from '../helpers/applyMixins'
@@ -238,6 +239,7 @@ class ThreeGraphics {
     sphere: SphereObject
     cylinder: CylinderObject
     extrude: ExtrudeObject
+    material: AddMaterial
   } {
     return {
       //  Lights
@@ -263,8 +265,9 @@ class ThreeGraphics {
       cylinder: (cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.addCylinder(cylinderConfig, materialConfig),
       extrude: (extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig = {}) =>
-        this.addExtrude(extrudeConfig, materialConfig)
+        this.addExtrude(extrudeConfig, materialConfig),
       //...
+      material: (materialConfig: MaterialConfig = {}) => this.addMaterial(materialConfig)
     }
   }
 

@@ -27,10 +27,13 @@ import {
   BoxBufferGeometry,
   SphereBufferGeometry,
   ExtrudeBufferGeometry,
-  CylinderBufferGeometry
+  CylinderBufferGeometry,
+  MeshPhysicalMaterial,
+  MeshToonMaterial
 } from 'three'
 import Textures from './textures'
 import ExtendedObject3D from './extendedObject3D'
+import logger from '../helpers/logger'
 
 export default class Factories extends Textures {
   public scene: Scene
@@ -75,7 +78,7 @@ export default class Factories extends Textures {
       bufferGeometry || breakable
         ? new ExtrudeBufferGeometry(shape, { depth, bevelEnabled, ...rest })
         : new ExtrudeGeometry(shape, { depth, bevelEnabled, ...rest })
-    const material = this.createMaterial(materialConfig)
+    const material = this.addMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     // auto adjust the center for custom shapes
     if (autoCenter) mesh.geometry.center()
@@ -113,7 +116,7 @@ export default class Factories extends Textures {
             rest.thetaStart || undefined,
             rest.thetaLength || undefined
           )
-    const material = this.createMaterial(materialConfig)
+    const material = this.addMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'sphere'
@@ -147,7 +150,7 @@ export default class Factories extends Textures {
             rest.heightSegments || undefined,
             rest.depthSegments || undefined
           )
-    const material = this.createMaterial(materialConfig)
+    const material = this.addMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'box'
@@ -192,7 +195,7 @@ export default class Factories extends Textures {
             rest.thetaStart || undefined,
             rest.thetaLength || undefined
           )
-    const material = this.createMaterial(materialConfig)
+    const material = this.addMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'cylinder'
@@ -206,7 +209,7 @@ export default class Factories extends Textures {
     return obj
   }
 
-  protected createMaterial(materialConfig: MaterialConfig = {}) {
+  protected addMaterial(materialConfig: MaterialConfig = {}) {
     const type = Object.keys(materialConfig)[0]
     let material: Material
 
@@ -230,6 +233,17 @@ export default class Factories extends Textures {
         break
       case 'phong':
         material = new MeshPhongMaterial(materialConfig.phong)
+        break
+      case 'physical':
+        if (typeof materialConfig.physical !== 'undefined') {
+          material = new MeshPhysicalMaterial(materialConfig.physical)
+        } else {
+          logger('You need to pass parameters to the physical material. (Fallback to default material)')
+          material = this.getDefaultMaterial()
+        }
+        break
+      case 'toon':
+        material = new MeshToonMaterial(materialConfig.toon)
         break
       case 'line':
         material = new LineBasicMaterial(materialConfig.line)

@@ -16,7 +16,10 @@ import {
   Shape,
   ExtrudeGeometryOptions,
   MeshLambertMaterialParameters,
-  Texture
+  Texture,
+  MeshToonMaterialParameters,
+  MeshPhysicalMaterialParameters,
+  Material
 } from 'three'
 import ExtendedObject3D from './threeWrapper/extendedObject3D'
 
@@ -76,6 +79,8 @@ export interface MaterialConfig {
   standard?: MeshStandardMaterialParameters
   lambert?: MeshLambertMaterialParameters
   phong?: MeshPhongMaterialParameters
+  physical?: MeshPhysicalMaterialParameters
+  toon?: MeshToonMaterialParameters
   line?: LineBasicMaterialParameters
   points?: PointsMaterialParameters
   [key: string]: any
@@ -98,6 +103,9 @@ export interface ExtrudeObject {
 }
 export interface HeightMapObject {
   (texture: Texture, config?: HeightMapConfig): ExtendedObject3D | undefined
+}
+export interface AddMaterial {
+  (materialConfig?: MaterialConfig): Material
 }
 
 interface GeometryConfig {
