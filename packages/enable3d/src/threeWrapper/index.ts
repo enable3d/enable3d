@@ -70,8 +70,9 @@ import WebXR from './webxr'
 import HeightMap from './heightmap'
 
 import chroma from 'chroma-js'
+import Transform from './transform'
 
-interface ThreeGraphics extends Loaders, Cameras, Textures, Lights, Factories, CSG, WebXR, HeightMap {}
+interface ThreeGraphics extends Loaders, Cameras, Textures, Lights, Factories, CSG, WebXR, HeightMap, Transform {}
 
 class ThreeGraphics {
   public scene: Scene
@@ -306,6 +307,6 @@ class ThreeGraphics {
   }
 }
 
-applyMixins(ThreeGraphics, [Loaders, Cameras, Textures, Lights, Factories, CSG, WebXR, HeightMap])
+applyMixins(ThreeGraphics, [Loaders, Cameras, Textures, Lights, Factories, CSG, WebXR, HeightMap, Transform])
 
 export default ThreeGraphics
