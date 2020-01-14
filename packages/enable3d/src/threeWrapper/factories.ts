@@ -69,9 +69,21 @@ export default class Factories extends Textures {
   }
 
   protected makeExtrude(extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig) {
-    const { x, y, z, name, shape, autoCenter = true, breakable = false, ...rest } = extrudeConfig
+    const {
+      x,
+      y,
+      z,
+      name,
+      shape,
+      autoCenter = true,
+      breakable = false,
+      bufferGeometry = false,
+      ...rest
+    } = extrudeConfig
     const { depth = 1, bevelEnabled = false } = rest
-    const geometry = new ExtrudeBufferGeometry(shape, { depth, bevelEnabled, ...rest })
+    const geometry = bufferGeometry
+      ? new ExtrudeBufferGeometry(shape, { depth, bevelEnabled, ...rest })
+      : new ExtrudeGeometry(shape, { depth, bevelEnabled, ...rest })
     const material = this.createMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     // auto adjust the center for custom shapes
@@ -89,16 +101,26 @@ export default class Factories extends Textures {
   }
 
   protected makeSphere(sphereConfig: SphereConfig, materialConfig: MaterialConfig): ExtendedObject3D {
-    const { x, y, z, name, breakable = false, ...rest } = sphereConfig
-    const geometry = new SphereBufferGeometry(
-      rest.radius || 1,
-      rest.widthSegments || 16,
-      rest.heightSegments || 12,
-      rest.phiStart || undefined,
-      rest.phiLength || undefined,
-      rest.thetaStart || undefined,
-      rest.thetaLength || undefined
-    )
+    const { x, y, z, name, breakable = false, bufferGeometry = false, ...rest } = sphereConfig
+    const geometry = bufferGeometry
+      ? new SphereBufferGeometry(
+          rest.radius || 1,
+          rest.widthSegments || 16,
+          rest.heightSegments || 12,
+          rest.phiStart || undefined,
+          rest.phiLength || undefined,
+          rest.thetaStart || undefined,
+          rest.thetaLength || undefined
+        )
+      : new SphereGeometry(
+          rest.radius || 1,
+          rest.widthSegments || 16,
+          rest.heightSegments || 12,
+          rest.phiStart || undefined,
+          rest.phiLength || undefined,
+          rest.thetaStart || undefined,
+          rest.thetaLength || undefined
+        )
     const material = this.createMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
@@ -114,15 +136,24 @@ export default class Factories extends Textures {
   }
 
   protected makeBox(boxConfig: BoxConfig, materialConfig: MaterialConfig): ExtendedObject3D {
-    const { x, y, z, name, breakable = false, ...rest } = boxConfig
-    const geometry = new BoxBufferGeometry(
-      rest.width || 1,
-      rest.height || 1,
-      rest.depth || 1,
-      rest.widthSegments || undefined,
-      rest.heightSegments || undefined,
-      rest.depthSegments || undefined
-    )
+    const { x, y, z, name, breakable = false, bufferGeometry = false, ...rest } = boxConfig
+    const geometry = bufferGeometry
+      ? new BoxBufferGeometry(
+          rest.width || 1,
+          rest.height || 1,
+          rest.depth || 1,
+          rest.widthSegments || undefined,
+          rest.heightSegments || undefined,
+          rest.depthSegments || undefined
+        )
+      : new BoxGeometry(
+          rest.width || 1,
+          rest.height || 1,
+          rest.depth || 1,
+          rest.widthSegments || undefined,
+          rest.heightSegments || undefined,
+          rest.depthSegments || undefined
+        )
     const material = this.createMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
@@ -145,17 +176,28 @@ export default class Factories extends Textures {
   }
 
   protected makeCylinder(cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
-    const { x, y, z, name, breakable = false, ...rest } = cylinderConfig
-    const geometry = new CylinderBufferGeometry(
-      rest.radiusTop || undefined,
-      rest.radiusBottom || undefined,
-      rest.height || undefined,
-      rest.radiusSegments || undefined,
-      rest.heightSegments || undefined,
-      rest.openEnded || undefined,
-      rest.thetaStart || undefined,
-      rest.thetaLength || undefined
-    )
+    const { x, y, z, name, breakable = false, bufferGeometry = false, ...rest } = cylinderConfig
+    const geometry = bufferGeometry
+      ? new CylinderBufferGeometry(
+          rest.radiusTop || undefined,
+          rest.radiusBottom || undefined,
+          rest.height || undefined,
+          rest.radiusSegments || undefined,
+          rest.heightSegments || undefined,
+          rest.openEnded || undefined,
+          rest.thetaStart || undefined,
+          rest.thetaLength || undefined
+        )
+      : new CylinderGeometry(
+          rest.radiusTop || undefined,
+          rest.radiusBottom || undefined,
+          rest.height || undefined,
+          rest.radiusSegments || undefined,
+          rest.heightSegments || undefined,
+          rest.openEnded || undefined,
+          rest.thetaStart || undefined,
+          rest.thetaLength || undefined
+        )
     const material = this.createMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`

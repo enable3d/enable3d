@@ -45,18 +45,10 @@ interface WH {
 
 export type Color = number | string
 
-interface Mass {
-  mass?: number
-}
-
 interface Makeup {
   texture?: any
   color?: Color
   material?: any
-}
-
-interface CollisionFlag {
-  collisionFlag?: number
 }
 
 export interface PerspectiveCamera extends XYZ {
@@ -108,8 +100,16 @@ export interface HeightMapObject {
   (texture: Texture, config?: HeightMapConfig): ExtendedObject3D | undefined
 }
 
-export interface SphereConfig extends XYZ, Mass, CollisionFlag {
+interface GeometryConfig {
   name?: string
+  friction?: number
+  collisionFlag?: number
+  breakable?: boolean
+  mass?: number
+  bufferGeometry?: boolean
+}
+
+export interface SphereConfig extends GeometryConfig, XYZ {
   radius?: number
   widthSegments?: number
   heightSegments?: number
@@ -117,20 +117,13 @@ export interface SphereConfig extends XYZ, Mass, CollisionFlag {
   phiLength?: number
   thetaStart?: number
   thetaLength?: number
-  friction?: number
-  collisionFlag?: number
-  breakable?: boolean
 }
 
-export interface BoxConfig extends XYZ, WH, Mass, CollisionFlag {
-  name?: string
+export interface BoxConfig extends GeometryConfig, XYZ, WH {
   depth?: number
   widthSegments?: number
   heightSegments?: number
   depthSegments?: number
-  friction?: number
-  collisionFlag?: number
-  breakable?: boolean
 }
 
 export interface GroundConfig extends BoxConfig {
@@ -138,8 +131,7 @@ export interface GroundConfig extends BoxConfig {
   height: number
 }
 
-export interface CylinderConfig extends XYZ, WH, Mass, CollisionFlag {
-  name?: string
+export interface CylinderConfig extends GeometryConfig, XYZ, WH {
   radiusTop?: number
   radiusBottom?: number
   height?: number
@@ -148,14 +140,11 @@ export interface CylinderConfig extends XYZ, WH, Mass, CollisionFlag {
   openEnded?: boolean
   thetaStart?: number
   thetaLength?: number
-  breakable?: boolean
 }
 
-export interface ExtrudeConfig extends XYZ, Mass, CollisionFlag, ExtrudeGeometryOptions {
-  name?: string
+export interface ExtrudeConfig extends GeometryConfig, XYZ, ExtrudeGeometryOptions {
   shape: Shape
   autoCenter?: boolean
-  breakable?: boolean
 }
 
 export interface HeightMapConfig {
