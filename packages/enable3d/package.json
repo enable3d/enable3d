@@ -1,6 +1,6 @@
 {
   "name": "enable3d",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "3D extension for Phaser 3",
   "main": "dist/index.js",
   "author": "Yannick Deubel",
