@@ -24,6 +24,7 @@ class Physics extends EventEmitter {
   protected addRigidBody: (threeObject: ExtendedObject3D, physicsShape: any, mass: any, pos: any, quat: any) => void
   private objectsToRemove: any[]
   private numObjectsToRemove: number
+  protected gravity: { x: number; y: number; z: number }
 
   constructor(protected phaser3D: ThreeGraphics, protected scene: Scene3D) {
     super()
@@ -66,14 +67,14 @@ class Physics extends EventEmitter {
   }
 
   protected setupPhysicsWorld() {
-    var gravityConstant = -20
+    const g = this.gravity
 
     const collisionConfiguration = new Ammo.btDefaultCollisionConfiguration()
     const dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration)
     const broadphase = new Ammo.btDbvtBroadphase()
     const solver = new Ammo.btSequentialImpulseConstraintSolver()
     this.physicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration)
-    this.physicsWorld.setGravity(new Ammo.btVector3(0, gravityConstant, 0))
+    this.physicsWorld.setGravity(new Ammo.btVector3(g.x, g.y, g.z))
 
     this.dispatcher = dispatcher
     this.tmpTrans = new Ammo.btTransform()

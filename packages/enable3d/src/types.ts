@@ -33,6 +33,8 @@ export interface Phaser3DConfig {
   /** Add your own THREE.js camera */
   camera?: THREE_PerspectiveCamera | THREE_OrthographicCamera
   enableXR?: boolean
+  /** Default gravity is { y: -9.81 } */
+  gravity?: { x: number; y: number; z: number }
 }
 
 export interface XYZ {

@@ -7,7 +7,15 @@
 import logger from '../helpers/logger'
 import PhysicsBody from './physicsBody'
 import ThreeGraphics from '../threeWrapper'
-import { SphereConfig, GroundConfig, MaterialConfig, BoxConfig, CylinderConfig, ExtrudeConfig } from '../types'
+import {
+  SphereConfig,
+  GroundConfig,
+  MaterialConfig,
+  BoxConfig,
+  CylinderConfig,
+  ExtrudeConfig,
+  Phaser3DConfig
+} from '../types'
 import applyMixins from '../helpers/applyMixins'
 import ExtendedObject3D from '../threeWrapper/extendedObject3D'
 import Shapes from './shapes'
@@ -24,9 +32,11 @@ class AmmoPhysics extends EventEmitter {
   protected rigidBodies: ExtendedObject3D[] = []
   protected objectsAmmo: { [ptr: number]: any } = {}
   protected earlierDetectedCollisions: { combinedName: string; collision: boolean }[] = []
+  protected gravity: { x: number; y: number; z: number }
 
-  constructor(protected phaser3D: ThreeGraphics, protected scene: Scene3D) {
+  constructor(protected phaser3D: ThreeGraphics, protected scene: Scene3D, config: Phaser3DConfig = {}) {
     super()
+    this.gravity = config.gravity || { x: 0, y: -9.81, z: 0 }
     this.start()
   }
 

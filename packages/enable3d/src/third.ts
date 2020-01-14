@@ -42,7 +42,7 @@ class Third extends ThreeGraphics {
   constructor(scene: Scene3D, config: Phaser3DConfig) {
     super(scene, config)
 
-    if (window.__loadPhysics) this.physics = new AmmoPhysics(this, scene)
+    if (window.__loadPhysics) this.physics = new AmmoPhysics(this, scene, config)
 
     // remove the update event which is used by ThreeGraphics.ts and AmmoPhysics.ts
     scene.events.once('shutdown', () => {
