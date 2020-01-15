@@ -7,7 +7,7 @@
 import ThreeGraphics from './threeWrapper'
 import AmmoPhysics from './ammoWrapper'
 import { Phaser3DConfig } from './types'
-import { Vector2, Vector3, RepeatWrapping, Shape, Geometry, BufferGeometry } from 'three'
+import { RepeatWrapping } from 'three'
 import ExtendedObject3D from './threeWrapper/extendedObject3D'
 import logger from './helpers/logger'
 import { Scene3D } from '.'
@@ -64,30 +64,30 @@ class Third extends ThreeGraphics {
         this.physics.add
           .box(
             {
-              x: Phaser.Math.Between(-20, 20),
-              y: Phaser.Math.Between(20, 40),
-              z: Phaser.Math.Between(-20, 20),
-              width: Phaser.Math.Between(1, 2),
-              height: Phaser.Math.Between(1, 2),
-              depth: Phaser.Math.Between(1, 2),
+              x: Phaser.Math.Between(-10, 10),
+              y: Phaser.Math.Between(10, 20),
+              z: Phaser.Math.Between(-10, 10),
+              width: Phaser.Math.Between(1, 2) / 10,
+              height: Phaser.Math.Between(1, 2) / 10,
+              depth: Phaser.Math.Between(1, 2) / 10,
               mass: 1
             },
             { [Phaser.Math.RND.pick(materials)]: { color: Math.floor(Math.random() * 0xffffff) } }
           )
-          .body.setRestitution(Math.floor(Math.random() * 10) / 10)
+          .body.setRestitution(Math.floor(Math.random() * 10) / 20)
       } else {
         this.physics.add
           .sphere(
             {
-              x: Phaser.Math.Between(-20, 20),
-              y: Phaser.Math.Between(20, 40),
-              z: Phaser.Math.Between(-20, 20),
-              radius: Phaser.Math.Between(1, 2),
+              x: Phaser.Math.Between(-10, 10),
+              y: Phaser.Math.Between(10, 20),
+              z: Phaser.Math.Between(-10, 10),
+              radius: Phaser.Math.Between(1, 2) / 10,
               mass: 1
             },
             { [Phaser.Math.RND.pick(materials)]: { color: Math.floor(Math.random() * 0xffffff) } }
           )
-          .body.setRestitution(Math.floor(Math.random() * 10) / 10)
+          .body.setRestitution(Math.floor(Math.random() * 10) / 20)
       }
     }
   }
@@ -124,13 +124,13 @@ class Third extends ThreeGraphics {
     }
 
     if (features.includes('camera')) {
-      this.camera.position.set(25, 25, 50)
+      this.camera.position.set(5, 5, 10)
     }
 
     if (features.includes('light')) {
       this.add.ambientLight({ color: 0x707070 })
       const light = this.add.directionalLight({ skyColor: 0xffffff, intensity: 0.8, x: -10, y: 18, z: 5 })
-      const d = 50
+      const d = 20
       light.shadow.camera.top = d
       light.shadow.camera.bottom = -d
       light.shadow.camera.left = -d
@@ -150,14 +150,14 @@ class Third extends ThreeGraphics {
         'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOnAAADusBZ+q87AAAAJtJREFUeJzt0EENwDAAxLDbNP6UOxh+NEYQ5dl2drFv286598GrA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAu37AD8eaBH5JQdVbAAAAAElFTkSuQmCC'
       const texture = this.load.texture(gridData)
       texture.wrapS = texture.wrapT = RepeatWrapping
-      texture.repeat.set(25, 25)
+      texture.repeat.set(21, 21)
 
       // ground
       this.ground = this.physics.add.ground(
         {
           name: 'ground',
-          width: 50,
-          height: 50,
+          width: 21,
+          height: 21,
           depth: 1,
           y: -0.5
         },
