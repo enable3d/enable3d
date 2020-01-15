@@ -72,6 +72,7 @@ import HeightMap from './heightmap'
 
 import chroma from 'chroma-js'
 import Transform from './transform'
+import { addWater } from '../utils/water'
 
 interface ThreeGraphics extends Loaders, Cameras, Textures, Lights, Factories, CSG, WebXR, HeightMap, Transform {}
 
@@ -240,6 +241,7 @@ class ThreeGraphics {
     cylinder: CylinderObject
     extrude: ExtrudeObject
     material: AddMaterial
+    water: any
   } {
     return {
       //  Lights
@@ -267,7 +269,8 @@ class ThreeGraphics {
       extrude: (extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig = {}) =>
         this.addExtrude(extrudeConfig, materialConfig),
       //...
-      material: (materialConfig: MaterialConfig = {}) => this.addMaterial(materialConfig)
+      material: (materialConfig: MaterialConfig = {}) => this.addMaterial(materialConfig),
+      water: (config: any) => addWater(config, this.scene)
     }
   }
 
