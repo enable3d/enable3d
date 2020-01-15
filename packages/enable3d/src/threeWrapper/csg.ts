@@ -8,7 +8,7 @@
 // which is a typescript rewrite of https://github.com/manthrax/THREE-CSGMesh
 // which as originally written by Copyright (c) 2011 Evan Wallace (http://madebyevan.com/), under the MIT license.
 
-import { Vector3, Geometry, Matrix3, Face3, Mesh, Matrix4, BufferGeometry } from 'three'
+import { Vector3, Geometry, Matrix3, Face3, Mesh, Matrix4 } from 'three'
 
 /**
  * CSG wrapper for enable3d
@@ -19,14 +19,16 @@ import { Vector3, Geometry, Matrix3, Face3, Mesh, Matrix4, BufferGeometry } from
  */
 export default class CSGWrapper {
   protected add: any
-  transform: any
 
   private toGeometry(meshA: Mesh, meshB: Mesh) {
+    // @ts-ignore
     meshA.geometry = this.transform.bufferGeometryToGeometry(meshA.geometry)
+    // @ts-ignore
     meshB.geometry = this.transform.bufferGeometryToGeometry(meshB.geometry)
   }
 
   private toBufferGeometry(meshC: Mesh) {
+    // @ts-ignore
     meshC.geometry = this.transform.geometryToBufferGeometry(meshC.geometry)
   }
 
