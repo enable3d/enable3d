@@ -7,10 +7,11 @@
 import ThreeGraphics from './threeWrapper'
 import AmmoPhysics from './ammoWrapper'
 import { Phaser3DConfig } from './types'
-import { RepeatWrapping } from 'three'
+import { RepeatWrapping, Mesh, SphereBufferGeometry, MeshBasicMaterial } from 'three'
 import ExtendedObject3D from './threeWrapper/extendedObject3D'
 import logger from './helpers/logger'
 import { Scene3D } from '.'
+import { Sky } from 'three/examples/jsm/objects/Sky'
 
 type WarpedStartFeatures =
   | 'light'
@@ -120,7 +121,46 @@ class Third extends ThreeGraphics {
     }
 
     if (features.includes('sky')) {
-      this.scene.background = this.new.color(0xbfd1e5)
+      const sky = new Sky()
+      sky.scale.setScalar(450000)
+      this.scene.add(sky)
+
+      const sunSphere = new Mesh(new SphereBufferGeometry(20000, 16, 8), new MeshBasicMaterial({ color: 0xffffff }))
+      sunSphere.position.y = -700000
+      sunSphere.visible = false
+      this.scene.add(sunSphere)
+
+      const effectController = {
+        turbidity: 10,
+        rayleigh: 2,
+        mieCoefficient: 0.005,
+        mieDirectionalG: 0.8,
+        luminance: 1,
+        inclination: 0.25, // elevation / inclination
+        azimuth: 0.25, // Facing front,
+        sun: !true
+      }
+
+      const distance = 400000
+
+      // @ts-ignore
+      const uniforms = sky.material.uniforms
+      uniforms['turbidity'].value = effectController.turbidity
+      uniforms['rayleigh'].value = effectController.rayleigh
+      uniforms['mieCoefficient'].value = effectController.mieCoefficient
+      uniforms['mieDirectionalG'].value = effectController.mieDirectionalG
+      uniforms['luminance'].value = effectController.luminance
+
+      const theta = Math.PI * (effectController.inclination - 0.5)
+      const phi = 2 * Math.PI * (effectController.azimuth - 0.5)
+
+      sunSphere.position.x = distance * Math.cos(phi)
+      sunSphere.position.y = distance * Math.sin(phi) * Math.sin(theta)
+      sunSphere.position.z = distance * Math.sin(phi) * Math.cos(theta)
+
+      sunSphere.visible = effectController.sun
+
+      uniforms['sunPosition'].value.copy(sunSphere.position)
     }
 
     if (features.includes('camera')) {
