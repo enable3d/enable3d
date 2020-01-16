@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES5",
-    // "module": "ES2015",
+    "module": "ESNext",
     "lib": ["DOM", "ESNext", "ScriptHost"],
     "declaration": true,
     "declarationMap": true,

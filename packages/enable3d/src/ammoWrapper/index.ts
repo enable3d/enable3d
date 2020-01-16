@@ -22,7 +22,7 @@ import Shapes from './shapes'
 import Constraints from './constraints'
 import { Scene3D } from '..'
 import Events from './events'
-import EventEmitter = require('eventemitter3')
+import EventEmitter from 'eventemitter3'
 import Physics from './physics'
 
 interface AmmoPhysics extends Physics, Constraints, Shapes, Events {}

@@ -6,10 +6,12 @@ const path = require('path')
 module.exports = (env, argv) => {
   return {
     mode: 'production',
-    entry: path.resolve(__dirname, './src/index.ts'),
+    entry: path.resolve(__dirname, './src/bundle.ts'),
     output: {
+      filename: `enable3d.${argv.packageVersion}.main.min.js`,
+      chunkFilename: `enable3d.${argv.packageVersion}.[name].min.js`,
       path: path.resolve(__dirname, `${argv.path}`),
-      filename: `enable3d.${argv.packageVersion}.min.js`,
+      publicPath: '/lib/',
       library: 'ENABLE3D',
       libraryTarget: 'umd'
     },
@@ -20,7 +22,17 @@ module.exports = (env, argv) => {
       rules: [
         {
           test: /\.tsx?$/,
-          loader: 'ts-loader'
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: ['@babel/preset-env'],
+                plugins: ['@babel/plugin-syntax-dynamic-import']
+              }
+            },
+            'ts-loader'
+          ],
+          exclude: /node_modules/
         }
       ]
     }

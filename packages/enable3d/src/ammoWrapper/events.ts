@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import EventEmitter = require('eventemitter3')
+import EventEmitter from 'eventemitter3'
 import { ExtendedObject3D } from '../types'
 
 export default class Events extends EventEmitter {

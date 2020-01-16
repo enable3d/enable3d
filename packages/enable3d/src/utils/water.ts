@@ -7,7 +7,7 @@ import { PlaneBufferGeometry, Scene, Vector2, Mesh, MeshStandardMaterial, Textur
 const addWater = async (config: any = {}, scene: Scene) => {
   const { width = 20, height = 20, x = 0, y = 0, z = 0, color = '#ffffff', scale = 4, flowX = 1, flowY = 1 } = config
 
-  const waterTextures = await (await import('./waterBase64')).default
+  const { default: waterTextures } = await import(/* webpackChunkName: "waterBase64" */ './waterBase64')
 
   const loader = new TextureLoader()
   const water1 = loader.load(waterTextures.one)
