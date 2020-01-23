@@ -25,6 +25,8 @@ export class Scene3D extends Phaser.Scene {
 
   /** Place this in the init() function */
   public requestThirdDimension() {
+    // set default background color to white
+    this.cameras.main.setBackgroundColor(0xffffff)
     // @ts-ignore
     for (let key in this.third) delete this.third[key]
     delete this.third
@@ -32,6 +34,8 @@ export class Scene3D extends Phaser.Scene {
   /** Place this in the init() function */
   public accessThirdDimension(config: Phaser3DConfig = {}) {
     this.third = new Third(this, config)
+    // set default background color to white
+    this.third.scene.background = this.third.new.color(0xffffff)
   }
 
   /** Combines the 3 XR update methods */
