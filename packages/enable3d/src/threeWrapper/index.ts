@@ -95,8 +95,7 @@ class ThreeGraphics {
 
     this.renderer = new WebGLRenderer({
       canvas: root.sys.game.canvas as HTMLCanvasElement,
-      context: root.sys.game.context as WebGLRenderingContext,
-      antialias: false
+      context: root.sys.game.context as WebGLRenderingContext
     })
 
     // the vr renderer is always window.innerWidth and window.innerHeight
