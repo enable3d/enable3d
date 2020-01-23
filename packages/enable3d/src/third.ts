@@ -217,7 +217,7 @@ class Third extends ThreeGraphics {
    * @param camera Pass the current camera (this.three.camera)
    * @param parent Pass the parent object of the Canvas (this.scale.parent)
    */
-  static OrbitControls(camera: any, parent: any) {
+  static OrbitControls(camera: any, parent: any): any {
     return ThreeGraphics.OrbitControls(camera, parent)
   }
 

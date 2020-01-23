@@ -23,6 +23,7 @@ Written in TypeScript, uses three.js and ammo.js, brings the third dimension to 
   <a href="#standalone-mode">Standalone Mode</a> •
   <a href="#phaser-starter-template">Phaser Starter Template</a> •
   <a href="#documentation">Documentation</a> •
+  <a href="#new-features">New Features</a> •
   <a href="#license">License</a>
 </p>
 
@@ -138,6 +139,25 @@ Try [phaser-project-template](https://github.com/yandeu/phaser-project-template)
 ## Documentation
 
 Why do you need a documentation if I've made such [great examples](https://enable3d.io/examples.html).
+
+## New Features
+
+At the time of writing, I have (more or less) implemented all core features I wanted to. Even if there is still a lot to implement, the library runs pretty stable. It is already possible to build all kinds of 3D games. But since it would take me a whole lot of time to implement all the little things a great 3d framework needs, I propose to add and improve only the feature you really need. For example, it does not make much sense to work 2 weeks on a perfect implementation of convex object breaking if no one needs it. So, if you need a feature or face some issues, open a new [issue on github](https://github.com/yandeu/enable3d/issues) or ask @yannick in the [Phaser forum](https://phaser.discourse.group/) for help.
+
+It does not make much sense to publish a new version to npm every time a little feature has been added. Means, if your awesome feature has not been published to npm yet, I recommend to install enable3d directly from github.
+
+```console
+# install enable3d from github
+npm install yandeu/enable3d
+
+# cd into the directory
+cd node_modules/enable3d/
+
+# install and build
+npm install && npm run build:enable3d
+```
+
+Happy coding!
 
 ## License
 
