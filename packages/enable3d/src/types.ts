@@ -35,6 +35,10 @@ export interface Phaser3DConfig {
   enableXR?: boolean
   /** Default gravity is { y: -9.81 } */
   gravity?: { x: number; y: number; z: number }
+  // Default is 1
+  maxSubSteps?: number
+  // Default is 1/60
+  fixedTimeStep?: number
 }
 
 export interface XYZ {

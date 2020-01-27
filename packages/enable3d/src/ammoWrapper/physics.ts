@@ -8,7 +8,7 @@ import { Scene3D } from '..'
 import DebugDrawer from './debugDrawer'
 import EventEmitter from 'eventemitter3'
 import ThreeGraphics from '../threeWrapper'
-import { ExtendedObject3D } from '../types'
+import { ExtendedObject3D, Phaser3DConfig } from '../types'
 import { Vector3, MeshLambertMaterial } from 'three'
 import { ConvexObjectBreaker } from 'three/examples/jsm/misc/ConvexObjectBreaker'
 
@@ -26,7 +26,7 @@ class Physics extends EventEmitter {
   private numObjectsToRemove: number
   protected gravity: { x: number; y: number; z: number }
 
-  constructor(protected phaser3D: ThreeGraphics, protected scene: Scene3D) {
+  constructor(protected phaser3D: ThreeGraphics, protected scene: Scene3D, public config: Phaser3DConfig = {}) {
     super()
   }
 
@@ -112,7 +112,7 @@ class Physics extends EventEmitter {
 
     // Step world
     const deltaTime = delta / 1000
-    this.physicsWorld.stepSimulation(deltaTime)
+    this.physicsWorld.stepSimulation(deltaTime, this.config.maxSubSteps || 1, this.config.fixedTimeStep || 1 / 60)
 
     /**
      * Update rigid bodies
