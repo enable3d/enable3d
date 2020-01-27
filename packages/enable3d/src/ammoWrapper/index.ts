@@ -89,14 +89,23 @@ class AmmoPhysics extends EventEmitter {
   }
 
   private addExisting(object: ExtendedObject3D, config: any = {}): void {
-    const { position: pos, quaternion: quat, shape, hasBody } = object
-    const { width = 1, height = 1, depth = 1, autoCenter = true, offset = undefined } = config
-    // @ts-ignore
-    const params = object?.geometry?.parameters
-    const hasShape = object.hasOwnProperty('shape')
-    const { mass = 1 } = config
+    const { position: pos, quaternion: quat, hasBody } = object
+    const { mass = 1, autoCenter = true, offset = undefined } = config
 
-    const defaultShape = () => new Ammo.btBoxShape(new Ammo.btVector3(width / 2, height / 2, depth / 2))
+    let params = { width: 1, height: 1, depth: 1, radius: 0.5 }
+    let shape = 'box'
+
+    if (config.hasOwnProperty('shape')) {
+      params = { ...params, ...config }
+      shape = config.shape
+    } else if (object.hasOwnProperty('shape')) {
+      // @ts-ignore
+      params = { ...params, ...object?.geometry?.parameters }
+      shape = object.shape
+    }
+
+    const boxShape = () =>
+      new Ammo.btBoxShape(new Ammo.btVector3(params.width / 2, params.height / 2, params.depth / 2))
 
     if (hasBody) {
       logger(`Object "${object.name}" already has a physical body!`)
@@ -107,29 +116,28 @@ class AmmoPhysics extends EventEmitter {
     if (autoCenter && (shape === 'convex' || shape === 'concave')) object.geometry.center()
 
     let Shape
-    if (hasShape) {
-      switch (shape) {
-        case 'box':
-          Shape = new Ammo.btBoxShape(new Ammo.btVector3(params.width / 2, params.height / 2, params.depth / 2))
-          break
-        case 'sphere':
-          Shape = new Ammo.btSphereShape(params.radius)
-          break
-        case 'convex':
-          Shape = this.addTriMeshShape(object, config)
-          break
-        case 'concave':
-          Shape = this.addTriMeshShape(object, config)
-          break
-        case 'hull':
-          Shape = this.addHullShape(object, config)
-          break
-        default:
-          Shape = defaultShape()
-          break
-      }
-    } else {
-      Shape = defaultShape()
+
+    switch (shape) {
+      case 'box':
+        Shape = boxShape()
+        break
+      case 'sphere':
+        Shape = new Ammo.btSphereShape(params.radius)
+        break
+      case 'convex':
+        Shape = this.addTriMeshShape(object, config)
+        break
+      case 'concave':
+        Shape = this.addTriMeshShape(object, config)
+        break
+      case 'hull':
+        Shape = this.addHullShape(object, config)
+        break
+    }
+
+    if (!Shape) {
+      logger(`Could not recognize shape "${shape}"!`)
+      return
     }
 
     Shape.setMargin(0.05)
