@@ -137,12 +137,7 @@ class AmmoPhysics extends EventEmitter {
     this.addRigidBody(object, Shape, mass, pos, quat)
     this.addBodyProperties(object, config)
 
-    if (!hasShape) {
-      const defaultOffset = { x: 0, y: 0, z: 0 }
-      if (offset) object.body.offset = { ...defaultOffset, ...offset }
-      // this will make sure the body will be aligned to the bottom
-      else object.body.offset = { ...defaultOffset, y: -height / 2 }
-    }
+    if (offset) object.body.offset = { x: 0, y: 0, z: 0, ...offset }
   }
 
   protected addRigidBody = (threeObject: ExtendedObject3D, physicsShape: any, mass: any, pos: any, quat: any) => {
