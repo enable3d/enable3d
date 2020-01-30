@@ -103,6 +103,10 @@ class ThreeGraphics {
       context: root.sys.game.context as WebGLRenderingContext
     })
 
+    // this.renderer.physicallyCorrectLights = true
+    this.renderer.gammaInput = true
+    this.renderer.gammaOutput = true
+
     // the vr renderer is always window.innerWidth and window.innerHeight
     this.renderer.vr.enabled = true
 
