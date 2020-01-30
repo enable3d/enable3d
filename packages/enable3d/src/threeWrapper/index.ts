@@ -36,7 +36,11 @@ import {
   Path,
   Texture,
   MeshLambertMaterial,
-  Raycaster
+  Raycaster,
+  DirectionalLight,
+  HemisphereLight,
+  AmbientLight,
+  PointLight
 } from 'three/src/Three'
 
 import {
@@ -232,9 +236,10 @@ class ThreeGraphics {
 
   //  Some basic factory helpers
   public get add(): {
-    directionalLight: any
-    hemisphereLight: any
-    ambientLight: any
+    directionalLight: (config?: any) => DirectionalLight
+    hemisphereLight: (config?: any) => HemisphereLight
+    ambientLight: (config?: any) => AmbientLight
+    pointLight: (config?: any) => PointLight
     mesh: any
     existing: any
     heightMap: HeightMapObject
@@ -252,7 +257,7 @@ class ThreeGraphics {
       directionalLight: (config: any = {}) => this.addDirectionalLight(config),
       hemisphereLight: (config: any = {}) => this.addHemisphereLight(config),
       ambientLight: (config: any = {}) => this.addAmbientLight(config),
-      // pointLight: config => this.addPointLight(config),
+      pointLight: (config: any = {}) => this.addPointLight(config),
       // spotLight: config => this.addSpotLight(config),
 
       // effectComposer: () => this.addEffectComposer(),

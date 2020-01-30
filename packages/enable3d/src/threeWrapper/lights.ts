@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { DirectionalLight, HemisphereLight, Scene, AmbientLight } from 'three'
+import { DirectionalLight, HemisphereLight, Scene, AmbientLight, PointLight } from 'three'
 
 export default class Lights {
   public scene: Scene
@@ -25,6 +25,12 @@ export default class Lights {
 
   protected addAmbientLight({ color = 0xffffff, intensity = 1 } = {}) {
     const light = new AmbientLight(color, intensity)
+    this.scene.add(light)
+    return light
+  }
+
+  protected addPointLight({ color = 0xffffff, intensity = 1, distance = 0, decay = 1 }) {
+    const light = new PointLight(color, intensity, distance, decay)
     this.scene.add(light)
     return light
   }
