@@ -11,9 +11,9 @@
  */
 
 import { Scene3D } from '..'
-import { Object3D, Vector2, Vector3, Math as THREE_Math } from 'three'
+import { Object3D, Vector2, Vector3 } from 'three'
 
-export interface ThirdPersonControlsConfig {
+export interface FirstPersonControlsConfig {
   offset?: Vector3
   sensitivity?: Vector2
   radius?: number
@@ -23,7 +23,7 @@ export interface ThirdPersonControlsConfig {
   autoUpdate?: boolean
 }
 
-class ThirdPersonControls {
+class FirstPersonControls {
   public sensitivity: Vector2
   public radius: number
   public targetRadius: number
@@ -32,7 +32,7 @@ class ThirdPersonControls {
   private theta: number
   private phi: number
 
-  constructor(private scene: Scene3D, private target: Object3D, private config: ThirdPersonControlsConfig) {
+  constructor(private scene: Scene3D, private target: Object3D, private config: FirstPersonControlsConfig) {
     const {
       offset = new Vector3(0, 0, 0),
       sensitivity = new Vector2(1, 1),
@@ -71,24 +71,22 @@ class ThirdPersonControls {
   }
 
   update(deltaX: number, deltaY: number) {
-    const target = this.target.position.clone().add(this.offset)
+    const center = this.target.position.clone().add(this.offset)
+    this.scene.third.camera.position.copy(center)
 
     this.theta -= deltaX * (this.sensitivity.x / 2)
     this.theta %= 360
-    this.phi += deltaY * (this.sensitivity.y / 2)
+    this.phi += deltaY * (-this.sensitivity.y / 2)
     this.phi = Math.min(85, Math.max(-85, this.phi))
 
-    this.radius = THREE_Math.lerp(this.radius, this.targetRadius, this.interpolationFactor)
-
-    this.scene.third.camera.position.x =
-      target.x + this.radius * Math.sin((this.theta * Math.PI) / 180) * Math.cos((this.phi * Math.PI) / 180)
-    this.scene.third.camera.position.y = target.y + this.radius * Math.sin((this.phi * Math.PI) / 180)
-    this.scene.third.camera.position.z =
-      target.z + this.radius * Math.cos((this.theta * Math.PI) / 180) * Math.cos((this.phi * Math.PI) / 180)
+    const lookAt = new Vector3()
+    lookAt.x = center.x + this.radius * Math.sin((this.theta * Math.PI) / 180) * Math.cos((this.phi * Math.PI) / 180)
+    lookAt.y = center.y + this.radius * Math.sin((this.phi * Math.PI) / 180)
+    lookAt.z = center.z + this.radius * Math.cos((this.theta * Math.PI) / 180) * Math.cos((this.phi * Math.PI) / 180)
 
     this.scene.third.camera.updateMatrix()
-    this.scene.third.camera.lookAt(target)
+    this.scene.third.camera.lookAt(lookAt)
   }
 }
 
-export { ThirdPersonControls }
+export { FirstPersonControls }

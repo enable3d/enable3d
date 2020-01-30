@@ -66,6 +66,7 @@ import Factories from './factories'
 import CSG from './csg'
 import JoyStick from '../utils/joystick'
 import { ThirdPersonControls, ThirdPersonControlsConfig } from '../utils/thirdPersonControls'
+import { FirstPersonControls, FirstPersonControlsConfig } from '../utils/firstPersonControls'
 import { Scene3D } from '..'
 import WebXR from './webxr'
 import HeightMap from './heightmap'
@@ -167,6 +168,8 @@ class ThreeGraphics {
 
   private get addControls() {
     return {
+      firstPerson: (target: Object3D, config: FirstPersonControlsConfig) =>
+        new FirstPersonControls(this.root, target, config),
       thirdPerson: (target: Object3D, config: ThirdPersonControlsConfig) =>
         new ThirdPersonControls(this.root, target, config),
       joystick: () => new JoyStick()
@@ -175,6 +178,7 @@ class ThreeGraphics {
 
   get new() {
     return {
+      lerp: (x: number, y: number, t: number) => THREE_Math.lerp(x, y, t),
       /** A simple THREE.js Object3D. */
       object3D: () => new Object3D(),
       /** An extended THREE.js Object3D with useful properties and methods. */
