@@ -40,7 +40,8 @@ import {
   DirectionalLight,
   HemisphereLight,
   AmbientLight,
-  PointLight
+  PointLight,
+  sRGBEncoding
 } from 'three/src/Three'
 
 import {
@@ -104,8 +105,7 @@ class ThreeGraphics {
     })
 
     // this.renderer.physicallyCorrectLights = true
-    this.renderer.gammaInput = true
-    this.renderer.gammaOutput = true
+    this.renderer.outputEncoding = sRGBEncoding
 
     // this.renderer.setPixelRatio(1)
     // this.renderer.setSize(window.innerWidth, window.innerHeight)

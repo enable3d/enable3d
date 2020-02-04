@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Texture, TextureLoader } from 'three'
+import { Texture, TextureLoader, RGBAFormat, sRGBEncoding } from 'three'
 import { Scene } from 'phaser'
 
 export default class Textures {
@@ -17,9 +17,10 @@ export default class Textures {
 
     texture.image = this.root.textures.get(key).getSourceImage()
 
-    // texture.format = THREE.RGBAFormat
+    texture.format = RGBAFormat
     texture.needsUpdate = true
     texture.anisotropy = this.textureAnisotropy
+    texture.encoding = sRGBEncoding
 
     return texture
   }
