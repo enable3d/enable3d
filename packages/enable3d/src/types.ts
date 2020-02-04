@@ -165,3 +165,14 @@ export interface HeightMapConfig {
   material?: MaterialConfig
   colorScale?: chroma.Scale<chroma.Color>
 }
+
+export interface AddExistingConfig {
+  width?: number
+  height?: number
+  depth?: number
+  radius?: number
+  shape?: string
+  mass?: number
+  autoCenter?: boolean
+  offset?: { x?: number; y?: number; z?: number }
+}

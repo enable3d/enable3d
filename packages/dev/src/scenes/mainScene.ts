@@ -54,7 +54,13 @@ export default class MainScene extends Scene3D {
       this.hero.scale.setX(0.02)
       this.hero.scale.setY(0.02)
       this.hero.scale.setZ(0.02)
-      this.third.physics.add.existing(this.hero, { width: 0.35, height: 0.5, depth: 0.35 })
+      this.third.physics.add.existing(this.hero, {
+        shape: 'box',
+        width: 0.35,
+        height: 0.5,
+        depth: 0.35,
+        offset: { y: -0.25 }
+      })
       this.hero.body.setAngularFactor(0, 0, 0)
 
       // Add 3rd Person controls

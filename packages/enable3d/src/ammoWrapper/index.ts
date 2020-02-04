@@ -14,7 +14,8 @@ import {
   BoxConfig,
   CylinderConfig,
   ExtrudeConfig,
-  Phaser3DConfig
+  Phaser3DConfig,
+  AddExistingConfig
 } from '../types'
 import applyMixins from '../helpers/applyMixins'
 import ExtendedObject3D from '../threeWrapper/extendedObject3D'
@@ -75,7 +76,7 @@ class AmmoPhysics extends EventEmitter {
         eventCallback: (event: 'start' | 'collision' | 'end') => void
       ) => this.addCollider(object1, object2, eventCallback),
       constraints: this.addConstraints,
-      existing: (object: ExtendedObject3D, config?: any) => this.addExisting(object, config),
+      existing: (object: ExtendedObject3D, config?: AddExistingConfig) => this.addExisting(object, config),
       sphere: (sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.addSphere(sphereConfig, materialConfig),
       ground: (groundConfig: GroundConfig, materialConfig: MaterialConfig = {}) =>
@@ -88,17 +89,17 @@ class AmmoPhysics extends EventEmitter {
     }
   }
 
-  private addExisting(object: ExtendedObject3D, config: any = {}): void {
+  private addExisting(object: ExtendedObject3D, config: AddExistingConfig = {}): void {
     const { position: pos, quaternion: quat, hasBody } = object
     const { mass = 1, autoCenter = true, offset = undefined } = config
 
     let params = { width: 1, height: 1, depth: 1, radius: 0.5 }
     let shape = 'box'
 
-    if (config.hasOwnProperty('shape')) {
+    if (config.shape) {
       params = { ...params, ...config }
       shape = config.shape
-    } else if (object.hasOwnProperty('shape')) {
+    } else if (object.shape) {
       // @ts-ignore
       params = { ...params, ...object?.geometry?.parameters }
       shape = object.shape
