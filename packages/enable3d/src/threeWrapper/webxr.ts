@@ -5,7 +5,7 @@
  */
 
 import ExtendedObject3D from './extendedObject3D'
-import { PerspectiveCamera, OrthographicCamera, WebGLRenderer, ArrayCamera } from 'three'
+import { PerspectiveCamera, OrthographicCamera, WebGLRenderer, ArrayCamera, Vector3 } from 'three'
 
 export default class WebXR {
   private cameraObject: ExtendedObject3D
@@ -22,10 +22,15 @@ export default class WebXR {
     this.cameraObject.add(this.camera)
   }
 
+  private get isPresenting() {
+    return !!this.renderer?.xr?.isPresenting
+  }
+
   public get xr(): any {
     return {
       getController: (id: number) => this.renderer.xr.getController(id),
-      camera: this.WebXRCamera
+      camera: this.WebXRCamera,
+      isPresenting: this.isPresenting
     }
   }
 
@@ -33,10 +38,9 @@ export default class WebXR {
     return {
       object3D: this.cameraObject,
       position: this.cameraObject?.position,
-      // @ts-ignore
-      rotation: this.renderer.vr.getCamera(this.camera).rotation,
-      // @ts-ignore
-      getWorldDirection: (target: Vector3) => this.renderer.vr.getCamera(this.camera).getWorldDirection(target)
+      rotation: this.isPresenting ? this.renderer.xr.getCamera(this.camera).rotation : undefined,
+      getWorldDirection: (target: Vector3) =>
+        this.isPresenting ? this.renderer.xr.getCamera(this.camera).getWorldDirection(target) : undefined
     }
   }
 }
