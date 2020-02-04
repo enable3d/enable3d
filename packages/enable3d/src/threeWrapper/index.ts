@@ -107,9 +107,6 @@ class ThreeGraphics {
     this.renderer.gammaInput = true
     this.renderer.gammaOutput = true
 
-    // the vr renderer is always window.innerWidth and window.innerHeight
-    this.renderer.vr.enabled = true
-
     // this.renderer.setPixelRatio(1)
     // this.renderer.setSize(window.innerWidth, window.innerHeight)
 
@@ -124,11 +121,15 @@ class ThreeGraphics {
     this.renderer.autoClear = false
 
     // add vr camera
-    if (enableXR) this.addXRCamera()
+    if (enableXR) {
+      // the xr renderer is always window.innerWidth and window.innerHeight
+      this.renderer.xr.enabled = true
+      this.addXRCamera()
+    }
 
     // phaser renderer
     this.view.render = (_renderer: WebGLRenderer) => {
-      if (!this.renderer.vr.isPresenting()) {
+      if (!this.renderer.xr.isPresenting) {
         this.root.updateLoopXR(this.root.sys.game.loop.time, this.root.sys.game.loop.delta)
         this.renderer.state.reset()
         this.renderer.render(this.scene, this.camera)
@@ -139,7 +140,7 @@ class ThreeGraphics {
     if (enableXR) {
       let lastTime = 0
       this.renderer.setAnimationLoop((time: number) => {
-        if (this.renderer.vr.isPresenting()) {
+        if (this.renderer.xr.isPresenting) {
           const delta = time - lastTime
           lastTime = time
           this.root.updateLoopXR(time, delta)
