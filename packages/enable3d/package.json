@@ -30,19 +30,19 @@
   "dependencies": {
     "chroma-js": "^2.1.0",
     "eventemitter3": "^4.0.0",
-    "phaser": "^3.21.0",
+    "phaser": "^3.22.0",
     "regenerator-runtime": "^0.13.3",
-    "three": "^0.111.0"
+    "three": "^0.113.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.3",
+    "@babel/core": "^7.8.4",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@babel/preset-env": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
     "@types/chroma-js": "^1.4.3",
     "babel-loader": "^8.0.6",
     "ts-loader": "^6.2.1",
-    "typescript": "^3.7.4",
-    "webpack": "^4.41.4",
+    "typescript": "^3.7.5",
+    "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"
   }
 }
