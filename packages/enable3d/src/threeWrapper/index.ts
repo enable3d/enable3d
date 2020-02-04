@@ -14,7 +14,7 @@ import {
   Scene,
   WebGLRenderer,
   Mesh,
-  Math as THREE_Math,
+  MathUtils as THREE_Math,
   Box3,
   Box3Helper,
   BoxHelper,

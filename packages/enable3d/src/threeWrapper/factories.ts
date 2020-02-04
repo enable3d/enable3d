@@ -9,7 +9,7 @@ import {
   SphereGeometry,
   BoxGeometry,
   Scene,
-  Math as THREE_Math,
+  MathUtils as THREE_Math,
   Object3D,
   Material,
   Line,

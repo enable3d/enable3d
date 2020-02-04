@@ -11,7 +11,7 @@
  */
 
 import { Scene3D } from '..'
-import { Object3D, Vector2, Vector3, Math as THREE_Math } from 'three'
+import { Object3D, Vector2, Vector3, MathUtils as THREE_Math } from 'three'
 
 export interface ThirdPersonControlsConfig {
   offset?: Vector3

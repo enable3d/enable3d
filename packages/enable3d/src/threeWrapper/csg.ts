@@ -165,7 +165,7 @@ class CSG {
       }
     }
     const inv = new Matrix4().getInverse(toMatrix)
-    geom.applyMatrix(inv)
+    geom.applyMatrix4(inv)
     geom.verticesNeedUpdate = geom.elementsNeedUpdate = geom.normalsNeedUpdate = true
     geom.computeBoundingSphere()
     geom.computeBoundingBox()

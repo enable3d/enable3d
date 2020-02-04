@@ -24,7 +24,7 @@ export default class WebXR {
 
   public get xr(): any {
     return {
-      getController: (id: number) => this.renderer.vr.getController(id),
+      getController: (id: number) => this.renderer.xr.getController(id),
       camera: this.WebXRCamera
     }
   }
