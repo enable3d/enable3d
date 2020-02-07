@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { AnimationClip, AnimationMixer, Mesh, Line, Points, Object3D } from 'three'
+import { AnimationClip, AnimationMixer, Mesh, Line, Points, Object3D, Vector3 } from 'three'
 import PhysicsBody from '../ammoWrapper/physicsBody'
 import { AnimationAction } from 'three/src/animation/AnimationAction'
 import logger from '../helpers/logger'
@@ -20,20 +20,41 @@ interface ExtendedObject3D extends Line, Mesh, Points {
  * Extends the Object3D class from THREE.js and implements properties from Line, Mesh and Points.
  */
 class ExtendedObject3D extends Object3D {
-  shape: string
-  name: string
-  body: PhysicsBody
-  hasBody: boolean = false
-  animations?: AnimationClip[]
-  mixer?: AnimationMixer
-  anims: { [key: string]: AnimationClip } = {}
-  action: AnimationAction
-  currentAnimation: string = ''
-  breakable: boolean
-  fragmentDepth: number
-  collided: boolean
+  private vector3 = new Vector3()
+  public shape: string
+  public name: string
+  public body: PhysicsBody
+  public hasBody: boolean = false
+  public animations?: AnimationClip[]
+  public mixer?: AnimationMixer
+  public anims: { [key: string]: AnimationClip } = {}
+  public action: AnimationAction
+  public currentAnimation: string = ''
+  public breakable: boolean
+  public fragmentDepth: number
+  public collided: boolean
 
-  setAction(name: string) {
+  /** Returns all values relative to the world. */
+  get world() {
+    return {
+      theta: this.worldTheta,
+      phi: this.worldPhi
+    }
+  }
+
+  /** Get the theta relative to the world. */
+  private get worldTheta() {
+    this.getWorldDirection(this.vector3)
+    return Math.atan2(this.vector3.x, this.vector3.z)
+  }
+
+  /** Get the phi relative to the world. */
+  private get worldPhi() {
+    this.getWorldDirection(this.vector3)
+    return Math.acos(this.vector3.y)
+  }
+
+  public setAction(name: string) {
     if (this.mixer && this.anims.hasOwnProperty(name)) {
       const action = this.mixer?.clipAction(this.anims[name])
       action.time = 0
