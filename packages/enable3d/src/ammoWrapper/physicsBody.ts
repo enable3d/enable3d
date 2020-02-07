@@ -6,14 +6,24 @@
 
 import AmmoPhysics from '.'
 import { ExtendedObject3D } from '../types'
-import Physics from './physics'
+import { Euler, Quaternion } from 'three'
+import logger from '../helpers/logger'
 
 class PhysicsBody {
-  offset = { x: 0, y: 0, z: 0 }
-  name: string
+  public offset = { x: 0, y: 0, z: 0 }
+  public name: string
+  public errors: string[] = []
+
   constructor(private physics: AmmoPhysics, public ammo: Ammo.btRigidBody) {
     // @ts-ignore
     this.name = ammo.name
+  }
+
+  private error(error: string) {
+    if (!this.errors.includes(error)) {
+      this.errors.push(error)
+      logger(error)
+    }
   }
 
   public get on() {
@@ -33,6 +43,83 @@ class PhysicsBody {
     })
   }
 
+  private dynamicCheck() {
+    if (this.ammo.isStaticOrKinematicObject()) {
+      this.error(`[Body ${this.name}] You only add force or velocity to dynamic bodies.`)
+      return false
+    }
+    return true
+  }
+
+  private kinematicCheck() {
+    if (!this.ammo.isKinematicObject()) {
+      this.error(`[Body ${this.name}] You can only transform kinematic bodies.`)
+      return false
+    }
+    return true
+  }
+
+  /** You have to call transform() before you can get or set the body's position or rotation. */
+  public transform() {
+    const t = this.physics.tmpTrans
+    this.ammo.getMotionState().getWorldTransform(t)
+  }
+
+  /** You have to call refresh() after you set the position or rotation of the body.  */
+  public refresh() {
+    if (!this.kinematicCheck()) return
+
+    const t = this.physics.tmpTrans
+    this.ammo.getMotionState().setWorldTransform(t)
+  }
+
+  /** Set the rotation in radians. */
+  public setRotation(x: number, y: number, z: number) {
+    if (!this.kinematicCheck()) return
+
+    const e = new Euler(x, y, z)
+    const q = new Quaternion()
+    q.setFromEuler(e)
+
+    const ammoQuat = new Ammo.btQuaternion(0, 0, 0, 1)
+    ammoQuat.setValue(q.x, q.y, q.z, q.w)
+
+    const t = this.physics.tmpTrans
+    t.setRotation(ammoQuat)
+  }
+
+  /** Get the rotation in radians. */
+  public getRotation() {
+    const t = this.physics.tmpTrans
+    const ammoQuat = t.getRotation()
+    const q = new Quaternion(ammoQuat.x(), ammoQuat.y(), ammoQuat.z(), ammoQuat.w())
+
+    const qx = q.x
+    const qy = q.y
+    const qz = q.z
+    const qw = q.w
+
+    // https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/index.htm
+    const angle = 2 * Math.acos(qw)
+    const x = qx / Math.sqrt(1 - qw * qw)
+    const y = qy / Math.sqrt(1 - qw * qw)
+    const z = qz / Math.sqrt(1 - qw * qw)
+
+    return { x: x * angle || 0, y: y * angle || 0, z: z * angle || 0 }
+  }
+
+  public setPosition(x: number, y: number, z: number) {
+    if (!this.kinematicCheck()) return
+
+    const t = this.physics.tmpTrans
+    t.getOrigin().setValue(x, y, z)
+  }
+
+  public getPosition() {
+    const t = this.physics.tmpTrans
+    return { x: t.getOrigin().x(), y: t.getOrigin().y(), z: t.getOrigin().z() }
+  }
+
   public get velocity() {
     return {
       x: this.ammo.getLinearVelocity().x(),
@@ -50,41 +137,53 @@ class PhysicsBody {
   }
 
   public setVelocity(x: number, y: number, z: number) {
+    if (!this.dynamicCheck()) return
     this.ammo.setLinearVelocity(new Ammo.btVector3(x, y, z))
   }
   public setVelocityX(value: number) {
+    if (!this.dynamicCheck()) return
     this.ammo.setLinearVelocity(new Ammo.btVector3(value, this.velocity.y, this.velocity.z))
   }
   public setVelocityY(value: number) {
+    if (!this.dynamicCheck()) return
     this.ammo.setLinearVelocity(new Ammo.btVector3(this.velocity.x, value, this.velocity.z))
   }
   public setVelocityZ(value: number) {
+    if (!this.dynamicCheck()) return
     this.ammo.setLinearVelocity(new Ammo.btVector3(this.velocity.x, this.velocity.y, value))
   }
 
   public setAngularVelocity(x: number, y: number, z: number) {
+    if (!this.dynamicCheck()) return
     this.ammo.setAngularVelocity(new Ammo.btVector3(x, y, z))
   }
   public setAngularVelocityX(value: number) {
+    if (!this.dynamicCheck()) return
     this.ammo.setAngularVelocity(new Ammo.btVector3(value, this.angularVelocity.y, this.angularVelocity.z))
   }
   public setAngularVelocityY(value: number) {
+    if (!this.dynamicCheck()) return
     this.ammo.setAngularVelocity(new Ammo.btVector3(this.angularVelocity.x, value, this.angularVelocity.z))
   }
   public setAngularVelocityZ(value: number) {
+    if (!this.dynamicCheck()) return
     this.ammo.setAngularVelocity(new Ammo.btVector3(this.angularVelocity.x, this.angularVelocity.y, value))
   }
 
   public applyForce(x: number, y: number, z: number) {
+    if (!this.dynamicCheck()) return
     this.ammo.applyCentralImpulse(new Ammo.btVector3(x, y, z))
   }
   public applyForceX(value: number) {
+    if (!this.dynamicCheck()) return
     this.ammo.applyCentralImpulse(new Ammo.btVector3(value, 0, 0))
   }
   public applyForceY(value: number) {
+    if (!this.dynamicCheck()) return
     this.ammo.applyCentralImpulse(new Ammo.btVector3(0, value, 0))
   }
   public applyForceZ(value: number) {
+    if (!this.dynamicCheck()) return
     this.ammo.applyCentralImpulse(new Ammo.btVector3(0, 0, value))
   }
 
@@ -101,7 +200,7 @@ class PhysicsBody {
    * @param value 0 is DYNAMIC, 1 is STATIC, 2 is KINEMATIC, 4 GHOST
    */
   public getCollisionFlags() {
-    this.ammo.getCollisionFlags()
+    return this.ammo.getCollisionFlags()
   }
 
   /**
