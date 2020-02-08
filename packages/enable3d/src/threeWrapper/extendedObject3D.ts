@@ -34,6 +34,11 @@ class ExtendedObject3D extends Object3D {
   public fragmentDepth: number
   public collided: boolean
 
+  constructor() {
+    super()
+    this.name = `object-${this.id}`
+  }
+
   /** Returns all values relative to the world. */
   get world() {
     return {
