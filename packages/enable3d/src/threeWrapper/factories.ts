@@ -33,6 +33,7 @@ import {
 } from 'three'
 import Textures from './textures'
 import ExtendedObject3D from './extendedObject3D'
+import ExtendedMesh from './extendedMesh'
 import logger from '../helpers/logger'
 
 export default class Factories extends Textures {
@@ -62,7 +63,7 @@ export default class Factories extends Textures {
         obj = new Points(geometry, material)
         break
       default:
-        obj = new Mesh(geometry, material)
+        obj = new ExtendedMesh(geometry, material)
         break
     }
     obj.position.set(x, y, z)
