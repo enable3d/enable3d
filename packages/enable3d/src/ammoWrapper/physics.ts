@@ -26,6 +26,10 @@ class Physics extends EventEmitter {
   private numObjectsToRemove: number
   protected gravity: { x: number; y: number; z: number }
 
+  protected emptyV3: Vector3
+  protected impactPoint: Vector3
+  protected impactNormal: Vector3
+
   constructor(protected phaser3D: ThreeGraphics, protected scene: Scene3D, public config: Phaser3DConfig = {}) {
     super()
   }
@@ -106,8 +110,10 @@ class Physics extends EventEmitter {
   }
 
   public update(delta: number) {
-    const impactPoint = new Vector3()
-    const impactNormal = new Vector3()
+    // reset these vectors
+    this.impactPoint.set(0, 0, 0)
+    this.impactNormal.set(0, 0, 0)
+
     const detectedCollisions: { combinedName: string; collision: boolean }[] = []
 
     // Step world
@@ -199,8 +205,8 @@ class Physics extends EventEmitter {
             maxImpulse = impulse
             var pos = contactPoint.get_m_positionWorldOnB()
             var normal = contactPoint.get_m_normalWorldOnB()
-            impactPoint.set(pos.x(), pos.y(), pos.z())
-            impactNormal.set(normal.x(), normal.y(), normal.z())
+            this.impactPoint.set(pos.x(), pos.y(), pos.z())
+            this.impactNormal.set(normal.x(), normal.y(), normal.z())
           }
 
           break
@@ -219,18 +225,19 @@ class Physics extends EventEmitter {
       // since the library convexBreaker makes use of three's userData
       // we have to clone the necessary params to threeObjectX.userData
       // TODO improve this
-      const emptyV3 = new Vector3(0, 0, 0)
+
+      this.emptyV3.set(0, 0, 0)
       threeObject0.userData = {
         mass: 1,
-        velocity: emptyV3,
-        angularVelocity: emptyV3,
+        velocity: this.emptyV3,
+        angularVelocity: this.emptyV3,
         breakable: breakable0,
         physicsBody: body0
       }
       threeObject1.userData = {
         mass: 1,
-        velocity: emptyV3,
-        angularVelocity: emptyV3,
+        velocity: this.emptyV3,
+        angularVelocity: this.emptyV3,
         breakable: breakable1,
         physicsBody: body1
       }
@@ -239,7 +246,7 @@ class Physics extends EventEmitter {
 
       // threeObject0
       if (breakable0 && !collided0 && maxImpulse > fractureImpulse && threeObject0.fragmentDepth < MAX_FRAGMENT_DEPTH) {
-        var debris = this.convexBreaker.subdivideByImpact(threeObject0, impactPoint, impactNormal, 1, 2) //, 1.5)
+        var debris = this.convexBreaker.subdivideByImpact(threeObject0, this.impactPoint, this.impactNormal, 1, 2) //, 1.5)
 
         var numObjects = debris.length
         for (var j = 0; j < numObjects; j++) {
@@ -258,7 +265,7 @@ class Physics extends EventEmitter {
 
       // threeObject1
       if (breakable1 && !collided1 && maxImpulse > fractureImpulse && threeObject1.fragmentDepth < MAX_FRAGMENT_DEPTH) {
-        var debris = this.convexBreaker.subdivideByImpact(threeObject1, impactPoint, impactNormal, 1, 2) //, 1.5)
+        var debris = this.convexBreaker.subdivideByImpact(threeObject1, this.impactPoint, this.impactNormal, 1, 2) //, 1.5)
 
         var numObjects = debris.length
         for (var j = 0; j < numObjects; j++) {

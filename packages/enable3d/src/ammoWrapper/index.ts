@@ -25,6 +25,7 @@ import { Scene3D } from '..'
 import Events from './events'
 import EventEmitter from 'eventemitter3'
 import Physics from './physics'
+import { Vector3 } from 'three'
 
 interface AmmoPhysics extends Physics, Constraints, Shapes, Events {}
 
@@ -37,7 +38,13 @@ class AmmoPhysics extends EventEmitter {
 
   constructor(protected phaser3D: ThreeGraphics, protected scene: Scene3D, public config: Phaser3DConfig = {}) {
     super()
+
+    this.emptyV3 = new Vector3()
+    this.impactPoint = new Vector3()
+    this.impactNormal = new Vector3()
+
     this.gravity = config.gravity || { x: 0, y: -9.81, z: 0 }
+
     this.start()
   }
 

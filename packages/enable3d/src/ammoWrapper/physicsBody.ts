@@ -14,6 +14,11 @@ class PhysicsBody {
   public name: string
   public errors: string[] = []
 
+  private tmpEuler = new Euler()
+  private tmpQuaternion = new Quaternion()
+  private tmpBtVector3 = new Ammo.btVector3()
+  private tmpBtQuaternion = new Ammo.btQuaternion(0, 0, 0, 1)
+
   constructor(private physics: AmmoPhysics, public ammo: Ammo.btRigidBody) {
     // @ts-ignore
     this.name = ammo.name
@@ -77,11 +82,12 @@ class PhysicsBody {
   public setRotation(x: number, y: number, z: number) {
     if (!this.kinematicCheck()) return
 
-    const e = new Euler(x, y, z)
-    const q = new Quaternion()
+    const e = this.tmpEuler.set(x, y, z)
+    const q = this.tmpQuaternion.set(0, 0, 0, 1)
     q.setFromEuler(e)
 
-    const ammoQuat = new Ammo.btQuaternion(0, 0, 0, 1)
+    this.tmpBtQuaternion.setValue(0, 0, 0, 1)
+    const ammoQuat = this.tmpBtQuaternion
     ammoQuat.setValue(q.x, q.y, q.z, q.w)
 
     const t = this.physics.tmpTrans
@@ -92,7 +98,7 @@ class PhysicsBody {
   public getRotation() {
     const t = this.physics.tmpTrans
     const ammoQuat = t.getRotation()
-    const q = new Quaternion(ammoQuat.x(), ammoQuat.y(), ammoQuat.z(), ammoQuat.w())
+    const q = this.tmpQuaternion.set(ammoQuat.x(), ammoQuat.y(), ammoQuat.z(), ammoQuat.w())
 
     const qx = q.x
     const qy = q.y
@@ -138,53 +144,65 @@ class PhysicsBody {
 
   public setVelocity(x: number, y: number, z: number) {
     if (!this.dynamicCheck()) return
-    this.ammo.setLinearVelocity(new Ammo.btVector3(x, y, z))
+    this.tmpBtVector3.setValue(x, y, z)
+    this.ammo.setLinearVelocity(this.tmpBtVector3)
   }
   public setVelocityX(value: number) {
     if (!this.dynamicCheck()) return
-    this.ammo.setLinearVelocity(new Ammo.btVector3(value, this.velocity.y, this.velocity.z))
+    this.tmpBtVector3.setValue(value, this.velocity.y, this.velocity.z)
+    this.ammo.setLinearVelocity(this.tmpBtVector3)
   }
   public setVelocityY(value: number) {
     if (!this.dynamicCheck()) return
-    this.ammo.setLinearVelocity(new Ammo.btVector3(this.velocity.x, value, this.velocity.z))
+    this.tmpBtVector3.setValue(this.velocity.x, value, this.velocity.z)
+    this.ammo.setLinearVelocity(this.tmpBtVector3)
   }
   public setVelocityZ(value: number) {
     if (!this.dynamicCheck()) return
-    this.ammo.setLinearVelocity(new Ammo.btVector3(this.velocity.x, this.velocity.y, value))
+    this.tmpBtVector3.setValue(this.velocity.x, this.velocity.y, value)
+    this.ammo.setLinearVelocity(this.tmpBtVector3)
   }
 
   public setAngularVelocity(x: number, y: number, z: number) {
     if (!this.dynamicCheck()) return
-    this.ammo.setAngularVelocity(new Ammo.btVector3(x, y, z))
+    this.tmpBtVector3.setValue(x, y, z)
+    this.ammo.setAngularVelocity(this.tmpBtVector3)
   }
   public setAngularVelocityX(value: number) {
     if (!this.dynamicCheck()) return
-    this.ammo.setAngularVelocity(new Ammo.btVector3(value, this.angularVelocity.y, this.angularVelocity.z))
+    this.tmpBtVector3.setValue(value, this.angularVelocity.y, this.angularVelocity.z)
+    this.ammo.setAngularVelocity(this.tmpBtVector3)
   }
   public setAngularVelocityY(value: number) {
     if (!this.dynamicCheck()) return
-    this.ammo.setAngularVelocity(new Ammo.btVector3(this.angularVelocity.x, value, this.angularVelocity.z))
+    this.tmpBtVector3.setValue(this.angularVelocity.x, value, this.angularVelocity.z)
+    this.ammo.setAngularVelocity(this.tmpBtVector3)
   }
   public setAngularVelocityZ(value: number) {
     if (!this.dynamicCheck()) return
-    this.ammo.setAngularVelocity(new Ammo.btVector3(this.angularVelocity.x, this.angularVelocity.y, value))
+    this.tmpBtVector3.setValue(this.angularVelocity.x, this.angularVelocity.y, value)
+    this.ammo.setAngularVelocity(this.tmpBtVector3)
   }
 
   public applyForce(x: number, y: number, z: number) {
     if (!this.dynamicCheck()) return
-    this.ammo.applyCentralImpulse(new Ammo.btVector3(x, y, z))
+    this.tmpBtVector3.setValue(x, y, z)
+    this.ammo.applyCentralImpulse(this.tmpBtVector3)
   }
   public applyForceX(value: number) {
     if (!this.dynamicCheck()) return
-    this.ammo.applyCentralImpulse(new Ammo.btVector3(value, 0, 0))
+    this.tmpBtVector3.setValue(value, 0, 0)
+    this.ammo.applyCentralImpulse(this.tmpBtVector3)
   }
   public applyForceY(value: number) {
     if (!this.dynamicCheck()) return
-    this.ammo.applyCentralImpulse(new Ammo.btVector3(0, value, 0))
+    this.tmpBtVector3.setValue(0, value, 0)
+    this.ammo.applyCentralImpulse(this.tmpBtVector3)
   }
   public applyForceZ(value: number) {
     if (!this.dynamicCheck()) return
-    this.ammo.applyCentralImpulse(new Ammo.btVector3(0, 0, value))
+    this.tmpBtVector3.setValue(0, 0, value)
+    this.ammo.applyCentralImpulse(this.tmpBtVector3)
   }
 
   /**
@@ -219,10 +237,12 @@ class PhysicsBody {
   }
 
   public setLinearFactor(x: number, y: number, z: number) {
-    this.ammo.setLinearFactor(new Ammo.btVector3(x, y, z))
+    this.tmpBtVector3.setValue(x, y, z)
+    this.ammo.setLinearFactor(this.tmpBtVector3)
   }
   public setAngularFactor(x: number, y: number, z: number) {
-    this.ammo.setAngularFactor(new Ammo.btVector3(x, y, z))
+    this.tmpBtVector3.setValue(x, y, z)
+    this.ammo.setAngularFactor(this.tmpBtVector3)
   }
 
   public setFriction(value: number) {
