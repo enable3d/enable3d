@@ -21,7 +21,6 @@ import logger from '../helpers/logger'
 
 export default class HeightMap {
   public scene: Scene
-  public getTexture: (key: string) => Texture
 
   constructor() {}
 

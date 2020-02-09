@@ -225,7 +225,7 @@ class ThreeGraphics {
     return mixer
   }
 
-  get load() {
+  public get load() {
     return {
       texture: (url: string) => this.loadTexture(url),
       gltf: (key: string, cb: Function) => this.loadGLTF(key, cb),
@@ -233,9 +233,14 @@ class ThreeGraphics {
     }
   }
 
-  get loadAsync() {
+  public get texture() {
     return {
-      texture: (url: string) => this.loadAsyncTexture(url)
+      /** Load a texture using the three.js texture loader. */
+      load: (url: string) => this.loadTexture(url),
+      /** Get the texture by its Key. */
+      get: (key: string) => this._getTexture(key),
+      /** Add the textures in the order Left, Right, Top, Bottom, Front, Back. */
+      cube: (textures: string[]) => this.textureCube(textures)
     }
   }
 
