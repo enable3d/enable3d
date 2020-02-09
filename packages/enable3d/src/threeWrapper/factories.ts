@@ -51,11 +51,11 @@ export default class Factories extends Textures {
     return this
   }
 
-  protected createMesh(geometry: any, material: Material, position: XYZ): Line | Points | Mesh {
+  protected createMesh(geometry: any, material: Material | Material[], position: XYZ): Line | Points | Mesh {
     const { x = 0, y = 0, z = 0 } = position
 
     let obj
-    switch (material.type) {
+    switch (!Array.isArray(material) && material.type) {
       case 'LineBasicMaterial':
         obj = new Line(geometry, material)
         break
@@ -212,7 +212,7 @@ export default class Factories extends Textures {
 
   protected addMaterial(materialConfig: MaterialConfig = {}) {
     const type = Object.keys(materialConfig)[0]
-    let material: Material
+    let material: Material | Material[]
 
     if (type) {
       const { map } = materialConfig[type]
@@ -251,6 +251,9 @@ export default class Factories extends Textures {
         break
       case 'points':
         material = new PointsMaterial(materialConfig.points)
+        break
+      case 'custom':
+        material = materialConfig.custom || this.getDefaultMaterial()
         break
       default:
         material = this.getDefaultMaterial()

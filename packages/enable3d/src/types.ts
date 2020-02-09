@@ -89,6 +89,7 @@ export interface MaterialConfig {
   toon?: MeshToonMaterialParameters
   line?: LineBasicMaterialParameters
   points?: PointsMaterialParameters
+  custom?: Material | Material[]
   [key: string]: any
 }
 
@@ -111,7 +112,7 @@ export interface HeightMapObject {
   (texture: Texture, config?: HeightMapConfig): ExtendedObject3D | undefined
 }
 export interface AddMaterial {
-  (materialConfig?: MaterialConfig): Material
+  (materialConfig?: MaterialConfig): Material | Material[]
 }
 
 interface GeometryConfig {
