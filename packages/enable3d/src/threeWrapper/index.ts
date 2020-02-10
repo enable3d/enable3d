@@ -59,7 +59,8 @@ import {
   ExtrudeObject,
   HeightMapObject,
   HeightMapConfig,
-  AddMaterial
+  AddMaterial,
+  TorusConfig
 } from '../types'
 import ExtendedObject3D from './extendedObject3D'
 import applyMixins from '../helpers/applyMixins'
@@ -258,6 +259,7 @@ class ThreeGraphics {
     ground: GroundObject
     sphere: SphereObject
     cylinder: CylinderObject
+    torus: (torusConfig?: TorusConfig, materialConfig?: MaterialConfig) => ExtendedObject3D
     extrude: ExtrudeObject
     material: AddMaterial
     water: any
@@ -285,6 +287,8 @@ class ThreeGraphics {
         this.addSphere(sphereConfig, materialConfig),
       cylinder: (cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.addCylinder(cylinderConfig, materialConfig),
+      torus: (torusConfig: TorusConfig = {}, materialConfig: MaterialConfig = {}) =>
+        this.addTorus(torusConfig, materialConfig),
       extrude: (extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig = {}) =>
         this.addExtrude(extrudeConfig, materialConfig),
       //...
@@ -312,6 +316,7 @@ class ThreeGraphics {
     box: BoxObject
     sphere: SphereObject
     cylinder: CylinderObject
+    torus: (torusConfig?: TorusConfig, materialConfig?: MaterialConfig) => ExtendedObject3D
     extrude: ExtrudeObject
     heightMap: HeightMapObject
   } {
@@ -321,6 +326,8 @@ class ThreeGraphics {
         this.makeSphere(sphereConfig, materialConfig),
       cylinder: (cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.makeCylinder(cylinderConfig, materialConfig),
+      torus: (torusConfig: TorusConfig = {}, materialConfig: MaterialConfig = {}) =>
+        this.makeTorus(torusConfig, materialConfig),
       extrude: (extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig = {}) =>
         this.makeExtrude(extrudeConfig, materialConfig),
       heightMap: (texture: Texture, config: HeightMapConfig = {}) => this.makeHeightMap(texture, config)

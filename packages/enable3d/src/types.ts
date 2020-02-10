@@ -157,6 +157,14 @@ export interface CylinderConfig extends GeometryConfig, XYZ, WH {
   thetaLength?: number
 }
 
+export interface TorusConfig extends GeometryConfig, XYZ {
+  radius?: number
+  tube?: number
+  radialSegments?: number
+  tubularSegments?: number
+  arc?: number
+}
+
 export interface ExtrudeConfig extends GeometryConfig, XYZ, ExtrudeGeometryOptions {
   shape: Shape
   autoCenter?: boolean

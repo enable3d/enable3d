@@ -4,7 +4,16 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { MaterialConfig, SphereConfig, BoxConfig, GroundConfig, XYZ, CylinderConfig, ExtrudeConfig } from '../types'
+import {
+  MaterialConfig,
+  SphereConfig,
+  BoxConfig,
+  GroundConfig,
+  XYZ,
+  CylinderConfig,
+  ExtrudeConfig,
+  TorusConfig
+} from '../types'
 import {
   SphereGeometry,
   BoxGeometry,
@@ -29,7 +38,9 @@ import {
   ExtrudeBufferGeometry,
   CylinderBufferGeometry,
   MeshPhysicalMaterial,
-  MeshToonMaterial
+  MeshToonMaterial,
+  TorusGeometry,
+  TorusBufferGeometry
 } from 'three'
 import Textures from './textures'
 import ExtendedObject3D from './extendedObject3D'
@@ -206,6 +217,39 @@ export default class Factories extends Textures {
 
   protected addCylinder(cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const obj = this.makeCylinder(cylinderConfig, materialConfig)
+    this.scene.add(obj)
+    return obj
+  }
+
+  // https://threejs.org/docs/index.html#api/en/geometries/TorusBufferGeometry
+  protected makeTorus(torusConfig: TorusConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+    const { x, y, z, name, breakable = false, bufferGeometry = true, ...rest } = torusConfig
+    const geometry =
+      bufferGeometry || breakable
+        ? new TorusBufferGeometry(
+            rest.radius || undefined,
+            rest.tube || undefined,
+            rest.radialSegments || undefined,
+            rest.tubularSegments || undefined,
+            rest.arc || undefined
+          )
+        : new TorusGeometry(
+            rest.radius || undefined,
+            rest.tube || undefined,
+            rest.radialSegments || undefined,
+            rest.tubularSegments || undefined,
+            rest.arc || undefined
+          )
+    const material = this.addMaterial(materialConfig)
+    const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
+    mesh.name = name || `body_id_${mesh.id}`
+    mesh.shape = 'torus'
+    mesh.breakable = breakable
+    return mesh
+  }
+
+  protected addTorus(torusConfig: TorusConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+    const obj = this.makeTorus(torusConfig, materialConfig)
     this.scene.add(obj)
     return obj
   }

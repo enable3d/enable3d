@@ -15,7 +15,8 @@ import {
   CylinderConfig,
   ExtrudeConfig,
   Phaser3DConfig,
-  AddExistingConfig
+  AddExistingConfig,
+  TorusConfig
 } from '../types'
 import applyMixins from '../helpers/applyMixins'
 import ExtendedObject3D from '../threeWrapper/extendedObject3D'
@@ -25,7 +26,7 @@ import { Scene3D } from '..'
 import Events from './events'
 import EventEmitter from 'eventemitter3'
 import Physics from './physics'
-import { Vector3 } from 'three'
+import { Vector3, Quaternion } from 'three'
 
 interface AmmoPhysics extends Physics, Constraints, Shapes, Events {}
 
@@ -91,6 +92,8 @@ class AmmoPhysics extends EventEmitter {
       box: (boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}) => this.addBox(boxConfig, materialConfig),
       cylinder: (cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.addCylinder(cylinderConfig, materialConfig),
+      torus: (torusConfig: TorusConfig = {}, materialConfig: MaterialConfig = {}) =>
+        this.addTorus(torusConfig, materialConfig),
       extrude: (extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig = {}) =>
         this.addExtrude(extrudeConfig, materialConfig)
     }
@@ -132,6 +135,9 @@ class AmmoPhysics extends EventEmitter {
       case 'sphere':
         Shape = new Ammo.btSphereShape(params.radius)
         break
+      case 'torus':
+        Shape = this.addTorusShape(params, quat)
+        break
       case 'convex':
         Shape = this.addTriMeshShape(object, config)
         break
@@ -156,30 +162,37 @@ class AmmoPhysics extends EventEmitter {
     if (offset) object.body.offset = { x: 0, y: 0, z: 0, ...offset }
   }
 
-  protected addRigidBody = (threeObject: ExtendedObject3D, physicsShape: any, mass: any, pos: any, quat: any) => {
-    threeObject.position.copy(pos)
-    threeObject.quaternion.copy(quat)
-    var transform = new Ammo.btTransform()
+  protected createRigidBody(physicsShape: any, mass: number, pos: Vector3, quat: Quaternion) {
+    const transform = new Ammo.btTransform()
     transform.setIdentity()
     transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z))
     transform.setRotation(new Ammo.btQuaternion(quat.x, quat.y, quat.z, quat.w))
-    var motionState = new Ammo.btDefaultMotionState(transform)
-    var localInertia = new Ammo.btVector3(0, 0, 0)
+    const motionState = new Ammo.btDefaultMotionState(transform)
+    const localInertia = new Ammo.btVector3(0, 0, 0)
     physicsShape.calculateLocalInertia(mass, localInertia)
-    var rbInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, physicsShape, localInertia)
-    var rigidBody = new Ammo.btRigidBody(rbInfo)
+    const rbInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, physicsShape, localInertia)
+    const rigidBody = new Ammo.btRigidBody(rbInfo)
+    return rigidBody
+  }
 
-    // TODO: rigidBody offset will not be applied if the
-    // object will not be updated in update()
+  protected addRigidBody(
+    threeObject: ExtendedObject3D,
+    physicsShape: any,
+    mass: number,
+    pos: Vector3,
+    quat: Quaternion
+  ) {
+    threeObject.position.copy(pos)
+    threeObject.quaternion.copy(quat)
+
+    const rigidBody = this.createRigidBody(physicsShape, mass, pos, quat)
+
     if (mass > 0) {
-      // @ts-ignore
-      // this.rigidBodies.push(threeObject)
       // Disable deactivation
       rigidBody.setActivationState(4)
     }
-    // @ts-ignore
-    this.rigidBodies.push(threeObject)
 
+    this.rigidBodies.push(threeObject)
     this.physicsWorld.addRigidBody(rigidBody)
 
     const ptr = Object.values(rigidBody)[0]

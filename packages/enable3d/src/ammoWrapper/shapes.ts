@@ -11,10 +11,11 @@ import {
   GroundConfig,
   CylinderConfig,
   ExtendedObject3D,
-  ExtrudeConfig
+  ExtrudeConfig,
+  TorusConfig
 } from '../types'
 import ThreeGraphics from '../threeWrapper'
-import { Vector3, BufferGeometry, Matrix4 } from 'three'
+import { Vector3, BufferGeometry, Matrix4, Quaternion } from 'three'
 
 interface Shapes {}
 
@@ -22,7 +23,14 @@ class Shapes {
   public tmpTrans: Ammo.btTransform
   public physicsWorld: Ammo.btDiscreteDynamicsWorld
   protected objectsAmmo: { [ptr: number]: any } = {}
-  protected addRigidBody: (threeObject: ExtendedObject3D, physicsShape: any, mass: any, pos: any, quat: any) => void
+  protected addRigidBody: (
+    threeObject: ExtendedObject3D,
+    physicsShape: any,
+    mass: number,
+    pos: Vector3,
+    quat: Quaternion
+  ) => void
+  protected createRigidBody: (physicsShape: any, mass: number, pos: Vector3, quat: Quaternion) => Ammo.btRigidBody
 
   constructor(protected phaser3D: ThreeGraphics) {}
 
@@ -194,6 +202,57 @@ class Shapes {
     this.addBodyProperties(cylinder, cylinderConfig)
 
     return cylinder
+  }
+
+  protected addTorusShape(params: any, quat: any) {
+    const { radius = 1, tube = 0.4, tubularSegments = 8 } = params
+
+    const SIMD_PI = Math.PI
+    const subdivisions = tubularSegments
+    const gap = Math.sqrt(2.0 * tube * tube - 2.0 * tube * tube * Math.cos((2.0 * SIMD_PI) / subdivisions))
+
+    const btHalfExtents = new Ammo.btVector3(tube, SIMD_PI / subdivisions + 0.5 * gap, tube)
+    const cylinderShape = new Ammo.btCylinderShape(btHalfExtents)
+    cylinderShape.setMargin(0.05)
+
+    const compoundShape = new Ammo.btCompoundShape()
+
+    const forward = new Ammo.btVector3(0, 0, 1)
+    const side = new Ammo.btVector3(0, radius, 0)
+    const rotation = new Ammo.btQuaternion(quat.x, quat.y, quat.z, quat.w)
+
+    for (let x = 0; x < subdivisions; x++) {
+      const angle = (x * 2.0 * SIMD_PI) / subdivisions
+      const position = side.rotate(forward, angle)
+      const transform = new Ammo.btTransform()
+      rotation.setRotation(forward, angle + Math.PI / 2)
+      transform.setIdentity()
+      transform.setOrigin(position)
+      transform.setRotation(rotation)
+      compoundShape.addChildShape(transform, cylinderShape)
+    }
+
+    return compoundShape
+  }
+
+  // https://pybullet.org/Bullet/phpBB3/viewtopic.php?t=7228
+  protected addTorus(torusConfig: TorusConfig = {}, materialConfig: MaterialConfig = {}) {
+    const torus = this.phaser3D.add.torus(torusConfig, materialConfig)
+
+    const { position: pos, quaternion: quat } = torus
+    const { mass = 1 } = torusConfig
+    // @ts-ignore
+    const params = torus?.geometry?.parameters
+
+    const torusShape = this.addTorusShape(params, quat)
+    torusShape.setMargin(0.05)
+
+    // this.addRigidBody(torus, compoundShape, mass, pos, quat)
+
+    this.addRigidBody(torus, torusShape, mass, pos, quat)
+    this.addBodyProperties(torus, torusShape)
+
+    return torus
   }
 
   protected addExtrude(extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig = {}) {
