@@ -17,7 +17,7 @@ export default class Lights {
     return light
   }
 
-  protected addHemisphereLight({ skyColor = 0xffffff, groundColor = 0x000000, intensity = 1 } = {}) {
+  protected addHemisphereLight({ skyColor = 0xffffff, groundColor = 0xffffff, intensity = 1 } = {}) {
     const light = new HemisphereLight(skyColor, groundColor, intensity)
     this.scene.add(light)
     return light

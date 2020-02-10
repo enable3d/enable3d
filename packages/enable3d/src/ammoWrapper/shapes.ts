@@ -117,7 +117,7 @@ class Shapes {
     const collisionShape =
       shape === 'convex'
         ? new Ammo.btConvexTriangleMeshShape(triMesh, true)
-        : new Ammo.btBvhTriangleMeshShape(triMesh, true)
+        : new Ammo.btBvhTriangleMeshShape(triMesh, true) // the btBvhTriangleMeshShape classes is the optimized version of btTriangleMeshShape
 
     // Will be done by the addExisting method
     // collisionShape.setMargin(0.05)

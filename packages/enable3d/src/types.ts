@@ -26,7 +26,7 @@ import ExtendedObject3D from './threeWrapper/extendedObject3D'
 export { ExtendedObject3D }
 export { AnimationAction } from 'three/src/animation/AnimationAction'
 export { ThirdPersonControls } from './utils/thirdPersonControls'
-export { AnimationMixer, AnimationClip, Object3D, Mesh, Line, Points, Group } from 'three'
+export { AnimationMixer, AnimationClip, Object3D, Mesh, Material, Line, Points, Group } from 'three'
 
 export interface Phaser3DConfig {
   anisotropy?: number

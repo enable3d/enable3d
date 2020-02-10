@@ -7,7 +7,7 @@
 import ThreeGraphics from './threeWrapper'
 import AmmoPhysics from './ammoWrapper'
 import { Phaser3DConfig } from './types'
-import { RepeatWrapping, Mesh, SphereBufferGeometry, MeshBasicMaterial } from 'three'
+import { RepeatWrapping, Mesh, SphereBufferGeometry, MeshBasicMaterial, DirectionalLight } from 'three'
 import ExtendedObject3D from './threeWrapper/extendedObject3D'
 import logger from './helpers/logger'
 import { Scene3D } from '.'
@@ -32,6 +32,7 @@ type WarpedStartFeatures =
   | '-sky'
 
 class Third extends ThreeGraphics {
+  public directionalLight: DirectionalLight
   public ground: ExtendedObject3D
   public physics: AmmoPhysics
 
@@ -168,7 +169,7 @@ class Third extends ThreeGraphics {
     }
 
     if (features.includes('light')) {
-      this.add.ambientLight({ color: 0x707070 })
+      this.add.ambientLight({ color: 0xc1c1c1, intensity: 1 })
       const light = this.add.directionalLight({ skyColor: 0xffffff, intensity: 0.8, x: -10, y: 18, z: 5 })
       const d = 20
       light.shadow.camera.top = d
@@ -177,6 +178,7 @@ class Third extends ThreeGraphics {
       light.shadow.camera.right = d
 
       light.shadow.mapSize.set(1024, 1024)
+      this.directionalLight = light
     }
 
     if (features.includes('lookAtCenter')) {

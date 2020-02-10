@@ -48,7 +48,7 @@ export default class Textures {
     texture.format = RGBAFormat
     texture.needsUpdate = true
     texture.anisotropy = this.textureAnisotropy
-    texture.encoding = sRGBEncoding
+    // texture.encoding = sRGBEncoding
 
     return texture
   }
