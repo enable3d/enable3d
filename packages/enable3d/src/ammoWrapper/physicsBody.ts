@@ -48,22 +48,6 @@ class PhysicsBody {
     })
   }
 
-  private dynamicCheck() {
-    if (this.ammo.isStaticOrKinematicObject()) {
-      this.error(`[Body ${this.name}] You only add force or velocity to dynamic bodies.`)
-      return false
-    }
-    return true
-  }
-
-  private kinematicCheck() {
-    if (!this.ammo.isKinematicObject()) {
-      this.error(`[Body ${this.name}] You can only transform kinematic bodies.`)
-      return false
-    }
-    return true
-  }
-
   /** You have to call transform() before you can get or set the body's position or rotation. */
   public transform() {
     const t = this.physics.tmpTrans
@@ -72,16 +56,12 @@ class PhysicsBody {
 
   /** You have to call refresh() after you set the position or rotation of the body.  */
   public refresh() {
-    if (!this.kinematicCheck()) return
-
     const t = this.physics.tmpTrans
     this.ammo.getMotionState().setWorldTransform(t)
   }
 
   /** Set the rotation in radians. */
   public setRotation(x: number, y: number, z: number) {
-    if (!this.kinematicCheck()) return
-
     const e = this.tmpEuler.set(x, y, z)
     const q = this.tmpQuaternion.set(0, 0, 0, 1)
     q.setFromEuler(e)
@@ -115,8 +95,6 @@ class PhysicsBody {
   }
 
   public setPosition(x: number, y: number, z: number) {
-    if (!this.kinematicCheck()) return
-
     const t = this.physics.tmpTrans
     t.getOrigin().setValue(x, y, z)
   }
@@ -143,64 +121,52 @@ class PhysicsBody {
   }
 
   public setVelocity(x: number, y: number, z: number) {
-    if (!this.dynamicCheck()) return
     this.tmpBtVector3.setValue(x, y, z)
     this.ammo.setLinearVelocity(this.tmpBtVector3)
   }
   public setVelocityX(value: number) {
-    if (!this.dynamicCheck()) return
     this.tmpBtVector3.setValue(value, this.velocity.y, this.velocity.z)
     this.ammo.setLinearVelocity(this.tmpBtVector3)
   }
   public setVelocityY(value: number) {
-    if (!this.dynamicCheck()) return
     this.tmpBtVector3.setValue(this.velocity.x, value, this.velocity.z)
     this.ammo.setLinearVelocity(this.tmpBtVector3)
   }
   public setVelocityZ(value: number) {
-    if (!this.dynamicCheck()) return
     this.tmpBtVector3.setValue(this.velocity.x, this.velocity.y, value)
     this.ammo.setLinearVelocity(this.tmpBtVector3)
   }
 
   public setAngularVelocity(x: number, y: number, z: number) {
-    if (!this.dynamicCheck()) return
     this.tmpBtVector3.setValue(x, y, z)
     this.ammo.setAngularVelocity(this.tmpBtVector3)
   }
   public setAngularVelocityX(value: number) {
-    if (!this.dynamicCheck()) return
     this.tmpBtVector3.setValue(value, this.angularVelocity.y, this.angularVelocity.z)
     this.ammo.setAngularVelocity(this.tmpBtVector3)
   }
   public setAngularVelocityY(value: number) {
-    if (!this.dynamicCheck()) return
     this.tmpBtVector3.setValue(this.angularVelocity.x, value, this.angularVelocity.z)
     this.ammo.setAngularVelocity(this.tmpBtVector3)
   }
   public setAngularVelocityZ(value: number) {
-    if (!this.dynamicCheck()) return
     this.tmpBtVector3.setValue(this.angularVelocity.x, this.angularVelocity.y, value)
     this.ammo.setAngularVelocity(this.tmpBtVector3)
   }
 
   public applyForce(x: number, y: number, z: number) {
-    if (!this.dynamicCheck()) return
     this.tmpBtVector3.setValue(x, y, z)
     this.ammo.applyCentralImpulse(this.tmpBtVector3)
   }
   public applyForceX(value: number) {
-    if (!this.dynamicCheck()) return
     this.tmpBtVector3.setValue(value, 0, 0)
     this.ammo.applyCentralImpulse(this.tmpBtVector3)
   }
   public applyForceY(value: number) {
-    if (!this.dynamicCheck()) return
     this.tmpBtVector3.setValue(0, value, 0)
     this.ammo.applyCentralImpulse(this.tmpBtVector3)
   }
   public applyForceZ(value: number) {
-    if (!this.dynamicCheck()) return
     this.tmpBtVector3.setValue(0, 0, value)
     this.ammo.applyCentralImpulse(this.tmpBtVector3)
   }
