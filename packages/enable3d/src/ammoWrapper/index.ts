@@ -134,7 +134,8 @@ class AmmoPhysics extends EventEmitter {
     if (autoCenter) object.geometry.center()
 
     if (shape === 'extrude') shape = 'hacd'
-    if (shape === 'mesh') shape = 'convexMesh'
+    if (shape === 'mesh' || shape === 'convex') shape = 'convexMesh'
+    if (shape === 'concave') shape = 'concaveMesh'
 
     let Shape
 
