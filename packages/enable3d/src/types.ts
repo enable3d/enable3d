@@ -181,6 +181,7 @@ export interface AddExistingConfig {
   depth?: number
   radius?: number
   shape?: string
+  shapes?: AddExistingConfig[]
   mass?: number
   autoCenter?: boolean
   offset?: { x?: number; y?: number; z?: number }

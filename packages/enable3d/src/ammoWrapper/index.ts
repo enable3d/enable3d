@@ -27,6 +27,8 @@ import Events from './events'
 import EventEmitter from 'eventemitter3'
 import Physics from './physics'
 import { Vector3, Quaternion } from 'three'
+import { createCollisionShapes } from './three-to-ammo'
+import { addTorusShape } from './torusShape'
 
 interface AmmoPhysics extends Physics, Constraints, Shapes, Events {}
 
@@ -99,11 +101,19 @@ class AmmoPhysics extends EventEmitter {
     }
   }
 
-  private addExisting(object: ExtendedObject3D, config: AddExistingConfig = {}): void {
+  protected addExisting(object: ExtendedObject3D, config: AddExistingConfig = {}): void {
     const { position: pos, quaternion: quat, hasBody } = object
-    const { mass = 1, autoCenter = true, offset = undefined } = config
+    const { mass = 1, autoCenter = false, offset = undefined, shapes = [] } = config
 
-    let params = { width: 1, height: 1, depth: 1, radius: 0.5 }
+    let params = {
+      width: 1,
+      height: 1,
+      depth: 1,
+      radius: 0.5,
+      radiusTop: 0.5, // for the cylinder
+      tube: 0.4, // for the torus
+      tubularSegments: 8 // for the torus
+    }
     let shape = 'box'
 
     if (config.shape) {
@@ -115,38 +125,41 @@ class AmmoPhysics extends EventEmitter {
       shape = object.shape
     }
 
-    const boxShape = () =>
-      new Ammo.btBoxShape(new Ammo.btVector3(params.width / 2, params.height / 2, params.depth / 2))
-
     if (hasBody) {
       logger(`Object "${object.name}" already has a physical body!`)
       return
     }
 
     // auto adjust the center for custom shapes
-    if (autoCenter && (shape === 'convex' || shape === 'concave')) object.geometry.center()
+    if (autoCenter) object.geometry.center()
+
+    if (shape === 'extrude') shape = 'hacd'
+    if (shape === 'mesh') shape = 'convexMesh'
 
     let Shape
 
-    switch (shape) {
-      case 'box':
-        Shape = boxShape()
-        break
-      case 'sphere':
-        Shape = new Ammo.btSphereShape(params.radius)
-        break
-      case 'torus':
-        Shape = this.addTorusShape(params, quat)
-        break
-      case 'convex':
-        Shape = this.addTriMeshShape(object, config)
-        break
-      case 'concave':
-        Shape = this.addTriMeshShape(object, config)
-        break
-      case 'hull':
-        Shape = this.addHullShape(object, config)
-        break
+    if (shapes.length > 0) {
+      // combine all compound shapes
+      const tmp: any[] = [] // stores all the raw shapes
+      const compoundShape = new Ammo.btCompoundShape()
+
+      shapes.forEach(obj => {
+        tmp.push(this.addShape({ shape: obj.shape, params: { ...obj } }))
+      })
+
+      shapes.forEach((obj, i) => {
+        const transform = new Ammo.btTransform()
+        // @ts-ignore
+        const pos = { x: obj.x || 0, y: obj.y || 0, z: obj.z || 0 }
+        transform.setIdentity()
+        transform.setOrigin(new Ammo.btVector3(pos.x || 0, pos.y || 0, pos.z || 0))
+        // transform.setRotation(new Ammo.btQuaternion(quat.x || 0, quat.y || 0, quat.z || 0, quat.w || 1))
+        compoundShape.addChildShape(transform, tmp[i])
+      })
+
+      Shape = compoundShape
+    } else {
+      Shape = this.addShape({ shape, shapes, params, object, quat })
     }
 
     if (!Shape) {
@@ -160,6 +173,53 @@ class AmmoPhysics extends EventEmitter {
     this.addBodyProperties(object, config)
 
     if (offset) object.body.offset = { x: 0, y: 0, z: 0, ...offset }
+  }
+
+  private addShape(opts: any) {
+    const { shape, object, params, quat } = opts
+
+    let Shape
+    switch (shape) {
+      case 'box':
+        Shape = new Ammo.btBoxShape(new Ammo.btVector3(params.width / 2, params.height / 2, params.depth / 2))
+        break
+      case 'sphere':
+        Shape = new Ammo.btSphereShape(params.radius)
+        break
+      case 'cylinder':
+        Shape = new Ammo.btCylinderShape(new Ammo.btVector3(params.radiusTop, params.height / 2, 0))
+        break
+      case 'torus':
+        Shape = addTorusShape(params, quat)
+        break
+      case 'hull':
+        Shape = createCollisionShapes(object, { type: 'hull' })
+        break
+      case 'hacd':
+        Shape = createCollisionShapes(object, { type: 'hacd' })
+        break
+      case 'vhacd':
+        Shape = createCollisionShapes(object, { type: 'vhacd' })
+        break
+      case 'convexMesh':
+        Shape = createCollisionShapes(object, { type: 'mesh', concave: false })
+        break
+      case 'concaveMesh':
+        Shape = createCollisionShapes(object, { type: 'mesh', concave: true })
+        break
+    }
+
+    if (Array.isArray(Shape)) {
+      const compoundShape = new Ammo.btCompoundShape()
+      Shape.forEach(shape => {
+        const transform = new Ammo.btTransform()
+        transform.setIdentity()
+        compoundShape.addChildShape(transform, shape)
+      })
+      Shape = compoundShape
+    }
+
+    return Shape
   }
 
   protected createRigidBody(physicsShape: any, mass: number, pos: Vector3, quat: Quaternion) {
@@ -180,12 +240,19 @@ class AmmoPhysics extends EventEmitter {
     physicsShape: any,
     mass: number,
     pos: Vector3,
-    quat: Quaternion
+    quat: Quaternion,
+    scale?: { x: number; y: number; z: number }
   ) {
     threeObject.position.copy(pos)
     threeObject.quaternion.copy(quat)
 
     const rigidBody = this.createRigidBody(physicsShape, mass, pos, quat)
+
+    if (scale) {
+      const localScale = new Ammo.btVector3(scale.x, scale.y, scale.z)
+      physicsShape.setLocalScaling(localScale)
+      Ammo.destroy(localScale)
+    }
 
     if (mass > 0) {
       // Disable deactivation
@@ -203,6 +270,12 @@ class AmmoPhysics extends EventEmitter {
     // @ts-ignore
     threeObject.ptr = ptr
     this.objectsAmmo[ptr] = threeObject
+  }
+
+  protected addBodyProperties(obj: ExtendedObject3D, config: any) {
+    const { friction = 0.5, collisionFlag = 0 } = config
+    obj.body.setCollisionFlags(collisionFlag)
+    obj.body.setFriction(friction)
   }
 }
 

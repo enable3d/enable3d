@@ -188,9 +188,9 @@ export default class Factories extends Textures {
     const geometry =
       bufferGeometry || breakable
         ? new CylinderBufferGeometry(
-            rest.radiusTop || undefined,
-            rest.radiusBottom || undefined,
-            rest.height || undefined,
+            rest.radiusTop || 0.5,
+            rest.radiusBottom || 0.5,
+            rest.height || 1,
             rest.radiusSegments || undefined,
             rest.heightSegments || undefined,
             rest.openEnded || undefined,
@@ -198,9 +198,9 @@ export default class Factories extends Textures {
             rest.thetaLength || undefined
           )
         : new CylinderGeometry(
-            rest.radiusTop || undefined,
-            rest.radiusBottom || undefined,
-            rest.height || undefined,
+            rest.radiusTop || 0.5,
+            rest.radiusBottom || 0.5,
+            rest.height || 1,
             rest.radiusSegments || undefined,
             rest.heightSegments || undefined,
             rest.openEnded || undefined,
