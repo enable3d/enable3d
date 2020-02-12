@@ -169,8 +169,8 @@ class Third extends ThreeGraphics {
     }
 
     if (features.includes('light')) {
-      this.add.ambientLight({ color: 0xc1c1c1, intensity: 1 })
-      const light = this.add.directionalLight({ skyColor: 0xffffff, intensity: 0.8, x: -10, y: 18, z: 5 })
+      this.add.ambientLight({ color: 0xcccccc })
+      const light = this.add.directionalLight({ color: 0xffffff, intensity: 0.5, x: -10, y: 18, z: 5 })
       const d = 20
       light.shadow.camera.top = d
       light.shadow.camera.bottom = -d
