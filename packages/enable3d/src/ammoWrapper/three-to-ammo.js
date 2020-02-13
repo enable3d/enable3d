@@ -1,6 +1,7 @@
 /**
  * @author       Yannick Deubel (https://github.com/yandeu)
  * @copyright    Copyright (c) 2020 Yannick Deubel; Project Url: https://github.com/yandeu/enable3d
+ * @description  This is a modified version of the original code from Kevin Lee
  */
 
 /**

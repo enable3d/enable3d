@@ -1,10 +1,14 @@
 /**
  * @author       Yannick Deubel (https://github.com/yandeu)
  * @copyright    Copyright (c) 2019 Yannick Deubel; Project Url: https://github.com/yandeu/enable3d
- * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
+ * @description  This is a modified version of the original code from Kevin Lee
  */
 
-// inspired by https://github.com/InfiniteLee/ammo-debug-drawer/blob/master/AmmoDebugDrawer.js
+/**
+ * @author       Kevin Lee (https://github.com/InfiniteLee)
+ * @copyright    Copyright (c) 2019 Kevin Lee; Project Url: https://github.com/InfiniteLee/ammo-debug-drawer
+ * @license      {@link https://github.com/InfiniteLee/ammo-debug-drawer/blob/master/LICENSE|MPL-2.0}
+ */
 
 import {
   Scene,
