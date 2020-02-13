@@ -556,7 +556,7 @@ export const createTriMeshShape = (function() {
     Ammo.destroy(btb)
     Ammo.destroy(btc)
 
-    _finishCollisionShape(collisionShape, options)
+    _finishCollisionShape(collisionShape, options, scale)
     return collisionShape
   }
 })()
@@ -666,11 +666,11 @@ const _finishCollisionShape = function(collisionShape, options, scale) {
   // localTransform.setRotation(rotation)
   // Ammo.destroy(rotation)
 
-  // if (scale) {
-  //   const localScale = new Ammo.btVector3(scale.x, scale.y, scale.z)
-  //   collisionShape.setLocalScaling(localScale)
-  //   Ammo.destroy(localScale)
-  // }
+  if (scale) {
+    const localScale = new Ammo.btVector3(scale.x, scale.y, scale.z)
+    collisionShape.setLocalScaling(localScale)
+    Ammo.destroy(localScale)
+  }
 
   // collisionShape.localTransform = localTransform
 }
