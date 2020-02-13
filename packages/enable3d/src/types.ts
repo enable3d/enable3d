@@ -142,8 +142,8 @@ export interface BoxConfig extends GeometryConfig, XYZ, WH {
 }
 
 export interface GroundConfig extends BoxConfig {
-  width: number
-  height: number
+  width?: number
+  height?: number
 }
 
 export interface CylinderConfig extends GeometryConfig, XYZ, WH {

@@ -89,8 +89,8 @@ class AmmoPhysics extends EventEmitter {
       existing: (object: ExtendedObject3D, config?: AddExistingConfig) => this.addExisting(object, config),
       sphere: (sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.addSphere(sphereConfig, materialConfig),
-      ground: (groundConfig: GroundConfig, materialConfig: MaterialConfig = {}) =>
-        this.addGround({ ...groundConfig, mass: 0 }, materialConfig),
+      ground: (groundConfig: GroundConfig = {}, materialConfig: MaterialConfig = {}) =>
+        this.addGround(groundConfig, materialConfig),
       box: (boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}) => this.addBox(boxConfig, materialConfig),
       cylinder: (cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.addCylinder(cylinderConfig, materialConfig),
