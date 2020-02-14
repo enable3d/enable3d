@@ -164,7 +164,7 @@ class Physics extends EventEmitter {
       const threeObject0 = this.objectsAmmo[ptr0]
       const threeObject1 = this.objectsAmmo[ptr1]
 
-      if (!threeObject0 && !threeObject1) {
+      if (!threeObject0 || !threeObject1) {
         continue
       }
 

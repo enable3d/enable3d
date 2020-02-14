@@ -29,8 +29,9 @@ import Physics from './physics'
 import { Vector3, Quaternion } from 'three'
 import { createCollisionShapes } from './three-to-ammo'
 import { addTorusShape } from './torusShape'
+import KinematicCharacterController from './kinematicCharacterController'
 
-interface AmmoPhysics extends Physics, Constraints, Shapes, Events {}
+interface AmmoPhysics extends Physics, Constraints, Shapes, Events, KinematicCharacterController {}
 
 class AmmoPhysics extends EventEmitter {
   public tmpTrans: Ammo.btTransform
@@ -261,6 +262,7 @@ class AmmoPhysics extends EventEmitter {
     }
 
     this.rigidBodies.push(threeObject)
+    // addRigidBody(body: Ammo.btRigidBody, group: number, mask: number): void
     this.physicsWorld.addRigidBody(rigidBody)
 
     const ptr = Object.values(rigidBody)[0]
@@ -280,6 +282,6 @@ class AmmoPhysics extends EventEmitter {
   }
 }
 
-applyMixins(AmmoPhysics, [Physics, Constraints, Shapes, Events])
+applyMixins(AmmoPhysics, [Physics, Constraints, Shapes, Events, KinematicCharacterController])
 
 export default AmmoPhysics

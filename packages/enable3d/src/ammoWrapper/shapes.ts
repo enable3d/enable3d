@@ -41,8 +41,9 @@ class Shapes {
 
   protected addGround(groundConfig: GroundConfig, materialConfig: MaterialConfig = {}) {
     const ground = this.phaser3D.add.ground(groundConfig, materialConfig)
-    const config = { ...groundConfig, mass: 0, setCollisionFlag: 1 }
+    const config = { ...groundConfig }
     this.addExisting(ground, config)
+    ground.body.setCollisionFlags(2)
     return ground
   }
 

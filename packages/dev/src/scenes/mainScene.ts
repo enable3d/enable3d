@@ -7,6 +7,8 @@ export default class MainScene extends Scene3D {
   keys: any
   gameOver: boolean
   playerCanJump: boolean
+  controller: Ammo.btKinematicCharacterController
+  onGround: boolean
 
   constructor() {
     super({ key: 'MainScene' })
@@ -18,77 +20,81 @@ export default class MainScene extends Scene3D {
     delete this.robot
     this.gameOver = false
     this.playerCanJump = true
+    this.onGround = false
   }
 
   create() {
     this.accessThirdDimension()
     this.third.warpSpeed()
-    this.third.haveSomeFun(50)
 
-    this.third.add.box({ y: 0.5, width: 1 })
+    // this.third.physics.add.box({ y: 2, width: 1, collisionFlag: 2 })
 
     // enable physics debugging
-    // this.third.physics.debug.enable()
-    // this.third.physics.debug.mode(3)
+    this.third.physics.debug.enable()
+    this.third.physics.debug.mode(3)
 
-    // add hero
-    this.third.load.gltf('hero', object => {
-      // get hero from object
-      const hero = object.scene.children[0] as Object3D
+    this.controller = this.third.physics.addCharacter()
 
-      this.hero = this.third.new.extendedObject3D()
-      this.hero.name = 'hero'
-      this.hero.add(hero)
-
-      this.hero.traverse((child: any) => {
-        if (child.isMesh) child.castShadow = child.receiveShadow = true
-      })
-
-      // animation
-      let mixer = this.third.new.animationMixer(hero)
-      let action = mixer.clipAction(object.animations[0])
-      action.play()
-
-      this.hero.position.set(0, 2, 2)
-      this.third.scene.add(this.hero)
-      this.hero.scale.setX(0.02)
-      this.hero.scale.setY(0.02)
-      this.hero.scale.setZ(0.02)
-      this.third.physics.add.existing(this.hero, {
-        shape: 'box',
-        width: 0.35,
-        height: 0.5,
-        depth: 0.35,
-        offset: { y: -0.25 }
-      })
-      this.hero.body.setAngularFactor(0, 0, 0)
-
-      // Add 3rd Person controls
-      this.third.controls.add.thirdPerson(this.hero, {
-        targetRadius: 1.5,
-        offset: this.third.new.vector3(0, 0.5, 0)
-      })
-
-      this.hero.body.on.collision((otherObject, event) => {
-        if (otherObject.name === 'ground') if (!this.playerCanJump && event !== 'end') this.playerCanJump = true
-      })
+    // move slowly to the right
+    this.controller.setWalkDirection(new Ammo.btVector3(0.05, 0, 0))
+    this.time.addEvent({
+      delay: 3200,
+      callback: () => {
+        // @ts-ignore
+        this.controller.jump()
+        this.controller.setWalkDirection(new Ammo.btVector3(0, 0, 0))
+      }
     })
 
-    // constraint test (spring)
-    let box1 = this.third.physics.add.box({ x: 10, z: 16, y: 20 }, { standard: { color: 0xff00ff } })
-    let box2 = this.third.physics.add.box(
-      { x: 10, z: 17, y: 15, collisionFlag: 4, mass: 5 },
-      { standard: { color: 0xffff00 } }
-    )
-    this.third.physics.add.constraints.spring(box1.body, box2.body, { angularLock: false })
+    let box = this.third.add.box({ width: 10, x: -1 })
+    box.rotateZ(Math.PI / 3)
+    this.third.physics.add.existing(box)
+    box.body.setCollisionFlags(2)
 
-    this.keys = {
-      a: this.input.keyboard.addKey('a'),
-      w: this.input.keyboard.addKey('w'),
-      d: this.input.keyboard.addKey('d'),
-      s: this.input.keyboard.addKey('s'),
-      space: this.input.keyboard.addKey(32)
-    }
+    // this.third.physics.add.box({ x: 4, y: 1, collisionFlag: 2 })
+
+    // add hero
+    // this.third.load.gltf('hero', object => {
+    //   // get hero from object
+    //   const hero = object.scene.children[0] as Object3D
+
+    //   this.hero = this.third.new.extendedObject3D()
+    //   this.hero.name = 'hero'
+    //   this.hero.add(hero)
+
+    //   this.hero.traverse((child: any) => {
+    //     if (child.isMesh) child.castShadow = child.receiveShadow = true
+    //   })
+
+    //   // animation
+    //   let mixer = this.third.new.animationMixer(hero)
+    //   let action = mixer.clipAction(object.animations[0])
+    //   action.play()
+
+    //   this.hero.position.set(0, 2, 2)
+    //   this.third.scene.add(this.hero)
+    //   this.hero.scale.setX(0.02)
+    //   this.hero.scale.setY(0.02)
+    //   this.hero.scale.setZ(0.02)
+    //   this.third.physics.add.existing(this.hero, {
+    //     shape: 'box',
+    //     width: 0.35,
+    //     height: 0.5,
+    //     depth: 0.35,
+    //     offset: { y: -0.25 }
+    //   })
+    //   this.hero.body.setAngularFactor(0, 0, 0)
+
+    //   // Add 3rd Person controls
+    //   // this.third.controls.add.thirdPerson(this.hero, {
+    //   //   targetRadius: 1.5,
+    //   //   offset: this.third.new.vector3(0, 0.5, 0)
+    //   // })
+
+    //   this.hero.body.on.collision((otherObject, event) => {
+    //     if (otherObject.name === 'ground') if (!this.playerCanJump && event !== 'end') this.playerCanJump = true
+    //   })
+    // })
 
     /*
     // conversion test
@@ -120,44 +126,16 @@ export default class MainScene extends Scene3D {
     */
   }
 
-  update(time, delta) {
-    if (this.hero && this.hero.body) {
-      if (this.gameOver) {
-        // camera shake effect
-        this.third.camera.position.x += (Math.random() - 0.5) / 5
-        this.third.camera.position.y += (Math.random() - 0.5) / 5
-        this.third.camera.position.z += (Math.random() - 0.5) / 5
-      }
-
-      if (!this.gameOver && this.hero.position.y < -10) {
-        this.gameOver = true
-        this.time.addEvent({ delay: 1000, callback: () => this.scene.restart() })
-      }
-
-      if (this.keys.space.isDown && this.playerCanJump) {
-        this.playerCanJump = false
-        this.hero.body.applyForceY(1)
-      }
-
-      if (this.keys.s.isDown) {
-        this.hero.position.x += 1
-      }
-
-      if (this.keys.w.isDown) {
-        const speed = 3
-        const rotation = this.hero.getWorldDirection(this.hero.rotation.toVector3())
-        const theta = Math.atan2(rotation.x, rotation.z)
-
-        const x = Math.sin(theta) * speed,
-          y = this.hero.body.velocity.y,
-          z = Math.cos(theta) * speed
-
-        this.hero.body.setVelocity(x, y, z)
-      }
-
-      if (this.keys.a.isDown) this.hero.body.setAngularVelocityY(2)
-      else if (this.keys.d.isDown) this.hero.body.setAngularVelocityY(-2)
-      else this.hero.body.setAngularVelocityY(0)
-    }
+  update(time) {
+    // if (Math.random() > 0.1) console.log(this.controller.onGround())
+    // if (time > 5000 && this.controller.onGround() && !this.onGround) {
+    //   this.onGround = true
+    //   this.controller.setGravity(0)
+    //   console.log('gravity to 0')
+    // } else if (!this.controller.onGround() && this.onGround) {
+    //   this.onGround = false
+    //   this.controller.setGravity(9.8)
+    //   console.log('gravity to 9.8')
+    // }
   }
 }
