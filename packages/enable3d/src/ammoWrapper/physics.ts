@@ -78,6 +78,15 @@ class Physics extends EventEmitter {
     const broadphase = new Ammo.btDbvtBroadphase()
     const solver = new Ammo.btSequentialImpulseConstraintSolver()
     this.physicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration)
+
+    // https://github.com/AndresTraks/BulletSharp/wiki/Collision-Callbacks-and-Triggers
+    this.physicsWorld.getPairCache().setInternalGhostPairCallback(new Ammo.btGhostPairCallback())
+    // seems to be the same as
+    // this.physicsWorld
+    //   .getBroadphase()
+    //   .getOverlappingPairCache()
+    //   .setInternalGhostPairCallback(new Ammo.btGhostPairCallback())
+
     this.physicsWorld.setGravity(new Ammo.btVector3(g.x, g.y, g.z))
 
     this.dispatcher = dispatcher

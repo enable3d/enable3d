@@ -14,8 +14,8 @@ const getPlayerShape = () => {
 
   const transform2 = new Ammo.btTransform()
   transform2.setIdentity()
-  transform2.setOrigin(new Ammo.btVector3(0, 0.5, 0))
-  compoundShape.addChildShape(transform2, new Ammo.btCylinderShape(new Ammo.btVector3(0.5, 0.5, 0)))
+  transform2.setOrigin(new Ammo.btVector3(0, 0.2, 0))
+  compoundShape.addChildShape(transform2, new Ammo.btCapsuleShape(0.5, 1))
 
   return compoundShape
 }
@@ -24,6 +24,7 @@ const getPlayerShape = () => {
 // https://pybullet.org/Bullet/phpBB3/viewtopic.php?t=9358
 // https://github.com/lo-th/Ammo.lab/blob/af8ee2562dd1b928722784319417944b55904399/src/gun/Character.js
 // https://discourse.threejs.org/t/ammo-js-with-three-js/12530
+// https://github.com/AndresTraks/BulletSharp/wiki/Collision-Callbacks-and-Triggers
 class KinematicCharacterController {
   public tmpTrans: Ammo.btTransform
   public physicsWorld: Ammo.btDiscreteDynamicsWorld
@@ -35,7 +36,7 @@ class KinematicCharacterController {
     const ghostObject = new Ammo.btPairCachingGhostObject()
     const transform = new Ammo.btTransform()
     transform.setIdentity()
-    transform.setOrigin(new Ammo.btVector3(-5, 2, 0))
+    transform.setOrigin(new Ammo.btVector3(-7, 2, 0))
     transform.setRotation(new Ammo.btQuaternion(0, 0, 0, 1))
     ghostObject.setWorldTransform(transform)
     ghostObject.setCollisionShape(shape)
@@ -44,16 +45,18 @@ class KinematicCharacterController {
     ghostObject.setActivationState(4)
     ghostObject.activate(true)
 
-    const controller = new Ammo.btKinematicCharacterController(ghostObject, shape.getChildShape(0), 0.35, 1)
+    const controller = new Ammo.btKinematicCharacterController(ghostObject, shape.getChildShape(1), 0.35, 1)
+    // @ts-ignore
     controller.setUseGhostSweepTest(true)
 
     // controller.setUpAxis(1)
     // controller.canJump( true);
-    // controller.setMaxJumpHeight(1)
-    // controller.setJumpSpeed(5)
+
+    // controller.setMaxJumpHeight(0.0001)
+    // controller.setJumpSpeed(0.0001)
 
     controller.setGravity(9.8 * 3) // default 9.8*3
-    controller.setMaxSlope(Math.PI / 4) // default Math.PI /4
+    controller.setMaxSlope(Math.PI / 4.9) // default Math.PI /4
 
     // controller.setGravity(0)
     // it falls through the ground if I apply gravity
@@ -62,10 +65,6 @@ class KinematicCharacterController {
     // addCollisionObject(collisionObject: Ammo.btCollisionObject, collisionFilterGroup?: number | undefined, collisionFilterMask?: number | undefined): void
     this.physicsWorld.addCollisionObject(ghostObject)
     this.physicsWorld.addAction(controller)
-    this.physicsWorld
-      .getBroadphase()
-      .getOverlappingPairCache()
-      .setInternalGhostPairCallback(new Ammo.btGhostPairCallback())
 
     return controller
   }

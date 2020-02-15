@@ -1,4 +1,4 @@
-import { Object3D, Scene3D, ExtendedObject3D } from 'enable3d'
+import { Object3D, Scene3D, ExtendedObject3D, Vector3 } from 'enable3d'
 
 export default class MainScene extends Scene3D {
   sphere: Object3D
@@ -9,6 +9,7 @@ export default class MainScene extends Scene3D {
   playerCanJump: boolean
   controller: Ammo.btKinematicCharacterController
   onGround: boolean
+  lookAt: Vector3
 
   constructor() {
     super({ key: 'MainScene' })
@@ -26,30 +27,61 @@ export default class MainScene extends Scene3D {
   create() {
     this.accessThirdDimension()
     this.third.warpSpeed()
+    this.third.camera.position.set(-2.5, 5.5, 8)
+    this.third.camera.lookAt(-1, 0, 0)
+    this.lookAt = this.third.new.vector3(0, 0, 0)
 
     // this.third.physics.add.box({ y: 2, width: 1, collisionFlag: 2 })
 
     // enable physics debugging
     this.third.physics.debug.enable()
-    this.third.physics.debug.mode(3)
+    // this.third.physics.debug.mode(3)
 
     this.controller = this.third.physics.addCharacter()
 
     // move slowly to the right
     this.controller.setWalkDirection(new Ammo.btVector3(0.05, 0, 0))
-    this.time.addEvent({
-      delay: 3200,
-      callback: () => {
-        // @ts-ignore
-        this.controller.jump()
-        this.controller.setWalkDirection(new Ammo.btVector3(0, 0, 0))
-      }
-    })
+    // this.time.addEvent({
+    //   delay: 3200,
+    //   callback: () => {
+    //     // @ts-ignore
+    //     this.controller.jump()
+    //     this.controller.setWalkDirection(new Ammo.btVector3(0, 0, 0))
+    //   }
+    // })
 
-    let box = this.third.add.box({ width: 10, x: -1 })
-    box.rotateZ(Math.PI / 3)
-    this.third.physics.add.existing(box)
-    box.body.setCollisionFlags(2)
+    const addStairs = true
+    const flag = 2
+
+    if (addStairs) {
+      this.third.physics.add.box({ height: 0.1, width: 3, x: -4, y: 0.05, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.1, width: 2.8, x: -4, y: 0.15, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.1, width: 2.6, x: -4, y: 0.25, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.1, width: 2.4, x: -4, y: 0.35, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.1, width: 2.2, x: -4, y: 0.45, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.1, width: 2, x: -4, y: 0.55, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.1, width: 1.8, x: -4, y: 0.65, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.1, width: 1.6, x: -4, y: 0.75, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.1, width: 1.4, x: -4, y: 0.85, collisionFlag: flag })
+
+      this.third.physics.add.box({ height: 0.2, width: 3, x: 0.5, y: 0.1, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.2, width: 2.6, x: 0.5, y: 0.3, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.2, width: 2.2, x: 0.5, y: 0.5, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.2, width: 1.8, x: 0.5, y: 0.7, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.2, width: 1.4, x: 0.5, y: 0.9, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.2, width: 1, x: 0.5, y: 1.1, collisionFlag: flag })
+
+      this.third.physics.add.box({ height: 0.3, width: 3, x: 5, y: 0.15, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.3, width: 2.2, x: 5, y: 0.45, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.3, width: 1.6, x: 5, y: 0.75, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.3, width: 1, x: 5, y: 1.05, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.3, width: 0.4, x: 5, y: 1.35, collisionFlag: flag })
+    }
+
+    // let box = this.third.add.box({ width: 10, x: -1 })
+    // box.rotateZ(Math.PI / 5)
+    // this.third.physics.add.existing(box)
+    // box.body.setCollisionFlags(2)
 
     // this.third.physics.add.box({ x: 4, y: 1, collisionFlag: 2 })
 
@@ -127,15 +159,26 @@ export default class MainScene extends Scene3D {
   }
 
   update(time) {
-    // if (Math.random() > 0.1) console.log(this.controller.onGround())
-    // if (time > 5000 && this.controller.onGround() && !this.onGround) {
-    //   this.onGround = true
-    //   this.controller.setGravity(0)
-    //   console.log('gravity to 0')
-    // } else if (!this.controller.onGround() && this.onGround) {
-    //   this.onGround = false
-    //   this.controller.setGravity(9.8)
-    //   console.log('gravity to 9.8')
-    // }
+    const t = this.controller.getGhostObject().getWorldTransform()
+    const p = t.getOrigin()
+
+    const v = this.third.new.vector3(p.x(), p.y(), p.z())
+    this.lookAt.lerp(v, 0.05)
+    this.third.camera.lookAt(this.lookAt)
+    // const r = this.getRotation(t)
+    // const theta = r.y
+    // const speed = 1 / 30
+    // const x = Math.sin(theta) * speed,
+    //   y = 0,
+    //   z = Math.cos(theta) * speed
+    // this.controller.setWalkDirection(new Ammo.btVector3(x, y, z))
+    // const forwardDir = t.getBasis().getRotation()
+    // if (Math.random() > 0.1) console.log(forwardDir)
+    // const e = this.third.new.euler(0, (1 * time) / 1000, 0)
+    // const q = this.third.new.quaternion(0, 0, 0, 1)
+    // q.setFromEuler(e)
+    // const ammoQuat = new Ammo.btQuaternion(0, 0, 0, 1)
+    // ammoQuat.setValue(q.x, q.y, q.z, q.w)
+    // t.setRotation(ammoQuat)
   }
 }
