@@ -21,7 +21,7 @@ Written in TypeScript, uses three.js and ammo.js, brings the third dimension to 
   <a href="#get-started">Get Started</a> •
   <a href="#how-to-use-with-phaser">Use with Phaser</a> •
   <a href="#standalone-mode">Standalone Mode</a> •
-  <a href="#phaser-starter-template">Phaser Starter Template</a> •
+  <a href="#starter-template">Starter Template</a> •
   <a href="#documentation">Documentation</a> •
   <a href="#new-features">New Features</a> •
   <a href="#license">License</a>
@@ -122,11 +122,11 @@ class MainScene extends Scene3D {
 
 At the moment enable3d can only be used together with Phaser.
 
-## Phaser Starter Template
+## Starter Template
 
-Looking for a powerful Phaser Starter Template?
+Looking for a powerful Starter Template?
 
-Try [phaser-project-template](https://github.com/yandeu/phaser-project-template) or [phaser-project-template-es6](https://github.com/yandeu/phaser-project-template-es6)
+Try [enable3d-project-template](https://github.com/yandeu/enable3d-project-template).
 
 ## Documentation
 
