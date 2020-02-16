@@ -74,10 +74,9 @@ export default class MainScene extends Scene3D {
       this.third.physics.add.box({ height: 0.2, width: 1, x: 0.5, y: 1.1, collisionFlags: flag })
 
       this.third.physics.add.box({ height: 0.3, width: 3, x: 5, y: 0.15, collisionFlags: flag })
-      this.third.physics.add.box({ height: 0.3, width: 2.2, x: 5, y: 0.45, collisionFlags: flag })
-      this.third.physics.add.box({ height: 0.3, width: 1.6, x: 5, y: 0.75, collisionFlags: flag })
-      this.third.physics.add.box({ height: 0.3, width: 1, x: 5, y: 1.05, collisionFlags: flag })
-      this.third.physics.add.box({ height: 0.3, width: 0.4, x: 5, y: 1.35, collisionFlags: flag })
+      this.third.physics.add.box({ height: 0.3, width: 2.1, x: 5, y: 0.45, collisionFlags: flag })
+      this.third.physics.add.box({ height: 0.3, width: 1.2, x: 5, y: 0.75, collisionFlags: flag })
+      this.third.physics.add.box({ height: 0.3, width: 0.3, x: 5, y: 1.05, collisionFlags: flag })
     }
 
     // let box = this.third.add.box({ width: 10, x: -1 })

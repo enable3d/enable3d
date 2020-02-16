@@ -1,3 +1,5 @@
+import { Vector3 } from 'three'
+
 /**
  * @author       Yannick Deubel (https://github.com/yandeu)
  * @copyright    Copyright (c) 2019 Yannick Deubel; Project Url: https://github.com/yandeu/enable3d
@@ -10,12 +12,12 @@ const getPlayerShape = () => {
   const transform1 = new Ammo.btTransform()
   transform1.setIdentity()
   transform1.setOrigin(new Ammo.btVector3(0, 0, 0))
-  compoundShape.addChildShape(transform1, new Ammo.btSphereShape(0.5))
+  compoundShape.addChildShape(transform1, new Ammo.btSphereShape(0.25))
 
   const transform2 = new Ammo.btTransform()
   transform2.setIdentity()
-  transform2.setOrigin(new Ammo.btVector3(0, 0.2, 0))
-  compoundShape.addChildShape(transform2, new Ammo.btCapsuleShape(0.5, 1))
+  transform2.setOrigin(new Ammo.btVector3(0, 0.25, 0))
+  compoundShape.addChildShape(transform2, new Ammo.btCylinderShape(new Ammo.btVector3(0.25, 0.25, 0)))
 
   return compoundShape
 }
@@ -31,7 +33,9 @@ class KinematicCharacterController {
 
   public addCharacter() {
     // const shape = getPlayerShape()
-    const shape = new Ammo.btCapsuleShape(0.5, 1)
+    // const shape = new Ammo.btCapsuleShape(0.25, 0.5)
+    const shape = new Ammo.btCapsuleShape(0.38, 0.8)
+    // const shape = new Ammo.btSphereShape(0.25)
 
     const ghostObject = new Ammo.btPairCachingGhostObject()
     const transform = new Ammo.btTransform()
@@ -44,10 +48,12 @@ class KinematicCharacterController {
     ghostObject.setActivationState(4)
     ghostObject.activate(true)
 
-    const controller = new Ammo.btKinematicCharacterController(ghostObject, ghostObject.getCollisionShape(), 0.35, 1)
+    // const controller = new Ammo.btKinematicCharacterController(ghostObject, shape.getChildShape(0), 0.35, 1)
+    // 0.5 does not work , 0.6 does not work, but 0.535 works :/
+    const controller = new Ammo.btKinematicCharacterController(ghostObject, shape, 0.535, 1)
     controller.setUseGhostSweepTest(true)
     controller.setGravity(9.8 * 3) // default 9.8*3
-    controller.setMaxSlope(Math.PI / 4) // default Math.PI / 4
+    controller.setMaxSlope(Math.PI / 3) // default Math.PI / 4
 
     // controller.setGravity(0)
     // it falls through the ground if I apply gravity
