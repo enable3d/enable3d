@@ -172,6 +172,7 @@ class AmmoPhysics extends EventEmitter {
     Shape.setMargin(0.05)
 
     this.addRigidBody(object, Shape, mass, pos, quat)
+    // @ts-ignore
     this.addBodyProperties(object, config)
 
     if (offset) object.body.offset = { x: 0, y: 0, z: 0, ...offset }
@@ -231,7 +232,9 @@ class AmmoPhysics extends EventEmitter {
     transform.setRotation(new Ammo.btQuaternion(quat.x, quat.y, quat.z, quat.w))
     const motionState = new Ammo.btDefaultMotionState(transform)
     const localInertia = new Ammo.btVector3(0, 0, 0)
-    physicsShape.calculateLocalInertia(mass, localInertia)
+    if (mass > 0) {
+      physicsShape.calculateLocalInertia(mass, localInertia)
+    }
     const rbInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, physicsShape, localInertia)
     const rigidBody = new Ammo.btRigidBody(rbInfo)
     return rigidBody
@@ -258,7 +261,7 @@ class AmmoPhysics extends EventEmitter {
 
     if (mass > 0) {
       // Disable deactivation
-      rigidBody.setActivationState(4)
+      // rigidBody.setActivationState(4)
     }
 
     this.rigidBodies.push(threeObject)
@@ -275,10 +278,17 @@ class AmmoPhysics extends EventEmitter {
     this.objectsAmmo[ptr] = threeObject
   }
 
-  protected addBodyProperties(obj: ExtendedObject3D, config: any) {
-    const { friction = 0.5, collisionFlag = 0 } = config
-    obj.body.setCollisionFlags(collisionFlag)
+  protected addBodyProperties(obj: ExtendedObject3D, config: { friction?: number; collisionFlags?: number } = {}) {
+    const { friction = 0.5, collisionFlags = 0 } = config
+
+    obj.body.setCollisionFlags(collisionFlags)
     obj.body.setFriction(friction)
+
+    // set the linear and angular factor of static object to zero
+    if (obj.body.ammo.isStaticObject()) {
+      obj.body.setLinearFactor(0, 0, 0)
+      obj.body.setAngularFactor(0, 0, 0)
+    }
   }
 }
 

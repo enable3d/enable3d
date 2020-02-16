@@ -30,8 +30,8 @@ class KinematicCharacterController {
   public physicsWorld: Ammo.btDiscreteDynamicsWorld
 
   public addCharacter() {
-    const shape = getPlayerShape()
-    shape.setMargin(0.05)
+    // const shape = getPlayerShape()
+    const shape = new Ammo.btCapsuleShape(0.5, 1)
 
     const ghostObject = new Ammo.btPairCachingGhostObject()
     const transform = new Ammo.btTransform()
@@ -41,22 +41,13 @@ class KinematicCharacterController {
     ghostObject.setWorldTransform(transform)
     ghostObject.setCollisionShape(shape)
     ghostObject.setCollisionFlags(ghostObject.getCollisionFlags() | 16) //CHARACTER_OBJECT
-
     ghostObject.setActivationState(4)
     ghostObject.activate(true)
 
-    const controller = new Ammo.btKinematicCharacterController(ghostObject, shape.getChildShape(1), 0.35, 1)
-    // @ts-ignore
+    const controller = new Ammo.btKinematicCharacterController(ghostObject, ghostObject.getCollisionShape(), 0.35, 1)
     controller.setUseGhostSweepTest(true)
-
-    // controller.setUpAxis(1)
-    // controller.canJump( true);
-
-    // controller.setMaxJumpHeight(0.0001)
-    // controller.setJumpSpeed(0.0001)
-
     controller.setGravity(9.8 * 3) // default 9.8*3
-    controller.setMaxSlope(Math.PI / 4.9) // default Math.PI /4
+    controller.setMaxSlope(Math.PI / 4) // default Math.PI / 4
 
     // controller.setGravity(0)
     // it falls through the ground if I apply gravity

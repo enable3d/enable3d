@@ -31,7 +31,8 @@ export default class MainScene extends Scene3D {
     this.third.camera.lookAt(-1, 0, 0)
     this.lookAt = this.third.new.vector3(0, 0, 0)
 
-    // this.third.physics.add.box({ y: 2, width: 1, collisionFlag: 2 })
+    this.third.physics.add.box({ y: 10, z: -5, mass: 2, width: 1 })
+    let box = this.third.physics.add.box({ y: 1, z: -5, width: 1, collisionFlags: 1 })
 
     // enable physics debugging
     this.third.physics.debug.enable()
@@ -51,31 +52,32 @@ export default class MainScene extends Scene3D {
     // })
 
     const addStairs = true
-    const flag = 2
+    const flag = 1
+    const mass = 0.01
 
     if (addStairs) {
-      this.third.physics.add.box({ height: 0.1, width: 3, x: -4, y: 0.05, collisionFlag: flag })
-      this.third.physics.add.box({ height: 0.1, width: 2.8, x: -4, y: 0.15, collisionFlag: flag })
-      this.third.physics.add.box({ height: 0.1, width: 2.6, x: -4, y: 0.25, collisionFlag: flag })
-      this.third.physics.add.box({ height: 0.1, width: 2.4, x: -4, y: 0.35, collisionFlag: flag })
-      this.third.physics.add.box({ height: 0.1, width: 2.2, x: -4, y: 0.45, collisionFlag: flag })
-      this.third.physics.add.box({ height: 0.1, width: 2, x: -4, y: 0.55, collisionFlag: flag })
-      this.third.physics.add.box({ height: 0.1, width: 1.8, x: -4, y: 0.65, collisionFlag: flag })
-      this.third.physics.add.box({ height: 0.1, width: 1.6, x: -4, y: 0.75, collisionFlag: flag })
-      this.third.physics.add.box({ height: 0.1, width: 1.4, x: -4, y: 0.85, collisionFlag: flag })
+      this.third.physics.add.box({ mass: mass, height: 0.1, width: 3, x: -4, y: 0.05, collisionFlags: flag })
+      this.third.physics.add.box({ mass: mass, height: 0.1, width: 2.8, x: -4, y: 0.15, collisionFlags: flag })
+      this.third.physics.add.box({ mass: mass, height: 0.1, width: 2.6, x: -4, y: 0.25, collisionFlags: flag })
+      this.third.physics.add.box({ mass: mass, height: 0.1, width: 2.4, x: -4, y: 0.35, collisionFlags: flag })
+      this.third.physics.add.box({ mass: mass, height: 0.1, width: 2.2, x: -4, y: 0.45, collisionFlags: flag })
+      this.third.physics.add.box({ mass: mass, height: 0.1, width: 2, x: -4, y: 0.55, collisionFlags: flag })
+      this.third.physics.add.box({ mass: mass, height: 0.1, width: 1.8, x: -4, y: 0.65, collisionFlags: flag })
+      this.third.physics.add.box({ mass: mass, height: 0.1, width: 1.6, x: -4, y: 0.75, collisionFlags: flag })
+      this.third.physics.add.box({ mass: mass, height: 0.1, width: 1.4, x: -4, y: 0.85, collisionFlags: flag })
 
-      this.third.physics.add.box({ height: 0.2, width: 3, x: 0.5, y: 0.1, collisionFlag: flag })
-      this.third.physics.add.box({ height: 0.2, width: 2.6, x: 0.5, y: 0.3, collisionFlag: flag })
-      this.third.physics.add.box({ height: 0.2, width: 2.2, x: 0.5, y: 0.5, collisionFlag: flag })
-      this.third.physics.add.box({ height: 0.2, width: 1.8, x: 0.5, y: 0.7, collisionFlag: flag })
-      this.third.physics.add.box({ height: 0.2, width: 1.4, x: 0.5, y: 0.9, collisionFlag: flag })
-      this.third.physics.add.box({ height: 0.2, width: 1, x: 0.5, y: 1.1, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.2, width: 3, x: 0.5, y: 0.1, collisionFlags: flag })
+      this.third.physics.add.box({ height: 0.2, width: 2.6, x: 0.5, y: 0.3, collisionFlags: flag })
+      this.third.physics.add.box({ height: 0.2, width: 2.2, x: 0.5, y: 0.5, collisionFlags: flag })
+      this.third.physics.add.box({ height: 0.2, width: 1.8, x: 0.5, y: 0.7, collisionFlags: flag })
+      this.third.physics.add.box({ height: 0.2, width: 1.4, x: 0.5, y: 0.9, collisionFlags: flag })
+      this.third.physics.add.box({ height: 0.2, width: 1, x: 0.5, y: 1.1, collisionFlags: flag })
 
-      this.third.physics.add.box({ height: 0.3, width: 3, x: 5, y: 0.15, collisionFlag: flag })
-      this.third.physics.add.box({ height: 0.3, width: 2.2, x: 5, y: 0.45, collisionFlag: flag })
-      this.third.physics.add.box({ height: 0.3, width: 1.6, x: 5, y: 0.75, collisionFlag: flag })
-      this.third.physics.add.box({ height: 0.3, width: 1, x: 5, y: 1.05, collisionFlag: flag })
-      this.third.physics.add.box({ height: 0.3, width: 0.4, x: 5, y: 1.35, collisionFlag: flag })
+      this.third.physics.add.box({ height: 0.3, width: 3, x: 5, y: 0.15, collisionFlags: flag })
+      this.third.physics.add.box({ height: 0.3, width: 2.2, x: 5, y: 0.45, collisionFlags: flag })
+      this.third.physics.add.box({ height: 0.3, width: 1.6, x: 5, y: 0.75, collisionFlags: flag })
+      this.third.physics.add.box({ height: 0.3, width: 1, x: 5, y: 1.05, collisionFlags: flag })
+      this.third.physics.add.box({ height: 0.3, width: 0.4, x: 5, y: 1.35, collisionFlags: flag })
     }
 
     // let box = this.third.add.box({ width: 10, x: -1 })
@@ -83,7 +85,7 @@ export default class MainScene extends Scene3D {
     // this.third.physics.add.existing(box)
     // box.body.setCollisionFlags(2)
 
-    // this.third.physics.add.box({ x: 4, y: 1, collisionFlag: 2 })
+    // this.third.physics.add.box({ x: 4, y: 1, collisionFlags: 2 })
 
     // add hero
     // this.third.load.gltf('hero', object => {

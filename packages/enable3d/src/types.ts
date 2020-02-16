@@ -118,7 +118,7 @@ export interface AddMaterial {
 interface GeometryConfig {
   name?: string
   friction?: number
-  collisionFlag?: number
+  collisionFlags?: number
   breakable?: boolean
   mass?: number
   bufferGeometry?: boolean
