@@ -53,14 +53,6 @@ npm i phaser enable3d
 Or download the UMD bundle in [/bundles](https://github.com/yandeu/enable3d/tree/master/bundles)
 The bundle exports "ENABLE3D".
 
-Starting with version 0.0.11, heavy modules are lazy loaded. Means you have to add all corresponding .js file to your project:
-
-- enable3d.0.0.11.main.min.js
-- enable3d.0.0.11.waterBase64.min.js
-- and so on ...
-
-By default lazy loaded modules are served from /lib/. To change the directory, you have to create a new bundle (npm run bundle) with a different _publicPath_ in [webpack.js](https://github.com/yandeu/enable3d/blob/master/packages/enable3d/webpack.js).
-
 ```ts
 const { enable3d, Scene3d } = ENABLE3D
 // now use enable3d and Scene3d in your project

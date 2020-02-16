@@ -5,13 +5,19 @@ import { PlaneBufferGeometry, Scene, Vector2, Mesh, MeshStandardMaterial, Textur
 // https://threejs.org/examples/?q=water#webgl_water
 
 const addWater = async (config: any = {}, scene: Scene) => {
-  const { width = 20, height = 20, x = 0, y = 0, z = 0, color = '#ffffff', scale = 4, flowX = 1, flowY = 1 } = config
-
-  const { default: waterTextures } = await import(/* webpackChunkName: "waterBase64" */ './waterBase64')
-
-  const loader = new TextureLoader()
-  const water1 = loader.load(waterTextures.one)
-  const water2 = loader.load(waterTextures.two)
+  const {
+    width = 20,
+    height = 20,
+    x = 0,
+    y = 0,
+    z = 0,
+    color = '#ffffff',
+    scale = 4,
+    flowX = 1,
+    flowY = 1,
+    normalMap0,
+    normalMap1
+  } = config
 
   //ground
   const groundGeometry = new PlaneBufferGeometry(width, height)
@@ -30,8 +36,8 @@ const addWater = async (config: any = {}, scene: Scene) => {
     flowDirection: new Vector2(flowX, flowY),
     textureWidth: 1024,
     textureHeight: 1024,
-    normalMap0: water1,
-    normalMap1: water2
+    normalMap0: normalMap0,
+    normalMap1: normalMap1
   })
   water.position.set(x, y + 0.1, z)
   water.rotation.x = Math.PI * -0.5
