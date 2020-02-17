@@ -106,6 +106,7 @@ class AmmoPhysics extends EventEmitter {
     const { position: pos, quaternion: quat, hasBody } = object
     const { mass = 1, autoCenter = false, offset = undefined, shapes = [] } = config
 
+    // default params
     let params = {
       width: 1,
       height: 1,
@@ -134,14 +135,15 @@ class AmmoPhysics extends EventEmitter {
     // auto adjust the center for custom shapes
     if (autoCenter) object.geometry.center()
 
+    // some aliases
     if (shape === 'extrude') shape = 'hacd'
     if (shape === 'mesh' || shape === 'convex') shape = 'convexMesh'
     if (shape === 'concave') shape = 'concaveMesh'
 
     let Shape
 
+    // combine multiple shapes to one compound shape
     if (shapes.length > 0) {
-      // combine all compound shapes
       const tmp: any[] = [] // stores all the raw shapes
       const compoundShape = new Ammo.btCompoundShape()
 
@@ -155,6 +157,7 @@ class AmmoPhysics extends EventEmitter {
         const pos = { x: obj.x || 0, y: obj.y || 0, z: obj.z || 0 }
         transform.setIdentity()
         transform.setOrigin(new Ammo.btVector3(pos.x || 0, pos.y || 0, pos.z || 0))
+        // TODO add rotation
         // transform.setRotation(new Ammo.btQuaternion(quat.x || 0, quat.y || 0, quat.z || 0, quat.w || 1))
         compoundShape.addChildShape(transform, tmp[i])
       })
@@ -171,9 +174,16 @@ class AmmoPhysics extends EventEmitter {
 
     Shape.setMargin(0.05)
 
-    this.addRigidBody(object, Shape, mass, pos, quat)
     // @ts-ignore
-    this.addBodyProperties(object, config)
+    if (config.controller) {
+      const { ghostObject, controller } = this.addKinematicCharacterController()
+      object.controller = controller
+      this.mergeRigidBodyWithThreeObject(object, ghostObject)
+    } else {
+      const rigidBody = this.addRigidBody(object, Shape, mass, pos, quat)
+      this.mergeRigidBodyWithThreeObject(object, rigidBody)
+      this.addBodyProperties(object, config)
+    }
 
     if (offset) object.body.offset = { x: 0, y: 0, z: 0, ...offset }
   }
@@ -225,6 +235,22 @@ class AmmoPhysics extends EventEmitter {
     return Shape
   }
 
+  protected mergeRigidBodyWithThreeObject(threeObject: ExtendedObject3D, rigidBody: any) {
+    this.rigidBodies.push(threeObject)
+    // addRigidBody(body: Ammo.btRigidBody, group: number, mask: number): void
+
+    const ptr = Object.values(rigidBody)[0]
+    // @ts-ignore
+    rigidBody.name = threeObject.name
+    threeObject.body = new PhysicsBody(this, rigidBody)
+
+    threeObject.hasBody = true
+    // @ts-ignore
+    threeObject.ptr = ptr
+    // @ts-ignore
+    this.objectsAmmo[ptr] = threeObject
+  }
+
   protected createRigidBody(physicsShape: any, mass: number, pos: Vector3, quat: Quaternion) {
     const transform = new Ammo.btTransform()
     transform.setIdentity()
@@ -261,24 +287,15 @@ class AmmoPhysics extends EventEmitter {
 
     if (mass > 0) {
       // Disable deactivation
-      // rigidBody.setActivationState(4)
+      rigidBody.setActivationState(4)
     }
 
-    this.rigidBodies.push(threeObject)
-    // addRigidBody(body: Ammo.btRigidBody, group: number, mask: number): void
     this.physicsWorld.addRigidBody(rigidBody)
 
-    const ptr = Object.values(rigidBody)[0]
-    // @ts-ignore
-    rigidBody.name = threeObject.name
-    threeObject.body = new PhysicsBody(this, rigidBody)
-    threeObject.hasBody = true
-    // @ts-ignore
-    threeObject.ptr = ptr
-    this.objectsAmmo[ptr] = threeObject
+    return rigidBody
   }
 
-  protected addBodyProperties(obj: ExtendedObject3D, config: { friction?: number; collisionFlags?: number } = {}) {
+  protected addBodyProperties(obj: ExtendedObject3D, config: any = {}) {
     const { friction = 0.5, collisionFlags = 0 } = config
 
     obj.body.setCollisionFlags(collisionFlags)

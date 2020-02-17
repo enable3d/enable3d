@@ -185,4 +185,5 @@ export interface AddExistingConfig {
   mass?: number
   autoCenter?: boolean
   offset?: { x?: number; y?: number; z?: number }
+  collisionFlags?: number
 }

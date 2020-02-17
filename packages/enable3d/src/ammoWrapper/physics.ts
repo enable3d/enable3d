@@ -135,19 +135,19 @@ class Physics extends EventEmitter {
     for (var i = 0, il = this.rigidBodies.length; i < il; i++) {
       var objThree = this.rigidBodies[i]
       var objPhys = objThree.body.ammo
-      var ms = objPhys.getMotionState()
+      // var ms = objPhys.getMotionState()
 
-      if (ms) {
-        ms.getWorldTransform(this.tmpTrans)
-        var p = this.tmpTrans.getOrigin()
-        var q = this.tmpTrans.getRotation()
-        // body offset
-        let o = objThree.body.offset
-        objThree.position.set(p.x() + o.x, p.y() + o.y, p.z() + o.z)
-        objThree.quaternion.set(q.x(), q.y(), q.z(), q.w())
+      // if (ms) {
+      const t = objPhys.getWorldTransform() // ms.getWorldTransform(this.tmpTrans)
+      var p = t.getOrigin()
+      var q = t.getRotation()
+      // body offset
+      let o = objThree.body.offset
+      objThree.position.set(p.x() + o.x, p.y() + o.y, p.z() + o.z)
+      objThree.quaternion.set(q.x(), q.y(), q.z(), q.w())
 
-        objThree.collided = false
-      }
+      objThree.collided = false
+      // }
     }
 
     /**

@@ -10,6 +10,8 @@ export default class MainScene extends Scene3D {
   controller: Ammo.btKinematicCharacterController
   onGround: boolean
   lookAt: Vector3
+  platform: ExtendedObject3D
+  player: ExtendedObject3D
 
   constructor() {
     super({ key: 'MainScene' })
@@ -26,22 +28,28 @@ export default class MainScene extends Scene3D {
 
   create() {
     this.accessThirdDimension()
-    this.third.warpSpeed()
-    this.third.camera.position.set(-2.5, 5.5, 8)
+    this.third.warpSpeed('-ground')
+    this.third.camera.position.set(0, 6, 10)
     this.third.camera.lookAt(-1, 0, 0)
     this.lookAt = this.third.new.vector3(0, 0, 0)
 
-    this.third.physics.add.box({ y: 10, z: -5, mass: 2, width: 1 })
-    let box = this.third.physics.add.box({ y: 1, z: -5, width: 1, collisionFlags: 1 })
-
+    // this.third.physics.add.box({ y
     // enable physics debugging
     this.third.physics.debug.enable()
-    // this.third.physics.debug.mode(3)
+    this.third.physics.debug.mode(3)
 
-    this.controller = this.third.physics.addCharacter()
+    // @ts-ignore
+    this.player = this.third.physics.add.cylinder({ name: 'player', controller: true })
+    // cylinder.controller.get
+
+    this.third.physics.add.box({ z: -5, collisionFlags: 1 })
+    this.third.physics.add.box({ z: -5, y: 5 })
+
+    // @ts-ignore
+    // this.third.physics.add.existing(cylinder, { controller: true })§
 
     // move slowly to the right
-    this.controller.setWalkDirection(new Ammo.btVector3(0.05, 0, 0))
+    // this.controller.setWalkDirection(new Ammo.btVector3(0, 0, 0))
     // this.time.addEvent({
     //   delay: 3200,
     //   callback: () => {
@@ -50,8 +58,23 @@ export default class MainScene extends Scene3D {
     //     this.controller.setWalkDirection(new Ammo.btVector3(0, 0, 0))
     //   }
     // })
+    this.platform = this.third.add.box({ width: 8, height: 0.1, depth: 6 })
+    this.platform.rotateZ(0.2)
+    this.third.physics.add.existing(this.platform, { collisionFlags: 2 })
+    this.platform.userData.speedX = 0.0075
+    this.platform.body.on.collision(other => {
+      this.platform.userData.onPlatform = true
+    })
 
-    const addStairs = true
+    this.keys = {
+      a: this.input.keyboard.addKey('a'),
+      w: this.input.keyboard.addKey('w'),
+      d: this.input.keyboard.addKey('d'),
+      s: this.input.keyboard.addKey('s'),
+      space: this.input.keyboard.addKey(32)
+    }
+
+    const addStairs = false
     const flag = 1
     const mass = 0.01
 
@@ -78,94 +101,75 @@ export default class MainScene extends Scene3D {
       this.third.physics.add.box({ height: 0.3, width: 1.2, x: 5, y: 0.75, collisionFlags: flag })
       this.third.physics.add.box({ height: 0.3, width: 0.3, x: 5, y: 1.05, collisionFlags: flag })
     }
-
-    // let box = this.third.add.box({ width: 10, x: -1 })
-    // box.rotateZ(Math.PI / 5)
-    // this.third.physics.add.existing(box)
-    // box.body.setCollisionFlags(2)
-
-    // this.third.physics.add.box({ x: 4, y: 1, collisionFlags: 2 })
-
-    // add hero
-    // this.third.load.gltf('hero', object => {
-    //   // get hero from object
-    //   const hero = object.scene.children[0] as Object3D
-
-    //   this.hero = this.third.new.extendedObject3D()
-    //   this.hero.name = 'hero'
-    //   this.hero.add(hero)
-
-    //   this.hero.traverse((child: any) => {
-    //     if (child.isMesh) child.castShadow = child.receiveShadow = true
-    //   })
-
-    //   // animation
-    //   let mixer = this.third.new.animationMixer(hero)
-    //   let action = mixer.clipAction(object.animations[0])
-    //   action.play()
-
-    //   this.hero.position.set(0, 2, 2)
-    //   this.third.scene.add(this.hero)
-    //   this.hero.scale.setX(0.02)
-    //   this.hero.scale.setY(0.02)
-    //   this.hero.scale.setZ(0.02)
-    //   this.third.physics.add.existing(this.hero, {
-    //     shape: 'box',
-    //     width: 0.35,
-    //     height: 0.5,
-    //     depth: 0.35,
-    //     offset: { y: -0.25 }
-    //   })
-    //   this.hero.body.setAngularFactor(0, 0, 0)
-
-    //   // Add 3rd Person controls
-    //   // this.third.controls.add.thirdPerson(this.hero, {
-    //   //   targetRadius: 1.5,
-    //   //   offset: this.third.new.vector3(0, 0.5, 0)
-    //   // })
-
-    //   this.hero.body.on.collision((otherObject, event) => {
-    //     if (otherObject.name === 'ground') if (!this.playerCanJump && event !== 'end') this.playerCanJump = true
-    //   })
-    // })
-
-    /*
-    // conversion test
-    // TODO does only work if x and y is set to 0
-    // so we have to calculate the x and y offset
-
-    // add 3 rectangles at the top of the screen
-    // two are 2 dimensional, one is 3 dimensional
-    let pps10 = this.third.getPixelsPerSquare(10)
-    const { width, height } = this.cameras.main
-
-    this.add.rectangle(width / 2 + pps10, pps10, pps10, pps10, 0xff00ff)
-    const positionIn3d = this.third.transform.from2dto3d(width / 2, pps10, 10)
-    this.third.add.box({ ...positionIn3d })
-
-    let ppsM5 = this.third.getPixelsPerSquare(-5)
-    this.third.add.box({ x: 10, y: 3, z: -5 })
-    const positionIn2d = this.third.transform.from3dto2d(this.third.new.vector3(10, 3, -5))
-    this.add.rectangle(positionIn2d.x + ppsM5, positionIn2d.y, ppsM5, ppsM5, 0xff00ff)
-
-    // add phaser texts
-    // one in the front
-    // and another in the back with a depth or <= -1
-    this.add.text(10, 10, 'Text in Front', { color: 0x00ff00, fontSize: '50px' })
-    this.add
-      .text(this.cameras.main.width - 10, 10, 'Text in Back', { color: 0x00ff00, fontSize: '50px' })
-      .setOrigin(1, 0)
-      .setDepth(-1)
-    */
   }
 
   update(time) {
-    const t = this.controller.getGhostObject().getWorldTransform()
-    const p = t.getOrigin()
+    let walk = {
+      x: 0,
+      z: 0
+    }
 
+    if (this.keys.w.isDown) {
+      walk.z = -0.07
+    } else if (this.keys.s.isDown) {
+      walk.z = 0.07
+    }
+    if (this.keys.a.isDown) {
+      walk.x = -0.07
+    } else if (this.keys.d.isDown) {
+      walk.x = 0.07
+    }
+
+    const isMoving = Math.abs(walk.x) > 0 || Math.abs(walk.z) > 0
+
+    this.player.controller.setWalkDirection(new Ammo.btVector3(walk.x, 0, walk.z))
+
+    if (this.keys.space.isDown) {
+      this.player.controller.jump()
+    }
+
+    const speed = this.platform.userData.speedX * Math.sin(time / 2000) * 8
+
+    if (this.platform?.body) {
+      this.platform.body.transform()
+      const pos = this.platform.body.getPosition()
+      this.platform.body.setPosition(pos.x + speed, pos.y, pos.z)
+      this.platform.body.refresh()
+    }
+
+    const t = this.player.controller.getGhostObject().getWorldTransform()
+    const p = t.getOrigin()
     const v = this.third.new.vector3(p.x(), p.y(), p.z())
     this.lookAt.lerp(v, 0.05)
     this.third.camera.lookAt(this.lookAt)
+
+    // console.log(this.platform.userData.onPlatform)
+    if (this.platform.userData.onPlatform) {
+      const i = this.player.controller.getGhostObject().getNumOverlappingObjects()
+      t.setOrigin(new Ammo.btVector3(p.x() + speed, p.y(), p.z()))
+    }
+
+    let btRayFrom = new Ammo.btVector3(p.x(), p.y(), p.z())
+    let btRayTo = new Ammo.btVector3(p.x(), p.y() - 1, p.z())
+
+    // rayCallback = new Ammo.ClosestRayResultCallback(btRayFrom, btRayTo)
+    let rayCallback = new Ammo.ClosestRayResultCallback(new Ammo.btVector3(0, 0, 0), new Ammo.btVector3(0, 0, 0))
+    rayCallback.set_m_rayFromWorld(btRayFrom)
+    rayCallback.set_m_rayToWorld(btRayTo)
+
+    this.third.physics.physicsWorld.rayTest(btRayFrom, btRayTo, rayCallback)
+
+    this.player.controller.setGravity(9.8 * 3)
+
+    // console.log(!isMoving, this.platform.userData.onPlatform, rayCallback.hasHit())
+    if (!isMoving && this.platform.userData.onPlatform && rayCallback.hasHit()) {
+      let dist = p.y() - rayCallback.get_m_hitPointWorld().y()
+      this.player.controller.setGravity(0)
+    }
+
+    // const t = this.controller.getGhostObject().getWorldTransform()
+    // const p = t.getOrigin()
+
     // const r = this.getRotation(t)
     // const theta = r.y
     // const speed = 1 / 30
@@ -181,5 +185,6 @@ export default class MainScene extends Scene3D {
     // const ammoQuat = new Ammo.btQuaternion(0, 0, 0, 1)
     // ammoQuat.setValue(q.x, q.y, q.z, q.w)
     // t.setRotation(ammoQuat)
+    this.platform.userData.onPlatform = false
   }
 }

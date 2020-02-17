@@ -33,6 +33,7 @@ class ExtendedObject3D extends Object3D {
   public breakable: boolean
   public fragmentDepth: number
   public collided: boolean
+  public controller: Ammo.btKinematicCharacterController
 
   constructor() {
     super()

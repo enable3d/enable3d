@@ -1,4 +1,6 @@
 import { Vector3 } from 'three'
+import ExtendedObject3D from '../threeWrapper/extendedObject3D'
+import PhysicsBody from './physicsBody'
 
 /**
  * @author       Yannick Deubel (https://github.com/yandeu)
@@ -31,26 +33,24 @@ class KinematicCharacterController {
   public tmpTrans: Ammo.btTransform
   public physicsWorld: Ammo.btDiscreteDynamicsWorld
 
-  public addCharacter() {
-    // const shape = getPlayerShape()
-    // const shape = new Ammo.btCapsuleShape(0.25, 0.5)
+  public addKinematicCharacterController() {
     const shape = new Ammo.btCapsuleShape(0.38, 0.8)
-    // const shape = new Ammo.btSphereShape(0.25)
 
     const ghostObject = new Ammo.btPairCachingGhostObject()
     const transform = new Ammo.btTransform()
     transform.setIdentity()
-    transform.setOrigin(new Ammo.btVector3(-7, 2, 0))
+    transform.setOrigin(new Ammo.btVector3(0, 2, 0))
     transform.setRotation(new Ammo.btQuaternion(0, 0, 0, 1))
     ghostObject.setWorldTransform(transform)
     ghostObject.setCollisionShape(shape)
     ghostObject.setCollisionFlags(ghostObject.getCollisionFlags() | 16) //CHARACTER_OBJECT
     ghostObject.setActivationState(4)
     ghostObject.activate(true)
+    // ghostObject.setFriction(0)
 
     // const controller = new Ammo.btKinematicCharacterController(ghostObject, shape.getChildShape(0), 0.35, 1)
     // 0.5 does not work , 0.6 does not work, but 0.535 works :/
-    const controller = new Ammo.btKinematicCharacterController(ghostObject, shape, 0.535, 1)
+    const controller = new Ammo.btKinematicCharacterController(ghostObject, shape, 0.35, 1)
     controller.setUseGhostSweepTest(true)
     controller.setGravity(9.8 * 3) // default 9.8*3
     controller.setMaxSlope(Math.PI / 3) // default Math.PI / 4
@@ -63,7 +63,7 @@ class KinematicCharacterController {
     this.physicsWorld.addCollisionObject(ghostObject)
     this.physicsWorld.addAction(controller)
 
-    return controller
+    return { controller, ghostObject }
   }
 }
 
