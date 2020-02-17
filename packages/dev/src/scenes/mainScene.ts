@@ -28,7 +28,7 @@ export default class MainScene extends Scene3D {
 
   create() {
     this.accessThirdDimension()
-    this.third.warpSpeed('-ground')
+    this.third.warpSpeed()
     this.third.camera.position.set(0, 6, 10)
     this.third.camera.lookAt(-1, 0, 0)
     this.lookAt = this.third.new.vector3(0, 0, 0)
@@ -36,14 +36,15 @@ export default class MainScene extends Scene3D {
     // this.third.physics.add.box({ y
     // enable physics debugging
     this.third.physics.debug.enable()
-    this.third.physics.debug.mode(3)
+    // this.third.physics.debug.mode(3)wwwwww
 
     // @ts-ignore
-    this.player = this.third.physics.add.cylinder({ name: 'player', controller: true })
+    this.player = this.third.physics.add.cylinder({ name: 'player', controller: true, height: 0.25 })
     // cylinder.controller.get
 
     this.third.physics.add.box({ z: -5, collisionFlags: 1 })
-    this.third.physics.add.box({ z: -5, y: 5 })
+    this.third.physics.add.box({ z: -5, y: 5, mass: 1 })
+    this.third.physics.add.box({ z: -5, y: 8, mass: 1 })
 
     // @ts-ignore
     // this.third.physics.add.existing(cylinder, { controller: true })§
@@ -58,12 +59,12 @@ export default class MainScene extends Scene3D {
     //     this.controller.setWalkDirection(new Ammo.btVector3(0, 0, 0))
     //   }
     // })
-    this.platform = this.third.add.box({ width: 8, height: 0.1, depth: 6 })
+    this.platform = this.third.add.box({ x: -8, z: -8, width: 8, height: 0.1, depth: 6 })
     this.platform.rotateZ(0.2)
     this.third.physics.add.existing(this.platform, { collisionFlags: 2 })
     this.platform.userData.speedX = 0.0075
     this.platform.body.on.collision(other => {
-      this.platform.userData.onPlatform = true
+      if (other.name === 'player') this.platform.userData.onPlatform = true
     })
 
     this.keys = {
@@ -74,7 +75,7 @@ export default class MainScene extends Scene3D {
       space: this.input.keyboard.addKey(32)
     }
 
-    const addStairs = false
+    const addStairs = true
     const flag = 1
     const mass = 0.01
 
@@ -143,11 +144,11 @@ export default class MainScene extends Scene3D {
     this.lookAt.lerp(v, 0.05)
     this.third.camera.lookAt(this.lookAt)
 
-    // console.log(this.platform.userData.onPlatform)
-    if (this.platform.userData.onPlatform) {
-      const i = this.player.controller.getGhostObject().getNumOverlappingObjects()
-      t.setOrigin(new Ammo.btVector3(p.x() + speed, p.y(), p.z()))
-    }
+    // console.log(this.platform.userData.onPlatform)wa
+    // if (this.platform.userData.onPlatform) {
+    //   const i = this.player.controller.getGhostObject().getNumOverlappingObjects()
+    //   t.setOrigin(new Ammo.btVector3(p.x() + speed, p.y(), p.z()))
+    // }
 
     let btRayFrom = new Ammo.btVector3(p.x(), p.y(), p.z())
     let btRayTo = new Ammo.btVector3(p.x(), p.y() - 1, p.z())
@@ -164,6 +165,7 @@ export default class MainScene extends Scene3D {
     // console.log(!isMoving, this.platform.userData.onPlatform, rayCallback.hasHit())
     if (!isMoving && this.platform.userData.onPlatform && rayCallback.hasHit()) {
       let dist = p.y() - rayCallback.get_m_hitPointWorld().y()
+      t.setOrigin(new Ammo.btVector3(p.x() + speed, p.y(), p.z()))
       this.player.controller.setGravity(0)
     }
 
