@@ -9,11 +9,13 @@ import Cameras from './threeWrapper/cameras'
 import loadAmmoModule from './helpers/wasmLoader'
 import Canvas from './utils/customCanvas'
 import { Phaser3DConfig } from './types'
+import * as THREE from 'three'
 
 export * from './types'
 export { Cameras }
 export { Third }
 export { Canvas }
+export { THREE }
 
 export class Scene3D extends Phaser.Scene {
   constructor(config: string | Phaser.Types.Scenes.SettingsConfig) {
