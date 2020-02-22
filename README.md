@@ -17,6 +17,7 @@ Written in TypeScript, uses three.js and ammo.js, brings the third dimension to 
 
 <p align="center">
   <a href="#key-features">Key Features</a> •
+  <a href="#goals-for-this-project">Goals</a> •
   <a href="#examples">Examples</a> •
   <a href="#get-started">Get Started</a> •
   <a href="#how-to-use-with-phaser">Use with Phaser</a> •
@@ -33,6 +34,30 @@ Written in TypeScript, uses three.js and ammo.js, brings the third dimension to 
 - Constraints
 - Collision and Overlap detection
 - and more...
+
+## Goals for this Project
+
+What are the goals for this project? Initially I only wanted to make a 3d extension for Phaser 3. But now, the main goal are 3 things: Providing Physics for three.js projects, a standalone 3d framework and a 3d extension for Phaser 3.
+
+I want to achieve this by splitting this projects into multiple modules. There will be 3 main levels of wrappers.
+
+```bash
+├── @enable3d/phaser        # 3d extension for Phaser
+│   └── @enable3d/three     # 3d framework on top of three.js
+│       └── @enable3d/ammo  # Physics plugin for three.js
+│
+├── @enable3d/misc
+└── @enable3d/common
+```
+
+So, if you have an existing three.js project and want to add physics to it, you simply need to add `@enable3d/physics`.
+
+If want to build a simple 3d scene and do not want to learn three.js, simple use `@enable3d/three` which wraps all three.js functionalities into a simple, phaser alike api.
+
+If you want to make a game, and want to use all the cool features (DataManager, TweenManager, SceneManager, InputManager, Loaders, SoundManager and more) that Phaser provides, install `@enable/phaser`.
+
+This is the goal. But for now, just follow the
+<a href="#get-started">Get Started</a> instructions.
 
 ## Examples
 
