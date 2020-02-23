@@ -77,7 +77,7 @@ export default class MainScene extends Scene3D {
     // constraint test (spring)
     let box1 = this.third.physics.add.box({ x: 10, z: 16, y: 20 }, { standard: { color: 0xff00ff } })
     let box2 = this.third.physics.add.box(
-      { x: 10, z: 17, y: 15, collisionFlag: 4, mass: 5 },
+      { x: 10, z: 17, y: 15, collisionFlags: 4, mass: 5 },
       { standard: { color: 0xffff00 } }
     )
     this.third.physics.add.constraints.spring(box1.body, box2.body, { angularLock: false })

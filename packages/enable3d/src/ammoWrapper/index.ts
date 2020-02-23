@@ -234,7 +234,7 @@ class AmmoPhysics extends EventEmitter {
     const motionState = new Ammo.btDefaultMotionState(transform)
     const localInertia = new Ammo.btVector3(0, 0, 0)
     if (mass > 0) {
-    physicsShape.calculateLocalInertia(mass, localInertia)
+      physicsShape.calculateLocalInertia(mass, localInertia)
     }
     const rbInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, physicsShape, localInertia)
     const rigidBody = new Ammo.btRigidBody(rbInfo)
@@ -279,8 +279,8 @@ class AmmoPhysics extends EventEmitter {
   }
 
   protected addBodyProperties(obj: ExtendedObject3D, config: any) {
-    const { friction = 0.5, collisionFlag = 0 } = config
-    obj.body.setCollisionFlags(collisionFlag)
+    const { friction = 0.5, collisionFlags = 0 } = config
+    obj.body.setCollisionFlags(collisionFlags)
     obj.body.setFriction(friction)
   }
 }
