@@ -133,14 +133,15 @@ class AmmoPhysics extends EventEmitter {
     // auto adjust the center for custom shapes
     if (autoCenter) object.geometry.center()
 
+    // some aliases
     if (shape === 'extrude') shape = 'hacd'
     if (shape === 'mesh' || shape === 'convex') shape = 'convexMesh'
     if (shape === 'concave') shape = 'concaveMesh'
 
     let Shape
 
+    // combine multiple shapes to one compound shape
     if (shapes.length > 0) {
-      // combine all compound shapes
       const tmp: any[] = [] // stores all the raw shapes
       const compoundShape = new Ammo.btCompoundShape()
 
@@ -154,6 +155,7 @@ class AmmoPhysics extends EventEmitter {
         const pos = { x: obj.x || 0, y: obj.y || 0, z: obj.z || 0 }
         transform.setIdentity()
         transform.setOrigin(new Ammo.btVector3(pos.x || 0, pos.y || 0, pos.z || 0))
+        // TODO add rotation
         // transform.setRotation(new Ammo.btQuaternion(quat.x || 0, quat.y || 0, quat.z || 0, quat.w || 1))
         compoundShape.addChildShape(transform, tmp[i])
       })
@@ -231,7 +233,9 @@ class AmmoPhysics extends EventEmitter {
     transform.setRotation(new Ammo.btQuaternion(quat.x, quat.y, quat.z, quat.w))
     const motionState = new Ammo.btDefaultMotionState(transform)
     const localInertia = new Ammo.btVector3(0, 0, 0)
+    if (mass > 0) {
     physicsShape.calculateLocalInertia(mass, localInertia)
+    }
     const rbInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, physicsShape, localInertia)
     const rigidBody = new Ammo.btRigidBody(rbInfo)
     return rigidBody
