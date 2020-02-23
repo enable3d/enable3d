@@ -10,7 +10,7 @@ import EventEmitter from 'eventemitter3'
 import ThreeGraphics from '../threeWrapper'
 import { ExtendedObject3D, Phaser3DConfig } from '../types'
 import { Vector3, MeshLambertMaterial } from 'three'
-import { ConvexObjectBreaker } from 'three/examples/jsm/misc/ConvexObjectBreaker'
+import { ConvexObjectBreaker } from './convexObjectBreaker'
 
 class Physics extends EventEmitter {
   public tmpTrans: Ammo.btTransform
@@ -20,7 +20,7 @@ class Physics extends EventEmitter {
   protected objectsAmmo: { [ptr: number]: any } = {}
   protected earlierDetectedCollisions: { combinedName: string; collision: boolean }[] = []
   protected debugDrawer: DebugDrawer
-  private convexBreaker: ConvexObjectBreaker
+  private convexBreaker: any
   protected addRigidBody: (threeObject: ExtendedObject3D, physicsShape: any, mass: any, pos: any, quat: any) => void
   private objectsToRemove: any[]
   private numObjectsToRemove: number
@@ -36,6 +36,7 @@ class Physics extends EventEmitter {
 
   protected setup() {
     // Initialize convexBreaker
+    // @ts-ignore
     this.convexBreaker = new ConvexObjectBreaker()
 
     this.objectsToRemove = []
