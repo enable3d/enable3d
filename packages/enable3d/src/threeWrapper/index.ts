@@ -91,6 +91,7 @@ class ThreeGraphics {
   private _mixers: AnimationMixer[] = []
   public camera: THREE_PerspectiveCamera | THREE_OrthographicCamera
   public readonly isXrEnabled: boolean
+  private defaultMaterial: MeshLambertMaterial
 
   constructor(public root: Scene3D, config: Phaser3DConfig = {}) {
     const { anisotropy = 1, enableXR = false, camera = Cameras.PerspectiveCamera(root, { z: 25, y: 5 }) } = config
@@ -99,6 +100,8 @@ class ThreeGraphics {
     this.view = root.add.extern()
     this.scene = new Scene()
     this.textureAnisotropy = anisotropy
+
+    this.defaultMaterial = new MeshLambertMaterial({ color: 0xcccccc })
 
     this.renderer = new WebGLRenderer({
       canvas: root.sys.game.canvas as HTMLCanvasElement,
@@ -215,7 +218,7 @@ class ThreeGraphics {
   }
 
   protected getDefaultMaterial() {
-    return new MeshLambertMaterial({ color: 0xcccccc })
+    return this.defaultMaterial
   }
 
   /**
