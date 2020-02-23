@@ -17,6 +17,11 @@ export default class Events extends EventEmitter {
     object2: ExtendedObject3D,
     eventCallback: (event: 'start' | 'collision' | 'end') => void
   ) {
+    if (!object1.body || !object2.body) return
+
+    object1.body.checkCollisions = true
+    object2.body.checkCollisions = true
+
     this.on('collision', data => {
       const { bodies, event } = data
       if (bodies[0]?.name && bodies[1]?.name && object1?.name && object2?.name) {

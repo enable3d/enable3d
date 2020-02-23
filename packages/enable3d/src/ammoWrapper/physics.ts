@@ -88,13 +88,7 @@ class Physics extends EventEmitter {
   private createDebrisFromBreakableObject(object: ExtendedObject3D, parent: ExtendedObject3D) {
     object.material = new MeshLambertMaterial({ color: 0xcccccc })
     object.shape = 'hull'
-    object.breakable = false
     object.fragmentDepth = parent.fragmentDepth + 1
-
-    // make this fragment breakable in 2.5seconds
-    setTimeout(() => {
-      object.breakable = true
-    }, 2500)
 
     // Add the object to the scene
     this.phaser3D.scene.add(object)
@@ -102,6 +96,12 @@ class Physics extends EventEmitter {
     // Add physics to the object
     // @ts-ignore
     this.addExisting(object)
+
+    object.body.breakable = false
+    // make this fragment breakable in 2.5seconds
+    setTimeout(() => {
+      object.body.breakable = true
+    }, 2500)
   }
 
   private removeDebris(object: any) {
@@ -138,7 +138,7 @@ class Physics extends EventEmitter {
         objThree.position.set(p.x() + o.x, p.y() + o.y, p.z() + o.z)
         objThree.quaternion.set(q.x(), q.y(), q.z(), q.w())
 
-        objThree.collided = false
+        objThree.body.collided = false
       }
     }
 
@@ -154,7 +154,7 @@ class Physics extends EventEmitter {
       // @ts-ignore
       const body1 = Ammo.castObject(contactManifold.getBody1(), Ammo.btRigidBody)
 
-      // do not check collision for 2 unnamed objects
+      // do not check collision between 2 unnamed objects
       // (fragments do not have a name, for example)
       if (body0.name === '' && body1.name === '') continue
 
@@ -162,32 +162,38 @@ class Physics extends EventEmitter {
       const ptr0 = body0[key]
       // @ts-ignore
       const ptr1 = body1[key]
-      const threeObject0 = this.objectsAmmo[ptr0]
-      const threeObject1 = this.objectsAmmo[ptr1]
+      const threeObject0 = this.objectsAmmo[ptr0] as ExtendedObject3D
+      const threeObject1 = this.objectsAmmo[ptr1] as ExtendedObject3D
 
-      if (!threeObject0 && !threeObject1) {
+      if (!threeObject0 || !threeObject1) {
         continue
       }
 
       /**
-       * Handle collision events
-       */
-      // check if a collision between these object has already been processed
-      const combinedName = `${threeObject0.name}__${threeObject1.name}`
-      let event
-      if (this.earlierDetectedCollisions.find(el => el.combinedName === combinedName)) event = 'colliding'
-      else event = 'start'
-      detectedCollisions.push({ combinedName, collision: true })
-      this.emit('collision', { bodies: [threeObject0, threeObject1], event })
-
-      /**
        * Get some information
        */
-      const breakable0 = threeObject0.breakable
-      const breakable1 = threeObject1.breakable
+      const breakable0 = threeObject0.body.breakable
+      const breakable1 = threeObject1.body.breakable
 
-      const collided0 = threeObject0.collided
-      const collided1 = threeObject1.collided
+      const collided0 = threeObject0.body.collided
+      const collided1 = threeObject1.body.collided
+
+      const checkCollisions0 = threeObject0.body?.checkCollisions
+      const checkCollisions1 = threeObject1.body?.checkCollisions
+
+      /**
+       * Handle collision events
+       */
+      if (checkCollisions0 || checkCollisions1) {
+        // check if a collision between these object has already been processed
+        const names = [threeObject0.name, threeObject1.name].sort()
+        const combinedName = `${names[0]}__${names[1]}`
+        let event
+        if (this.earlierDetectedCollisions.find(el => el.combinedName === combinedName)) event = 'colliding'
+        else event = 'start'
+        detectedCollisions.push({ combinedName, collision: true })
+        this.emit('collision', { bodies: [threeObject0, threeObject1], event })
+      }
 
       if ((!breakable0 && !breakable1) || (collided0 && collided1)) {
         continue
@@ -261,7 +267,7 @@ class Physics extends EventEmitter {
         }
 
         this.objectsToRemove[this.numObjectsToRemove++] = threeObject0
-        threeObject0.collided = true
+        threeObject0.body.collided = true
       }
 
       // threeObject1
@@ -280,7 +286,7 @@ class Physics extends EventEmitter {
         }
 
         this.objectsToRemove[this.numObjectsToRemove++] = threeObject1
-        threeObject1.collided = true
+        threeObject1.body.collided = true
       }
     }
 

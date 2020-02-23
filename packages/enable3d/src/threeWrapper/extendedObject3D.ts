@@ -30,9 +30,7 @@ class ExtendedObject3D extends Object3D {
   public anims: { [key: string]: AnimationClip } = {}
   public action: AnimationAction
   public currentAnimation: string = ''
-  public breakable: boolean
   public fragmentDepth: number
-  public collided: boolean
 
   constructor() {
     super()

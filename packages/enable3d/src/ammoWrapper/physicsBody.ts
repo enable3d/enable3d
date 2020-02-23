@@ -13,6 +13,9 @@ class PhysicsBody {
   public offset = { x: 0, y: 0, z: 0 }
   public name: string
   public errors: string[] = []
+  public checkCollisions = false
+  public breakable = false
+  public collided = false
 
   private tmpEuler = new Euler()
   private tmpQuaternion = new Quaternion()
@@ -41,6 +44,8 @@ class PhysicsBody {
   private onCollision(
     collisionCallback: (otherObject: ExtendedObject3D, event: 'start' | 'collision' | 'end') => void
   ) {
+    this.checkCollisions = true
+
     this.physics.on('collision', (data: { bodies: ExtendedObject3D[]; event: 'start' | 'collision' | 'end' }) => {
       const { bodies, event } = data
       if (bodies[0].name === this.name) collisionCallback(bodies[1], event)

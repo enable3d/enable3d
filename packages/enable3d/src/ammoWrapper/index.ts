@@ -103,7 +103,7 @@ class AmmoPhysics extends EventEmitter {
 
   protected addExisting(object: ExtendedObject3D, config: AddExistingConfig = {}): void {
     const { position: pos, quaternion: quat, hasBody } = object
-    const { mass = 1, autoCenter = false, offset = undefined, shapes = [] } = config
+    const { mass = 1, autoCenter = false, offset = undefined, shapes = [], breakable = false } = config
 
     let params = {
       width: 1,
@@ -173,6 +173,7 @@ class AmmoPhysics extends EventEmitter {
     this.addRigidBody(object, Shape, mass, pos, quat)
     this.addBodyProperties(object, config)
 
+    if (breakable) object.body.breakable = true
     if (offset) object.body.offset = { x: 0, y: 0, z: 0, ...offset }
   }
 

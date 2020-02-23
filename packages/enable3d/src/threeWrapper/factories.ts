@@ -96,7 +96,6 @@ export default class Factories extends Textures {
     if (autoCenter) mesh.geometry.center()
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'extrude'
-    mesh.breakable = breakable
     return mesh
   }
 
@@ -132,7 +131,6 @@ export default class Factories extends Textures {
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'sphere'
-    mesh.breakable = breakable
     return mesh
   }
 
@@ -166,7 +164,6 @@ export default class Factories extends Textures {
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'box'
-    mesh.breakable = breakable
     return mesh
   }
 
@@ -211,7 +208,6 @@ export default class Factories extends Textures {
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'cylinder'
-    mesh.breakable = breakable
     return mesh
   }
 
@@ -244,7 +240,6 @@ export default class Factories extends Textures {
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'torus'
-    mesh.breakable = breakable
     return mesh
   }
 
