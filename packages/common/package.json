@@ -1,6 +1,6 @@
 {
   "name": "@enable3d/common",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -10,8 +10,8 @@
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
   "dependencies": {
-    "@enable3d/ammo-physics": "^0.0.14",
-    "@enable3d/three-wrapper": "^0.0.14",
+    "@enable3d/ammo-physics": "^0.0.15",
+    "@enable3d/three-wrapper": "^0.0.15",
     "chroma-js": "^2.1.0"
   }
 }

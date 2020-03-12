@@ -1,7 +1,7 @@
 {
   "name": "dev",
   "private": true,
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
   "dependencies": {
-    "@enable3d/phaser-extension": "^0.0.14",
+    "@enable3d/phaser-extension": "^0.0.15",
     "phaser": "^3.21.0"
   },
   "devDependencies": {
