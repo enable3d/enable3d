@@ -1,0 +1,22 @@
+{
+  "name": "@enable3d/three-graphics",
+  "version": "0.0.14",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "tsc": "tsc",
+    "bundle": "webpack --config ../../webpack/webpack.threeGraphics.js --path=../bundles --packageVersion=${npm_package_version}"
+  },
+  "keywords": [],
+  "author": "Yannick Deubel",
+  "license": "GNU GPLv3",
+  "dependencies": {
+    "@enable3d/ammo-physics": "^0.0.14",
+    "@enable3d/common": "^0.0.14",
+    "@enable3d/three-wrapper": "^0.0.14",
+    "chroma-js": "^2.1.0"
+  },
+  "devDependencies": {
+    "@types/chroma-js": "^1.4.3"
+  }
+}

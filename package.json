@@ -3,16 +3,29 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
+    "tsc": "lerna run tsc",
+    "publish": "npm run tsc && npm-run-all publish:*",
+    "publish:ammoPhysics": "cd packages/ammoPhysics && npm run publish",
+    "publish:common": "cd packages/common && npm run publish",
+    "publish:phaserExtension": "cd packages/phaserExtension && npm run publish",
+    "publish:threeGraphics": "cd packages/threeGraphics && npm run publish",
+    "publish:threeWrapper": "cd packages/threeWrapper && npm run publish",
     "start": "npm-run-all --parallel start:*",
-    "start:enable3d": "cd packages/enable3d && tsc --watch",
+    "start:ammoPhysics": "cd packages/ammoPhysics && tsc --watch",
+    "start:common": "cd packages/common && tsc --watch",
     "start:dev": "cd packages/dev && npm start",
-    "build": "npm-run-all build:*",
-    "build:enable3d": "cd packages/enable3d && tsc",
-    "build:dev": "cd packages/dev && npm run build",
-    "bundle": "cd packages/enable3d && npm run bundle",
-    "postinstall": "lerna bootstrap --no-ci",
-    "lerna-version": "lerna version --no-commit-hooks --no-git-tag-version && npm run bundle",
-    "publish": "cd packages/enable3d/ && npm publish"
+    "start:phaserExtension": "cd packages/phaserExtension && tsc --watch",
+    "start:threeGraphics": "cd packages/threeGraphics && tsc --watch",
+    "start:threeWrapper": "cd packages/threeWrapper && tsc --watch",
+    "prune": "npm-run-all prune:*",
+    "prune:node-modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
+    "prune:dist": "find . -name 'dist' -type d -prune -exec rm -rf '{}' +",
+    "bundle": "npm-run-all bundle:*",
+    "bundle:phaserExtension": "cd packages/phaserExtension && npm run tsc && npm run bundle",
+    "bundle:ammoPhysics": "cd packages/ammoPhysics && npm run tsc && npm run bundle",
+    "bundle:threeGraphics": "cd packages/threeGraphics && npm run tsc && npm run bundle",
+    "postinstall": "lerna bootstrap --no-ci && lerna run tsc",
+    "lerna-version": "lerna version --no-commit-hooks --no-git-tag-version && npm run bundle"
   },
   "repository": {
     "type": "git",
@@ -27,6 +40,10 @@
   "homepage": "https://github.com/yandeu/enable3d#readme",
   "devDependencies": {
     "lerna": "^3.19.0",
-    "npm-run-all": "^4.1.5"
+    "npm-run-all": "^4.1.5",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.8.2",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
   }
 }

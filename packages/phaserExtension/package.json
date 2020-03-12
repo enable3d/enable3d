@@ -1,0 +1,46 @@
+{
+  "name": "@enable3d/phaser-extension",
+  "version": "0.0.14",
+  "description": "3D extension for Phaser 3",
+  "main": "dist/index.js",
+  "author": "Yannick Deubel",
+  "license": "GNU GPLv3",
+  "scripts": {
+    "tsc": "tsc",
+    "bundle": "webpack --config ../../webpack/webpack.phaserExtension.js --path=../bundles --packageVersion=${npm_package_version}"
+  },
+  "keywords": [
+    "phaser",
+    "three",
+    "ammo",
+    "game",
+    "3d",
+    "framework",
+    "physics"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yandeu/enable3d.git",
+    "directory": "packages/phaserExtension"
+  },
+  "bugs": {
+    "url": "https://github.com/yandeu/enable3d/issues"
+  },
+  "homepage": "https://enable3d.io",
+  "dependencies": {
+    "@enable3d/ammo-physics": "^0.0.14",
+    "@enable3d/common": "^0.0.14",
+    "@enable3d/three-graphics": "^0.0.14",
+    "@enable3d/three-wrapper": "^0.0.14",
+    "chroma-js": "^2.1.0",
+    "eventemitter3": "^4.0.0",
+    "phaser": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/chroma-js": "^1.4.3",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.8.2",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
+  }
+}

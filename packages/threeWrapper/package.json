@@ -1,0 +1,15 @@
+{
+  "name": "@enable3d/three-wrapper",
+  "version": "0.0.14",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "keywords": [],
+  "author": "Yannick Deubel",
+  "license": "GNU GPLv3",
+  "dependencies": {
+    "three": "^0.113.2"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "rootDir": "./packages",
+    "baseUrl": "./packages",
+    "paths": {
+      "@enable3d/*": ["*/src"]
+    },
+    "target": "ES5",
+    "module": "ESNext",
+    "lib": ["DOM", "ESNext", "ScriptHost"],
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "removeComments": false,
+    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "allowJs": true
+  },
+  "include": ["./src/**/*", "./types/**/*"],
+  "exclude": ["./node_modules/*", "**/node_modules/*", "**/dist/*", "**/*.spec.ts"]
+}
