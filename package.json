@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "tsc": "lerna run tsc",
-    "publish": "npm run tsc && npm-run-all publish:*",
+    "clean:dist": "rimraf packages/threeWrapper/dist packages/common/dist packages/ammoPhysics/dist packages/threeGraphics/dist packages/phaserExtension/dist",
+    "publish": "npm run clean:dist && npm run tsc && npm-run-all publish:*",
     "publish:threeWrapper": "cd packages/threeWrapper && npm publish",
     "publish:common": "cd packages/common && npm publish",
     "publish:ammoPhysics": "cd packages/ammoPhysics && npm publish",
@@ -41,6 +42,7 @@
   "devDependencies": {
     "lerna": "^3.19.0",
     "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
     "ts-loader": "^6.2.1",
     "typescript": "^3.8.2",
     "webpack": "^4.41.5",
