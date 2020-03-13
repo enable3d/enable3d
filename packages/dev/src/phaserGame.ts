@@ -14,7 +14,7 @@ const startPhaserGame = () => {
       height: window.innerHeight // * window.devicePixelRatio
     },
     scene: [PreloadScene, MainScene],
-    ...Canvas({ antialias: false })
+    ...Canvas()
   }
 
   window.addEventListener('load', () => {

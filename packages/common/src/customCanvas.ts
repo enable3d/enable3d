@@ -20,7 +20,7 @@ interface CustomCanvasConfig {
 const customCanvas = (
   customCanvasConfig: CustomCanvasConfig = {}
 ): { canvas: HTMLCanvasElement; context: CanvasRenderingContext2D } => {
-  const { antialias = true } = customCanvasConfig
+  const { antialias = false } = customCanvasConfig
 
   // create canvas
   const myCustomCanvas: any = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas')

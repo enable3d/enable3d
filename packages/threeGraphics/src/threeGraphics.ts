@@ -128,13 +128,14 @@ class ThreeGraphics {
       anisotropy = 1,
       enableXR = false,
       camera = Cameras.PerspectiveCamera({ z: 25, y: 5 }),
-      renderer = new WebGLRenderer({ antialias: true })
+      antialias = false,
+      renderer
     } = config
 
     this.textureAnisotropy = anisotropy
     this.isXrEnabled = enableXR
     this.camera = camera
-    this.renderer = renderer
+    this.renderer = renderer || new WebGLRenderer({ antialias })
 
     this.scene = new Scene()
     this.factory = new Factories(this.scene)
