@@ -11,7 +11,7 @@
  */
 
 import { Scene3D } from '..'
-import { Object3D, Vector2, Vector3, MathUtils as THREE_Math } from '@enable3d/three-wrapper/src/index'
+import { Object3D, Vector2, Vector3, MathUtils as THREE_Math } from '@enable3d/three-wrapper/dist/index'
 
 export interface ThirdPersonControlsConfig {
   offset?: Vector3

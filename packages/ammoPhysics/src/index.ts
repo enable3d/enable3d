@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import logger from '@enable3d/common/src/logger'
+import logger from '@enable3d/common/dist/logger'
 import PhysicsBody from './physicsBody'
 import {
   PlaneConfig,
@@ -18,25 +18,25 @@ import {
   Phaser3DConfig,
   AddExistingConfig,
   TorusConfig
-} from '@enable3d/common/src/types'
-import applyMixins from '@enable3d/common/src/applyMixins'
-import ExtendedObject3D from '@enable3d/common/src/extendedObject3D'
+} from '@enable3d/common/dist/types'
+import applyMixins from '@enable3d/common/dist/applyMixins'
+import ExtendedObject3D from '@enable3d/common/dist/extendedObject3D'
 import Shapes from './shapes'
 import Constraints from './constraints'
 import Events from './events'
 import EventEmitter from 'eventemitter3'
 import Physics from './physics'
-import { Vector3, Quaternion, Scene, Mesh, Euler } from '@enable3d/three-wrapper/src/index'
+import { Vector3, Quaternion, Scene, Mesh, Euler } from '@enable3d/three-wrapper/dist/index'
 import { createCollisionShapes } from './three-to-ammo'
 import { addTorusShape } from './torusShape'
-import Factories from '@enable3d/common/src/factories'
-import { REVISION } from '@enable3d/three-wrapper/src/index'
+import Factories from '@enable3d/common/dist/factories'
+import { REVISION } from '@enable3d/three-wrapper/dist/index'
 
-import { PhysicsLoader } from '@enable3d/common/src/physicsLoader'
-import DefaultMaterial from '@enable3d/common/src/defaultMaterial'
+import { PhysicsLoader } from '@enable3d/common/dist/physicsLoader'
+import DefaultMaterial from '@enable3d/common/dist/defaultMaterial'
 export { PhysicsLoader }
 
-import * as Types from '@enable3d/common/src/types'
+import * as Types from '@enable3d/common/dist/types'
 export { Types }
 
 interface AmmoPhysics extends Physics, Constraints, Shapes, Events {}

@@ -4,14 +4,14 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { ThreeGraphics } from '@enable3d/three-graphics/src/index'
-import { Phaser3DConfig } from '@enable3d/common/src/types'
+import { ThreeGraphics } from '@enable3d/three-graphics/dist/index'
+import { Phaser3DConfig } from '@enable3d/common/dist/types'
 import { Scene3D } from '.'
-import { WebGLRenderer, Object3D, Texture, RGBAFormat } from '@enable3d/three-wrapper/src/index'
+import { WebGLRenderer, Object3D, Texture, RGBAFormat } from '@enable3d/three-wrapper/dist/index'
 import { FirstPersonControlsConfig, FirstPersonControls } from './misc/firstPersonControls'
 import { ThirdPersonControlsConfig, ThirdPersonControls } from './misc/thirdPersonControls'
 import JoyStick from './misc/joystick'
-import { GLTFLoader, FBXLoader } from '@enable3d/three-wrapper/src/examples'
+import { GLTFLoader, FBXLoader } from '@enable3d/three-wrapper/dist/examples'
 
 /**
  * The phaser wrapper for ThreeGraphics, which is a separate module

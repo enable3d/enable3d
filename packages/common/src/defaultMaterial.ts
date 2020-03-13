@@ -1,4 +1,4 @@
-import { MeshLambertMaterial } from '@enable3d/three-wrapper/src/index'
+import { MeshLambertMaterial } from '@enable3d/three-wrapper/dist/index'
 
 class DefaultMaterial {
   private _defaultMaterial: MeshLambertMaterial

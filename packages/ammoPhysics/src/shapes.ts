@@ -16,8 +16,8 @@ import {
   AddExistingConfig,
   PlaneConfig,
   ConeConfig
-} from '@enable3d/common/src/types'
-import Factories from '@enable3d/common/src/factories'
+} from '@enable3d/common/dist/types'
+import Factories from '@enable3d/common/dist/factories'
 
 interface Shapes {}
 

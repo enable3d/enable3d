@@ -8,7 +8,7 @@
 // which is a typescript rewrite of https://github.com/manthrax/THREE-CSGMesh
 // which as originally written by Copyright (c) 2011 Evan Wallace (http://madebyevan.com/), under the MIT license.
 
-import { Vector3, Geometry, Matrix3, Face3, Mesh, Matrix4 } from '@enable3d/three-wrapper/src/index'
+import { Vector3, Geometry, Matrix3, Face3, Mesh, Matrix4 } from '@enable3d/three-wrapper/dist/index'
 
 /**
  * CSG wrapper for enable3d

@@ -4,8 +4,8 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { GLTFLoader } from '@enable3d/three-wrapper/src/examples'
-import { FBXLoader } from '@enable3d/three-wrapper/src/examples'
+import { GLTFLoader } from '@enable3d/three-wrapper/dist/examples'
+import { FBXLoader } from '@enable3d/three-wrapper/dist/examples'
 
 export default class Loaders {
   constructor() {}

@@ -33,9 +33,9 @@
  *
  */
 
-import { Line3, Mesh, Plane, Vector3 } from '@enable3d/three-wrapper/src/index'
-import { ConvexBufferGeometry } from '@enable3d/three-wrapper/src/examples'
-import logger from '@enable3d/common/src/logger'
+import { Line3, Mesh, Plane, Vector3 } from '@enable3d/three-wrapper/dist/index'
+import { ConvexBufferGeometry } from '@enable3d/three-wrapper/dist/examples'
+import logger from '@enable3d/common/dist/logger'
 
 const ConvexObjectBreaker = function(minSizeForBreak?: number, smallDelta?: number) {
   // @ts-ignore

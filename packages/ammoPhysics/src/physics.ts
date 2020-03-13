@@ -6,10 +6,10 @@
 
 import DebugDrawer from './debugDrawer'
 import EventEmitter from 'eventemitter3'
-import { ExtendedObject3D, Phaser3DConfig } from '@enable3d/common/src/types'
-import { Vector3, Scene, Quaternion, Euler } from '@enable3d/three-wrapper/src/index'
+import { ExtendedObject3D, Phaser3DConfig } from '@enable3d/common/dist/types'
+import { Vector3, Scene, Quaternion, Euler } from '@enable3d/three-wrapper/dist/index'
 import { ConvexObjectBreaker } from './convexObjectBreaker'
-import DefaultMaterial from '@enable3d/common/src/defaultMaterial'
+import DefaultMaterial from '@enable3d/common/dist/defaultMaterial'
 
 class Physics extends EventEmitter {
   public tmpTrans: Ammo.btTransform

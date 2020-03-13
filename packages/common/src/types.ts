@@ -21,7 +21,7 @@ import {
   MeshPhysicalMaterialParameters,
   Material,
   WebGLRenderer
-} from '@enable3d/three-wrapper/src/index'
+} from '@enable3d/three-wrapper/dist/index'
 import ExtendedObject3D from './extendedObject3D'
 import ExtendedMesh from './extendedMesh'
 
@@ -39,7 +39,7 @@ export {
   Line,
   Points,
   Group
-} from '@enable3d/three-wrapper/src/index'
+} from '@enable3d/three-wrapper/dist/index'
 
 export interface Phaser3DConfig {
   anisotropy?: number

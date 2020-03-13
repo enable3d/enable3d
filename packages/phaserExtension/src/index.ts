@@ -5,21 +5,21 @@
  */
 
 import Third from './third'
-import Phaser from 'phaser'
-import Cameras from '@enable3d/three-graphics/src/cameras'
-import loadAmmoModule from '@enable3d/common/src/wasmLoader'
-import Canvas from '@enable3d/common/src/customCanvas'
-import { Phaser3DConfig } from '@enable3d/common/src/types'
+import * as Phaser from 'phaser'
+import Cameras from '@enable3d/three-graphics/dist/cameras'
+import loadAmmoModule from '@enable3d/common/dist/wasmLoader'
+import Canvas from '@enable3d/common/dist/customCanvas'
+import { Phaser3DConfig } from '@enable3d/common/dist/types'
 
-export * from '@enable3d/common/src/types'
+export * from '@enable3d/common/dist/types'
 export { Cameras }
 export { Third }
 export { Canvas }
 
-import * as THREE from '@enable3d/three-wrapper/src/index'
+import * as THREE from '@enable3d/three-wrapper/dist/index'
 export { THREE }
 
-import * as Types from '@enable3d/common/src/types'
+import * as Types from '@enable3d/common/dist/types'
 export { Types }
 
 export class Scene3D extends Phaser.Scene {

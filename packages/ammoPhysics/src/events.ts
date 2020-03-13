@@ -5,7 +5,7 @@
  */
 
 import EventEmitter from 'eventemitter3'
-import { ExtendedObject3D } from '@enable3d/common/src/types'
+import { ExtendedObject3D } from '@enable3d/common/dist/types'
 
 export default class Events extends EventEmitter {
   public tmpTrans: Ammo.btTransform

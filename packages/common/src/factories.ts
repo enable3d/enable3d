@@ -55,7 +55,7 @@ import {
   PlaneGeometry,
   DoubleSide,
   ConeBufferGeometry
-} from '@enable3d/three-wrapper/src/index'
+} from '@enable3d/three-wrapper/dist/index'
 import ExtendedObject3D from './extendedObject3D'
 import ExtendedMesh from './extendedMesh'
 import logger from './logger'

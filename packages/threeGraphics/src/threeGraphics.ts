@@ -4,10 +4,10 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { OrbitControls } from '@enable3d/three-wrapper/src/examples'
-import { SVGLoader } from '@enable3d/three-wrapper/src/examples'
-import { VRButton } from '@enable3d/three-wrapper/src/examples'
-import { Sky } from '@enable3d/three-wrapper/src/examples'
+import { OrbitControls } from '@enable3d/three-wrapper/dist/examples'
+import { SVGLoader } from '@enable3d/three-wrapper/dist/examples'
+import { VRButton } from '@enable3d/three-wrapper/dist/examples'
+import { Sky } from '@enable3d/three-wrapper/dist/examples'
 
 type WarpedStartFeatures =
   | 'light'
@@ -65,7 +65,7 @@ import {
   SphereBufferGeometry,
   MeshBasicMaterial,
   RepeatWrapping
-} from '@enable3d/three-wrapper/src/index'
+} from '@enable3d/three-wrapper/dist/index'
 
 import {
   BoxConfig,
@@ -88,14 +88,14 @@ import {
   PlaneConfig,
   ConeObject,
   ConeConfig
-} from '@enable3d/common/src/types'
-import ExtendedObject3D from '@enable3d/common/src/extendedObject3D'
-import applyMixins from '@enable3d/common/src/applyMixins'
+} from '@enable3d/common/dist/types'
+import ExtendedObject3D from '@enable3d/common/dist/extendedObject3D'
+import applyMixins from '@enable3d/common/dist/applyMixins'
 import Loaders from './loaders'
 import Cameras from './cameras'
 import Textures from './textures'
 import Lights from './lights'
-import Factories from '@enable3d/common/src/factories'
+import Factories from '@enable3d/common/dist/factories'
 import CSG from './csg'
 import WebXR from './webxr'
 import HeightMap from './heightmap'
@@ -103,9 +103,9 @@ import HeightMap from './heightmap'
 import chroma from 'chroma-js'
 import Transform from './transform'
 import { addWater } from './misc/water'
-import DefaultMaterial from '@enable3d/common/src/defaultMaterial'
-import { AmmoPhysics } from '@enable3d/ammo-physics/src/index'
-import logger from '@enable3d/common/src/logger'
+import DefaultMaterial from '@enable3d/common/dist/defaultMaterial'
+import { AmmoPhysics } from '@enable3d/ammo-physics/dist/index'
+import logger from '@enable3d/common/dist/logger'
 
 interface ThreeGraphics extends Loaders, Cameras, Textures, Lights, CSG, WebXR, HeightMap, Transform {}
 

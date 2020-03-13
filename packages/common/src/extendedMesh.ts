@@ -12,10 +12,10 @@ import {
   Geometry,
   BufferGeometry,
   Material
-} from '@enable3d/three-wrapper/src/index'
+} from '@enable3d/three-wrapper/dist/index'
 // Can I use circular dependencies if I only ise the typings?
-import PhysicsBody from '@enable3d/ammo-physics/src/physicsBody'
-import { AnimationAction } from '@enable3d/three-wrapper/src/index'
+// import PhysicsBody from '@enable3d/ammo-physics/dist/physicsBody'
+import { AnimationAction } from '@enable3d/three-wrapper/dist/index'
 import logger from './logger'
 
 interface ExtendedMesh extends Mesh {}
@@ -24,7 +24,7 @@ class ExtendedMesh extends Mesh {
   private vector3 = new Vector3()
   public shape: string
   public name: string
-  public body: PhysicsBody
+  public body: any // PhysicsBody
   public hasBody: boolean = false
   public animations?: AnimationClip[]
   public mixer?: AnimationMixer

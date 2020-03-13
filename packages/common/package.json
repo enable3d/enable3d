@@ -10,7 +10,6 @@
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
   "dependencies": {
-    "@enable3d/ammo-physics": "^0.0.15",
     "@enable3d/three-wrapper": "^0.0.15",
     "chroma-js": "^2.1.0"
   }

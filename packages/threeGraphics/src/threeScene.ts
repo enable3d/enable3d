@@ -5,8 +5,8 @@
  */
 
 import { ThreeGraphics } from './index'
-import { Clock } from '@enable3d/three-wrapper/src/index'
-import { Phaser3DConfig } from '@enable3d/common/src/types'
+import { Clock } from '@enable3d/three-wrapper/dist/index'
+import { Phaser3DConfig } from '@enable3d/common/dist/types'
 
 class ThreeScene extends ThreeGraphics {
   private then: number = 0

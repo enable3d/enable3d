@@ -5,7 +5,7 @@
  */
 
 import { AmmoPhysics } from '.'
-import { ExtendedObject3D } from '@enable3d/common/src/types'
+import { ExtendedObject3D } from '@enable3d/common/dist/types'
 
 import EventEmitter from 'eventemitter3'
 

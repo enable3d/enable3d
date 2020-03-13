@@ -4,11 +4,11 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { PerspectiveCamera, OrthographicCamera } from '@enable3d/common/src/types'
+import { PerspectiveCamera, OrthographicCamera } from '@enable3d/common/dist/types'
 import {
   PerspectiveCamera as THREE_PerspectiveCamera,
   OrthographicCamera as THREE_OrthographicCamera
-} from '@enable3d/three-wrapper/src/index'
+} from '@enable3d/three-wrapper/dist/index'
 
 export default class Cameras {
   static PerspectiveCamera(config: PerspectiveCamera = {}): THREE.PerspectiveCamera {

@@ -4,10 +4,18 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { AnimationClip, AnimationMixer, Mesh, Line, Points, Object3D, Vector3 } from '@enable3d/three-wrapper/src/index'
+import {
+  AnimationClip,
+  AnimationMixer,
+  Mesh,
+  Line,
+  Points,
+  Object3D,
+  Vector3
+} from '@enable3d/three-wrapper/dist/index'
 // Can I use circular dependencies if I only ise the typings?
-import PhysicsBody from '@enable3d/ammo-physics/src/physicsBody'
-import { AnimationAction } from '@enable3d/three-wrapper/src/index'
+// import PhysicsBody from '@enable3d/ammo-physics/dist/physicsBody'
+import { AnimationAction } from '@enable3d/three-wrapper/dist/index'
 import logger from './logger'
 
 interface ExtendedObject3D extends Line, Mesh, Points {
@@ -24,7 +32,7 @@ class ExtendedObject3D extends Object3D {
   private vector3 = new Vector3()
   public shape: string
   public name: string
-  public body: PhysicsBody
+  public body: any // PhysicsBody
   public hasBody: boolean = false
   public animations?: AnimationClip[]
   public mixer?: AnimationMixer
