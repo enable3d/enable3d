@@ -1,5 +1,7 @@
-import startThreeScene from './threeScene'
 import startPhaserGame from './phaserGame'
+import startThreeScene from './threeScene'
+import startPhysics from './physics'
 
-//startThreeScene()
 startPhaserGame()
+// startThreeScene()
+// startPhysics()
