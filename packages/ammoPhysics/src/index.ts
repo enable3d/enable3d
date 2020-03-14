@@ -43,11 +43,12 @@ interface AmmoPhysics extends Physics, Constraints, Shapes, Events {}
 
 class AmmoPhysics extends EventEmitter {
   public tmpTrans: Ammo.btTransform
+  public factory: Factories
+
   protected rigidBodies: ExtendedObject3D[] = []
   protected objectsAmmo: { [ptr: number]: any } = {}
   protected earlierDetectedCollisions: { combinedName: string; collision: boolean }[] = []
   protected gravity: { x: number; y: number; z: number }
-  protected factory: Factories
 
   protected tmpEuler: Euler
   protected tmpQuaternion: Quaternion
