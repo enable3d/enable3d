@@ -15,7 +15,6 @@ import {
   BufferGeometry,
   BufferAttribute,
   LineBasicMaterial,
-  VertexColors,
   LineSegments,
   StaticDrawUsage
 } from '@enable3d/three-wrapper/dist/index'
@@ -79,7 +78,7 @@ class DebugDrawer {
     this.index = 0
 
     const material = new LineBasicMaterial({
-      vertexColors: VertexColors,
+      vertexColors: true,
       depthTest: !drawOnTop
     })
 

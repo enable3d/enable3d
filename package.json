@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "tsc": "lerna run tsc",
+    "update-and-fix": "lerna run update && lerna run fix",
     "clean:dist": "rimraf packages/threeWrapper/dist packages/common/dist packages/ammoPhysics/dist packages/threeGraphics/dist packages/phaserExtension/dist",
     "publish": "npm run clean:dist && npm run tsc && npm-run-all publish:*",
     "publish:threeWrapper": "cd packages/threeWrapper && npm publish",

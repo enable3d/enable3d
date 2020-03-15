@@ -5,15 +5,17 @@
   "main": "dist/index.js",
   "scripts": {
     "tsc": "tsc",
+    "update": "npm update",
+    "fix": "npm audit fix",
     "bundle": "webpack --config ../../webpack/webpack.threeGraphics.js --path=../bundles --packageVersion=${npm_package_version}"
   },
   "keywords": [],
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
   "dependencies": {
-    "@enable3d/ammo-physics": "^0.0.15",
-    "@enable3d/common": "^0.0.15",
-    "@enable3d/three-wrapper": "^0.0.15",
+    "@enable3d/ammo-physics": "0.0.15",
+    "@enable3d/common": "0.0.15",
+    "@enable3d/three-wrapper": "0.0.15",
     "chroma-js": "^2.1.0"
   },
   "devDependencies": {

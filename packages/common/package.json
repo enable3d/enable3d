@@ -4,13 +4,15 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "update": "npm update",
+    "fix": "npm audit fix"
   },
   "keywords": [],
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
   "dependencies": {
-    "@enable3d/three-wrapper": "^0.0.15",
+    "@enable3d/three-wrapper": "0.0.15",
     "chroma-js": "^2.1.0"
   }
 }

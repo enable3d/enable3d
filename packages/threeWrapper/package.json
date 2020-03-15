@@ -4,12 +4,14 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "update": "npm update",
+    "fix": "npm audit fix"
   },
   "keywords": [],
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
   "dependencies": {
-    "three": "^0.113.2"
+    "three": "^0.114.0"
   }
 }

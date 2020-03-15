@@ -12,6 +12,10 @@ export default class MainScene extends Scene3D {
   create() {
     this.accessThirdDimension()
     this.third.warpSpeed()
+
+    this.third.physics.debug.enable()
+
+    this.third.physics.add.box({ y: 2 })
   }
 
   update() {}
