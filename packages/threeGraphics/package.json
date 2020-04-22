@@ -19,6 +19,6 @@
     "chroma-js": "^2.1.0"
   },
   "devDependencies": {
-    "@types/chroma-js": "^1.4.3"
+    "@types/chroma-js": "^2.0.0"
   }
 }

@@ -39,7 +39,7 @@
     "phaser": "^3.22.0"
   },
   "devDependencies": {
-    "@types/chroma-js": "^1.4.3",
+    "@types/chroma-js": "^2.0.0",
     "ts-loader": "^6.2.1",
     "typescript": "^3.8.3",
     "webpack": "^4.42.0",

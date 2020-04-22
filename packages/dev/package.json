@@ -13,7 +13,7 @@
   "license": "GNU GPLv3",
   "dependencies": {
     "@enable3d/phaser-extension": "^0.0.15",
-    "phaser": "^3.21.0"
+    "phaser": "^3.22.0"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^5.1.1",
