@@ -13,7 +13,7 @@
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
   "dependencies": {
-    "@enable3d/common": "^0.0.15",
+    "@enable3d/common": "0.0.15",
     "@enable3d/three-wrapper": "0.0.15",
     "eventemitter3": "^4.0.0"
   }
