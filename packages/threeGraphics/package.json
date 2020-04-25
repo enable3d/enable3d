@@ -1,7 +1,7 @@
 {
   "name": "@enable3d/three-graphics",
   "version": "0.0.15",
-  "description": "",
+  "description": "3D Framework wrapping three.js and ammo.js",
   "main": "dist/index.js",
   "scripts": {
     "tsc": "tsc",
@@ -9,9 +9,27 @@
     "fix": "npm audit fix",
     "bundle": "webpack --config ../../webpack/webpack.threeGraphics.js --path=../bundles --packageVersion=${npm_package_version}"
   },
-  "keywords": [],
+  "keywords": [
+    "phaser",
+    "phaser.js",
+    "three.js",
+    "ammo.js",
+    "3d",
+    "game",
+    "framework",
+    "physics"
+  ],
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yandeu/enable3d.git",
+    "directory": "packages/phaserExtension"
+  },
+  "bugs": {
+    "url": "https://github.com/yandeu/enable3d/issues"
+  },
+  "homepage": "https://enable3d.io",
   "dependencies": {
     "@enable3d/ammo-physics": "0.0.15",
     "@enable3d/common": "0.0.15",

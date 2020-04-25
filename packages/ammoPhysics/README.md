@@ -1,13 +1,13 @@
 <h1 align="center">
-  3D extension for Phaser 3
+  Physics Plugin for tree.js
 </h1>
 
 <h4 align="center">
-  Written in TypeScript, uses three.js and ammo.js, brings the third dimension to your Phaser 3 game.
+  Written in TypeScript, adds Physics to your three.js project using ammo.js
 </h4>
 
 <p align="center">  
-  <a href="https://www.npmjs.com/package/@enable3d/phaser-extension"><img src="https://img.shields.io/npm/v/@enable3d/phaser-extension?style=flat-square" alt="NPM version"></a>
+  <a href="https://www.npmjs.com/package/@enable3d/ammo-physics"><img src="https://img.shields.io/npm/v/@enable3d/ammo-physics?style=flat-square" alt="NPM version"></a>
   <a href="https://github.com/yandeu/enable3d/commits/master"><img src="https://img.shields.io/github/last-commit/yandeu/enable3d.svg?style=flat-square" alt="GitHub last commit"></a>
   <a href="https://github.com/prettier/prettier" alt="code style: prettier"><img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square"></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/built%20with-TypeScript-blue?style=flat-square"></a>

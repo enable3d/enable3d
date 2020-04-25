@@ -3,8 +3,6 @@
   "version": "0.0.15",
   "description": "3D extension for Phaser 3",
   "main": "dist/index.js",
-  "author": "Yannick Deubel",
-  "license": "GNU GPLv3",
   "scripts": {
     "tsc": "tsc",
     "update": "npm update",
@@ -13,13 +11,16 @@
   },
   "keywords": [
     "phaser",
-    "three",
-    "ammo",
-    "game",
+    "phaser.js",
+    "three.js",
+    "ammo.js",
     "3d",
+    "game",
     "framework",
     "physics"
   ],
+  "author": "Yannick Deubel",
+  "license": "GNU GPLv3",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yandeu/enable3d.git",
