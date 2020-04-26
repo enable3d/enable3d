@@ -35,15 +35,10 @@
     "@enable3d/common": "0.0.15",
     "@enable3d/three-graphics": "0.0.15",
     "@enable3d/three-wrapper": "0.0.15",
+    "@types/chroma-js": "^2.0.0",
     "chroma-js": "^2.1.0",
     "eventemitter3": "^4.0.0",
     "phaser": "^3.22.0"
   },
-  "devDependencies": {
-    "@types/chroma-js": "^2.0.0",
-    "ts-loader": "^6.2.1",
-    "typescript": "^3.8.3",
-    "webpack": "^4.42.0",
-    "webpack-cli": "^3.3.11"
-  }
+  "devDependencies": {}
 }
