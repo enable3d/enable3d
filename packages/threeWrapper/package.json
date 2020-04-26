@@ -2,9 +2,10 @@
   "name": "@enable3d/three-wrapper",
   "version": "0.0.15",
   "description": "",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "tsc": "tsc",
+    "tsc": "npm run webpack",
+    "webpack": "webpack --config webpack.examples.js && webpack --config webpack.index.js",
     "update": "npm update",
     "fix": "npm audit fix"
   },
