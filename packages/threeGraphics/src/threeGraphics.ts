@@ -4,10 +4,10 @@
  * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { OrbitControls } from '@enable3d/three-wrapper/dist/examples'
-import { SVGLoader } from '@enable3d/three-wrapper/dist/examples'
-import { VRButton } from '@enable3d/three-wrapper/dist/examples'
-import { Sky } from '@enable3d/three-wrapper/dist/examples'
+import { OrbitControls } from '@enable3d/three-wrapper/dist/index'
+import { SVGLoader } from '@enable3d/three-wrapper/dist/index'
+import { VRButton } from '@enable3d/three-wrapper/dist/index'
+import { Sky } from '@enable3d/three-wrapper/dist/index'
 
 type WarpedStartFeatures =
   | 'light'

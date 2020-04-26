@@ -34,10 +34,10 @@
  */
 
 import { Line3, Mesh, Plane, Vector3 } from '@enable3d/three-wrapper/dist/index'
-import { ConvexBufferGeometry } from '@enable3d/three-wrapper/dist/examples'
+import { ConvexBufferGeometry } from '@enable3d/three-wrapper/dist/index'
 import logger from '@enable3d/common/dist/logger'
 
-const ConvexObjectBreaker = function(minSizeForBreak?: number, smallDelta?: number) {
+const ConvexObjectBreaker = function (minSizeForBreak?: number, smallDelta?: number) {
   // @ts-ignore
   this.minSizeForBreak = minSizeForBreak || 1.4
   // @ts-ignore
@@ -88,7 +88,7 @@ const ConvexObjectBreaker = function(minSizeForBreak?: number, smallDelta?: numb
 ConvexObjectBreaker.prototype = {
   constructor: ConvexObjectBreaker,
 
-  prepareBreakableObject: function(object: any, mass: any, velocity: any, angularVelocity: any, breakable: any) {
+  prepareBreakableObject: function (object: any, mass: any, velocity: any, angularVelocity: any, breakable: any) {
     // object is a Object3d (normally a Mesh), must have a BufferGeometry, and it must be convex.
     // Its material property is propagated to its children (sub-pieces)
     // mass must be > 0
@@ -110,7 +110,7 @@ ConvexObjectBreaker.prototype = {
    *
    * Returns the array of pieces
    */
-  subdivideByImpact: function(
+  subdivideByImpact: function (
     object: any,
     pointOfImpact: any,
     normal: any,
@@ -146,11 +146,7 @@ ConvexObjectBreaker.prototype = {
           angle = (endAngle - startAngle) * (0.2 + 0.6 * Math.random()) + startAngle
 
           // Rotate tempPlane2 at impact point around normal axis and the angle
-          scope.tempVector3_2
-            .copy(object.position)
-            .sub(pointOfImpact)
-            .applyAxisAngle(normal, angle)
-            .add(pointOfImpact)
+          scope.tempVector3_2.copy(object.position).sub(pointOfImpact).applyAxisAngle(normal, angle).add(pointOfImpact)
           tempPlane2.setFromCoplanarPoints(pointOfImpact, scope.tempVector3, scope.tempVector3_2)
         } else {
           angle = (0.5 * (numIterations & 1) + 0.2 * (2 - Math.random())) * Math.PI
@@ -186,7 +182,7 @@ ConvexObjectBreaker.prototype = {
     return debris
   },
 
-  cutByPlane: function(object: any, plane: any, output: any) {
+  cutByPlane: function (object: any, plane: any, output: any) {
     // Returns breakable objects in output.object1 and output.object2 members, the resulting 2 pieces of the cut.
     // object2 can be null if the plane doesn't cut the object.
     // object1 can be null only in case of internal error
@@ -437,7 +433,7 @@ ConvexObjectBreaker.prototype = {
   }
 }
 
-ConvexObjectBreaker.transformFreeVector = function(v: any, m: any) {
+ConvexObjectBreaker.transformFreeVector = function (v: any, m: any) {
   // input:
   // vector interpreted as a free vector
   // THREE.Matrix4 orthogonal matrix (matrix without scale)
@@ -454,7 +450,7 @@ ConvexObjectBreaker.transformFreeVector = function(v: any, m: any) {
   return v
 }
 
-ConvexObjectBreaker.transformFreeVectorInverse = function(v: any, m: any) {
+ConvexObjectBreaker.transformFreeVectorInverse = function (v: any, m: any) {
   // input:
   // vector interpreted as a free vector
   // THREE.Matrix4 orthogonal matrix (matrix without scale)
@@ -471,7 +467,7 @@ ConvexObjectBreaker.transformFreeVectorInverse = function(v: any, m: any) {
   return v
 }
 
-ConvexObjectBreaker.transformTiedVectorInverse = function(v: any, m: any) {
+ConvexObjectBreaker.transformTiedVectorInverse = function (v: any, m: any) {
   // input:
   // vector interpreted as a tied (ordinary) vector
   // THREE.Matrix4 orthogonal matrix (matrix without scale)
@@ -488,7 +484,7 @@ ConvexObjectBreaker.transformTiedVectorInverse = function(v: any, m: any) {
   return v
 }
 
-ConvexObjectBreaker.transformPlaneToLocalSpace = (function() {
+ConvexObjectBreaker.transformPlaneToLocalSpace = (function () {
   var v1 = new Vector3()
 
   return function transformPlaneToLocalSpace(plane: any, m: any, resultPlane: any) {

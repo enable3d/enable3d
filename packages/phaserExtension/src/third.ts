@@ -11,7 +11,7 @@ import { WebGLRenderer, Object3D, Texture, RGBAFormat } from '@enable3d/three-wr
 import { FirstPersonControlsConfig, FirstPersonControls } from './misc/firstPersonControls'
 import { ThirdPersonControlsConfig, ThirdPersonControls } from './misc/thirdPersonControls'
 import JoyStick from './misc/joystick'
-import { GLTFLoader, FBXLoader } from '@enable3d/three-wrapper/dist/examples'
+import { GLTFLoader, FBXLoader } from '@enable3d/three-wrapper/dist/index'
 
 /**
  * The phaser wrapper for ThreeGraphics, which is a separate module

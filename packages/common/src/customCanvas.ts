@@ -7,7 +7,7 @@
 // copied from https://phaser.io/examples/v3/view/game-config/custom-webgl-canvas
 // copied from https://github.com/mrdoob/three.js/blob/dev/src/renderers/WebGLRenderer.js
 
-import { WEBGL } from '@enable3d/three-wrapper/dist/examples'
+import { WEBGL } from '@enable3d/three-wrapper/dist/index'
 
 interface CustomCanvasConfig {
   antialias?: boolean

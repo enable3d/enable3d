@@ -8,7 +8,7 @@ import {
   PerspectiveCamera,
   OrthographicCamera
 } from '@enable3d/three-wrapper/dist/index'
-import { SVGLoader } from '@enable3d/three-wrapper/dist/examples'
+import { SVGLoader } from '@enable3d/three-wrapper/dist/index'
 
 /**
  * @author       Yannick Deubel (https://github.com/yandeu)

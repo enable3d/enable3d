@@ -1,4 +1,4 @@
-import { Water } from '@enable3d/three-wrapper/dist/examples'
+import { Water } from '@enable3d/three-wrapper/dist/index'
 import {
   PlaneBufferGeometry,
   Scene,

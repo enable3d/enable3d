@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "tsc": "npm run webpack",
-    "webpack": "webpack --config webpack.examples.js && webpack --config webpack.index.js",
+    "webpack": "webpack --config webpack.index.js",
     "update": "npm update",
     "fix": "npm audit fix"
   },
