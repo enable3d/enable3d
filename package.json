@@ -18,7 +18,7 @@
     "start:dev": "cd packages/dev && npm start",
     "start:phaserExtension": "cd packages/phaserExtension && tsc --watch",
     "start:threeGraphics": "cd packages/threeGraphics && tsc --watch",
-    "start:threeWrapper": "cd packages/threeWrapper && tsc --watch",
+    "start:threeWrapper": "cd packages/threeWrapper && npm run webpack",
     "prune": "npm-run-all prune:*",
     "prune:node-modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
     "prune:dist": "find . -name 'dist' -type d -prune -exec rm -rf '{}' +",
