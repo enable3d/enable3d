@@ -87,7 +87,8 @@ import {
   PlaneObject,
   PlaneConfig,
   ConeObject,
-  ConeConfig
+  ConeConfig,
+  ExtendedMesh
 } from '@enable3d/common/dist/types'
 import ExtendedObject3D from '@enable3d/common/dist/extendedObject3D'
 import applyMixins from '@enable3d/common/dist/applyMixins'
@@ -172,6 +173,12 @@ class ThreeGraphics {
       vrButton.style.cssText += 'background: rgba(0, 0, 0, 0.8); '
       document.body.appendChild(vrButton)
     }
+  }
+
+  /** Destroys a object and its body. */
+  public destroy(obj: ExtendedObject3D | ExtendedMesh) {
+    this.physics.destroy(obj.body)
+    this.scene.remove(obj)
   }
 
   get mixers() {

@@ -10,6 +10,7 @@ import { ExtendedObject3D, Phaser3DConfig } from '@enable3d/common/dist/types'
 import { Vector3, Scene, Quaternion, Euler } from '@enable3d/three-wrapper/dist/index'
 import { ConvexObjectBreaker } from './convexObjectBreaker'
 import DefaultMaterial from '@enable3d/common/dist/defaultMaterial'
+import PhysicsBody from './physicsBody'
 
 class Physics extends EventEmitter {
   public tmpTrans: Ammo.btTransform
@@ -39,6 +40,40 @@ class Physics extends EventEmitter {
 
   constructor(protected scene: Scene | 'headless', public config: Phaser3DConfig = {}) {
     super()
+  }
+
+  /** Destroys a physics body. */
+  public destroy(body: PhysicsBody) {
+    if (typeof body?.ammo === 'undefined') return
+
+    const ptr = Object.values(body.ammo)[0]
+    const name = Object.values(body.ammo)[1]
+    const obj = this.objectsAmmo[ptr]
+
+    // TODO: Remember why I track objectsAmmo and rigidBodies?
+    // console.log(this.objectsAmmo)
+    // console.log(this.rigidBodies)
+
+    if (ptr && name && obj) {
+      if (obj?.body?.ammo) {
+        // remove from physics world
+        this.physicsWorld.removeRigidBody(obj.body.ammo)
+
+        // reset properties
+        obj.body = undefined
+        obj.hasBody = false
+
+        // remove from this.objectAmmo
+        delete this.objectsAmmo[ptr]
+        // remove from this.rigidBodies
+        for (var i = 0; i < this.rigidBodies.length; i++) {
+          if (this.rigidBodies[i].name === name) {
+            this.rigidBodies.splice(i, 1)
+            i--
+          }
+        }
+      }
+    }
   }
 
   protected setup() {
