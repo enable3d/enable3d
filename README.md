@@ -10,6 +10,7 @@ Written in TypeScript, uses three.js and ammo.js, brings physics to your three.j
 
 <p align="center">  
   <a href="https://www.npmjs.com/search?q=%40enable3d"><img src="https://img.shields.io/npm/v/@enable3d/phaser-extension?style=flat-square" alt="NPM version"></a>
+  <a href="https://github.com/mrdoob/three.js/"><img src="https://img.shields.io/badge/three-r116-blue.svg?style=flat-square" alt="Three"></a>
   <a href="https://github.com/yandeu/enable3d/commits/master"><img src="https://img.shields.io/github/last-commit/yandeu/enable3d.svg?style=flat-square" alt="GitHub last commit"></a>
   <a href="https://github.com/prettier/prettier" alt="code style: prettier"><img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square"></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/built%20with-TypeScript-blue?style=flat-square"></a>

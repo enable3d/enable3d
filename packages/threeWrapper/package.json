@@ -13,6 +13,6 @@
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
   "dependencies": {
-    "three": "^0.115.0"
+    "three": "~0.116.0"
   }
 }
