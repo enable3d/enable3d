@@ -12,6 +12,7 @@
     "publish:ammoPhysics": "cd packages/ammoPhysics && npm publish",
     "publish:threeGraphics": "cd packages/threeGraphics && npm publish",
     "publish:phaserExtension": "cd packages/phaserExtension && npm publish",
+    "headless": "nodemon packages/dev/src/headless-node.js",
     "start": "npm-run-all --parallel start:*",
     "start:ammoPhysics": "cd packages/ammoPhysics && tsc --watch",
     "start:common": "cd packages/common && tsc --watch",
@@ -42,6 +43,7 @@
   "homepage": "https://github.com/yandeu/enable3d#readme",
   "devDependencies": {
     "lerna": "^3.19.0",
+    "nodemon": "^2.0.3",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
     "ts-loader": "^6.2.1",

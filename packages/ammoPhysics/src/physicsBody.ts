@@ -8,6 +8,7 @@ import { AmmoPhysics } from '.'
 import { ExtendedObject3D } from '@enable3d/common/dist/types'
 
 import EventEmitter from 'eventemitter3'
+import { Euler, Quaternion } from '@enable3d/three-wrapper/dist/index'
 
 class PhysicsBody {
   public offset = { x: 0, y: 0, z: 0 }
@@ -20,7 +21,12 @@ class PhysicsBody {
 
   private _emitUpdateEvents = false
   private _needUpdate = false
+
+  private tmpEuler = new Euler()
+  private tmpQuaternion = new Quaternion()
   private tmpBtVector3 = new Ammo.btVector3()
+  private tmpBtQuaternion = new Ammo.btQuaternion(0, 0, 0, 1)
+
   private eventEmitter: EventEmitter
 
   constructor(private physics: AmmoPhysics, public ammo: Ammo.btRigidBody) {
@@ -79,61 +85,61 @@ class PhysicsBody {
     })
   }
 
-  // /** You have to call transform() before you can get or set the body's position or rotation. */
-  // public transform() {
-  //   const t = this.physics.tmpTrans
-  //   this.ammo.getMotionState().getWorldTransform(t)
-  // }
+  /** You have to call transform() before you can get or set the body's position or rotation. (for headless mode only) */
+  public transform() {
+    const t = this.physics.tmpTrans
+    this.ammo.getMotionState().getWorldTransform(t)
+  }
 
-  // /** You have to call refresh() after you set the position or rotation of the body.  */
-  // public refresh() {
-  //   const t = this.physics.tmpTrans
-  //   this.ammo.getMotionState().setWorldTransform(t)
-  // }
+  /** You have to call refresh() after you set the position or rotation of the body. (for headless mode only) */
+  public refresh() {
+    const t = this.physics.tmpTrans
+    this.ammo.getMotionState().setWorldTransform(t)
+  }
 
-  // /** Set the rotation in radians. */
-  // public setRotation(x: number, y: number, z: number) {
-  //   const e = this.tmpEuler.set(x, y, z)
-  //   const q = this.tmpQuaternion.set(0, 0, 0, 1)
-  //   q.setFromEuler(e)
+  /** Set the rotation in radians. (for headless mode only) */
+  public setRotation(x: number, y: number, z: number) {
+    const e = this.tmpEuler.set(x, y, z)
+    const q = this.tmpQuaternion.set(0, 0, 0, 1)
+    q.setFromEuler(e)
 
-  //   this.tmpBtQuaternion.setValue(0, 0, 0, 1)
-  //   const ammoQuat = this.tmpBtQuaternion
-  //   ammoQuat.setValue(q.x, q.y, q.z, q.w)
+    this.tmpBtQuaternion.setValue(0, 0, 0, 1)
+    const ammoQuat = this.tmpBtQuaternion
+    ammoQuat.setValue(q.x, q.y, q.z, q.w)
 
-  //   const t = this.physics.tmpTrans
-  //   t.setRotation(ammoQuat)
-  // }
+    const t = this.physics.tmpTrans
+    t.setRotation(ammoQuat)
+  }
 
-  // /** Get the rotation in radians. */
-  // public getRotation() {
-  //   const t = this.physics.tmpTrans
-  //   const ammoQuat = t.getRotation()
-  //   const q = this.tmpQuaternion.set(ammoQuat.x(), ammoQuat.y(), ammoQuat.z(), ammoQuat.w())
+  /** Get the rotation in radians. (for headless mode only) */
+  public get rotation() {
+    const t = this.physics.tmpTrans
+    const ammoQuat = t.getRotation()
+    const q = this.tmpQuaternion.set(ammoQuat.x(), ammoQuat.y(), ammoQuat.z(), ammoQuat.w())
 
-  //   const qx = q.x
-  //   const qy = q.y
-  //   const qz = q.z
-  //   const qw = q.w
+    const qx = q.x
+    const qy = q.y
+    const qz = q.z
+    const qw = q.w
 
-  //   // https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/index.htm
-  //   const angle = 2 * Math.acos(qw)
-  //   const x = qx / Math.sqrt(1 - qw * qw)
-  //   const y = qy / Math.sqrt(1 - qw * qw)
-  //   const z = qz / Math.sqrt(1 - qw * qw)
+    // https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/index.htm
+    const angle = 2 * Math.acos(qw)
+    const x = qx / Math.sqrt(1 - qw * qw)
+    const y = qy / Math.sqrt(1 - qw * qw)
+    const z = qz / Math.sqrt(1 - qw * qw)
 
-  //   return { x: x * angle || 0, y: y * angle || 0, z: z * angle || 0 }
-  // }
+    return { x: x * angle || 0, y: y * angle || 0, z: z * angle || 0 }
+  }
 
-  // public setPosition(x: number, y: number, z: number) {
-  //   const t = this.physics.tmpTrans
-  //   t.getOrigin().setValue(x, y, z)
-  // }
+  public setPosition(x: number, y: number, z: number) {
+    const t = this.physics.tmpTrans
+    t.getOrigin().setValue(x, y, z)
+  }
 
-  // public getPosition() {
-  //   const t = this.physics.tmpTrans
-  //   return { x: t.getOrigin().x(), y: t.getOrigin().y(), z: t.getOrigin().z() }
-  // }
+  public get position() {
+    const t = this.physics.tmpTrans
+    return { x: t.getOrigin().x(), y: t.getOrigin().y(), z: t.getOrigin().z() }
+  }
 
   public get velocity() {
     return {

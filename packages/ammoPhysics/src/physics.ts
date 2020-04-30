@@ -37,25 +37,27 @@ class Physics extends EventEmitter {
 
   protected defaultMaterial: DefaultMaterial
 
-  constructor(protected scene: Scene, public config: Phaser3DConfig = {}) {
+  constructor(protected scene: Scene | 'headless', public config: Phaser3DConfig = {}) {
     super()
   }
 
   protected setup() {
-    // Initialize convexBreaker
-    // @ts-ignore
-    this.convexBreaker = new ConvexObjectBreaker()
+    if (this.scene !== 'headless') {
+      // Initialize convexBreaker
+      // @ts-ignore
+      this.convexBreaker = new ConvexObjectBreaker()
 
-    this.objectsToRemove = []
-    this.numObjectsToRemove = 0
-    for (var i = 0; i < 500; i++) {
-      this.objectsToRemove[i] = null
+      this.objectsToRemove = []
+      this.numObjectsToRemove = 0
+      for (var i = 0; i < 500; i++) {
+        this.objectsToRemove[i] = null
+      }
     }
 
     // setup ammo physics
     this.setupPhysicsWorld()
 
-    this.debugDrawer = new DebugDrawer(this.scene, this.physicsWorld, {})
+    if (this.scene !== 'headless') this.debugDrawer = new DebugDrawer(this.scene, this.physicsWorld, {})
 
     /**
      * TODO add ghost object
@@ -75,6 +77,8 @@ class Physics extends EventEmitter {
   }
 
   public updateDebugger() {
+    if (this.scene === 'headless') return
+
     if (this.debugDrawer && this.debugDrawer.enabled) this.debugDrawer.update()
   }
 
@@ -93,6 +97,8 @@ class Physics extends EventEmitter {
   }
 
   private createDebrisFromBreakableObject(object: ExtendedObject3D, parent: ExtendedObject3D) {
+    if (this.scene === 'headless') return
+
     object.material = this.defaultMaterial.get()
     object.shape = 'hull'
     object.fragmentDepth = parent.fragmentDepth + 1
@@ -112,6 +118,8 @@ class Physics extends EventEmitter {
   }
 
   private removeDebris(object: any) {
+    if (this.scene === 'headless') return
+
     this.scene.remove(object)
     this.physicsWorld.removeRigidBody(object.body.ammo)
     delete this.objectsAmmo[object.ptr]
@@ -131,53 +139,55 @@ class Physics extends EventEmitter {
     /**
      * Update rigid bodies
      */
-    for (var i = 0, il = this.rigidBodies.length; i < il; i++) {
-      var objThree = this.rigidBodies[i]
-      var objPhys = objThree.body.ammo
-      var ms = objPhys.getMotionState()
+    if (this.scene !== 'headless') {
+      for (var i = 0, il = this.rigidBodies.length; i < il; i++) {
+        var objThree = this.rigidBodies[i]
+        var objPhys = objThree.body.ammo
+        var ms = objPhys.getMotionState()
 
-      if (ms) {
-        ms.getWorldTransform(this.tmpTrans)
+        if (ms) {
+          ms.getWorldTransform(this.tmpTrans)
 
-        // check if object did an update since last call
-        if (objThree.body.didUpdate) {
-          // @ts-ignore
-          if (objThree.body._emitUpdateEvents) objThree.body.eventEmitter.emit('update')
-          objThree.body.didUpdate = false
+          // check if object did an update since last call
+          if (objThree.body.didUpdate) {
+            // @ts-ignore
+            if (objThree.body._emitUpdateEvents) objThree.body.eventEmitter.emit('update')
+            objThree.body.didUpdate = false
+          }
+
+          // update positions
+          if (objThree.body.ammo.isKinematicObject() && objThree.body.needUpdate) {
+            // get position and rotation
+            objThree.getWorldQuaternion(this.tmpQuaternion)
+            objThree.getWorldPosition(this.tmpVector3)
+            // adjust tmp variables
+            this.tmpBtVector3.setValue(this.tmpVector3.x, this.tmpVector3.y, this.tmpVector3.z)
+            this.tmpBtQuaternion.setValue(
+              this.tmpQuaternion.x,
+              this.tmpQuaternion.y,
+              this.tmpQuaternion.z,
+              this.tmpQuaternion.w
+            )
+            // set position and rotation
+            this.tmpTrans.setOrigin(this.tmpBtVector3)
+            this.tmpTrans.setRotation(this.tmpBtQuaternion)
+            // set transform
+            ms.setWorldTransform(this.tmpTrans)
+            // reset needsUpdate
+            objThree.body.needUpdate = false
+          } else {
+            // get position and rotation
+            let p = this.tmpTrans.getOrigin()
+            let q = this.tmpTrans.getRotation()
+            // body offset
+            let o = objThree.body.offset
+            // set position and rotation
+            objThree.position.set(p.x() + o.x, p.y() + o.y, p.z() + o.z)
+            objThree.quaternion.set(q.x(), q.y(), q.z(), q.w())
+          }
+
+          objThree.body.collided = false
         }
-
-        // update positions
-        if (objThree.body.ammo.isKinematicObject() && objThree.body.needUpdate) {
-          // get position and rotation
-          objThree.getWorldQuaternion(this.tmpQuaternion)
-          objThree.getWorldPosition(this.tmpVector3)
-          // adjust tmp variables
-          this.tmpBtVector3.setValue(this.tmpVector3.x, this.tmpVector3.y, this.tmpVector3.z)
-          this.tmpBtQuaternion.setValue(
-            this.tmpQuaternion.x,
-            this.tmpQuaternion.y,
-            this.tmpQuaternion.z,
-            this.tmpQuaternion.w
-          )
-          // set position and rotation
-          this.tmpTrans.setOrigin(this.tmpBtVector3)
-          this.tmpTrans.setRotation(this.tmpBtQuaternion)
-          // set transform
-          ms.setWorldTransform(this.tmpTrans)
-          // reset needsUpdate
-          objThree.body.needUpdate = false
-        } else {
-          // get position and rotation
-          let p = this.tmpTrans.getOrigin()
-          let q = this.tmpTrans.getRotation()
-          // body offset
-          let o = objThree.body.offset
-          // set position and rotation
-          objThree.position.set(p.x() + o.x, p.y() + o.y, p.z() + o.z)
-          objThree.quaternion.set(q.x(), q.y(), q.z(), q.w())
-        }
-
-        objThree.body.collided = false
       }
     }
 

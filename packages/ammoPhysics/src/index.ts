@@ -39,11 +39,15 @@ export { PhysicsLoader }
 import * as Types from '@enable3d/common/dist/types'
 export { Types }
 
+// Export THREE.Clock
+export { Clock } from './lib/Clock'
+
 interface AmmoPhysics extends Physics, Constraints, Shapes, Events {}
 
 class AmmoPhysics extends EventEmitter {
   public tmpTrans: Ammo.btTransform
   public factory: Factories
+  public isHeadless: boolean
 
   protected rigidBodies: ExtendedObject3D[] = []
   protected objectsAmmo: { [ptr: number]: any } = {}
@@ -58,27 +62,30 @@ class AmmoPhysics extends EventEmitter {
 
   protected defaultMaterial: DefaultMaterial
 
-  constructor(public scene: Scene, public config: Phaser3DConfig = {}) {
+  constructor(public scene: Scene | 'headless', public config: Phaser3DConfig = {}) {
     super()
 
+    this.isHeadless = scene === 'headless' ? true : false
     this.tmpEuler = new Euler()
     this.tmpQuaternion = new Quaternion()
     this.tmpVector3 = new Vector3()
     this.tmpBtVector3 = new Ammo.btVector3()
     this.tmpBtQuaternion = new Ammo.btQuaternion(0, 0, 0, 1)
 
-    this.defaultMaterial = new DefaultMaterial()
+    if (scene !== 'headless') {
+      this.defaultMaterial = new DefaultMaterial()
 
-    const version = `three.js version ${REVISION}`
-    console.log(
-      `%c %c %c %c %c ${version} %c https://threejs.org/`,
-      'background: #ff0000',
-      'background: #ffff00',
-      'background: #00ff00',
-      'background: #00ffff',
-      'color: #fff; background: #000000;',
-      'background: none'
-    )
+      const version = `three.js version ${REVISION}`
+      console.log(
+        `%c %c %c %c %c ${version} %c https://threejs.org/`,
+        'background: #ff0000',
+        'background: #ffff00',
+        'background: #00ff00',
+        'background: #00ffff',
+        'color: #fff; background: #000000;',
+        'background: none'
+      )
+    }
 
     this.factory = new Factories(scene)
 
@@ -92,6 +99,8 @@ class AmmoPhysics extends EventEmitter {
   }
 
   public get debug() {
+    if (this.isHeadless) return null
+
     return {
       enable: () => {
         this.debugDrawer.enable()

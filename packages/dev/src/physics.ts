@@ -1,5 +1,5 @@
 import { THREE } from '@enable3d/phaser-extension'
-import { AmmoPhysics, PhysicsLoader } from '@enable3d/phaser-extension/node_modules/@enable3d/ammo-physics'
+import { AmmoPhysics, PhysicsLoader } from '@enable3d/ammo-physics'
 
 const MainScene = () => {
   // scene
@@ -32,7 +32,7 @@ const MainScene = () => {
 
   // physics
   const physics = new AmmoPhysics(scene)
-  physics.debug.enable()
+  physics.debug?.enable()
   const { factory } = physics
 
   physics.add.ground({ width: 20, height: 20 })

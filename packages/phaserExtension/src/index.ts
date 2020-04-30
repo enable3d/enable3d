@@ -16,7 +16,7 @@ export { Cameras }
 export { Third }
 export { Canvas }
 
-import * as THREE from '@enable3d/three-wrapper/dist/index'
+import { THREE } from '@enable3d/three-graphics/dist/index'
 export { THREE }
 
 import * as Types from '@enable3d/common/dist/types'

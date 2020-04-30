@@ -11,7 +11,7 @@
  */
 
 import { Scene3D } from '..'
-import { Object3D, Vector2, Vector3 } from '@enable3d/three-wrapper/dist/index'
+import { Object3D, Vector2, Vector3 } from '@enable3d/three-graphics/dist/index'
 
 export interface FirstPersonControlsConfig {
   offset?: Vector3

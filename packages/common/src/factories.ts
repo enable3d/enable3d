@@ -63,8 +63,10 @@ import DefaultMaterial from './defaultMaterial'
 
 export default class Factories {
   protected defaultMaterial: DefaultMaterial
+  public isHeadless: boolean
 
-  constructor(private scene: Scene) {
+  constructor(private scene: Scene | 'headless') {
+    this.isHeadless = scene === 'headless' ? true : false
     this.defaultMaterial = new DefaultMaterial()
   }
 
@@ -136,17 +138,18 @@ export default class Factories {
     }
   }
 
-  private addExisting(object: ExtendedObject3D | Mesh | Line | Points) {
-    this.scene.add(object)
+  private addExisting(...object: Object3D[] | ExtendedObject3D[] | Mesh[] | Line[] | Points[]) {
+    if (this.scene === 'headless') return
+    this.scene.add(...object)
   }
 
   private addMesh(mesh: Object3D) {
     if (Array.isArray(mesh)) {
       for (let i = 0; i < mesh.length; i++) {
-        this.scene.add(mesh[i])
+        this.addExisting(mesh[i])
       }
     } else {
-      this.scene.add(mesh)
+      this.addExisting(mesh)
     }
     return this
   }
@@ -176,7 +179,7 @@ export default class Factories {
     const { x, y, z, name, shape, autoCenter = true, breakable = false, bufferGeometry = true, ...rest } = extrudeConfig
     const { depth = 1, bevelEnabled = false } = rest
     const geometry =
-      bufferGeometry || breakable
+      bufferGeometry || breakable || this.isHeadless
         ? new ExtrudeBufferGeometry(shape, { depth, bevelEnabled, ...rest })
         : new ExtrudeGeometry(shape, { depth, bevelEnabled, ...rest })
     const material = this.addMaterial(materialConfig)
@@ -190,14 +193,14 @@ export default class Factories {
 
   private addExtrude(extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const obj = this.makeExtrude(extrudeConfig, materialConfig)
-    this.scene.add(obj)
+    this.addExisting(obj)
     return obj
   }
 
   private makePlane(planeConfig: PlaneConfig, materialConfig: MaterialConfig): ExtendedObject3D {
     const { x, y, z, name, breakable = false, bufferGeometry = true, ...rest } = planeConfig
     const geometry =
-      bufferGeometry || breakable
+      bufferGeometry || breakable || this.isHeadless
         ? new PlaneBufferGeometry(rest.width || 1, rest.height || 1, rest.widthSegments || 1, rest.heightSegments || 1)
         : new PlaneGeometry(rest.width || 1, rest.height || 1, rest.widthSegments || 1, rest.heightSegments || 1)
     const material = this.addMaterial(materialConfig) as Material
@@ -210,14 +213,14 @@ export default class Factories {
 
   private addPlane(planeConfig: PlaneConfig, materialConfig: MaterialConfig): ExtendedObject3D {
     const obj = this.makePlane(planeConfig, materialConfig)
-    this.scene.add(obj)
+    this.addExisting(obj)
     return obj
   }
 
   private makeSphere(sphereConfig: SphereConfig, materialConfig: MaterialConfig): ExtendedObject3D {
     const { x, y, z, name, breakable = false, bufferGeometry = true, ...rest } = sphereConfig
     const geometry =
-      bufferGeometry || breakable
+      bufferGeometry || breakable || this.isHeadless
         ? new SphereBufferGeometry(
             rest.radius || 1,
             rest.widthSegments || 16,
@@ -245,14 +248,14 @@ export default class Factories {
 
   private addSphere(sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const obj = this.makeSphere(sphereConfig, materialConfig)
-    this.scene.add(obj)
+    this.addExisting(obj)
     return obj
   }
 
   private makeBox(boxConfig: BoxConfig, materialConfig: MaterialConfig): ExtendedObject3D {
     const { x, y, z, name, breakable = false, bufferGeometry = true, ...rest } = boxConfig
     const geometry =
-      bufferGeometry || breakable
+      bufferGeometry || breakable || this.isHeadless
         ? new BoxBufferGeometry(
             rest.width || 1,
             rest.height || 1,
@@ -278,21 +281,21 @@ export default class Factories {
 
   private addBox(boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const obj = this.makeBox(boxConfig, materialConfig)
-    this.scene.add(obj)
+    this.addExisting(obj)
     return obj
   }
 
   private addGround(groundConfig: GroundConfig, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const obj = this.makeBox(groundConfig, materialConfig)
     obj.rotateX(THREE_Math.degToRad(90))
-    this.scene.add(obj)
+    this.addExisting(obj)
     return obj
   }
 
   private makeCylinder(cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const { x, y, z, name, breakable = false, bufferGeometry = true, ...rest } = cylinderConfig
     const geometry =
-      bufferGeometry || breakable
+      bufferGeometry || breakable || this.isHeadless
         ? new CylinderBufferGeometry(
             rest.radiusTop || 1,
             rest.radiusBottom || 1,
@@ -322,14 +325,14 @@ export default class Factories {
 
   private addCylinder(cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const obj = this.makeCylinder(cylinderConfig, materialConfig)
-    this.scene.add(obj)
+    this.addExisting(obj)
     return obj
   }
 
   private makeCone(coneConfig: ConeConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const { x, y, z, name, breakable = false, bufferGeometry = true, ...rest } = coneConfig
     const geometry =
-      bufferGeometry || breakable
+      bufferGeometry || breakable || this.isHeadless
         ? new ConeBufferGeometry(
             rest.radius || 1,
             rest.height || 1,
@@ -357,7 +360,7 @@ export default class Factories {
 
   private addCone(coneConfig: ConeConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const obj = this.makeCone(coneConfig, materialConfig)
-    this.scene.add(obj)
+    this.addExisting(obj)
     return obj
   }
 
@@ -365,7 +368,7 @@ export default class Factories {
   private makeTorus(torusConfig: TorusConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const { x, y, z, name, breakable = false, bufferGeometry = true, ...rest } = torusConfig
     const geometry =
-      bufferGeometry || breakable
+      bufferGeometry || breakable || this.isHeadless
         ? new TorusBufferGeometry(
             rest.radius || undefined,
             rest.tube || undefined,
@@ -389,7 +392,7 @@ export default class Factories {
 
   private addTorus(torusConfig: TorusConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const obj = this.makeTorus(torusConfig, materialConfig)
-    this.scene.add(obj)
+    this.addExisting(obj)
     return obj
   }
 
@@ -401,6 +404,9 @@ export default class Factories {
     //   const { map } = materialConfig[type]
     //   if (typeof map === 'string') materialConfig[type].map = this.loadTexture(map)
     // }
+
+    // always share the same material in headless mode to save memory
+    if (this.scene === 'headless') return this.defaultMaterial.get()
 
     switch (type) {
       case 'basic':
