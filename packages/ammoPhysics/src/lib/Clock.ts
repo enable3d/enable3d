@@ -7,6 +7,9 @@
  * @author alteredq / http://alteredqualia.com/
  */
 
+/**
+ * This is the Clock class THREE provides.
+ */
 class Clock {
   autoStart: boolean
   startTime: number

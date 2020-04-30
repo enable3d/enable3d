@@ -1,4 +1,4 @@
-const { AmmoPhysics, Clock } = require('@enable3d/ammo-physics')
+const { AmmoPhysics, ServerClock } = require('@enable3d/ammo-physics')
 const Ammo = require('@enable3d/ammo-physics/ammo/ammo.js')
 
 const MainScene = () => {
@@ -15,9 +15,6 @@ const MainScene = () => {
     // console.log(otherObject.name, event)
   })
 
-  // clock
-  const clock = new Clock()
-
   // -- NOTE --
   // In headless mode you have to call body.transform()
   // before and body.refresh() after getting or setting position or rotation.
@@ -27,16 +24,20 @@ const MainScene = () => {
   // box.body.setPosition(pos.x, pos.y + 0.01, pos.z)
   // box.body.refresh()
 
+  // clock
+  const clock = new ServerClock()
+
   // loop
   const animate = () => {
-    setTimeout(animate, 1000 / 60)
     physics.update(clock.getDelta() * 1000)
 
     // box.body.transform()
     // const pos = box.body.position
     // console.log(pos)
   }
-  animate()
+  clock.onTick(delta => {
+    animate(delta)
+  })
 }
 
 Ammo().then(() => {

@@ -41,6 +41,7 @@ export { Types }
 
 // Export THREE.Clock
 export { Clock } from './lib/Clock'
+export { ServerClock } from '@enable3d/common/dist/serverClock'
 
 interface AmmoPhysics extends Physics, Constraints, Shapes, Events {}
 
