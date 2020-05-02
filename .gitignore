@@ -1,3 +1,5 @@
 **/node_modules/**
 **/dist/**
 **/.tmp/**
+**/screenshots/**
+test/**/*.tmp.test.js
