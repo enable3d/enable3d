@@ -1,10 +1,17 @@
 {
-  "packages": ["packages/*"],
-  "version": "0.0.15",
+  "packages": [
+    "packages/*"
+  ],
+  "version": "0.0.16",
   "command": {
     "bootstrap": {
-      "npmClientArgs": ["--no-package-lock"]
+      "npmClientArgs": [
+        "--no-package-lock"
+      ]
     },
-    "ignoreChanges": ["**/node_modules/**", "*/tsconfig.json"]
+    "ignoreChanges": [
+      "**/node_modules/**",
+      "*/tsconfig.json"
+    ]
   }
 }

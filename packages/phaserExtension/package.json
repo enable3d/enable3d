@@ -1,6 +1,6 @@
 {
   "name": "@enable3d/phaser-extension",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "3D extension for Phaser 3",
   "main": "dist/index.js",
   "scripts": {
@@ -31,14 +31,13 @@
   },
   "homepage": "https://enable3d.io",
   "dependencies": {
-    "@enable3d/ammo-physics": "0.0.15",
-    "@enable3d/common": "0.0.15",
-    "@enable3d/three-graphics": "0.0.15",
-    "@enable3d/three-wrapper": "0.0.15",
+    "@enable3d/ammo-physics": "^0.0.16",
+    "@enable3d/common": "^0.0.16",
+    "@enable3d/three-graphics": "^0.0.16",
+    "@enable3d/three-wrapper": "^0.0.16",
     "@types/chroma-js": "^2.0.0",
     "chroma-js": "^2.1.0",
     "eventemitter3": "^4.0.0",
     "phaser": "^3.22.0"
-  },
-  "devDependencies": {}
+  }
 }
