@@ -1,7 +1,7 @@
 /**
  * @author       Yannick Deubel (https://github.com/yandeu)
- * @copyright    Copyright (c) 2020 Yannick Deubel; Project Url: https://github.com/yandeu/enable3d
- * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
+ * @copyright    Copyright (c) 2020 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
+ * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
 // Inspired by https://github.com/donmccurdy/aframe-physics-system/blob/master/src/components/ammo-constraint.js
@@ -51,10 +51,7 @@ export default class Constraints {
   }
 
   private getTransform(body: Ammo.btRigidBody, targetBody: Ammo.btRigidBody) {
-    const bodyTransform = body
-      .getCenterOfMassTransform()
-      .inverse()
-      .op_mul(targetBody.getWorldTransform())
+    const bodyTransform = body.getCenterOfMassTransform().inverse().op_mul(targetBody.getWorldTransform())
     const targetTransform = new Ammo.btTransform()
     targetTransform.setIdentity()
     return { body: bodyTransform, target: targetTransform }

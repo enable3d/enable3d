@@ -1,6 +1,6 @@
 /**
  * @author       Yannick Deubel (https://github.com/yandeu)
- * @copyright    Copyright (c) 2020 Yannick Deubel; Project Url: https://github.com/yandeu/enable3d
+ * @copyright    Copyright (c) 2020 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
  * @description  This is a modified version of the original code from Kevin Lee
  */
 
@@ -42,7 +42,7 @@ import logger from '@enable3d/common/dist/logger'
 
 const hasUpdateMatricesFunction = ExtendedObject3d.prototype.hasOwnProperty('updateMatrices')
 
-export const createCollisionShapes = function(root, options) {
+export const createCollisionShapes = function (root, options) {
   switch (options.type) {
     case TYPE.BOX:
       return createBoxShape(root, options)
@@ -72,7 +72,7 @@ export const createCollisionShapes = function(root, options) {
 
 //TODO: support gimpact (dynamic trimesh) and heightmap
 
-export const createBoxShape = function(root, options) {
+export const createBoxShape = function (root, options) {
   options.type = TYPE.BOX
   _setOptions(options)
 
@@ -93,7 +93,7 @@ export const createBoxShape = function(root, options) {
   return collisionShape
 }
 
-export const createCylinderShape = function(root, options) {
+export const createCylinderShape = function (root, options) {
   options.type = TYPE.CYLINDER
   _setOptions(options)
 
@@ -124,7 +124,7 @@ export const createCylinderShape = function(root, options) {
   return collisionShape
 }
 
-export const createCapsuleShape = function(root, options) {
+export const createCapsuleShape = function (root, options) {
   options.type = TYPE.CAPSULE
   _setOptions(options)
 
@@ -154,7 +154,7 @@ export const createCapsuleShape = function(root, options) {
   return collisionShape
 }
 
-export const createConeShape = function(root, options) {
+export const createConeShape = function (root, options) {
   options.type = TYPE.CONE
   _setOptions(options)
 
@@ -184,7 +184,7 @@ export const createConeShape = function(root, options) {
   return collisionShape
 }
 
-export const createSphereShape = function(root, options) {
+export const createSphereShape = function (root, options) {
   options.type = TYPE.SPHERE
   _setOptions(options)
 
@@ -201,10 +201,10 @@ export const createSphereShape = function(root, options) {
   return collisionShape
 }
 
-export const createHullShape = (function() {
+export const createHullShape = (function () {
   const vertex = new Vector3()
   const center = new Vector3()
-  return function(root, options) {
+  return function (root, options) {
     options.type = TYPE.HULL
     _setOptions(options)
 
@@ -268,10 +268,10 @@ export const createHullShape = (function() {
   }
 })()
 
-export const createHACDShapes = (function() {
+export const createHACDShapes = (function () {
   const v = new Vector3()
   const center = new Vector3()
-  return function(root, options) {
+  return function (root, options) {
     options.type = TYPE.HACD
     _setOptions(options)
 
@@ -377,10 +377,10 @@ export const createHACDShapes = (function() {
   }
 })()
 
-export const createVHACDShapes = (function() {
+export const createVHACDShapes = (function () {
   const v = new Vector3()
   const center = new Vector3()
-  return function(root, options) {
+  return function (root, options) {
     options.type = TYPE.VHACD
     _setOptions(options)
 
@@ -499,11 +499,11 @@ export const createVHACDShapes = (function() {
   }
 })()
 
-export const createTriMeshShape = (function() {
+export const createTriMeshShape = (function () {
   const va = new Vector3()
   const vb = new Vector3()
   const vc = new Vector3()
-  return function(root, options) {
+  return function (root, options) {
     options.type = TYPE.MESH
     _setOptions(options)
 
@@ -562,7 +562,7 @@ export const createTriMeshShape = (function() {
   }
 })()
 
-export const createHeightfieldTerrainShape = function(root, options) {
+export const createHeightfieldTerrainShape = function (root, options) {
   _setOptions(options)
 
   if (options.fit === FIT.ALL) {
@@ -644,7 +644,7 @@ function _setOptions(options) {
   }
 }
 
-const _finishCollisionShape = function(collisionShape, options, scale) {
+const _finishCollisionShape = function (collisionShape, options, scale) {
   collisionShape.type = options.type
   collisionShape.setMargin(options.margin)
   collisionShape.destroy = () => {
@@ -678,11 +678,11 @@ const _finishCollisionShape = function(collisionShape, options, scale) {
 
 // Calls `cb(geo, transform)` for each geometry under `root` whose vertices we should take into account for the physics shape.
 // `transform` is the transform required to transform the given geometry's vertices into root-local space.
-const _iterateGeometries = (function() {
+const _iterateGeometries = (function () {
   const transform = new Matrix4()
   const inverse = new Matrix4()
   const bufferGeometry = new BufferGeometry()
-  return function(root, options, cb) {
+  return function (root, options, cb) {
     inverse.getInverse(root.matrixWorld)
     root.traverse(mesh => {
       if (
@@ -704,7 +704,7 @@ const _iterateGeometries = (function() {
   }
 })()
 
-const _computeScale = function(root, options) {
+const _computeScale = function (root, options) {
   // const scale = new Vector3(1, 1, 1)
   // if (options.fit === FIT.ALL) {
   //   scale.setFromMatrixScale(root.matrixWorld)
@@ -714,10 +714,10 @@ const _computeScale = function(root, options) {
   return scale
 }
 
-const _computeRadius = (function() {
+const _computeRadius = (function () {
   const v = new Vector3()
   const center = new Vector3()
-  return function(root, options, bounds) {
+  return function (root, options, bounds) {
     let maxRadiusSq = 0
     let { x: cx, y: cy, z: cz } = bounds.getCenter(center)
     _iterateGeometries(root, options, (geo, transform) => {
@@ -734,26 +734,20 @@ const _computeRadius = (function() {
   }
 })()
 
-const _computeHalfExtents = function(root, bounds, minHalfExtent, maxHalfExtent) {
+const _computeHalfExtents = function (root, bounds, minHalfExtent, maxHalfExtent) {
   const halfExtents = new Vector3()
-  return halfExtents
-    .subVectors(bounds.max, bounds.min)
-    .multiplyScalar(0.5)
-    .clampScalar(minHalfExtent, maxHalfExtent)
+  return halfExtents.subVectors(bounds.max, bounds.min).multiplyScalar(0.5).clampScalar(minHalfExtent, maxHalfExtent)
 }
 
-const _computeLocalOffset = function(matrix, bounds, target) {
-  target
-    .addVectors(bounds.max, bounds.min)
-    .multiplyScalar(0.5)
-    .applyMatrix4(matrix)
+const _computeLocalOffset = function (matrix, bounds, target) {
+  target.addVectors(bounds.max, bounds.min).multiplyScalar(0.5).applyMatrix4(matrix)
   return target
 }
 
 // returns the bounding box for the geometries underneath `root`.
-const _computeBounds = (function() {
+const _computeBounds = (function () {
   const v = new Vector3()
-  return function(root, options) {
+  return function (root, options) {
     const bounds = new Box3()
     let minX = +Infinity
     let minY = +Infinity

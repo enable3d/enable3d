@@ -36,15 +36,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yandeu/enable3d.git"
+    "url": "git+https://github.com/enable3d/enable3d.git"
   },
   "keywords": [],
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
   "bugs": {
-    "url": "https://github.com/yandeu/enable3d/issues"
+    "url": "https://github.com/enable3d/enable3d/issues"
   },
-  "homepage": "https://github.com/yandeu/enable3d#readme",
+  "homepage": "https://github.com/enable3d/enable3d#readme",
   "devDependencies": {
     "jest": "^25.5.3",
     "jest-puppeteer": "^4.4.0",

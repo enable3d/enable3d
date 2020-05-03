@@ -23,11 +23,11 @@
   "license": "GNU GPLv3",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yandeu/enable3d.git",
+    "url": "git+https://github.com/enable3d/enable3d.git",
     "directory": "packages/phaserExtension"
   },
   "bugs": {
-    "url": "https://github.com/yandeu/enable3d/issues"
+    "url": "https://github.com/enable3d/enable3d/issues"
   },
   "homepage": "https://enable3d.io",
   "dependencies": {

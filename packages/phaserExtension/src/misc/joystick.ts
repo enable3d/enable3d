@@ -1,7 +1,7 @@
 /**
  * @author       Yannick Deubel (https://github.com/yandeu)
- * @copyright    Copyright (c) 2020 Yannick Deubel; Project Url: https://github.com/yandeu/enable3d
- * @license      {@link https://github.com/yandeu/enable3d/blob/master/LICENSE|GNU GPLv3}
+ * @copyright    Copyright (c) 2020 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
+ * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
 import EventEmitter from 'eventemitter3'
@@ -144,8 +144,9 @@ export default class JoyStick extends EventEmitter {
     const { size } = styles
 
     const thumb = document.createElement('div')
-    thumb.style.cssText = `position: absolute; left: ${size / 4}px; top: ${size / 4}px; width: ${size /
-      2}px; height: ${size / 2}px; border-radius: 50%; background: #fff; `
+    thumb.style.cssText = `position: absolute; left: ${size / 4}px; top: ${size / 4}px; width: ${size / 2}px; height: ${
+      size / 2
+    }px; border-radius: 50%; background: #fff; `
     return thumb
   }
 
