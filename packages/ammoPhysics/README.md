@@ -3,7 +3,7 @@
 </h1>
 
 <h4 align="center">
-  Written in TypeScript, adds Physics to your three.js project using ammo.js
+  Written in TypeScript, adds Physics to your three.js project using ammo.js.
 </h4>
 
 <p align="center">  

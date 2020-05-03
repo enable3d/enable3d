@@ -3,7 +3,7 @@
 </h1>
 
 <h4 align="center">
-  Written in TypeScript, uses three.js and ammo.js, brings the third dimension to your Phaser 3 game.
+  Easily add 3D objects and physics to your html5 canvas.
 </h4>
 
 <p align="center">  
