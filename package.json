@@ -46,6 +46,7 @@
   },
   "homepage": "https://github.com/enable3d/enable3d#readme",
   "devDependencies": {
+    "@types/node": "^13.13.4",
     "jest": "^25.5.3",
     "jest-puppeteer": "^4.4.0",
     "lerna": "^3.19.0",
