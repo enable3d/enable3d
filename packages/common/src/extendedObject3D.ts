@@ -14,7 +14,7 @@ import {
   Vector3
 } from '@enable3d/three-wrapper/dist/index'
 // Can I use circular dependencies if I only ise the typings?
-// import PhysicsBody from '@enable3d/ammo-physics/dist/physicsBody'
+import PhysicsBody from './physicsBody'
 import { AnimationAction } from '@enable3d/three-wrapper/dist/index'
 import logger from './logger'
 
@@ -32,7 +32,7 @@ class ExtendedObject3D extends Object3D {
   private vector3 = new Vector3()
   public shape: string
   public name: string
-  public body: any // PhysicsBody
+  public body: PhysicsBody
   public hasBody: boolean = false
   public animations?: AnimationClip[]
   public mixer?: AnimationMixer

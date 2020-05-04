@@ -4,7 +4,6 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { AmmoPhysics } from '.'
 import { ExtendedObject3D } from '@enable3d/common/dist/types'
 
 import EventEmitter from 'eventemitter3'
@@ -29,7 +28,7 @@ class PhysicsBody {
 
   private eventEmitter: EventEmitter
 
-  constructor(private physics: AmmoPhysics, public ammo: Ammo.btRigidBody) {
+  constructor(private physics: any, public ammo: Ammo.btRigidBody) {
     // @ts-ignore
     this.name = ammo.name
   }

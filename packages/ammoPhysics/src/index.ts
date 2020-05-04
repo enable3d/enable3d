@@ -5,7 +5,7 @@
  */
 
 import logger from '@enable3d/common/dist/logger'
-import PhysicsBody from './physicsBody'
+import PhysicsBody from '@enable3d/common/dist/physicsBody'
 import {
   PlaneConfig,
   SphereConfig,

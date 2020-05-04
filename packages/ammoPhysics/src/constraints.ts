@@ -6,7 +6,7 @@
 
 // Inspired by https://github.com/donmccurdy/aframe-physics-system/blob/master/src/components/ammo-constraint.js
 
-import PhysicsBody from './physicsBody'
+import PhysicsBody from '@enable3d/common/dist/physicsBody'
 import { XYZ } from '@enable3d/common/dist/types'
 
 export default class Constraints {
@@ -51,7 +51,10 @@ export default class Constraints {
   }
 
   private getTransform(body: Ammo.btRigidBody, targetBody: Ammo.btRigidBody) {
-    const bodyTransform = body.getCenterOfMassTransform().inverse().op_mul(targetBody.getWorldTransform())
+    const bodyTransform = body
+      .getCenterOfMassTransform()
+      .inverse()
+      .op_mul(targetBody.getWorldTransform())
     const targetTransform = new Ammo.btTransform()
     targetTransform.setIdentity()
     return { body: bodyTransform, target: targetTransform }

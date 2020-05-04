@@ -10,7 +10,7 @@ import { ExtendedObject3D, Phaser3DConfig } from '@enable3d/common/dist/types'
 import { Vector3, Scene, Quaternion, Euler } from '@enable3d/three-wrapper/dist/index'
 import { ConvexObjectBreaker } from './convexObjectBreaker'
 import DefaultMaterial from '@enable3d/common/dist/defaultMaterial'
-import PhysicsBody from './physicsBody'
+import PhysicsBody from '@enable3d/common/dist/physicsBody'
 
 class Physics extends EventEmitter {
   public tmpTrans: Ammo.btTransform
