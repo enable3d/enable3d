@@ -139,6 +139,7 @@ export interface AddMaterial {
 interface GeometryConfig {
   name?: string
   friction?: number
+  /** Set the collision flags. 0 is DYNAMIC, 1 is STATIC, 2 is KINEMATIC, 4 GHOST */
   collisionFlags?: number
   breakable?: boolean
   mass?: number
