@@ -174,55 +174,53 @@ class Physics extends EventEmitter {
     /**
      * Update rigid bodies
      */
-    if (this.scene !== 'headless') {
-      for (var i = 0, il = this.rigidBodies.length; i < il; i++) {
-        var objThree = this.rigidBodies[i]
-        var objPhys = objThree.body.ammo
-        var ms = objPhys.getMotionState()
+    for (var i = 0, il = this.rigidBodies.length; i < il; i++) {
+      var objThree = this.rigidBodies[i]
+      var objPhys = objThree.body.ammo
+      var ms = objPhys.getMotionState()
 
-        if (ms) {
-          ms.getWorldTransform(this.tmpTrans)
+      if (ms) {
+        ms.getWorldTransform(this.tmpTrans)
 
-          // check if object did an update since last call
-          if (objThree.body.didUpdate) {
-            // @ts-ignore
-            if (objThree.body._emitUpdateEvents) objThree.body.eventEmitter.emit('update')
-            objThree.body.didUpdate = false
-          }
-
-          // update positions
-          if (objThree.body.ammo.isKinematicObject() && objThree.body.needUpdate) {
-            // get position and rotation
-            objThree.getWorldQuaternion(this.tmpQuaternion)
-            objThree.getWorldPosition(this.tmpVector3)
-            // adjust tmp variables
-            this.tmpBtVector3.setValue(this.tmpVector3.x, this.tmpVector3.y, this.tmpVector3.z)
-            this.tmpBtQuaternion.setValue(
-              this.tmpQuaternion.x,
-              this.tmpQuaternion.y,
-              this.tmpQuaternion.z,
-              this.tmpQuaternion.w
-            )
-            // set position and rotation
-            this.tmpTrans.setOrigin(this.tmpBtVector3)
-            this.tmpTrans.setRotation(this.tmpBtQuaternion)
-            // set transform
-            ms.setWorldTransform(this.tmpTrans)
-            // reset needsUpdate
-            objThree.body.needUpdate = false
-          } else {
-            // get position and rotation
-            let p = this.tmpTrans.getOrigin()
-            let q = this.tmpTrans.getRotation()
-            // body offset
-            let o = objThree.body.offset
-            // set position and rotation
-            objThree.position.set(p.x() + o.x, p.y() + o.y, p.z() + o.z)
-            objThree.quaternion.set(q.x(), q.y(), q.z(), q.w())
-          }
-
-          objThree.body.collided = false
+        // check if object did an update since last call
+        if (objThree.body.didUpdate) {
+          // @ts-ignore
+          if (objThree.body._emitUpdateEvents) objThree.body.eventEmitter.emit('update')
+          objThree.body.didUpdate = false
         }
+
+        // update positions
+        if (objThree.body.ammo.isKinematicObject() && objThree.body.needUpdate) {
+          // get position and rotation
+          objThree.getWorldQuaternion(this.tmpQuaternion)
+          objThree.getWorldPosition(this.tmpVector3)
+          // adjust tmp variables
+          this.tmpBtVector3.setValue(this.tmpVector3.x, this.tmpVector3.y, this.tmpVector3.z)
+          this.tmpBtQuaternion.setValue(
+            this.tmpQuaternion.x,
+            this.tmpQuaternion.y,
+            this.tmpQuaternion.z,
+            this.tmpQuaternion.w
+          )
+          // set position and rotation
+          this.tmpTrans.setOrigin(this.tmpBtVector3)
+          this.tmpTrans.setRotation(this.tmpBtQuaternion)
+          // set transform
+          ms.setWorldTransform(this.tmpTrans)
+          // reset needsUpdate
+          objThree.body.needUpdate = false
+        } else {
+          // get position and rotation
+          let p = this.tmpTrans.getOrigin()
+          let q = this.tmpTrans.getRotation()
+          // body offset
+          let o = objThree.body.offset
+          // set position and rotation
+          objThree.position.set(p.x() + o.x, p.y() + o.y, p.z() + o.z)
+          objThree.quaternion.set(q.x(), q.y(), q.z(), q.w())
+        }
+
+        objThree.body.collided = false
       }
     }
 
