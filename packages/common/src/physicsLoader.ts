@@ -1,7 +1,8 @@
 import loadAmmoModule from './wasmLoader'
 
 const PhysicsLoader = (path: string, callback: Function) => {
-  window.__loadPhysics = true
+  if (typeof window !== 'undefined') window.__loadPhysics = true
+
   loadAmmoModule(path, () => {
     Ammo().then(() => {
       callback()
