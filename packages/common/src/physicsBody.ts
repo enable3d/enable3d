@@ -130,11 +130,13 @@ class PhysicsBody {
     return { x: x * angle || 0, y: y * angle || 0, z: z * angle || 0 }
   }
 
+  /** Set position. (for headless mode only) */
   public setPosition(x: number, y: number, z: number) {
     const t = this.physics.tmpTrans
     t.getOrigin().setValue(x, y, z)
   }
 
+  /** Get position. (for headless mode only) */
   public get position() {
     const t = this.physics.tmpTrans
     return { x: t.getOrigin().x(), y: t.getOrigin().y(), z: t.getOrigin().z() }
