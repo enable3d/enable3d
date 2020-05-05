@@ -10,13 +10,11 @@
  * @license      {@link https://github.com/timetocode/node-game-loop/blob/master/LICENSE|MIT}
  */
 
-const EventEmitter = require('events')
-
 /**
- * A more precise clock than setTimeout(cb, ms).
- * But costs slightly more cpu.
+ * A very precise server clock for you game loop.
+ * Will fallback to setTimeout() if frame rate is below 25.
  */
-class ServerClock extends EventEmitter {
+class ServerClock {
   /**
    * Length of a tick in milliseconds. The denominator is your desired framerate.
    * e.g. 1000 / 20 = 20 fps,  1000 / 60 = 60 fps
@@ -33,17 +31,21 @@ class ServerClock extends EventEmitter {
   /** store is the clock is running or not */
   private _isRunning = false
 
-  constructor(ms: number = 60, autoStart: boolean = true) {
-    super()
-    if (autoStart) this.start(ms)
+  private _highAccuracy = true
+
+  private _onTickCallback: (delta: number) => void
+
+  constructor(fps: number = 60, autoStart: boolean = true) {
+    if (autoStart) this.start(fps)
   }
 
   /**
    * Start the clock.
-   * @param ms Interval in milliseconds. Default is 60 fps.
+   * @param fps Interval in milliseconds. Default is 60 fps.
    */
-  public start(ms = 60) {
-    this.tickLengthMs = 1000 / ms
+  public start(fps = 60) {
+    if (fps <= 25) this.disableHighAccuracy()
+    this.tickLengthMs = 1000 / fps
     this._isRunning = true
     this.startTime = Date.now()
     this.loop()
@@ -70,8 +72,8 @@ class ServerClock extends EventEmitter {
   }
 
   /** Event listener for every new tick. */
-  public onTick(cb: Function) {
-    return this.on('tick', () => cb(this._delta))
+  public onTick(onTickCallback: (delta: number) => void) {
+    this._onTickCallback = onTickCallback
   }
 
   private loop() {
@@ -85,12 +87,12 @@ class ServerClock extends EventEmitter {
 
       this.previousTick = now
 
-      this.emit('tick', this._delta)
+      this._onTickCallback(this._delta)
 
       // console.log(
       //   'this._delta',
       //   this._delta,
-      //   '(target: ' + this.tickLengthMs + ' ms)',
+      //   '(target: ' + this.tickLengthMs + ' fps)',
       //   'node ticks',
       //   this.actualTicks
       // )
@@ -98,11 +100,27 @@ class ServerClock extends EventEmitter {
       this.actualTicks = 0
     }
 
-    if (Date.now() - this.previousTick < this.tickLengthMs - 16) {
-      setTimeout(() => this.loop())
+    if (this._highAccuracy) {
+      if (Date.now() - this.previousTick < this.tickLengthMs - 16) {
+        setTimeout(() => this.loop())
+      } else {
+        setImmediate(() => this.loop())
+      }
     } else {
-      setImmediate(() => this.loop())
+      setTimeout(() => {
+        this.loop()
+      }, this.tickLengthMs)
     }
+  }
+
+  /** Disable high accuracy to save some cpu power. */
+  public disableHighAccuracy() {
+    this._highAccuracy = false
+  }
+
+  /** Enable hight accuracy. Much more precise but uses much more cpu power. */
+  public enableHighAccuracy() {
+    this._highAccuracy = true
   }
 }
 

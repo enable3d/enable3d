@@ -15,21 +15,15 @@ const MainScene = () => {
     // console.log(otherObject.name, event)
   })
 
-  // -- NOTE --
-  // In headless mode you have to call body.transform()
-  // before and body.refresh() after getting or setting position or rotation.
-  //
-  // box.body.transform()
-  // const pos = box.body.position
-  // box.body.setPosition(pos.x, pos.y + 0.01, pos.z)
-  // box.body.refresh()
-
   // clock
   const clock = new ServerClock()
 
+  // for debugging I disable high accuracy
+  clock.disableHighAccuracy()
+
   // loop
-  const animate = () => {
-    physics.update(clock.getDelta() * 1000)
+  const animate = delta => {
+    physics.update(delta * 1000)
 
     // box.body.transform()
     // const pos = box.body.position
