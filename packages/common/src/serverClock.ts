@@ -113,7 +113,7 @@ class ServerClock {
     }
   }
 
-  /** Disable high accuracy to save some cpu power. */
+  /** Disable high accuracy to save some cpu power. This is very useful while developing. */
   public disableHighAccuracy() {
     this._highAccuracy = false
   }
