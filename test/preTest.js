@@ -45,7 +45,8 @@ const getExamples = async () => {
     }
   } while (m)
 
-  return examples
+  // TODO: It excludes headless examples for now
+  return examples.filter(e => !/^headless/.test(e))
 }
 
 const createScreenshotsDirectory = () => {
