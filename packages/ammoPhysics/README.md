@@ -1,5 +1,5 @@
 <h1 align="center">
-  Physics Plugin for tree.js
+  Physics Plugin for three.js
 </h1>
 
 <h4 align="center">
