@@ -1,17 +1,32 @@
-import { Water } from '@enable3d/three-wrapper/dist/index'
 import {
   PlaneBufferGeometry,
   Scene,
   Vector2,
   Mesh,
   MeshStandardMaterial,
-  TextureLoader
+  Water,
+  WebGLRenderer,
+  Texture
 } from '@enable3d/three-wrapper/dist/index'
+import { Color } from '@enable3d/common/dist/types'
 
 // from this example:
 // https://threejs.org/examples/?q=water#webgl_water
+interface AddWaterConfig {
+  width?: number
+  height?: number
+  x?: number
+  y?: number
+  z?: number
+  color?: Color
+  scale?: number
+  flowX?: number
+  flowY?: number
+  normalMap0?: Texture
+  normalMap1?: Texture
+}
 
-const addWater = async (config: any = {}, scene: Scene) => {
+const addWater = (scene: Scene, renderer: WebGLRenderer, config: AddWaterConfig = {}) => {
   const {
     width = 20,
     height = 20,
@@ -22,8 +37,8 @@ const addWater = async (config: any = {}, scene: Scene) => {
     scale = 4,
     flowX = 1,
     flowY = 1,
-    normalMap0,
-    normalMap1
+    normalMap0 = undefined,
+    normalMap1 = undefined
   } = config
 
   //ground
@@ -44,11 +59,14 @@ const addWater = async (config: any = {}, scene: Scene) => {
     textureWidth: 1024,
     textureHeight: 1024,
     normalMap0: normalMap0,
-    normalMap1: normalMap1
+    normalMap1: normalMap1,
+    encoding: renderer.outputEncoding
   })
   water.position.set(x, y + 0.1, z)
   water.rotation.x = Math.PI * -0.5
-  scene.add(water)
+  scene.add(ground)
+
+  return { ground, water }
 }
 
-export { addWater }
+export { addWater, AddWaterConfig }

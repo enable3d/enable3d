@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { OrbitControls } from '@enable3d/three-wrapper/dist/index'
+import { OrbitControls, Water } from '@enable3d/three-wrapper/dist/index'
 import { SVGLoader } from '@enable3d/three-wrapper/dist/index'
 import { VRButton } from '@enable3d/three-wrapper/dist/index'
 import { Sky } from '@enable3d/three-wrapper/dist/index'
@@ -103,7 +103,7 @@ import HeightMap from './heightmap'
 
 import chroma from 'chroma-js'
 import Transform from './transform'
-import { addWater } from './misc/water'
+import { addWater, AddWaterConfig } from './misc/water'
 import DefaultMaterial from '@enable3d/common/dist/defaultMaterial'
 import { AmmoPhysics } from '@enable3d/ammo-physics/dist/index'
 import logger from '@enable3d/common/dist/logger'
@@ -274,7 +274,7 @@ class ThreeGraphics {
     torus: (torusConfig?: TorusConfig, materialConfig?: MaterialConfig) => ExtendedObject3D
     extrude: ExtrudeObject
     material: AddMaterial
-    water: any
+    water: (config?: AddWaterConfig) => { ground: Mesh; water: Water }
   } {
     return {
       //  Lights
@@ -310,7 +310,7 @@ class ThreeGraphics {
         this.factory.add.extrude(extrudeConfig, materialConfig),
       //...
       material: (materialConfig: MaterialConfig = {}) => this.factory.add.material(materialConfig),
-      water: (config: any) => addWater(config, this.scene)
+      water: (config: AddWaterConfig = {}) => addWater(this.scene, this.renderer, config)
     }
   }
 
