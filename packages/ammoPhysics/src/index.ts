@@ -37,6 +37,8 @@ import DefaultMaterial from '@enable3d/common/dist/defaultMaterial'
 export { PhysicsLoader }
 
 import * as Types from '@enable3d/common/dist/types'
+import { ClosestRaycaster, AllHitsRaycaster } from './raycaster/raycaster'
+export { ClosestRaycaster, AllHitsRaycaster }
 export { Types }
 
 // Export THREE.Clock
@@ -151,7 +153,15 @@ class AmmoPhysics extends EventEmitter {
       torus: (torusConfig: TorusConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.addTorus(torusConfig, materialConfig),
       extrude: (extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig = {}) =>
-        this.addExtrude(extrudeConfig, materialConfig)
+        this.addExtrude(extrudeConfig, materialConfig),
+      /**
+       * Creates a new Raycaster
+       * @param type Returns only the closes body by default. Can be 'closest' or 'allHits'.
+       */
+      raycaster: (type = 'closest') => {
+        if (type === 'closest') return new ClosestRaycaster(this) as ClosestRaycaster
+        else return new AllHitsRaycaster(this) as AllHitsRaycaster
+      }
     }
   }
 
