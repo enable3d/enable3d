@@ -248,6 +248,12 @@ class PhysicsBody {
     this.ammo.setFriction(value)
   }
 
+  /** Set per body gravity */
+  public setGravity(x: number, y: number, z: number) {
+    this.tmpBtVector3.setValue(x, y, z)
+    this.ammo.setGravity(this.tmpBtVector3)
+  }
+
   public setLinearFactor(x: number, y: number, z: number) {
     this.tmpBtVector3.setValue(x, y, z)
     this.ammo.setLinearFactor(this.tmpBtVector3)

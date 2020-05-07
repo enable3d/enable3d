@@ -13,9 +13,8 @@ export default class MainScene extends Scene3D {
     this.accessThirdDimension()
     this.third.warpSpeed()
 
-    this.third.add.water({
-      y: 1
-    })
+    this.third.physics.add.box({ x: -2, y: 5 })
+    this.third.physics.add.box({ x: 2, y: 5 }).body.setGravity(0, -1, 0)
   }
 
   update() {}
