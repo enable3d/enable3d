@@ -64,7 +64,7 @@ const addWater = (scene: Scene, renderer: WebGLRenderer, config: AddWaterConfig 
   })
   water.position.set(x, y + 0.1, z)
   water.rotation.x = Math.PI * -0.5
-  scene.add(ground)
+  scene.add(water)
 
   return { ground, water }
 }
