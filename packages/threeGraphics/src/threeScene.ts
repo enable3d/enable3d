@@ -35,7 +35,10 @@ class ThreeScene extends ThreeGraphics {
     await this.init?.()
     await this._preload()
     await this._create()
-    requestAnimationFrame(this._update.bind(this))
+
+    this.renderer.setAnimationLoop(() => {
+      this._update()
+    })
   }
 
   private async _preload() {
@@ -46,19 +49,14 @@ class ThreeScene extends ThreeGraphics {
     await this.create?.()
   }
 
-  private _update(now: number) {
-    // update time and delta
-    now *= 0.001 // make it seconds
-    const delta = now - this.then
-    this.then = now
+  private _update() {
+    const delta = this.clock.getDelta() * 1000
     const time = this.clock.getElapsedTime()
 
-    this.update?.(time, delta)
-    this.physics.update(delta * 1000)
+    this.update?.(parseFloat(time.toFixed(3)), parseInt(delta.toString()))
+    this.physics.update(delta)
     this.physics.updateDebugger()
     this.renderer.render(this.scene, this.camera)
-
-    requestAnimationFrame(this._update.bind(this))
   }
 }
 

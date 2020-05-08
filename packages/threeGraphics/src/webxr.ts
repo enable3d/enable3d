@@ -32,7 +32,7 @@ export default class WebXR {
     return !!this.renderer?.xr?.isPresenting
   }
 
-  public get xr(): any {
+  public get xr() {
     return {
       getController: (id: number) => this.renderer.xr.getController(id),
       camera: this.WebXRCamera,
