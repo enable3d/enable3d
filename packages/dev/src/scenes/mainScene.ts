@@ -7,11 +7,10 @@ export default class MainScene extends Scene3D {
   }
 
   init() {
-    this.requestThirdDimension()
+    this.accessThirdDimension()
   }
 
   create() {
-    this.accessThirdDimension()
     this.third.warpSpeed('-ground')
 
     this.third.physics.add.ground({ y: -1, width: 4, height: 4, name: 'groundOne' })

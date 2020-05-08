@@ -32,14 +32,19 @@ export class Scene3D extends Phaser.Scene {
 
   /** Place this in the init() function */
   public requestThirdDimension() {
+    console.warn(
+      '[enable3d] You do not need requestThirdDimension() anymore. Place accessThirdDimension() inside init() instead!'
+    )
+  }
+
+  /** Place this in the init() function */
+  public accessThirdDimension(config: Phaser3DConfig = {}) {
     // set default background color to white
     this.cameras.main.setBackgroundColor(0xffffff)
     // @ts-ignore
     for (let key in this.third) delete this.third[key]
     delete this.third
-  }
-  /** Place this in the init() function */
-  public accessThirdDimension(config: Phaser3DConfig = {}) {
+    // create new third
     this.third = new Third(this, config)
   }
 
