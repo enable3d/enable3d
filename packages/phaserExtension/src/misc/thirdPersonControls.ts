@@ -21,6 +21,10 @@ export interface ThirdPersonControlsConfig {
   interpolationFactor?: number
   pointerLock?: boolean
   autoUpdate?: boolean
+  /** Theta in deg */
+  theta: number
+  /** Phi in deg */
+  phi: number
 }
 
 class ThirdPersonControls {
@@ -29,8 +33,10 @@ class ThirdPersonControls {
   public targetRadius: number
   public offset: Vector3
   public interpolationFactor: number
-  private theta: number
-  private phi: number
+  /** Theta in deg */
+  public theta: number
+  /** Phi in deg */
+  public phi: number
 
   constructor(private scene: Scene3D, private target: Object3D, private config: ThirdPersonControlsConfig) {
     const {
@@ -40,7 +46,9 @@ class ThirdPersonControls {
       targetRadius = 10,
       interpolationFactor = 0.05,
       pointerLock = true,
-      autoUpdate = true
+      autoUpdate = true,
+      theta = 0,
+      phi = 0
     } = config
 
     this.offset = offset
@@ -48,9 +56,8 @@ class ThirdPersonControls {
     this.radius = radius
     this.targetRadius = targetRadius
     this.interpolationFactor = interpolationFactor
-
-    this.theta = 0
-    this.phi = 0
+    this.theta = theta
+    this.phi = phi
 
     if (pointerLock) {
       scene.input.on('pointerdown', () => {
