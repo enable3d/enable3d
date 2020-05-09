@@ -8,11 +8,15 @@ import { ThreeGraphics } from './index'
 import { Clock } from '@enable3d/three-wrapper/dist/index'
 import { Phaser3DConfig } from '@enable3d/common/dist/types'
 
+interface ThreeSceneConfig extends Phaser3DConfig {
+  parent?: string
+}
+
 class ThreeScene extends ThreeGraphics {
   private then: number = 0
   public clock: Clock
 
-  constructor(config: Phaser3DConfig = {}) {
+  constructor(private config: ThreeSceneConfig = {}) {
     super(config)
     this._init()
   }
@@ -27,10 +31,9 @@ class ThreeScene extends ThreeGraphics {
 
     this.renderer.setSize(window.innerWidth, window.innerHeight)
 
-    const div = document.createElement('div')
-    div.id = 'three-scene'
-    document.body.appendChild(div)
-    document.getElementById('three-scene')?.appendChild(this.renderer.domElement)
+    const parent = this.config.parent ? document.getElementById(this.config.parent) : document.body
+    if (parent) parent.appendChild(this.renderer.domElement)
+    else console.error(`[enable3d] parent "${this.config.parent}" not found!`)
 
     await this.init?.()
     await this._preload()

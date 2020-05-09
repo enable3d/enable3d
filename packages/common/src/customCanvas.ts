@@ -11,6 +11,7 @@ import { WEBGL } from '@enable3d/three-wrapper/dist/index'
 
 interface CustomCanvasConfig {
   antialias?: boolean
+  parent?: string
 }
 
 /**
@@ -20,13 +21,15 @@ interface CustomCanvasConfig {
 const customCanvas = (
   customCanvasConfig: CustomCanvasConfig = {}
 ): { canvas: HTMLCanvasElement; context: CanvasRenderingContext2D } => {
-  const { antialias = false } = customCanvasConfig
+  const { antialias = false, parent: p = undefined } = customCanvasConfig
 
   // create canvas
   const myCustomCanvas: any = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas')
   myCustomCanvas.id = 'myCustomCanvas'
 
-  document.body.appendChild(myCustomCanvas)
+  const parent = p ? document.getElementById(p) : document.body
+  if (parent) parent.appendChild(myCustomCanvas)
+  else console.error(`[enable3d] parent "${p}" not found!`)
 
   const parameters: any = { antialias }
 
