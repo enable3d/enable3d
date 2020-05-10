@@ -144,9 +144,8 @@ export default class JoyStick extends EventEmitter {
     const { size } = styles
 
     const thumb = document.createElement('div')
-    thumb.style.cssText = `position: absolute; left: ${size / 4}px; top: ${size / 4}px; width: ${size / 2}px; height: ${
-      size / 2
-    }px; border-radius: 50%; background: #fff; `
+    thumb.style.cssText = `position: absolute; left: ${size / 4}px; top: ${size / 4}px; width: ${size /
+      2}px; height: ${size / 2}px; border-radius: 50%; background: #fff; `
     return thumb
   }
 
@@ -192,20 +191,16 @@ export default class JoyStick extends EventEmitter {
 
     if ('ontouchstart' in window) {
       document.ontouchmove = evt => {
-        evt.preventDefault()
         if (evt.target === element.domElement) this.move(evt, element)
       }
       document.ontouchend = evt => {
-        evt.preventDefault()
         if (evt.target === element.domElement) this.up(element)
       }
     } else {
       document.onmousemove = evt => {
-        evt.preventDefault()
         if (evt.target === element.domElement) this.move(evt, element)
       }
       document.onmouseup = evt => {
-        evt.preventDefault()
         if (evt.target === element.domElement) this.up(element)
       }
     }
