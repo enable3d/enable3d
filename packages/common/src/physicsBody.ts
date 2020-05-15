@@ -23,6 +23,7 @@ class PhysicsBody {
 
   private tmpEuler = new Euler()
   private tmpQuaternion = new Quaternion()
+
   private tmpBtVector3 = new Ammo.btVector3()
   private tmpBtVector3_1 = new Ammo.btVector3()
   private tmpBtQuaternion = new Ammo.btQuaternion(0, 0, 0, 1)
@@ -32,6 +33,19 @@ class PhysicsBody {
   constructor(private physics: any, public ammo: Ammo.btRigidBody) {
     // @ts-ignore
     this.name = ammo.name
+  }
+
+  /**
+   * Don't call this manually! Do physics.destroy() instead.
+   */
+  public destructor() {
+    // remove events
+    if (this.eventEmitter) this.eventEmitter.removeAllListeners()
+
+    // destroy tmp ammo values
+    Ammo.destroy(this.tmpBtVector3)
+    Ammo.destroy(this.tmpBtVector3_1)
+    Ammo.destroy(this.tmpBtQuaternion)
   }
 
   private setupEventEmitter() {

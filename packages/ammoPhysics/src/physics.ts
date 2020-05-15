@@ -59,6 +59,9 @@ class Physics extends EventEmitter {
         // remove from physics world
         this.physicsWorld.removeRigidBody(obj.body.ammo)
 
+        // call destructor on body
+        body.destructor()
+
         // reset properties
         obj.body = undefined
         obj.hasBody = false
