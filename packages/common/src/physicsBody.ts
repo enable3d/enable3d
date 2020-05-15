@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { ExtendedObject3D } from './types'
+import { ExtendedObject3D, XYZ } from './types'
 
 import EventEmitter from 'eventemitter3'
 import { Euler, Quaternion } from '@enable3d/three-wrapper/dist/index'
@@ -24,6 +24,7 @@ class PhysicsBody {
   private tmpEuler = new Euler()
   private tmpQuaternion = new Quaternion()
   private tmpBtVector3 = new Ammo.btVector3()
+  private tmpBtVector3_1 = new Ammo.btVector3()
   private tmpBtQuaternion = new Ammo.btQuaternion(0, 0, 0, 1)
 
   private eventEmitter: EventEmitter
@@ -192,6 +193,7 @@ class PhysicsBody {
     this.ammo.setAngularVelocity(this.tmpBtVector3)
   }
 
+  // Apply Force methods
   public applyForce(x: number, y: number, z: number) {
     this.tmpBtVector3.setValue(x, y, z)
     this.ammo.applyCentralImpulse(this.tmpBtVector3)
@@ -207,6 +209,37 @@ class PhysicsBody {
   public applyForceZ(value: number) {
     this.tmpBtVector3.setValue(0, 0, value)
     this.ammo.applyCentralImpulse(this.tmpBtVector3)
+  }
+
+  // Apply "Something" Methods
+  public applyCentralForce(x: number, y: number, z: number) {
+    this.tmpBtVector3.setValue(x, y, z)
+    this.ammo.applyCentralForce(this.tmpBtVector3)
+  }
+  public applyCentralImpulse(x: number, y: number, z: number) {
+    this.tmpBtVector3.setValue(x, y, z)
+    this.ammo.applyCentralImpulse(this.tmpBtVector3)
+  }
+  public applyCentralLocalForce(x: number, y: number, z: number) {
+    this.tmpBtVector3.setValue(x, y, z)
+    this.ammo.applyCentralLocalForce(this.tmpBtVector3)
+  }
+  public applyImpulse(impulse: XYZ, relativePosition: XYZ) {
+    this.tmpBtVector3.setValue(impulse.x || 0, impulse.y || 0, impulse.z || 0)
+    this.tmpBtVector3_1.setValue(relativePosition.x || 0, relativePosition.y || 0, relativePosition.z || 0)
+    this.ammo.applyImpulse(this.tmpBtVector3, this.tmpBtVector3_1)
+  }
+  public applyLocalTorque(x: number, y: number, z: number) {
+    this.tmpBtVector3.setValue(x, y, z)
+    this.ammo.applyLocalTorque(this.tmpBtVector3)
+  }
+  public applyTorque(x: number, y: number, z: number) {
+    this.tmpBtVector3.setValue(x, y, z)
+    this.ammo.applyTorque(this.tmpBtVector3)
+  }
+  public applyTorqueImpulse(x: number, y: number, z: number) {
+    this.tmpBtVector3.setValue(x, y, z)
+    this.ammo.applyTorqueImpulse(this.tmpBtVector3)
   }
 
   /**
