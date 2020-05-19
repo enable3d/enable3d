@@ -11,9 +11,8 @@
   },
   "keywords": [
     "phaser",
-    "phaser.js",
-    "three.js",
-    "ammo.js",
+    "three",
+    "ammo",
     "3d",
     "game",
     "framework",
@@ -35,8 +34,6 @@
     "@enable3d/common": "^0.17.0",
     "@enable3d/three-graphics": "^0.17.0",
     "@enable3d/three-wrapper": "^0.17.0",
-    "@types/chroma-js": "^2.0.0",
-    "chroma-js": "^2.1.0",
     "eventemitter3": "^4.0.0",
     "phaser": "^3.22.0"
   }

@@ -8,7 +8,7 @@ import {
   WebGLRenderer,
   Texture
 } from '@enable3d/three-wrapper/dist/index'
-import { Color } from '@enable3d/common/dist/types'
+import { Color } from '../types'
 
 // from this example:
 // https://threejs.org/examples/?q=water#webgl_water

@@ -56,13 +56,37 @@ const createScreenshotsDirectory = () => {
   }
 }
 
+const removeAllExistingScreenshots = () => {
+  // remove all screenshots
+  const screenshotsPath = path.resolve(__dirname, '../screenshots')
+  fs.readdir(screenshotsPath, function(err, files) {
+    if (err) {
+      return console.log('Unable to scan directory: ' + err)
+    }
+
+    files.forEach(function(file) {
+      if (/\.png$/.test(file)) {
+        fs.unlink(path.join(screenshotsPath, file), err => {
+          if (err) {
+            console.error(err)
+            return
+          }
+          //file removed
+        })
+      }
+    })
+  })
+}
+
 const main = async () => {
   createScreenshotsDirectory()
+  removeAllExistingScreenshots()
 
   const examples = await getExamples()
   const template = fs.readFileSync(path.resolve(__dirname, './template.js'), { encoding: 'utf8' })
 
-  examples.forEach(e => {
+  examples.forEach((e, i) => {
+    // if (i >= 4) return
     const t = template.replace('EXAMPLES_PLACEHOLDER', `'${e}'`)
     fs.writeFileSync(path.resolve(__dirname, `${e.trim()}.tmp.test.js`), t)
   })

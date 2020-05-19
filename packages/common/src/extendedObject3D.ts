@@ -18,7 +18,7 @@ import PhysicsBody from './physicsBody'
 import { AnimationAction } from '@enable3d/three-wrapper/dist/index'
 import logger from './logger'
 
-interface ExtendedObject3D extends Line, Mesh, Points {
+export interface ExtendedObject3D extends Line, Mesh, Points {
   isLine: any
   isPoints: any
   isMesh: any
@@ -28,7 +28,7 @@ interface ExtendedObject3D extends Line, Mesh, Points {
 /**
  * Extends the Object3D class from THREE.js and implements properties from Line, Mesh and Points.
  */
-class ExtendedObject3D extends Object3D {
+export class ExtendedObject3D extends Object3D {
   private vector3 = new Vector3()
   public shape: string
   public name: string

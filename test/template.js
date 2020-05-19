@@ -63,8 +63,8 @@ describe.each([EXAMPLES_PLACEHOLDER])('Example: (%s)', example => {
           isBundle = true
           try {
             const file = getFile(b.bundle)
-            injected = true
             request.respond({ body: file })
+            injected = true
           } catch {
             request.continue()
           }

@@ -18,9 +18,9 @@ import PhysicsBody from './physicsBody'
 import { AnimationAction } from '@enable3d/three-wrapper/dist/index'
 import logger from './logger'
 
-interface ExtendedMesh extends Mesh {}
+export interface ExtendedMesh extends Mesh {}
 
-class ExtendedMesh extends Mesh {
+export class ExtendedMesh extends Mesh {
   private vector3 = new Vector3()
   public shape: string
   public name: string
@@ -73,5 +73,3 @@ class ExtendedMesh extends Mesh {
     }
   }
 }
-
-export default ExtendedMesh

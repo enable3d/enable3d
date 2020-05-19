@@ -12,7 +12,6 @@
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
   "dependencies": {
-    "@enable3d/three-wrapper": "^0.17.0",
-    "chroma-js": "^2.1.0"
+    "@enable3d/three-wrapper": "^0.17.0"
   }
 }

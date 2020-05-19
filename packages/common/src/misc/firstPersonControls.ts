@@ -10,8 +10,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Scene3D } from '..'
-import { Object3D, Vector2, Vector3 } from '@enable3d/three-graphics/dist/index'
+import { Object3D, Vector2, Vector3, PerspectiveCamera, OrthographicCamera } from '@enable3d/three-wrapper/dist'
 
 export interface FirstPersonControlsConfig {
   offset?: Vector3
@@ -32,7 +31,11 @@ class FirstPersonControls {
   private theta: number
   private phi: number
 
-  constructor(private scene: Scene3D, private target: Object3D, private config: FirstPersonControlsConfig) {
+  constructor(
+    private camera: PerspectiveCamera | OrthographicCamera,
+    private target: Object3D,
+    private config: FirstPersonControlsConfig
+  ) {
     const {
       offset = new Vector3(0, 0, 0),
       sensitivity = new Vector2(1, 1),
@@ -52,27 +55,27 @@ class FirstPersonControls {
     this.theta = 0
     this.phi = 0
 
-    if (pointerLock) {
-      scene.input.on('pointerdown', () => {
-        scene.input.mouse.requestPointerLock()
-      })
-      scene.input.on('pointermove', (pointer: PointerEvent) => {
-        if (scene.input.mouse.locked) {
-          this.update(pointer.movementX, pointer.movementY)
-        }
-      })
-    }
+    // if (pointerLock) {
+    //   scene.input.on('pointerdown', () => {
+    //     scene.input.mouse.requestPointerLock()
+    //   })
+    //   scene.input.on('pointermove', (pointer: PointerEvent) => {
+    //     if (scene.input.mouse.locked) {
+    //       this.update(pointer.movementX, pointer.movementY)
+    //     }
+    //   })
+    // }
 
-    if (autoUpdate) {
-      scene.events.on('update', () => {
-        this.update(0, 0)
-      })
-    }
+    // if (autoUpdate) {
+    //   scene.events.on('update', () => {
+    //     this.update(0, 0)
+    //   })
+    // }
   }
 
   update(deltaX: number, deltaY: number) {
     const center = this.target.position.clone().add(this.offset)
-    this.scene.third.camera.position.copy(center)
+    this.camera.position.copy(center)
 
     this.theta -= deltaX * (this.sensitivity.x / 2)
     this.theta %= 360
@@ -84,8 +87,8 @@ class FirstPersonControls {
     lookAt.y = center.y + this.radius * Math.sin((this.phi * Math.PI) / 180)
     lookAt.z = center.z + this.radius * Math.cos((this.theta * Math.PI) / 180) * Math.cos((this.phi * Math.PI) / 180)
 
-    this.scene.third.camera.updateMatrix()
-    this.scene.third.camera.lookAt(lookAt)
+    this.camera.updateMatrix()
+    this.camera.lookAt(lookAt)
   }
 }
 

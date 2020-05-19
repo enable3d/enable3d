@@ -2,9 +2,6 @@
   "compilerOptions": {
     "rootDir": "./packages",
     "baseUrl": "./packages",
-    "paths": {
-      "@enable3d/*": ["*/src"]
-    },
     "target": "ES5",
     "module": "ESNext",
     "lib": ["DOM", "ESNext", "ScriptHost"],

@@ -1,5 +1,5 @@
-import { THREE } from '@enable3d/phaser-extension'
-import { AmmoPhysics, PhysicsLoader } from '@enable3d/ammo-physics'
+import { THREE } from '@enable3d/three-graphics'
+import { AmmoPhysics, PhysicsLoader, ExtendedObject3D, ExtendedMesh } from '@enable3d/ammo-physics'
 
 const MainScene = () => {
   // scene
@@ -35,8 +35,10 @@ const MainScene = () => {
   physics.debug?.enable()
   const { factory } = physics
 
-  physics.add.ground({ width: 20, height: 20 })
-  physics.add.sphere({ y: 5 })
+  /**
+   * Add your objects below here
+   */
+  physics.add.ground({ width: 50, height: 50 })
 
   // clock
   const clock = new THREE.Clock()

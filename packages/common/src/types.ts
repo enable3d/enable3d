@@ -11,8 +11,8 @@ import {
   LineBasicMaterialParameters,
   PointsMaterialParameters,
   MeshNormalMaterialParameters,
-  PerspectiveCamera as THREE_PerspectiveCamera,
-  OrthographicCamera as THREE_OrthographicCamera,
+  PerspectiveCamera,
+  OrthographicCamera,
   Shape,
   ExtrudeGeometryOptions,
   MeshLambertMaterialParameters,
@@ -22,8 +22,8 @@ import {
   Material,
   WebGLRenderer
 } from '@enable3d/three-wrapper/dist/index'
-import ExtendedObject3D from './extendedObject3D'
-import ExtendedMesh from './extendedMesh'
+import { ExtendedObject3D } from './extendedObject3D'
+import { ExtendedMesh } from './extendedMesh'
 
 export { ExtendedObject3D }
 export { ExtendedMesh }
@@ -41,10 +41,10 @@ export {
   Group
 } from '@enable3d/three-wrapper/dist/index'
 
-export interface Phaser3DConfig {
+export interface ThreeGraphicsConfig {
   anisotropy?: number
   /** Add your own THREE.js camera */
-  camera?: THREE_PerspectiveCamera | THREE_OrthographicCamera
+  camera?: PerspectiveCamera | OrthographicCamera
   enableXR?: boolean
   antialias?: boolean
   /** Default gravity is { y: -9.81 } */
@@ -54,6 +54,7 @@ export interface Phaser3DConfig {
   // Default is 1/60
   fixedTimeStep?: number
   renderer?: WebGLRenderer
+  usePhysics?: boolean
 }
 
 export interface XYZ {
@@ -75,14 +76,14 @@ interface Makeup {
   material?: any
 }
 
-export interface PerspectiveCamera extends XYZ {
+export interface PerspectiveCameraConfig extends XYZ {
   fov?: number
   aspect?: number
   near?: number
   far?: number
 }
 
-export interface OrthographicCamera extends XYZ {
+export interface OrthographicCameraConfig extends XYZ {
   left?: number
   right?: number
   top?: number
@@ -138,7 +139,6 @@ export interface AddMaterial {
 
 interface GeometryConfig {
   name?: string
-  friction?: number
   /** Set the collision flags. 0 is DYNAMIC, 1 is STATIC, 2 is KINEMATIC, 4 GHOST */
   collisionFlags?: number
   breakable?: boolean
@@ -213,17 +213,20 @@ export interface HeightMapConfig {
   colorScale?: any // chroma.Scale<chroma.Color>
 }
 
+export type CustomCompoundShape = { shape: string; [property: string]: any }[]
+
 export interface AddExistingConfig extends XYZ {
   width?: number
   height?: number
   depth?: number
   radius?: number
   shape?: string
-  shapes?: AddExistingConfig[]
+  compound?: CustomCompoundShape
   mass?: number
+  /** Set the collision flags. 0 is DYNAMIC, 1 is STATIC, 2 is KINEMATIC, 4 GHOST */
+  collisionFlags?: number
   autoCenter?: boolean
   offset?: { x?: number; y?: number; z?: number }
   breakable?: boolean
-  addRigidBody?: boolean
   addChildren?: boolean
 }

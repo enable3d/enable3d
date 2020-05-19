@@ -10,8 +10,14 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Scene3D } from '..'
-import { Object3D, Vector2, Vector3, MathUtils as THREE_Math } from '@enable3d/three-graphics/dist/index'
+import {
+  Object3D,
+  Vector2,
+  Vector3,
+  MathUtils as THREE_Math,
+  OrthographicCamera,
+  PerspectiveCamera
+} from '@enable3d/three-wrapper/dist'
 
 export interface ThirdPersonControlsConfig {
   offset?: Vector3
@@ -22,9 +28,9 @@ export interface ThirdPersonControlsConfig {
   pointerLock?: boolean
   autoUpdate?: boolean
   /** Theta in deg */
-  theta: number
+  theta?: number
   /** Phi in deg */
-  phi: number
+  phi?: number
 }
 
 class ThirdPersonControls {
@@ -38,7 +44,11 @@ class ThirdPersonControls {
   /** Phi in deg */
   public phi: number
 
-  constructor(private scene: Scene3D, private target: Object3D, private config: ThirdPersonControlsConfig) {
+  constructor(
+    private camera: PerspectiveCamera | OrthographicCamera,
+    private target: Object3D,
+    private config: ThirdPersonControlsConfig
+  ) {
     const {
       offset = new Vector3(0, 0, 0),
       sensitivity = new Vector2(1, 1),
@@ -59,22 +69,22 @@ class ThirdPersonControls {
     this.theta = theta
     this.phi = phi
 
-    if (pointerLock) {
-      scene.input.on('pointerdown', () => {
-        scene.input.mouse.requestPointerLock()
-      })
-      scene.input.on('pointermove', (pointer: PointerEvent) => {
-        if (scene.input.mouse.locked) {
-          this.update(pointer.movementX, pointer.movementY)
-        }
-      })
-    }
+    // if (pointerLock) {
+    //   scene.input.on('pointerdown', () => {
+    //     scene.input.mouse.requestPointerLock()
+    //   })
+    //   scene.input.on('pointermove', (pointer: PointerEvent) => {
+    //     if (scene.input.mouse.locked) {
+    //       this.update(pointer.movementX, pointer.movementY)
+    //     }
+    //   })
+    // }
 
-    if (autoUpdate) {
-      scene.events.on('update', () => {
-        this.update(0, 0)
-      })
-    }
+    // if (autoUpdate) {
+    //   scene.events.on('update', () => {
+    //     this.update(0, 0)
+    //   })
+    // }
   }
 
   update(deltaX: number, deltaY: number) {
@@ -87,14 +97,14 @@ class ThirdPersonControls {
 
     this.radius = THREE_Math.lerp(this.radius, this.targetRadius, this.interpolationFactor)
 
-    this.scene.third.camera.position.x =
+    this.camera.position.x =
       target.x + this.radius * Math.sin((this.theta * Math.PI) / 180) * Math.cos((this.phi * Math.PI) / 180)
-    this.scene.third.camera.position.y = target.y + this.radius * Math.sin((this.phi * Math.PI) / 180)
-    this.scene.third.camera.position.z =
+    this.camera.position.y = target.y + this.radius * Math.sin((this.phi * Math.PI) / 180)
+    this.camera.position.z =
       target.z + this.radius * Math.cos((this.theta * Math.PI) / 180) * Math.cos((this.phi * Math.PI) / 180)
 
-    this.scene.third.camera.updateMatrix()
-    this.scene.third.camera.lookAt(target)
+    this.camera.updateMatrix()
+    this.camera.lookAt(target)
   }
 }
 

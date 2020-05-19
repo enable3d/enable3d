@@ -6,7 +6,7 @@
 
 import DebugDrawer from './debugDrawer'
 import EventEmitter from 'eventemitter3'
-import { ExtendedObject3D, Phaser3DConfig } from '@enable3d/common/dist/types'
+import { ExtendedObject3D, ThreeGraphicsConfig, ExtendedMesh } from '@enable3d/common/dist/types'
 import { Vector3, Scene, Quaternion, Euler } from '@enable3d/three-wrapper/dist/index'
 import { ConvexObjectBreaker } from './convexObjectBreaker'
 import DefaultMaterial from '@enable3d/common/dist/defaultMaterial'
@@ -16,8 +16,8 @@ class Physics extends EventEmitter {
   public tmpTrans: Ammo.btTransform
   public physicsWorld: Ammo.btDiscreteDynamicsWorld
   protected dispatcher: Ammo.btCollisionDispatcher
-  protected rigidBodies: ExtendedObject3D[] = []
-  protected objectsAmmo: { [ptr: number]: any } = {}
+  public rigidBodies: ExtendedObject3D[] = []
+  public objectsAmmo: { [ptr: number]: ExtendedObject3D } = {}
   protected earlierDetectedCollisions: { combinedName: string; collision: boolean }[] = []
   protected debugDrawer: DebugDrawer
   private convexBreaker: any
@@ -38,16 +38,19 @@ class Physics extends EventEmitter {
 
   protected defaultMaterial: DefaultMaterial
 
-  constructor(protected scene: Scene | 'headless', public config: Phaser3DConfig = {}) {
+  constructor(protected scene: Scene | 'headless', public config: ThreeGraphicsConfig = {}) {
     super()
   }
 
   /** Destroys a physics body. */
-  public destroy(body: PhysicsBody) {
-    if (typeof body?.ammo === 'undefined') return
+  public destroy(body: PhysicsBody | ExtendedObject3D | ExtendedMesh) {
+    // @ts-ignore
+    const b: PhysicsBody = Object.keys(body).includes('body') ? body.body : body
 
-    const ptr = Object.values(body.ammo)[0]
-    const name = Object.values(body.ammo)[1]
+    if (typeof b?.ammo === 'undefined') return
+
+    const ptr = Object.values(b.ammo)[0]
+    const name = Object.values(b.ammo)[1]
     const obj = this.objectsAmmo[ptr]
 
     // TODO: Remember why I track objectsAmmo and rigidBodies?
@@ -63,6 +66,7 @@ class Physics extends EventEmitter {
         body.destructor()
 
         // reset properties
+        // @ts-ignore
         obj.body = undefined
         obj.hasBody = false
 
@@ -77,6 +81,9 @@ class Physics extends EventEmitter {
         }
       }
     }
+
+    // @ts-ignore
+    if (this.scene === 'headless' && obj) obj = null
   }
 
   protected setup() {

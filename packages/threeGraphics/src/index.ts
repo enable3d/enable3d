@@ -1,8 +1,5 @@
-import { ThreeGraphics } from './threeGraphics'
+import { ThreeGraphics } from './core'
 export { ThreeGraphics }
-
-import { ThreeScene } from './threeScene'
-export { ThreeScene }
 
 import { PhysicsLoader } from '@enable3d/common/dist/physicsLoader'
 export { PhysicsLoader }

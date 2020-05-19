@@ -20,18 +20,16 @@ import { ExtendedObject3D, HeightMapConfig } from '@enable3d/common/dist/types'
 import logger from '@enable3d/common/dist/logger'
 
 export default class HeightMap {
-  public scene: Scene
+  constructor(private scene: Scene) {}
 
-  constructor() {}
-
-  protected addHeightMap(texture: Texture, config: HeightMapConfig = {}) {
-    const heightMap = this.makeHeightMap(texture, config)
+  public add(texture: Texture, config: HeightMapConfig = {}) {
+    const heightMap = this.make(texture, config)
     if (heightMap) this.scene.add(heightMap)
     else logger('Could not make heightmap')
     return heightMap
   }
 
-  protected makeHeightMap(texture: Texture, config: HeightMapConfig = {}) {
+  public make(texture: Texture, config: HeightMapConfig = {}) {
     // var spacingX = 3
     // var spacingZ = 3
     // var heightOffset = 2

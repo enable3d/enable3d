@@ -6,7 +6,7 @@
 
 import EventEmitter from 'eventemitter3'
 
-interface JoyStickButton {
+export interface JoyStickButton {
   id: number
   domElement: HTMLElement
   offset: {
@@ -15,7 +15,7 @@ interface JoyStickButton {
   }
 }
 
-interface JoyStickAxis extends JoyStickButton {
+export interface JoyStickAxis extends JoyStickButton {
   maxRadius: number
   maxRadiusSquared: number
   origin: {
@@ -29,7 +29,7 @@ interface JoyStickAxis extends JoyStickButton {
 // This class is based on a file I found online called toon3d.js
 // Unfortunately I could not find its license or author.
 // I just ported it to TypeScript and improved the code.
-export default class JoyStick extends EventEmitter {
+export class JoyStick extends EventEmitter {
   id = -1
 
   get add() {
@@ -80,9 +80,9 @@ export default class JoyStick extends EventEmitter {
     }
 
     return {
-      onMove: (event: (data: { top: number; right: number }) => void) => {
-        this.on(`axis_onmove_${element.id}`, data => {
-          event(data)
+      onMove: (event: (delta: { x: number; y: number }) => void) => {
+        this.on(`axis_onmove_${element.id}`, delta => {
+          event(delta)
         })
       }
     }
@@ -200,8 +200,8 @@ export default class JoyStick extends EventEmitter {
       document.onmousemove = evt => {
         if (evt.target === element.domElement) this.move(evt, element)
       }
-      document.onmouseup = evt => {
-        if (evt.target === element.domElement) this.up(element)
+      document.onmouseup = _evt => {
+        this.up(element)
       }
     }
   }

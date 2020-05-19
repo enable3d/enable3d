@@ -7,9 +7,9 @@ module.exports = (env, argv) => {
   return {
     mode: 'production',
     devtool: 'source-map',
-    entry: path.resolve(__dirname, '../packages/threeGraphics/src/bundle.ts'),
+    entry: path.resolve(__dirname, '../packages/enable3d/src/bundle.ts'),
     output: {
-      filename: `enable3d.threeGraphics.${argv.packageVersion}.min.js`,
+      filename: `enable3d.framework.${argv.packageVersion}.min.js`,
       path: path.resolve(__dirname, `${argv.path}`),
       library: 'ENABLE3D',
       libraryTarget: 'umd'
@@ -23,7 +23,7 @@ module.exports = (env, argv) => {
           test: /\.tsx?$/,
           loader: 'ts-loader',
           options: {
-            configFile: 'packages/threeGraphics/tsconfig.bundle.json'
+            configFile: 'packages/enable3d/tsconfig.bundle.json'
           }
         }
       ]

@@ -56,8 +56,8 @@ import {
   DoubleSide,
   ConeBufferGeometry
 } from '@enable3d/three-wrapper/dist/index'
-import ExtendedObject3D from './extendedObject3D'
-import ExtendedMesh from './extendedMesh'
+import { ExtendedObject3D } from './extendedObject3D'
+import { ExtendedMesh } from './extendedMesh'
 import logger from './logger'
 import DefaultMaterial from './defaultMaterial'
 

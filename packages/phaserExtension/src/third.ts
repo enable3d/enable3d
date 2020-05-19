@@ -4,33 +4,40 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { ThreeGraphics } from '@enable3d/three-graphics/dist/index'
-import { Phaser3DConfig } from '@enable3d/common/dist/types'
-import { Scene3D } from '.'
-import {
-  WebGLRenderer,
-  Object3D,
-  Texture,
-  RGBAFormat,
-  GLTFLoader,
-  FBXLoader
-} from '@enable3d/three-graphics/dist/index'
-import { FirstPersonControlsConfig, FirstPersonControls } from './misc/firstPersonControls'
-import { ThirdPersonControlsConfig, ThirdPersonControls } from './misc/thirdPersonControls'
-import JoyStick from './misc/joystick'
+import { WebGLRenderer, ThreeGraphics } from '@enable3d/three-graphics/dist/index'
+import { ThreeGraphicsConfig, ExtendedObject3D, ExtendedMesh } from '@enable3d/common/dist/types'
+import { Scene3D } from './scene3d'
+
+import * as Plugins from '@enable3d/three-graphics/dist/plugins/index'
 
 /**
  * The phaser wrapper for ThreeGraphics, which is a separate module
  */
 class Third extends ThreeGraphics {
   public scene3D: Scene3D
+  public isXrEnabled: boolean
+  // public camera: THREE.PerspectiveCamera | THREE.OrthographicCamera,
+
+  // plugins
+  public load: Plugins.Loaders
+  public lights: Plugins.Lights
+  public transform: Plugins.Transform
+  public csg: Plugins.CSG
+  public heightMap: Plugins.HeightMap
+  public webXR: Plugins.WebXR
+  public misc: Plugins.Misc
+  public cameras: Plugins.Cameras
+
+  private factories: Plugins.Factories
+  private ws: Plugins.WarpSpeed
+  private mixers: Plugins.Mixers
 
   /**
    * Start Phaser3D
    * @param scene Add the current Phaser Scene
    * @param config Phaser3D Config
    */
-  constructor(scene3D: Scene3D, config: Phaser3DConfig = {}) {
+  constructor(scene3D: Scene3D, config: ThreeGraphicsConfig = {}) {
     // add a custom renderer to ThreeGraphics
     config.renderer = new WebGLRenderer({
       canvas: scene3D.sys.game.canvas as HTMLCanvasElement,
@@ -39,10 +46,18 @@ class Third extends ThreeGraphics {
 
     super(config)
 
+    const { enableXR = false } = config
+    this.isXrEnabled = enableXR
+
     //  We don't want three.js to wipe our gl context!
     this.renderer.autoClear = false
 
     this.scene3D = scene3D
+
+    // load xr plugin
+    if (enableXR) {
+      this.webXR = Plugins.WebXR.Enable(this.renderer, this.camera)
+    }
 
     // xr renderer
     if (this.isXrEnabled) {
@@ -60,7 +75,7 @@ class Third extends ThreeGraphics {
 
     if (!this.isXrEnabled) {
       scene3D.events.on('postupdate', (_time: number, delta: number) => {
-        this.mixers.update(delta)
+        this.animationMixers.update(delta)
         this.physics?.update(delta)
         this.physics?.updateDebugger()
       })
@@ -76,56 +91,53 @@ class Third extends ThreeGraphics {
       }
     }
 
+    // plugins
+    this.load = new Plugins.Loaders(this.cache, this.textureAnisotropy)
+    this.lights = new Plugins.Lights(this.scene)
+    this.transform = new Plugins.Transform(this.camera, this.renderer)
+    this.csg = new Plugins.CSG(this.scene, this.transform)
+    this.heightMap = new Plugins.HeightMap(this.scene)
+    this.factories = new Plugins.Factories(this.scene)
+    this.misc = new Plugins.Misc(this.scene, this.renderer, this.factories)
+    this.cameras = new Plugins.Cameras()
+    this.ws = new Plugins.WarpSpeed(
+      this.scene,
+      this.renderer,
+      this.camera,
+      this.lights,
+      this.physics,
+      this.load,
+      this.factories
+    )
+    this.mixers = new Plugins.Mixers()
+
     // remove the update event which is used by ThreeGraphics.ts and AmmoPhysics.ts
     scene3D.events.once('shutdown', () => {
       scene3D.events.removeListener('update')
     })
   }
 
-  // this extends load() from threeGraphics.ts, with this.loadFromCache
-  public get load() {
-    return {
-      texture: (url: string) => this.loadTexture(url),
-      gltf: (url: string, cb: Function) => this.loadGLTF(url, cb),
-      fbx: (path: string, cb: (object: any) => void) => this.loadFBX(path, cb),
-      async: this.loadAsync,
-      cache: this.loadFromCache
-    }
+  /** Destroys a object and its body. */
+  public destroy(obj: ExtendedObject3D | ExtendedMesh) {
+    this.physics?.destroy(obj.body)
+    this.scene.remove(obj)
+    // @ts-ignore
+    obj = null
   }
-
-  private get loadFromCache() {
-    return {
-      gltf: (key: string, cb: Function) => {
-        const loader = new GLTFLoader()
-        const data = this.scene3D.cache.binary.get(key)
-        loader.parse(data, '', object => cb(object))
-      },
-      texture: (key: string) => {
-        const texture = new Texture()
-        texture.image = this.scene3D.textures.get(key).getSourceImage()
-        texture.format = RGBAFormat
-        texture.needsUpdate = true
-        texture.anisotropy = this.textureAnisotropy
-        // texture.encoding = sRGBEncoding
-        return texture
-      }
-    }
+  public async warpSpeed(...features: Plugins.WarpedStartFeatures[]) {
+    return await this.ws.warpSpeed(...features)
   }
-
-  get controls() {
-    return {
-      add: this.addControls
-    }
+  public haveSomeFun(numberOfElements: number = 20) {
+    Plugins.HaveSomeFun(numberOfElements, this.physics)
   }
-
-  private get addControls() {
-    return {
-      firstPerson: (target: Object3D, config: FirstPersonControlsConfig) =>
-        new FirstPersonControls(this.scene3D, target, config),
-      thirdPerson: (target: Object3D, config: ThirdPersonControlsConfig) =>
-        new ThirdPersonControls(this.scene3D, target, config),
-      joystick: () => new JoyStick()
-    }
+  public get animationMixers() {
+    return this.mixers.mixers
+  }
+  public get make() {
+    return this.factories.make
+  }
+  public get add() {
+    return this.factories.add
   }
 }
 

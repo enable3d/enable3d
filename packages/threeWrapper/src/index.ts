@@ -6,11 +6,11 @@ export { ConvexBufferGeometry }
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 export { FBXLoader }
 
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-export { GLTFLoader }
+import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+export { GLTFLoader, GLTF }
 
-import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader'
-export { SVGLoader }
+import { SVGLoader, SVGResult } from 'three/examples/jsm/loaders/SVGLoader'
+export { SVGLoader, SVGResult }
 
 import { VRButton } from 'three/examples/jsm/webxr/VRButton'
 export { VRButton }

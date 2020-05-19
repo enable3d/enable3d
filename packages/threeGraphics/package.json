@@ -1,23 +1,18 @@
 {
   "name": "@enable3d/three-graphics",
   "version": "0.17.0",
-  "description": "3D Framework wrapping three.js and ammo.js",
+  "description": "3D library wrapping three.js and ammo.js",
   "main": "dist/index.js",
   "scripts": {
     "tsc": "tsc",
     "update": "npm update",
-    "fix": "npm audit fix",
-    "bundle": "webpack --config ../../webpack/webpack.threeGraphics.js --path=../bundles --packageVersion=${npm_package_version}"
+    "fix": "npm audit fix"
   },
   "keywords": [
-    "phaser",
-    "phaser.js",
+    "three",
     "three.js",
-    "ammo.js",
-    "3d",
-    "game",
-    "framework",
-    "physics"
+    "ammo",
+    "ammo.js"
   ],
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
@@ -33,8 +28,6 @@
   "dependencies": {
     "@enable3d/ammo-physics": "^0.17.0",
     "@enable3d/common": "^0.17.0",
-    "@enable3d/three-wrapper": "^0.17.0",
-    "@types/chroma-js": "^2.0.0",
-    "chroma-js": "^2.1.0"
+    "@enable3d/three-wrapper": "^0.17.0"
   }
 }

@@ -8,7 +8,8 @@
 // which is a typescript rewrite of https://github.com/manthrax/THREE-CSGMesh
 // which as originally written by Copyright (c) 2011 Evan Wallace (http://madebyevan.com/), under the MIT license.
 
-import { Vector3, Geometry, Matrix3, Face3, Mesh, Matrix4 } from '@enable3d/three-wrapper/dist/index'
+import { Vector3, Geometry, Matrix3, Face3, Mesh, Matrix4, Scene } from '@enable3d/three-wrapper/dist/index'
+import Transform from './transform'
 
 /**
  * CSG wrapper for enable3d
@@ -18,7 +19,7 @@ import { Vector3, Geometry, Matrix3, Face3, Mesh, Matrix4 } from '@enable3d/thre
  * and then transform them back to buffer geometries.
  */
 export default class CSGWrapper {
-  protected add: any
+  constructor(private scene: Scene, private transform: Transform) {}
 
   private toGeometry(meshA: Mesh, meshB: Mesh) {
     // @ts-ignore
@@ -32,41 +33,33 @@ export default class CSGWrapper {
     meshC.geometry = this.transform.geometryToBufferGeometry(meshC.geometry)
   }
 
-  public get mesh() {
-    return {
-      union: (meshA: Mesh, meshB: Mesh) => this.csgUnion(meshA, meshB),
-      subtract: (meshA: Mesh, meshB: Mesh) => this.csgSubtract(meshA, meshB),
-      intersect: (meshA: Mesh, meshB: Mesh) => this.csgIntersect(meshA, meshB)
-    }
-  }
-
-  private csgUnion(meshA: Mesh, meshB: Mesh): Mesh {
+  public union(meshA: Mesh, meshB: Mesh): Mesh {
     this.toGeometry(meshA, meshB)
 
     const meshC = this.doCSG(meshA, meshB, 'union')
     this.toBufferGeometry(meshC)
 
-    this.add.existing(meshC)
+    this.scene.add(meshC)
     return meshC
   }
 
-  private csgSubtract(meshA: Mesh, meshB: Mesh): Mesh {
+  public subtract(meshA: Mesh, meshB: Mesh): Mesh {
     this.toGeometry(meshA, meshB)
 
     const meshC = this.doCSG(meshA, meshB, 'subtract')
     this.toBufferGeometry(meshC)
 
-    this.add.existing(meshC)
+    this.scene.add(meshC)
     return meshC
   }
 
-  private csgIntersect(meshA: any, meshB: any): Mesh {
+  public intersect(meshA: any, meshB: any): Mesh {
     this.toGeometry(meshA, meshB)
 
     const meshC = this.doCSG(meshA, meshB, 'intersect')
     this.toBufferGeometry(meshC)
 
-    this.add.existing(meshC)
+    this.scene.add(meshC)
     return meshC
   }
 

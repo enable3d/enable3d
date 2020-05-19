@@ -1,88 +1,83 @@
 import {
-  ThreeScene,
+  Project,
+  Scene3D,
   PhysicsLoader,
+  ExtendedObject3D,
+  FirstPersonControls,
+  ThirdPersonControls,
   THREE,
-  Types
-} from '@enable3d/phaser-extension/node_modules/@enable3d/three-graphics'
+  Types,
+  PointerDrag,
+  PointerLock
+} from 'enable3d'
 
-const startThreeScene = () => {
-  class MainScene extends ThreeScene {
-    box: Types.ExtendedObject3D
-    heroModel: any
-    side: any
-    top: any
+const isTouchDevice = 'ontouchstart' in window
 
-    async init() {
-      const DPR = window.devicePixelRatio
-      this.renderer.setPixelRatio(Math.min(2, DPR))
-    }
+class MainScene extends Scene3D {
+  async create() {
+    const features = await this.warpSpeed()
 
-    async preload() {
-      this.side = await this.load.async.texture('/assets/grass.jpg')
-      this.top = await this.load.async.texture('/assets/heightmap-simple.png')
-      this.heroModel = await this.load.async.gltf('/assets/hero.glb')
-    }
+    this.physics.debug?.enable()
 
-    create() {
-      this.warpSpeed()
+    new PointerLock(this.canvas)
 
-      // collisionFlags 2 means this will be a kinematic body
-      this.box = this.physics.add.box({ y: 2, collisionFlags: 2 })
-      let box2 = this.physics.add.box({ y: 10 })
-      this.physics.debug.enable()
+    const pd = new PointerDrag(this.canvas)
+    pd.onMove(delta => console.log(delta))
 
-      // texture cube
-      const textureCube = this.texture.cube([this.side, this.side, this.top, this.top, this.side, this.side])
-      textureCube.texture.front.repeat.set(4, 1)
-      textureCube.texture.back.repeat.set(4, 1)
-      this.physics.add.box({ y: 2, width: 4 }, { custom: textureCube.materials })
+    // custom shape (as child)
+    let robot = new ExtendedObject3D()
+    let sphere2 = this.make.sphere({ radius: 0.5 }) // relative position to box1
+    robot.add(sphere2)
+    robot.position.setY(2)
+    this.add.existing(robot)
+    this.physics.add.existing(robot, { shape: 'box' })
 
-      // add hero
-      const hero = this.heroModel.scene as Types.ExtendedObject3D
-      hero.scale.set(0.1, 0.1, 0.1)
-      hero.position.set(2, 0, 2)
-      this.scene.add(this.heroModel.scene)
+    // custom shape
+    let sphere0 = this.add.sphere({ radius: 0.5 }) // relative position to box1
+    sphere0.position.setY(2)
+    this.physics.add.existing(sphere0, { shape: 'box', width: 0.75 })
 
-      // green sphere
-      const geometry = new THREE.SphereBufferGeometry()
-      const material = new THREE.MeshLambertMaterial({ color: 0xff00ff })
-      const cube = new THREE.Mesh(geometry, material) as any
-      cube.position.set(0, 10, 0)
-      this.scene.add(cube)
-      this.physics.add.existing(cube)
+    // compound shape (child based)
+    // (the center of mass is the center of the box)
+    let box1 = this.add.box({ x: -8, y: 2 })
+    let sphere1 = this.add.sphere({ radius: 0.5, x: 0.25, y: 0.5 }) // relative position to box1
+    box1.add(sphere1)
+    this.physics.add.existing(box1)
 
-      // merge children to compound shape
-      const body = this.add.box({ z: 5, height: 0.8, y: 1, width: 0.4, depth: 0.4 }, { lambert: { color: 0xffff00 } })
-      const head = this.add.sphere({ z: 0, radius: 0.25, y: -0.8 }, { lambert: { color: 0xffff00 } })
-      body.add(head, cube.clone())
-      body.position.set(5, 5, 5)
-      body.rotation.set(0, 0.4, 0.2)
-      this.physics.add.existing(body)
+    // compound shape (group)
+    // (the center of mass is 0,0,0)
+    let group = new THREE.Group()
+    const body = this.add.box({ height: 0.8, y: 1, width: 0.4, depth: 0.4 }, { lambert: { color: 0xffff00 } })
+    const head = this.add.sphere({ radius: 0.25, y: 1.7, z: 0.05 }, { lambert: { color: 0xffff00 } })
+    group.add(body, head)
+    group.position.setX(2)
+    this.add.existing(group)
+    // @ts-ignore
+    this.physics.add.existing(group)
 
-      // this is how you once change position/rotation of a dynamic body
-      const updateDynamicBody = () => {
-        const collisionFlags = box2.body.getCollisionFlags()
-        box2.body.setCollisionFlags(2)
-        box2.position.set(0, 10, 0)
-        box2.body.needUpdate = true
-        box2.body.once.update(() => {
-          box2.body.setVelocity(0, 0, 0)
-          box2.body.setAngularVelocity(0, 0, 0)
-          box2.body.setCollisionFlags(collisionFlags)
-        })
-      }
-      window.setTimeout(() => updateDynamicBody(), 4000)
-      window.setTimeout(() => updateDynamicBody(), 8000)
-    }
+    // simple sphere
+    let sphere = this.add.sphere({ x: 8 })
+    this.physics.add.existing(sphere)
 
-    update() {
-      // this works only on kinematic objects
-      this.box.rotation.x += 0.01
-      this.box.rotation.y += 0.01
-      this.box.body.needUpdate = true
-    }
+    // add hacd shape
+    let torus = this.add.torus({ x: -4, y: 2 })
+    this.physics.add.existing(torus, { shape: 'hacd' })
+
+    this.physics.add.box({ y: 5, collisionFlags: 2 })
+
+    // custom compound shape
+    const box = this.add.box({ z: -5 })
+    const compound: Types.CustomCompoundShape = [
+      { shape: 'box', width: 0.5, height: 1, depth: 0.4, y: -0.5, z: 0.5 },
+      { shape: 'box', width: 2.4, height: 0.6, depth: 0.4, z: -0.4, y: 0.2 },
+      { shape: 'sphere', radius: 0.65, z: -0.25, y: 0.35 },
+      { shape: 'box', width: 1.5, height: 0.8, depth: 1, y: 0.2, z: 0.2 }
+    ]
+    this.physics.add.existing(box, { compound })
   }
-  PhysicsLoader('/lib', () => new MainScene())
+}
+const startProject = () => {
+  PhysicsLoader('/lib', () => new Project({ scenes: [MainScene] }))
 }
 
-export default startThreeScene
+export default startProject

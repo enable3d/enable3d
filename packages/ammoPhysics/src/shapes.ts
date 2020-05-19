@@ -24,7 +24,7 @@ interface Shapes {}
 class Shapes {
   public tmpTrans: Ammo.btTransform
   public physicsWorld: Ammo.btDiscreteDynamicsWorld
-  protected objectsAmmo: { [ptr: number]: any } = {}
+  public objectsAmmo: { [ptr: number]: ExtendedObject3D } = {}
   protected addExisting: (object: ExtendedObject3D, config?: AddExistingConfig) => void
   protected factory: Factories
 

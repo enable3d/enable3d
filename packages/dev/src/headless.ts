@@ -2,11 +2,9 @@
 import { AmmoPhysics, PhysicsLoader, Clock } from '@enable3d/phaser-extension/node_modules/@enable3d/ammo-physics'
 
 const MainScene = () => {
-  console.log('mainscene')
   const physics = new AmmoPhysics('headless')
 
   let box = physics.add.box({ y: 10 })
-  console.log(box)
 
   let ground = physics.add.ground({ width: 20, height: 20 })
 

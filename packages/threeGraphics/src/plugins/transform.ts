@@ -17,37 +17,26 @@ import { SVGLoader } from '@enable3d/three-wrapper/dist/index'
  */
 
 export default class Transform {
-  public renderer: WebGLRenderer
-  public camera: PerspectiveCamera | OrthographicCamera
-  public new: {
-    svgLoader: () => SVGLoader
+  constructor(private camera: PerspectiveCamera | OrthographicCamera, private renderer: WebGLRenderer) {}
+
+  public geometryToBufferGeometry(geometry: Geometry | BufferGeometry) {
+    // @ts-ignore
+    if (geometry.isGeometry) return new BufferGeometry().fromGeometry(geometry)
+    else return geometry as BufferGeometry
   }
 
-  get transform() {
-    return {
-      geometryToBufferGeometry: (geometry: Geometry | BufferGeometry) => {
-        // @ts-ignore
-        if (geometry.isGeometry) return new BufferGeometry().fromGeometry(geometry)
-        else return geometry as BufferGeometry
-      },
-      bufferGeometryToGeometry: (bufferGeometry: Geometry | BufferGeometry) => {
-        // @ts-ignore
-        if (bufferGeometry.isBufferGeometry) return new Geometry().fromBufferGeometry(bufferGeometry)
-        else return bufferGeometry as Geometry
-      },
-      fromSVGtoShape: (svg: string, isCCW?: boolean, noHoles?: boolean) =>
-        this.transformFromSVGtoShape(svg, isCCW, noHoles),
-      from3dto2d: (position: Vector3) => this.transformFrom3dto2d(position),
-      from2dto3d: (x: number, y: number, z: number = 0) => this.transformFrom2dto3d(x, y, z)
-    }
+  public bufferGeometryToGeometry(bufferGeometry: Geometry | BufferGeometry) {
+    // @ts-ignore
+    if (bufferGeometry.isBufferGeometry) return new Geometry().fromBufferGeometry(bufferGeometry)
+    else return bufferGeometry as Geometry
   }
 
   /**
    * Transforms your svg files to paths.
    */
-  private transformFromSVGtoShape(svg: string, isCCW: boolean = false, noHoles?: boolean) {
+  public fromSVGtoShape(svg: string, isCCW: boolean = false, noHoles?: boolean) {
     if (svg) {
-      const svgLoader = this.new.svgLoader()
+      const svgLoader = new SVGLoader()
       const shapes: Shape[] = []
       svgLoader.parse(svg).paths.forEach(path => {
         path.toShapes(isCCW, noHoles).forEach(shape => {
@@ -59,7 +48,7 @@ export default class Transform {
     return []
   }
 
-  private transformFrom3dto2d(position: Vector3): Vector2 {
+  public from3dto2d(position: Vector3): Vector2 {
     const vector3 = new Vector3(position.x, position.y, position.z)
     const canvas = this.renderer.domElement
 
@@ -79,7 +68,7 @@ export default class Transform {
    * @param y Y Position in Phaser Pixels.
    * @param z Z-Index of THREE Camera.
    */
-  private transformFrom2dto3d(x: number, y: number, z: number = 0): Vector3 {
+  public from2dto3d(x: number, y: number, z: number = 0): Vector3 {
     const pps = this.getPixelsPerSquare(z)
     const canvas = this.renderer.domElement
 
@@ -96,8 +85,8 @@ export default class Transform {
    * @param z The Z value of the THREE Camera you want to get the PixelPerSquare (PPS) from.
    */
   public getPixelsPerSquare(z: number = 0): number {
-    let center = this.transform.from3dto2d(new Vector3(0, 0, z))
-    let right = this.transform.from3dto2d(new Vector3(1, 0, z))
+    let center = this.from3dto2d(new Vector3(0, 0, z))
+    let right = this.from3dto2d(new Vector3(1, 0, z))
     return Math.abs(center.x - right.x)
   }
 }

@@ -4,14 +4,19 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { PerspectiveCamera, OrthographicCamera } from '@enable3d/common/dist/types'
-import {
-  PerspectiveCamera as THREE_PerspectiveCamera,
-  OrthographicCamera as THREE_OrthographicCamera
-} from '@enable3d/three-wrapper/dist/index'
+import { PerspectiveCameraConfig, OrthographicCameraConfig } from '@enable3d/common/dist/types'
+import { PerspectiveCamera, OrthographicCamera } from '@enable3d/three-wrapper/dist/index'
 
 export default class Cameras {
-  static PerspectiveCamera(config: PerspectiveCamera = {}): THREE.PerspectiveCamera {
+  public perspectiveCamera(config: PerspectiveCameraConfig = {}): PerspectiveCamera {
+    return Cameras.Perspective(config)
+  }
+
+  public orthographicCamera(config: OrthographicCameraConfig = {}): OrthographicCamera {
+    return Cameras.Orthographic(config)
+  }
+
+  static Perspective(config: PerspectiveCameraConfig = {}): PerspectiveCamera {
     // for phaser
     // aspect = scene.scale.gameSize.aspectRatio
     const {
@@ -23,12 +28,12 @@ export default class Cameras {
       y = 0,
       z = 0
     } = config
-    const camera = new THREE_PerspectiveCamera(fov, aspect, near, far)
+    const camera = new PerspectiveCamera(fov, aspect, near, far)
     camera.position.set(x, y, z)
     return camera
   }
 
-  static OrthographicCamera(config: OrthographicCamera = {}): THREE.OrthographicCamera {
+  static Orthographic(config: OrthographicCameraConfig = {}): OrthographicCamera {
     // for phaser
     // const { width, height } = scene.cameras.main
     const width = window.innerWidth
@@ -44,7 +49,7 @@ export default class Cameras {
       y = 0,
       z = 0
     } = config
-    const camera = new THREE_OrthographicCamera(left, right, top, bottom, near, far)
+    const camera = new OrthographicCamera(left, right, top, bottom, near, far)
     camera.position.set(x, y, z)
     return camera
   }
