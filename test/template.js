@@ -40,7 +40,7 @@ describe.each([EXAMPLES_PLACEHOLDER])('Example: (%s)', example => {
     await page.setRequestInterception(true)
 
     // the names of the 3 bundle enable3d generates
-    const bundles = ['ammoPhysics', 'threeGraphics', 'phaserExtension'].map(n => {
+    const bundles = ['ammoPhysics', 'framework', 'phaserExtension'].map(n => {
       return {
         bundle: n,
         regex: new RegExp(`https://enable3d.io/lib/enable3d.${n}.[\\S]+.min.js$`, 'gm')
