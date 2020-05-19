@@ -63,7 +63,7 @@ class Physics extends EventEmitter {
         this.physicsWorld.removeRigidBody(obj.body.ammo)
 
         // call destructor on body
-        body.destructor()
+        obj.body.destructor()
 
         // reset properties
         // @ts-ignore
