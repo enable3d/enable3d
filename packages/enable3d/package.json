@@ -1,6 +1,6 @@
 {
   "name": "enable3d",
-  "version": "0.18.0-alpha.0",
+  "version": "0.18.0-alpha.1",
   "description": "3D Framework for Web, Mobile and PC",
   "main": "dist/index.js",
   "scripts": {
@@ -31,9 +31,9 @@
   },
   "homepage": "https://enable3d.io",
   "dependencies": {
-    "@enable3d/ammo-physics": "^0.18.0-alpha.0",
-    "@enable3d/common": "^0.18.0-alpha.0",
-    "@enable3d/three-graphics": "^0.18.0-alpha.0",
-    "@enable3d/three-wrapper": "^0.18.0-alpha.0"
+    "@enable3d/ammo-physics": "^0.18.0-alpha.1",
+    "@enable3d/common": "^0.18.0-alpha.1",
+    "@enable3d/three-graphics": "^0.18.0-alpha.1",
+    "@enable3d/three-wrapper": "^0.18.0-alpha.1"
   }
 }
