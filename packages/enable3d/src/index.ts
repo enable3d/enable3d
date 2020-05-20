@@ -17,8 +17,8 @@ export { THREE }
 import * as Types from '@enable3d/common/dist/types'
 export { Types }
 
-export { JoyStick, JoyStickAxis, JoyStickButton } from '@enable3d/common/src/misc/joystick'
-export { ThirdPersonControls, ThirdPersonControlsConfig } from '@enable3d/common/src/misc/thirdPersonControls'
-export { FirstPersonControls, FirstPersonControlsConfig } from '@enable3d/common/src/misc/firstPersonControls'
-export { PointerLock } from '@enable3d/common/src/misc/pointerLock'
-export { PointerDrag } from '@enable3d/common/src/misc/pointerDrag'
+export { JoyStick, JoyStickAxis, JoyStickButton } from '@enable3d/common/dist/misc/joystick'
+export { ThirdPersonControls, ThirdPersonControlsConfig } from '@enable3d/common/dist/misc/thirdPersonControls'
+export { FirstPersonControls, FirstPersonControlsConfig } from '@enable3d/common/dist/misc/firstPersonControls'
+export { PointerLock } from '@enable3d/common/dist/misc/pointerLock'
+export { PointerDrag } from '@enable3d/common/dist/misc/pointerDrag'
