@@ -198,8 +198,8 @@ export class Scene3D implements Partial<ThreeGraphics> {
     const time = this.clock.getElapsedTime()
 
     this.update?.(parseFloat(time.toFixed(3)), parseInt(delta.toString()))
-    this.physics.update(delta)
-    this.physics.updateDebugger()
+    this.physics?.update(delta)
+    this.physics?.updateDebugger()
 
     this.animationMixers.update(delta)
     this.renderer.render(this.scene, this.camera)

@@ -50,7 +50,10 @@ export class ThreeGraphics {
     this.cache = THREE.Cache
     this.cache.enabled = true
 
-    if (usePhysics) this.physics = new AmmoPhysics(this.scene, threeGraphicsConfig)
+    if (usePhysics) {
+      if (typeof Ammo !== 'undefined') this.physics = new AmmoPhysics(this.scene, threeGraphicsConfig)
+      else console.log('[enable3d]: Are you sure you included ammo.js?')
+    }
   }
 
   // get new() {
