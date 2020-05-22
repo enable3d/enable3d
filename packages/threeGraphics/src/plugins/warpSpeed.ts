@@ -9,7 +9,6 @@ import {
 
 import { Sky, OrbitControls } from '@enable3d/three-wrapper/dist/index'
 import * as THREE from '@enable3d/three-wrapper/dist/index'
-import Cameras from './cameras'
 import { Lights, Loaders, Factories } from '.'
 import { AmmoPhysics, ExtendedObject3D } from '@enable3d/ammo-physics'
 
@@ -130,7 +129,8 @@ export default class WarpSpeed {
 
     if (features.includes('light')) {
       const ambientLight = this.lights.ambientLight({ color: 0xcccccc })
-      const directionalLight = this.lights.directionalLight({ color: 0xffffff, intensity: 0.5, x: -10, y: 18, z: 5 })
+      const directionalLight = this.lights.directionalLight({ color: 0xffffff, intensity: 0.5 })
+      directionalLight.position.set(-10, 18, 5)
       const d = 20
       directionalLight.shadow.camera.top = d
       directionalLight.shadow.camera.bottom = -d
