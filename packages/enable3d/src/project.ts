@@ -8,9 +8,8 @@ import { ThreeGraphics } from '@enable3d/three-graphics/dist/index'
 import { Scene3D } from './scene3d'
 import { ThreeGraphicsConfig } from '@enable3d/common/dist/types'
 
-interface Scene3DConfig extends ThreeGraphicsConfig {
+interface Scene3DConfig extends Omit<ThreeGraphicsConfig, 'camera' | 'usePhysics'> {
   parent?: string
-  autoStart?: boolean
   scenes: typeof Scene3D[]
 }
 
