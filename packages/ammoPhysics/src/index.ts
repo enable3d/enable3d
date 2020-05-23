@@ -94,6 +94,11 @@ class AmmoPhysics extends EventEmitter {
     this.start()
   }
 
+  public setGravity(x = 0, y = -9.8, z = 0) {
+    this.tmpBtVector3.setValue(x, y, z)
+    this.physicsWorld.setGravity(this.tmpBtVector3)
+  }
+
   public get debug() {
     if (this.isHeadless) return null
 
