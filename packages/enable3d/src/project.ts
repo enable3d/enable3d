@@ -23,11 +23,16 @@ export class Project extends ThreeGraphics {
 
     this.renderer.setSize(window.innerWidth, window.innerHeight)
 
-    this.parent = this.projectConfig.parent
-      ? (document.getElementById(this.projectConfig.parent) as HTMLElement)
-      : document.body
-    if (this.parent) this.parent.appendChild(this.renderer.domElement)
-    else console.error(`[enable3d] parent "${this.projectConfig.parent}" not found!`)
+    if (this.projectConfig.parent) this.parent = document.getElementById(this.projectConfig.parent) as HTMLElement
+    else this.parent = document.body
+
+    if (!this.parent) {
+      console.warn(`[enable3d] parent "${this.projectConfig.parent}" not found! Will add it to the body.`)
+      this.parent = document.body
+    }
+
+    this.parent.appendChild(this.renderer.domElement)
+
     this.canvas = this.renderer.domElement
 
     let firstSceneKey = ''
