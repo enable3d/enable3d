@@ -164,25 +164,6 @@ class AmmoPhysics extends EventEmitter {
     }
   }
 
-  // public addCompoundShape(shapes: any) {
-  //   const compoundShape = new Ammo.btCompoundShape()
-  //   shapes.forEach((obj: any, i: number) => {
-  //     const transform = new Ammo.btTransform()
-
-  //     const pos = new Vector3(obj.x || 0, obj.y || 0, obj.z || 0)
-  //     if (obj.tmp?.offset) {
-  //       const o = obj.tmp.offset
-  //       pos.add(new Vector3(o.x, o.y, o.z))
-  //     }
-  //     transform.setIdentity()
-  //     transform.setOrigin(new Ammo.btVector3(pos.x || 0, pos.y || 0, pos.z || 0))
-  //     // TODO add rotation
-  //     // transform.setRotation(new Ammo.btQuaternion(quat.x || 0, quat.y || 0, quat.z || 0, quat.w || 1))
-  //     compoundShape.addChildShape(transform, shapes[i])
-  //   })
-  //   return compoundShape
-  // }
-
   private prepareThreeObjectForCollisionShape(object: ExtendedObject3D, config: Types.AddExistingConfig = {}) {
     const { position: pos, quaternion: quat, hasBody } = object
     const { autoCenter = false } = config
@@ -367,6 +348,13 @@ class AmmoPhysics extends EventEmitter {
       })
     }
 
+    // FALLBACK: if we do not have any collisionShapes yet, add a simple box as a fallback
+    if (collisionShapes.length === 0) {
+      const p = this.prepareThreeObjectForCollisionShape(object, config)
+      const cs = this.createCollisionShape(p.shape, p.params, p.object)
+      collisionShapes.push(cs)
+    }
+
     const collisionShape =
       collisionShapes.length === 1 ? collisionShapes[0] : this.mergeCollisionShapesToCompoundShape(collisionShapes)
 
@@ -410,60 +398,6 @@ class AmmoPhysics extends EventEmitter {
 
     object.body.setCollisionFlags(collisionFlags)
   }
-
-  // protected getShape(shape: any, shapes: any, children: any, params: any, object: any, quat: any) {
-  //   let Shape: Ammo.btConvexShape
-
-  //   // combine multiple shapes to one compound shape
-  //   if (shapes.length > 0) {
-  //     const tmp: any[] = [] // stores all the raw shapes
-
-  //     shapes.forEach((obj: any) => {
-  //       const s = this.addShape({ shape: obj.shape, params: { ...obj } })
-  //       // @ts-ignore
-  //       s.tmp = { offset: { x: obj.x || 0, y: obj.y || 0, z: obj.z || 0 } }
-  //       // TODO add rotation as well
-  //       tmp.push(s)
-  //     })
-
-  //     Shape = this.addCompoundShape(tmp)
-  //   } else {
-  //     Shape = this.addShape({ shape, shapes, params, object, quat })
-  //   }
-
-  //   if (!Shape) {
-  //     logger(`Could not recognize shape "${shape}"!`)
-  //     return
-  //   }
-
-  //   if (children.length >= 1) {
-  //     Shape = this.addCompoundShape([Shape, ...children])
-  //   }
-
-  //   Shape.setMargin(0.05)
-
-  //   return Shape as Ammo.btConvexShape
-  // }
-
-  // public addRigidBodyToShape(object: any, Shape: any, options: any) {
-  //   const {
-  //     mass = 1,
-  //     pos = new Vector3(0, 0, 0),
-  //     quat = new Quaternion(0, 0, 0, 1),
-  //     breakable = false,
-  //     offset = { x: 0, y: 0, z: 0 },
-  //     config = {}
-  //   } = options
-  //   this.addRigidBody(object, Shape, mass, pos, quat)
-  //   this.addBodyProperties(object, config)
-
-  //   if (breakable) object.body.breakable = true
-  //   if (offset) object.body.offset = { x: 0, y: 0, z: 0, ...offset }
-  // }
-
-  // private addShape(opts: any) {
-  //   const { shape, object, params, quat } = opts
-  // }
 
   public collisionShapeToRigidBody(
     physicsShape: Ammo.btCollisionShape,
