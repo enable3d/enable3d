@@ -30,6 +30,7 @@ jobs:
       - name: npm install, bundle, and test
         run: |
           npm ci
+          npm run clean:bundles
           npm run bundle
           npm test
         env:
