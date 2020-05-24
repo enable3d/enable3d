@@ -20,6 +20,7 @@ import { Vector3, Quaternion, Scene, Mesh, Euler } from '@enable3d/three-wrapper
 import { createCollisionShapes } from './three-to-ammo'
 import { addTorusShape } from './torusShape'
 import Factories from '@enable3d/common/dist/factories'
+import Events from './events'
 import { REVISION } from '@enable3d/three-wrapper/dist/index'
 
 import DebugDrawer from './debugDrawer'
@@ -71,6 +72,7 @@ class AmmoPhysics extends EventEmitter {
 
   private shapes: Shapes
   private constraints: Constraints
+  private events: Events
 
   constructor(public scene: Scene | 'headless', public config: Types.ThreeGraphicsConfig = {}) {
     super()
@@ -165,6 +167,7 @@ class AmmoPhysics extends EventEmitter {
       }
     }
 
+    this.events = new Events()
     this.factory = new Factories(this.scene)
     this.shapes = new Shapes(this.factory, (object: ExtendedObject3D, config?: Types.AddExistingConfig) =>
       this.addExisting(object, config)
@@ -494,6 +497,11 @@ class AmmoPhysics extends EventEmitter {
 
   public get add() {
     return {
+      collider: (
+        object1: ExtendedObject3D,
+        object2: ExtendedObject3D,
+        eventCallback: (event: 'start' | 'collision' | 'end') => void
+      ) => this.events.addCollider(object1, object2, eventCallback),
       constraints: this.constraints.addConstraints,
       existing: (object: ExtendedObject3D, config?: Types.AddExistingConfig) => this.addExisting(object, config),
       plane: (planeConfig: Types.PlaneConfig = {}, materialConfig: Types.MaterialConfig = {}) =>
