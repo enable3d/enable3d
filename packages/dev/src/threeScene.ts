@@ -9,8 +9,13 @@ class MainScene extends Scene3D {
   point: PointLight
   directional: DirectionalLight
 
+  init(data: any) {
+    console.log(data)
+  }
+
   async create() {
-    this.warpSpeed('-sky', '-light', '-grid')
+    const { orbitControls } = await this.warpSpeed('-sky', '-light', '-grid')
+    this.deconstructor.add(() => orbitControls?.dispose)
 
     this.add.box({ y: 2 })
 

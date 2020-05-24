@@ -42,11 +42,20 @@ export class Scene3D implements Partial<ThreeGraphics> {
 
   public __config: any = {}
   private _isRunning: boolean = false
+  private _deconstructorFunctions: Function[] = []
 
   constructor(private sceneConfig: { key?: string; enableXR?: boolean } = {}) {
     const { key = Math.random().toString(), enableXR = false } = sceneConfig
     this.__config.sceneKey = key
     this.__config.enableXR = enableXR
+  }
+
+  public get deconstructor() {
+    return {
+      add: (fnc: Function) => {
+        this._deconstructorFunctions.push(fnc)
+      }
+    }
   }
 
   // @ts-ignore
@@ -150,6 +159,12 @@ export class Scene3D implements Partial<ThreeGraphics> {
 
     // reset clock
     this.clock.start()
+
+    for (let i = 0; i < this._deconstructorFunctions.length; i++) {
+      await this._deconstructorFunctions[i]()
+    }
+    this._deconstructorFunctions = []
+
     // destroy all rigid bodies
     for (let i = Object.keys(this.physics.objectsAmmo).length - 1; i >= 0; i--) {
       this.physics.destroy(Object.values(this.physics.objectsAmmo)[i].body)
