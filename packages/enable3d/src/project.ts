@@ -8,7 +8,7 @@ import { ThreeGraphics } from '@enable3d/three-graphics/dist/index'
 import { Scene3D } from './scene3d'
 import { ThreeGraphicsConfig } from '@enable3d/common/dist/types'
 
-interface Scene3DConfig extends Omit<ThreeGraphicsConfig, 'camera' | 'usePhysics'> {
+interface Scene3DConfig extends Omit<ThreeGraphicsConfig, 'camera' | 'usePhysics' | 'enableXR'> {
   parent?: string
   scenes: typeof Scene3D[]
 }
