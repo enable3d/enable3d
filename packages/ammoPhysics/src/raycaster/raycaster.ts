@@ -4,10 +4,10 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import Physics from '../physics'
 import applyMixins from '@enable3d/common/dist/applyMixins'
 import ClosestRayResultCallback from './closestRayResultCallback'
 import AllHitsRayResultCallback from './allHitsRayResultCallback'
+import { AmmoPhysics } from '../physics'
 
 class Raycaster {
   protected _tmpBtVector3: Ammo.btVector3
@@ -16,7 +16,7 @@ class Raycaster {
   protected _btRayCallback: any
   protected initCallback: any
 
-  constructor(protected physics: Physics) {}
+  constructor(protected physics: AmmoPhysics) {}
 
   setRayFromWorld(x = 0, y = 0, z = 0) {
     this._btRayFrom.setValue(x, y, z)
@@ -57,7 +57,7 @@ class ClosestRaycaster {
     this._tmpBtVector3
   )
 
-  constructor(protected physics: Physics) {}
+  constructor(protected physics: AmmoPhysics) {}
 }
 
 class AllHitsRaycaster {
@@ -70,7 +70,7 @@ class AllHitsRaycaster {
     this._tmpBtVector3
   )
 
-  constructor(protected physics: Physics) {}
+  constructor(protected physics: AmmoPhysics) {}
 }
 
 applyMixins(ClosestRaycaster, [Raycaster, ClosestRayResultCallback])

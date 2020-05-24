@@ -8,15 +8,11 @@
 
 import PhysicsBody from '@enable3d/common/dist/physicsBody'
 import { XYZ } from '@enable3d/common/dist/types'
-import Physics from './physics'
 
 export default class Constraints {
-  public tmpTrans: Ammo.btTransform
-  public physicsWorld: Ammo.btDiscreteDynamicsWorld
+  public tmpBtVector3 = new Ammo.btVector3()
 
-  protected tmpBtVector3: Ammo.btVector3
-
-  constructor() {}
+  constructor(public tmpTrans: Ammo.btTransform, public physicsWorld: Ammo.btDiscreteDynamicsWorld) {}
 
   private toAmmoV3(v?: XYZ, d: number = 0) {
     return new Ammo.btVector3(
@@ -26,7 +22,7 @@ export default class Constraints {
     )
   }
 
-  protected get addConstraints() {
+  public get addConstraints() {
     return {
       lock: (body: PhysicsBody, targetBody: PhysicsBody) => this.lock(body, targetBody),
       fixed: (body: PhysicsBody, targetBody: PhysicsBody) => this.fixed(body, targetBody),

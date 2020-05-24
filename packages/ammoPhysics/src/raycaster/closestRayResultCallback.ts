@@ -4,14 +4,14 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import Physics from '../physics'
+import { AmmoPhysics } from '../physics'
 import { ExtendedObject3D } from '@enable3d/common/dist/types'
 
 export default class ClosestRayResultCallback {
   protected _tmpBtVector3: Ammo.btVector3
   protected _btRayCallback: Ammo.ClosestRayResultCallback
 
-  constructor(protected physics: Physics) {}
+  constructor(protected physics: AmmoPhysics) {}
 
   getHitPointWorld(): { x: number; y: number; z: number } {
     const h = this._btRayCallback.get_m_hitPointWorld() as Ammo.btVector3
