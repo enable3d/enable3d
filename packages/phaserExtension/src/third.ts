@@ -75,7 +75,7 @@ class Third extends ThreeGraphics {
 
     if (!this.isXrEnabled) {
       scene3D.events.on('postupdate', (_time: number, delta: number) => {
-        this.animationMixers.update(delta)
+        this.animationMixers?.update(delta)
         this.physics?.update(delta)
         this.physics?.updateDebugger()
       })
@@ -131,7 +131,7 @@ class Third extends ThreeGraphics {
     Plugins.HaveSomeFun(numberOfElements, this.physics)
   }
   public get animationMixers() {
-    return this.mixers.mixers
+    return this.mixers?.mixers
   }
   public get make() {
     return this.factories.make
