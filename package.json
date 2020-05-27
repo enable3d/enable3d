@@ -60,7 +60,7 @@
     "puppeteer": "^3.1.0",
     "rimraf": "^3.0.2",
     "ts-loader": "^6.2.2",
-    "typescript": "^3.9.3",
+    "typescript": "~3.8.3",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.10"
   }
