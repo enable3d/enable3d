@@ -46,7 +46,7 @@ class Loader {
 
 export class FBXLoader extends Loader {
   // @ts-ignore
-  private loader = new THREE.FBXLoader() as any
+  private loader = new THREE.FBXLoader()
 
   public load(absolutePath: string) {
     return new Promise((resolve, reject) => {
@@ -72,7 +72,8 @@ export class FBXLoader extends Loader {
 }
 
 export class GLTFLoader extends Loader {
-  private loader = new THREE.GLTFLoader() as any
+  // @ts-ignore
+  private loader = new THREE.GLTFLoader()
 
   public load(absolutePath: string) {
     return new Promise((resolve, reject) => {

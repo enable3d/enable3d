@@ -16,7 +16,7 @@ import {
   Color,
   Texture
 } from '@enable3d/three-wrapper/dist/index'
-import { ExtendedObject3D, HeightMapConfig } from '@enable3d/common/dist/types'
+import { HeightMapConfig, ExtendedMesh } from '@enable3d/common/dist/types'
 import logger from '@enable3d/common/dist/logger'
 
 export default class HeightMap {
@@ -57,7 +57,7 @@ export default class HeightMap {
     const material = new MeshPhongMaterial(materialConfig)
 
     // mesh
-    const mesh = new Mesh(plane, material) as ExtendedObject3D
+    const mesh = new ExtendedMesh(plane, material)
     mesh.receiveShadow = mesh.castShadow = true
     mesh.shape = 'concave'
 
