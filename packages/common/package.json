@@ -1,6 +1,6 @@
 {
   "name": "@enable3d/common",
-  "version": "0.18.0-alpha.1",
+  "version": "0.18.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -12,6 +12,6 @@
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
   "dependencies": {
-    "@enable3d/three-wrapper": "^0.18.0-alpha.1"
+    "@enable3d/three-wrapper": "^0.18.0"
   }
 }
