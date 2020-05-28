@@ -12,7 +12,7 @@ export default class AllHitsRayResultCallback {
 
   constructor(protected physics: AmmoPhysics) {}
 
-  getHitPointWorld(): { x: number; y: number; z: number }[] {
+  getHitPointsWorld() {
     const h = this._btRayCallback.get_m_hitPointWorld() as Ammo.btVector3Array
 
     const points = []
@@ -24,12 +24,30 @@ export default class AllHitsRayResultCallback {
     return points
   }
 
-  getCollisionObjects(): ExtendedObject3D[] {
+  // TODO: Remove this in future versions!
+  getHitPointWorld() {
+    console.warn('[enable3d] Use getHitPointsWorld() instead of getHitPointWorld() for the AllHitsRayCaster!')
+    return this.getHitPointsWorld()
+  }
+
+  getHitNormalsWorld() {
+    const h = this._btRayCallback.get_m_hitNormalWorld()
+
+    const normals = []
+    for (let i = h.size() - 1; i >= 0; i--) {
+      const hh = h.at(i)
+      normals.push({ x: hh.x(), y: hh.y(), z: hh.z() })
+    }
+
+    return normals
+  }
+
+  getCollisionObjects() {
     const getPtr = (obj: any) => {
       return Object.values(obj)[0]
     }
 
-    const obs = []
+    const obs: ExtendedObject3D[] = []
     // @ts-ignore
     const o = this._btRayCallback.get_m_collisionObjects()
     for (let i = o.size() - 1; i >= 0; i--) {

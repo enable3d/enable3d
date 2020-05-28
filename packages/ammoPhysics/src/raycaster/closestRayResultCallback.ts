@@ -20,6 +20,14 @@ export default class ClosestRayResultCallback {
     return point
   }
 
+  getHitNormalWorld() {
+    const h = this._btRayCallback.get_m_hitNormalWorld()
+
+    const normal = { x: h.x(), y: h.y(), z: h.z() }
+
+    return normal
+  }
+
   getCollisionObject(): ExtendedObject3D {
     const getPtr = (obj: any) => {
       return Object.values(obj)[0]
