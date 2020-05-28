@@ -8,7 +8,6 @@ import { AmmoPhysics } from '../physics'
 import { ExtendedObject3D } from '@enable3d/common/dist/types'
 
 export default class AllHitsRayResultCallback {
-  protected _tmpBtVector3: Ammo.btVector3
   protected _btRayCallback: Ammo.AllHitsRayResultCallback
 
   constructor(protected physics: AmmoPhysics) {}
