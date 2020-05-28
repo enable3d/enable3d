@@ -10,6 +10,7 @@ import AllHitsRayResultCallback from './allHitsRayResultCallback'
 import { AmmoPhysics } from '../physics'
 
 class Raycaster {
+  public readonly type: string
   protected _btRayFrom: Ammo.btVector3
   protected _btRayTo: Ammo.btVector3
   protected _btRayCallback: Ammo.RayResultCallback
@@ -31,7 +32,11 @@ class Raycaster {
   rayTest() {
     if (typeof this._btRayCallback !== 'undefined') Ammo.destroy(this._btRayCallback)
 
-    this._btRayCallback = new Ammo.ClosestRayResultCallback(this._btRayFrom, this._btRayTo)
+    this._btRayCallback =
+      this.type === 'closest'
+        ? new Ammo.ClosestRayResultCallback(this._btRayFrom, this._btRayTo)
+        : new Ammo.AllHitsRayResultCallback(this._btRayFrom, this._btRayTo)
+
     this.physics.physicsWorld.rayTest(this._btRayFrom, this._btRayTo, this._btRayCallback)
   }
 
@@ -46,6 +51,7 @@ interface ClosestRaycaster extends Raycaster, ClosestRayResultCallback {}
 interface AllHitsRaycaster extends Raycaster, AllHitsRayResultCallback {}
 
 class ClosestRaycaster implements Raycaster, ClosestRayResultCallback {
+  public readonly type = 'closest'
   protected _btRayFrom = new Ammo.btVector3(0, 0, 0)
   protected _btRayTo = new Ammo.btVector3(0, 0, 0)
   protected _btRayCallback: Ammo.ClosestRayResultCallback
@@ -54,6 +60,7 @@ class ClosestRaycaster implements Raycaster, ClosestRayResultCallback {
 }
 
 class AllHitsRaycaster implements Raycaster, AllHitsRayResultCallback {
+  public readonly type = 'allHits'
   protected _btRayFrom = new Ammo.btVector3(0, 0, 0)
   protected _btRayTo = new Ammo.btVector3(0, 0, 0)
   protected _btRayCallback: Ammo.AllHitsRayResultCallback

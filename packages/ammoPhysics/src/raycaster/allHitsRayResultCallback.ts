@@ -48,7 +48,6 @@ export default class AllHitsRayResultCallback {
     }
 
     const obs: ExtendedObject3D[] = []
-    // @ts-ignore
     const o = this._btRayCallback.get_m_collisionObjects()
     for (let i = o.size() - 1; i >= 0; i--) {
       const ptr = getPtr(o.at(i))
