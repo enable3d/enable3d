@@ -335,14 +335,19 @@ class AmmoPhysics extends EventEmitter {
        * Handle collision events
        */
       if (checkCollisions0 || checkCollisions1) {
-        // check if a collision between these object has already been processed
         const names = [threeObject0.name, threeObject1.name].sort()
         const combinedName = `${names[0]}__${names[1]}`
+
         let event: Types.CollisionEvent
+
         if (this.earlierDetectedCollisions.find(el => el.combinedName === combinedName)) event = 'collision'
         else event = 'start'
-        detectedCollisions.push({ combinedName, collision: true })
-        this.emit('collision', { bodies: [threeObject0, threeObject1], event })
+
+        if (!detectedCollisions.find(el => el.combinedName === combinedName)) {
+          console.log(combinedName, event)
+          detectedCollisions.push({ combinedName, collision: true })
+          this.emit('collision', { bodies: [threeObject0, threeObject1], event })
+        }
       }
 
       if ((!breakable0 && !breakable1) || (collided0 && collided1)) {
