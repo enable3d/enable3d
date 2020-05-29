@@ -8,6 +8,7 @@ import { ExtendedObject3D, XYZ } from './types'
 
 import EventEmitter from 'eventemitter3'
 import { Euler, Quaternion } from '@enable3d/three-wrapper/dist/index'
+import { CollisionEvent } from './types'
 
 class PhysicsBody {
   public offset = { x: 0, y: 0, z: 0 }
@@ -76,7 +77,7 @@ class PhysicsBody {
   public get on() {
     return {
       update: (updateCallback: Function) => this.onUpdateEvent(updateCallback),
-      collision: (collisionCallback: (otherObject: ExtendedObject3D, event: 'start' | 'collision' | 'end') => void) =>
+      collision: (collisionCallback: (otherObject: ExtendedObject3D, event: CollisionEvent) => void) =>
         this.onCollision(collisionCallback)
     }
   }
@@ -87,12 +88,10 @@ class PhysicsBody {
     }
   }
 
-  private onCollision(
-    collisionCallback: (otherObject: ExtendedObject3D, event: 'start' | 'collision' | 'end') => void
-  ) {
+  private onCollision(collisionCallback: (otherObject: ExtendedObject3D, event: CollisionEvent) => void) {
     this.checkCollisions = true
 
-    this.physics.on('collision', (data: { bodies: ExtendedObject3D[]; event: 'start' | 'collision' | 'end' }) => {
+    this.physics.on('collision', (data: { bodies: ExtendedObject3D[]; event: CollisionEvent }) => {
       const { bodies, event } = data
       if (bodies[0].name === this.name) collisionCallback(bodies[1], event)
       else if (bodies[1].name === this.name) collisionCallback(bodies[0], event)

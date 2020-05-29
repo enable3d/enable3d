@@ -20,7 +20,7 @@ import { Vector3, Quaternion, Scene, Mesh, Euler } from '@enable3d/three-wrapper
 import { createCollisionShapes } from './three-to-ammo'
 import { addTorusShape } from './torusShape'
 import Factories from '@enable3d/common/dist/factories'
-import Events from './events'
+import Events from './colliderEvents'
 import { REVISION } from '@enable3d/three-wrapper/dist/index'
 
 import DebugDrawer from './debugDrawer'
@@ -338,8 +338,8 @@ class AmmoPhysics extends EventEmitter {
         // check if a collision between these object has already been processed
         const names = [threeObject0.name, threeObject1.name].sort()
         const combinedName = `${names[0]}__${names[1]}`
-        let event
-        if (this.earlierDetectedCollisions.find(el => el.combinedName === combinedName)) event = 'colliding'
+        let event: Types.CollisionEvent
+        if (this.earlierDetectedCollisions.find(el => el.combinedName === combinedName)) event = 'collision'
         else event = 'start'
         detectedCollisions.push({ combinedName, collision: true })
         this.emit('collision', { bodies: [threeObject0, threeObject1], event })
@@ -502,7 +502,7 @@ class AmmoPhysics extends EventEmitter {
       collider: (
         object1: ExtendedObject3D,
         object2: ExtendedObject3D,
-        eventCallback: (event: 'start' | 'collision' | 'end') => void
+        eventCallback: (event: Types.CollisionEvent) => void
       ) => this.events.addCollider(object1, object2, eventCallback),
       constraints: this.constraints.addConstraints,
       existing: (object: ExtendedObject3D, config?: Types.AddExistingConfig) => this.addExisting(object, config),

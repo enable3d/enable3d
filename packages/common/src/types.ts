@@ -230,3 +230,5 @@ export interface AddExistingConfig extends XYZ {
   breakable?: boolean
   addChildren?: boolean
 }
+
+export type CollisionEvent = 'start' | 'collision' | 'end'

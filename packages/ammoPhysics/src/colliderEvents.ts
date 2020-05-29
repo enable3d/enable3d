@@ -5,7 +5,7 @@
  */
 
 import EventEmitter from 'eventemitter3'
-import { ExtendedObject3D } from '@enable3d/common/dist/types'
+import { ExtendedObject3D, CollisionEvent } from '@enable3d/common/dist/types'
 
 export default class Events extends EventEmitter {
   public tmpTrans: Ammo.btTransform
@@ -14,7 +14,7 @@ export default class Events extends EventEmitter {
   public addCollider(
     object1: ExtendedObject3D,
     object2: ExtendedObject3D,
-    eventCallback: (event: 'start' | 'collision' | 'end') => void
+    eventCallback: (event: CollisionEvent) => void
   ) {
     if (!object1.body || !object2.body) return
 

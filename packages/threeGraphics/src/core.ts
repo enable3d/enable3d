@@ -106,9 +106,9 @@ export class ThreeGraphics {
   //      * This returns all collisions of all object. Maybe you are looking for 'this.third.physics.add.collider(body1, body2, callback)' instead?
   //      */
   //     collision: (
-  //       eventCallback: (data: { bodies: ExtendedObject3D[]; event: 'start' | 'collision' | 'end' }) => void
+  //       eventCallback: (data: { bodies: ExtendedObject3D[]; event: CollisionEvent }) => void
   //     ) => {
-  //       this.physics.on('collision', (data: { bodies: ExtendedObject3D[]; event: 'start' | 'collision' | 'end' }) => {
+  //       this.physics.on('collision', (data: { bodies: ExtendedObject3D[]; event: CollisionEvent }) => {
   //         eventCallback(data)
   //       })
   //     }
