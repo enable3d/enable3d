@@ -16,7 +16,6 @@ class PhysicsBody {
   public errors: string[] = []
   public checkCollisions = false
   public breakable = false
-  public collided = false
   public didUpdate = false
 
   private _emitUpdateEvents = false

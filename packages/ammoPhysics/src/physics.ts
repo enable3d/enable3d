@@ -138,7 +138,7 @@ class AmmoPhysics extends EventEmitter {
         // remove from this.objectAmmo
         delete this.objectsAmmo[ptr]
         // remove from this.rigidBodies
-        for (var i = 0; i < this.rigidBodies.length; i++) {
+        for (let i = 0; i < this.rigidBodies.length; i++) {
           if (this.rigidBodies[i].name === name) {
             this.rigidBodies.splice(i, 1)
             i--
@@ -162,7 +162,7 @@ class AmmoPhysics extends EventEmitter {
 
       this.objectsToRemove = []
       this.numObjectsToRemove = 0
-      for (var i = 0; i < 500; i++) {
+      for (let i = 0; i < 500; i++) {
         this.objectsToRemove[i] = null
       }
     }
@@ -242,10 +242,10 @@ class AmmoPhysics extends EventEmitter {
     /**
      * Update rigid bodies
      */
-    for (var i = 0, il = this.rigidBodies.length; i < il; i++) {
-      var objThree = this.rigidBodies[i]
-      var objPhys = objThree.body.ammo
-      var ms = objPhys.getMotionState()
+    for (let i = 0, il = this.rigidBodies.length; i < il; i++) {
+      const objThree = this.rigidBodies[i]
+      const objPhys = objThree.body.ammo
+      const ms = objPhys.getMotionState()
 
       if (ms) {
         ms.getWorldTransform(this.tmpTrans)
@@ -287,15 +287,11 @@ class AmmoPhysics extends EventEmitter {
           objThree.position.set(p.x() + o.x, p.y() + o.y, p.z() + o.z)
           objThree.quaternion.set(q.x(), q.y(), q.z(), q.w())
         }
-
-        objThree.body.collided = false
       }
     }
 
-    /**
-     * Check collisions
-     */
-    for (var i = 0, il = this.dispatcher.getNumManifolds(); i < il; i++) {
+    // check collisions
+    for (let i = 0, il = this.dispatcher.getNumManifolds(); i < il; i++) {
       const contactManifold = this.dispatcher.getManifoldByIndexInternal(i)
       const key = Object.keys(contactManifold.getBody0())[0]
 
@@ -312,6 +308,7 @@ class AmmoPhysics extends EventEmitter {
       const ptr0 = body0[key]
       // @ts-ignore
       const ptr1 = body1[key]
+
       const threeObject0 = this.objectsAmmo[ptr0] as ExtendedObject3D
       const threeObject1 = this.objectsAmmo[ptr1] as ExtendedObject3D
 
@@ -325,50 +322,52 @@ class AmmoPhysics extends EventEmitter {
       const breakable0 = threeObject0.body.breakable
       const breakable1 = threeObject1.body.breakable
 
-      const collided0 = threeObject0.body.collided
-      const collided1 = threeObject1.body.collided
-
       const checkCollisions0 = threeObject0.body?.checkCollisions
       const checkCollisions1 = threeObject1.body?.checkCollisions
 
-      /**
-       * Handle collision events
-       */
-      if (checkCollisions0 || checkCollisions1) {
-        const names = [threeObject0.name, threeObject1.name].sort()
-        const combinedName = `${names[0]}__${names[1]}`
-
-        let event: Types.CollisionEvent
-
-        if (this.earlierDetectedCollisions.find(el => el.combinedName === combinedName)) event = 'collision'
-        else event = 'start'
-
-        if (!detectedCollisions.find(el => el.combinedName === combinedName)) {
-          console.log(combinedName, event)
-          detectedCollisions.push({ combinedName, collision: true })
-          this.emit('collision', { bodies: [threeObject0, threeObject1], event })
-        }
-      }
-
-      if ((!breakable0 && !breakable1) || (collided0 && collided1)) {
-        continue
-      }
+      if (!checkCollisions0 && !checkCollisions1 && !breakable0 && !breakable1) continue
 
       let contact = false
       let maxImpulse = 0
-      for (var j = 0, jl = contactManifold.getNumContacts(); j < jl; j++) {
-        var contactPoint = contactManifold.getContactPoint(j)
+      for (let j = 0, jl = contactManifold.getNumContacts(); j < jl; j++) {
+        const contactPoint = contactManifold.getContactPoint(j)
 
-        if (contactPoint.getDistance() < 0) {
+        // Distance definition: when the distance between objects is positive, they are separated. When the distance is negative, they are penetrating. Zero distance means exactly touching.
+        // https://pybullet.org/Bullet/phpBB3/viewtopic.php?t=5831
+        if (contactPoint.getDistance() <= 0) {
           contact = true
-          var impulse = contactPoint.getAppliedImpulse()
+          const impulse = contactPoint.getAppliedImpulse()
 
           if (impulse > maxImpulse) {
             maxImpulse = impulse
-            var pos = contactPoint.get_m_positionWorldOnB()
-            var normal = contactPoint.get_m_normalWorldOnB()
-            this.impactPoint.set(pos.x(), pos.y(), pos.z())
-            this.impactNormal.set(normal.x(), normal.y(), normal.z())
+            const impactPoint = contactPoint.get_m_positionWorldOnB()
+            const impactNormal = contactPoint.get_m_normalWorldOnB()
+
+            // handle collision events
+            if (checkCollisions0 || checkCollisions1) {
+              const names = [threeObject0.name, threeObject1.name].sort()
+              const combinedName = `${names[0]}__${names[1]}`
+
+              let event: Types.CollisionEvent = {
+                name: 'start',
+                impactPoint: { x: impactPoint.x(), y: impactPoint.y(), z: impactPoint.z() },
+                impactNormal: { x: impactNormal.x(), y: impactNormal.y(), z: impactNormal.z() }
+              }
+
+              if (this.earlierDetectedCollisions.find(el => el.combinedName === combinedName)) event.name = 'collision'
+              // else event = 'start'
+
+              if (!detectedCollisions.find(el => el.combinedName === combinedName)) {
+                detectedCollisions.push({ combinedName, collision: true })
+                this.emit('collision', { bodies: [threeObject0, threeObject1], event })
+              }
+            }
+
+            // get what ween need for the convex breaking
+            if (breakable0 || breakable1) {
+              this.impactPoint.set(impactPoint.x(), impactPoint.y(), impactPoint.z())
+              this.impactNormal.set(impactNormal.x(), impactNormal.y(), impactNormal.z())
+            }
           }
 
           break
@@ -377,6 +376,8 @@ class AmmoPhysics extends EventEmitter {
 
       // If no point has contact, abort
       if (!contact) continue
+
+      if (!breakable0 && !breakable1) continue
 
       /**
        * Check for breakable objects (subdivision)
@@ -407,14 +408,14 @@ class AmmoPhysics extends EventEmitter {
       if (typeof threeObject1.fragmentDepth === 'undefined') threeObject1.fragmentDepth = 0
 
       // threeObject0
-      if (breakable0 && !collided0 && maxImpulse > fractureImpulse && threeObject0.fragmentDepth < MAX_FRAGMENT_DEPTH) {
-        var debris = this.convexBreaker.subdivideByImpact(threeObject0, this.impactPoint, this.impactNormal, 1, 2) //, 1.5)
+      if (breakable0 && maxImpulse > fractureImpulse && threeObject0.fragmentDepth < MAX_FRAGMENT_DEPTH) {
+        const debris = this.convexBreaker.subdivideByImpact(threeObject0, this.impactPoint, this.impactNormal, 1, 2) //, 1.5)
 
-        var numObjects = debris.length
-        for (var j = 0; j < numObjects; j++) {
-          var vel = body0.getLinearVelocity()
-          var angVel = body0.getAngularVelocity()
-          var fragment = debris[j] as ExtendedObject3D
+        const numObjects = debris.length
+        for (let j = 0; j < numObjects; j++) {
+          const vel = body0.getLinearVelocity()
+          const angVel = body0.getAngularVelocity()
+          const fragment = debris[j] as ExtendedObject3D
           fragment.userData.velocity.set(vel.x(), vel.y(), vel.z())
           fragment.userData.angularVelocity.set(angVel.x(), angVel.y(), angVel.z())
 
@@ -422,18 +423,17 @@ class AmmoPhysics extends EventEmitter {
         }
 
         this.objectsToRemove[this.numObjectsToRemove++] = threeObject0
-        threeObject0.body.collided = true
       }
 
       // threeObject1
-      if (breakable1 && !collided1 && maxImpulse > fractureImpulse && threeObject1.fragmentDepth < MAX_FRAGMENT_DEPTH) {
-        var debris = this.convexBreaker.subdivideByImpact(threeObject1, this.impactPoint, this.impactNormal, 1, 2) //, 1.5)
+      if (breakable1 && maxImpulse > fractureImpulse && threeObject1.fragmentDepth < MAX_FRAGMENT_DEPTH) {
+        const debris = this.convexBreaker.subdivideByImpact(threeObject1, this.impactPoint, this.impactNormal, 1, 2) //, 1.5)
 
-        var numObjects = debris.length
-        for (var j = 0; j < numObjects; j++) {
-          var vel = body1.getLinearVelocity()
-          var angVel = body1.getAngularVelocity()
-          var fragment = debris[j] as ExtendedObject3D
+        const numObjects = debris.length
+        for (let j = 0; j < numObjects; j++) {
+          const vel = body1.getLinearVelocity()
+          const angVel = body1.getAngularVelocity()
+          const fragment = debris[j] as ExtendedObject3D
           fragment.userData.velocity.set(vel.x(), vel.y(), vel.z())
           fragment.userData.angularVelocity.set(angVel.x(), angVel.y(), angVel.z())
 
@@ -441,28 +441,24 @@ class AmmoPhysics extends EventEmitter {
         }
 
         this.objectsToRemove[this.numObjectsToRemove++] = threeObject1
-        threeObject1.body.collided = true
       }
     }
 
-    /**
-     * Remove objects
-     */
-    for (var i = 0; i < this.numObjectsToRemove; i++) {
+    // remove objects
+    for (let i = 0; i < this.numObjectsToRemove; i++) {
       this.removeDebris(this.objectsToRemove[i])
     }
     this.numObjectsToRemove = 0
 
-    /**
-     * Handle collision end events
-     */
+    // handle collision end events
     this.earlierDetectedCollisions.forEach(el => {
       const { combinedName } = el
       if (!detectedCollisions.find(el => el.combinedName === combinedName)) {
         const split = combinedName.split('__')
         const obj0 = this.rigidBodies.find(obj => obj.name === split[0])
         const obj1 = this.rigidBodies.find(obj => obj.name === split[1])
-        if (obj0 && obj1) this.emit('collision', { bodies: [obj0, obj1], event: 'end' })
+        const event: Types.CollisionEvent = { name: 'end' }
+        if (obj0 && obj1) this.emit('collision', { bodies: [obj0, obj1], event })
       }
     })
     this.earlierDetectedCollisions = [...detectedCollisions]
