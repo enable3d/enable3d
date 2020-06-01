@@ -13,6 +13,9 @@ export { ExtendedObject3D }
 import { ExtendedMesh } from '@enable3d/common/dist/extendedMesh'
 export { ExtendedMesh }
 
+import { ExtendedGroup } from '@enable3d/common/dist/extendedGroup'
+export { ExtendedGroup }
+
 import Shapes from './shapes'
 import Constraints from './constraints'
 import EventEmitter from 'eventemitter3'

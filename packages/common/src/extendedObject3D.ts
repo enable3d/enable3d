@@ -28,6 +28,8 @@ export interface ExtendedObject3D extends Line, Mesh, Points {
  */
 export class ExtendedObject3D extends Object3D {
   private vector3 = new Vector3()
+  public readonly isGroup = false
+
   public shape: string
   public name: string
   public body: PhysicsBody

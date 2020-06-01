@@ -11,13 +11,14 @@ export interface ExtendedMesh extends Mesh {}
 
 export class ExtendedMesh extends Mesh {
   private vector3 = new Vector3()
+  public readonly isGroup = false
+
   public shape: string
   public name: string
   public body: PhysicsBody
   public hasBody: boolean = false
   public fragmentDepth: number
   public breakable: boolean
-
   constructor(geometry?: Geometry | BufferGeometry | undefined, material?: Material | Material[] | undefined) {
     super(geometry, material)
     this.name = `object-${this.id}`
