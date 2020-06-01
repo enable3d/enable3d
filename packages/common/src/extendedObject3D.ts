@@ -13,10 +13,8 @@ import {
   Object3D,
   Vector3
 } from '@enable3d/three-wrapper/dist/index'
-// Can I use circular dependencies if I only ise the typings?
 import PhysicsBody from './physicsBody'
 import { AnimationAction } from '@enable3d/three-wrapper/dist/index'
-import logger from './logger'
 
 export interface ExtendedObject3D extends Line, Mesh, Points {
   isLine: any
@@ -34,16 +32,24 @@ export class ExtendedObject3D extends Object3D {
   public name: string
   public body: PhysicsBody
   public hasBody: boolean = false
-  public animations?: AnimationClip[]
-  public mixer?: AnimationMixer
-  public anims: { [key: string]: AnimationClip } = {}
-  public action: AnimationAction
-  public currentAnimation: string = ''
   public fragmentDepth: number
+  public breakable: boolean
+
+  private anims: any = {} // deprecated
+
+  private _currentAnimation: string = ''
+  private _animationActions: Map<string, AnimationAction> = new Map()
+  private _animationMixer: AnimationMixer
 
   constructor() {
     super()
     this.name = `object-${this.id}`
+  }
+
+  /** setAction(name) is deprecated. Use animation.play(name) instead! */
+  public setAction(name: string) {
+    console.warn('[enable3d] setAction(name) is deprecated. Use animation.play(name) instead!')
+    this.animationPlay(name)
   }
 
   /** Returns all values relative to the world. */
@@ -66,17 +72,44 @@ export class ExtendedObject3D extends Object3D {
     return Math.acos(this.vector3.y)
   }
 
-  public setAction(name: string) {
-    if (this.mixer && this.anims.hasOwnProperty(name)) {
-      const action = this.mixer?.clipAction(this.anims[name])
-      action.time = 0
-      this.mixer.stopAllAction()
-      action.fadeIn(0.5)
-      action.play()
-      this.currentAnimation = name
-    } else {
-      logger(`[Phaser3D] Can't set animation ${name}`)
+  public get animation() {
+    return {
+      current: this._currentAnimation,
+      add: (key: string, animation: AnimationClip) => this.animationAdd(key, animation),
+      play: (name: string, transitionDuration = 500) => this.animationPlay(name, transitionDuration),
+      mixer: this.animationMixer
     }
+  }
+
+  public set animationMixer(animationMixer: AnimationMixer) {
+    this._animationMixer = animationMixer
+  }
+
+  public get animationMixer() {
+    if (!this._animationMixer) this._animationMixer = new AnimationMixer(this)
+    return this._animationMixer
+  }
+
+  private animationAdd(key: string, animation: AnimationClip) {
+    this._animationActions.set(key, this.animationMixer.clipAction(animation))
+  }
+
+  private animationPlay(name: string, transitionDuration = 500) {
+    const next = this._animationActions.get(name)
+    const current = this._animationActions.get(this._currentAnimation)
+
+    if (next) {
+      if (current) {
+        next.reset()
+        next.crossFadeFrom(current, transitionDuration / 1000, true)
+        next.play()
+      } else {
+        next.reset()
+        next.play()
+      }
+    }
+
+    this._currentAnimation = name
   }
 }
 

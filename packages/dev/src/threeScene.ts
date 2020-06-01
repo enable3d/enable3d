@@ -1,43 +1,45 @@
-import { Project, Scene3D, PhysicsLoader } from 'enable3d'
+import { Project, Scene3D, PhysicsLoader, ExtendedObject3D } from 'enable3d'
 import { SpotLight, SpotLightHelper, PointLight, DirectionalLight } from '../../threeWrapper/dist'
 
 const isTouchDevice = 'ontouchstart' in window
 
 class MainScene extends Scene3D {
-  spot: SpotLight
-  spotHelper: SpotLightHelper
-  point: PointLight
-  directional: DirectionalLight
-
-  init(data: any) {
-    console.log(data)
-  }
-
   async create() {
-    const { orbitControls } = await this.warpSpeed('-sky', '-light', '-grid')
-    this.deconstructor.add(() => orbitControls?.dispose)
+    this.warpSpeed()
+    this.camera.position.set(2, 2, 4)
 
-    this.add.box({ y: 2 })
+    this.load.gltf('/assets/box_man.glb').then(gltf => {
+      const child = gltf.scene.children[0]
 
-    this.spot = this.lights.spotLight({ color: 0x7f00ff, angle: Math.PI / 8 })
-    this.spotHelper = this.lights.helper.spotLightHelper(this.spot)
+      const boxMan = new ExtendedObject3D()
+      boxMan.add(child)
+      this.scene.add(boxMan)
 
-    this.point = this.lights.pointLight({ color: 0x00ff7f, intensity: 2 })
-    this.point.position.set(0, 5, 0)
-    this.lights.helper.pointLightHelper(this.point)
+      let i = 0
+      let anims = ['run', 'sprint', 'idle', 'driving', 'falling']
 
-    this.directional = this.lights.directionalLight({ color: 0xff7f00 })
-    this.directional.position.set(5, 5, 5)
-    this.lights.helper.directionalLightHelper(this.directional)
-  }
+      // ad the box man's animation mixer to the animationMixers array (for auto updates)
+      this.animationMixers.add(boxMan.animation.mixer)
 
-  update(time: number, delta: number) {
-    this.spot.position.set(Math.sin(time) * 2 - 5, 10, 2)
-    this.spot.target.position.set(2, 0, Math.sin(time) * 5)
-    this.spot.target.updateMatrixWorld()
-    this.spotHelper.update()
+      gltf.animations.forEach(animation => {
+        if (animation.name) {
+          // add a new animation to the box man
+          boxMan.animation.add(animation.name, animation)
+        }
+      })
 
-    this.point.position.set(Math.cos(time * 2), Math.sin(time * 3) * 3 + 3.1, Math.cos(time * 1.5))
+      // play the run animation
+      // boxMan.animation.play('run')
+      // old
+      boxMan.setAction('idle')
+
+      setInterval(() => {
+        i++
+        // play the run animation
+        boxMan.animation.play(anims[i % 5], 500)
+        console.log('current animation', boxMan.animation.current)
+      }, 2500)
+    })
   }
 }
 
