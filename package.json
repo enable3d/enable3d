@@ -63,5 +63,8 @@
     "typescript": "~3.8.3",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.10"
+  },
+  "funding": {
+    "url": "https://github.com/sponsors/yandeu"
   }
 }

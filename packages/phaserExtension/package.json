@@ -36,5 +36,8 @@
     "@enable3d/three-wrapper": "^0.18.0",
     "eventemitter3": "^4.0.0",
     "phaser": "^3.22.0"
+  },
+  "funding": {
+    "url": "https://github.com/sponsors/yandeu"
   }
 }

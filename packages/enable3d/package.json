@@ -35,5 +35,8 @@
     "@enable3d/common": "^0.18.0",
     "@enable3d/three-graphics": "^0.18.0",
     "@enable3d/three-wrapper": "^0.18.0"
+  },
+  "funding": {
+    "url": "https://github.com/sponsors/yandeu"
   }
 }

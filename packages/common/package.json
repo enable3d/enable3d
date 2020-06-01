@@ -13,5 +13,8 @@
   "license": "GNU GPLv3",
   "dependencies": {
     "@enable3d/three-wrapper": "^0.18.0"
+  },
+  "funding": {
+    "url": "https://github.com/sponsors/yandeu"
   }
 }
