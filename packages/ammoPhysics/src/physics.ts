@@ -240,7 +240,7 @@ class AmmoPhysics extends EventEmitter {
     const deltaTime = delta / 1000
 
     // must always satisfy the equation timeStep < maxSubSteps * fixedTimeStep
-    this.physicsWorld.stepSimulation(deltaTime, this.config.maxSubSteps || 2, this.config.fixedTimeStep || 1 / 60)
+    this.physicsWorld.stepSimulation(deltaTime, this.config.maxSubSteps || 4, this.config.fixedTimeStep || 1 / 60)
 
     /**
      * Update rigid bodies
