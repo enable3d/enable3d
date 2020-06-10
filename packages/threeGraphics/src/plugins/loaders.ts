@@ -14,117 +14,123 @@ import {
   Texture,
   SVGLoader,
   SVGResult,
-  RGBAFormat
+  RGBAFormat,
+  FileLoader,
+  ImageLoader
 } from '@enable3d/three-wrapper/dist/index'
 
 export default class Loaders {
-  constructor(private cache: typeof Cache, private textureAnisotropy: number) {}
+  private _fileLoader: FileLoader
+  private _imgLoader: ImageLoader
+  private _svgLoader: SVGLoader
+  private _textureLoader: TextureLoader
+  private _gltfLoader: GLTFLoader
+  private _fbxLoader: FBXLoader
+  private preloads: Map<string, string> = new Map()
 
-  public getFromCache(cacheKey: string) {
-    if (cacheKey === '') return
-    return this.cache.get(cacheKey)
+  constructor(private _cache: typeof Cache, private textureAnisotropy: number) {}
+
+  private get fileLoader() {
+    if (!this._fileLoader) this._fileLoader = new FileLoader()
+    return this._fileLoader
+  }
+  private get imageLoader() {
+    if (!this._imgLoader) this._imgLoader = new ImageLoader()
+    return this._imgLoader
+  }
+  private get svgLoader() {
+    if (!this._svgLoader) this._svgLoader = new SVGLoader()
+    return this._svgLoader
+  }
+  private get textureLoader() {
+    if (!this._textureLoader) this._textureLoader = new TextureLoader()
+    return this._textureLoader
+  }
+  private get gltfLoader() {
+    if (!this._gltfLoader) this._gltfLoader = new GLTFLoader()
+    return this._gltfLoader
+  }
+  private get fbxLoader() {
+    if (!this._fbxLoader) this._fbxLoader = new FBXLoader()
+    return this._fbxLoader
   }
 
-  public addToCache(cacheKey: string, file: any) {
-    if (cacheKey === '') return
-    this.cache.add(cacheKey, file)
-  }
-
-  // method overloading https://stackoverflow.com/a/12689054/12656855
-  public svg(url: string): Promise<SVGResult>
-  public svg(cacheKey: string, url: string): Promise<SVGResult>
-  public svg(urlOrCacheKey: string, url?: string): Promise<SVGResult> {
-    let cacheKey = ''
-    let URL = url || ''
-
-    if (url && typeof url == 'string') cacheKey = urlOrCacheKey
-    else URL = urlOrCacheKey
+  public async preload(key: string, url: string) {
+    this.preloads.set(key, url)
 
     return new Promise(resolve => {
-      // first check the cache
-      const file = this.getFromCache(cacheKey)
-      if (file) return resolve(file)
+      const isModel = /\.fbx$|\.glb$|\.gltf$/.test(url)
+      const isTexture = /\.jpe?g$|\.png$/.test(url)
 
-      const loader = new SVGLoader()
-      loader.load(URL, svg => {
-        this.addToCache(cacheKey, svg)
+      if (isTexture) {
+        this.textureLoader.load(url, texture => {
+          return resolve(texture)
+        })
+      } else {
+        if (isModel) this.fileLoader.setResponseType('arraybuffer')
+        this.fileLoader.load(url, file => {
+          return resolve(file)
+        })
+      }
+    })
+  }
+
+  public file(url: string) {
+    const key = this.preloads.get(url)
+    url = key ? key : url
+
+    return new Promise(resolve => {
+      this.fileLoader.load(url, file => {
+        return resolve(file)
+      })
+    })
+  }
+
+  public svg(url: string): Promise<SVGResult> {
+    const key = this.preloads.get(url)
+    url = key ? key : url
+
+    return new Promise(resolve => {
+      this.svgLoader.load(url, svg => {
         return resolve(svg)
       })
     })
   }
 
-  // method overloading https://stackoverflow.com/a/12689054/12656855
-  public texture(url: string): Promise<Texture>
-  public texture(cacheKey: string, url: string): Promise<Texture>
-  public texture(urlOrCacheKey: string, url?: string): Promise<Texture> {
-    let cacheKey = ''
-    let URL = url || ''
-
-    if (url && typeof url == 'string') cacheKey = urlOrCacheKey
-    else URL = urlOrCacheKey
+  public texture(url: string): Promise<Texture> {
+    const key = this.preloads.get(url)
+    url = key ? key : url
 
     return new Promise(resolve => {
-      // first check the cache
-      const file = this.getFromCache(cacheKey)
-      if (file) return resolve(file)
-
-      const loader = new TextureLoader()
-      loader.load(URL, (texture: Texture) => {
+      this.textureLoader.load(url, (texture: Texture) => {
         // options
         texture.anisotropy = this.textureAnisotropy
         texture.format = RGBAFormat
         texture.needsUpdate = true
         texture.anisotropy = this.textureAnisotropy
         // texture.encoding = sRGBEncoding
-
-        this.addToCache(cacheKey, texture)
         resolve(texture)
       })
     })
   }
 
-  // method overloading https://stackoverflow.com/a/12689054/12656855
-  public gltf(url: string): Promise<GLTF>
-  public gltf(cacheKey: string, url: string): Promise<GLTF>
-
-  public gltf(urlOrCacheKey: string, url?: string): Promise<GLTF> {
-    let cacheKey = ''
-    let URL = url || ''
-
-    if (url && typeof url == 'string') cacheKey = urlOrCacheKey
-    else URL = urlOrCacheKey
+  public gltf(url: string): Promise<GLTF> {
+    const key = this.preloads.get(url)
+    url = key ? key : url
 
     return new Promise(resolve => {
-      // first check the cache
-      const file = this.getFromCache(cacheKey)
-      if (file) return resolve(file)
-
-      const loader = new GLTFLoader()
-      loader.load(URL, (gltf: GLTF) => {
-        this.addToCache(cacheKey, gltf)
+      this.gltfLoader.load(url, (gltf: GLTF) => {
         resolve(gltf)
       })
     })
   }
 
-  // method overloading https://stackoverflow.com/a/12689054/12656855
-  public fbx(url: string): Promise<Group>
-  public fbx(cacheKey: string, url: string): Promise<Group>
-  public fbx(urlOrCacheKey: string, url?: string): Promise<Group> {
-    let cacheKey = ''
-    let URL = url || ''
-
-    if (url && typeof url == 'string') cacheKey = urlOrCacheKey
-    else URL = urlOrCacheKey
+  public fbx(url: string): Promise<Group> {
+    const key = this.preloads.get(url)
+    url = key ? key : url
 
     return new Promise(resolve => {
-      // first check the cache
-      const file = this.getFromCache(cacheKey)
-      if (file) return resolve(file)
-
-      const loader = new FBXLoader()
-      loader.load(URL, (fbx: Group) => {
-        this.addToCache(cacheKey, fbx)
+      this.fbxLoader.load(url, (fbx: Group) => {
         resolve(fbx)
       })
     })
