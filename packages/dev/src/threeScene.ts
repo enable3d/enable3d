@@ -16,7 +16,7 @@ class MainScene extends Scene3D {
       this.scene.add(boxMan)
 
       let i = 0
-      let anims = ['run', 'sprint', 'idle', 'driving', 'falling']
+      let anims = ['run', 'sprint', 'jump_running', 'idle', 'driving', 'falling']
 
       // ad the box man's animation mixer to the animationMixers array (for auto updates)
       this.animationMixers.add(boxMan.animation.mixer)
@@ -29,16 +29,19 @@ class MainScene extends Scene3D {
       })
 
       // play the run animation
-      // boxMan.animation.play('run')
-      // old
-      boxMan.setAction('idle')
+      boxMan.animation.play('idle')
 
-      setInterval(() => {
-        i++
-        // play the run animation
-        boxMan.animation.play(anims[i % 5], 500)
-        console.log('current animation', boxMan.animation.current)
-      }, 2500)
+      const nextAnimation = (time: number) => {
+        setTimeout(() => {
+          i++
+          let next = anims[i % 5]
+          boxMan.animation.play(next, 200, next === 'jump_running' ? false : true)
+          console.log('current animation', boxMan.animation.current)
+          nextAnimation(next === 'jump_running' ? 650 : 2500)
+        }, time)
+      }
+
+      nextAnimation(2500)
     })
   }
 }

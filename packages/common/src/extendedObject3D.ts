@@ -11,7 +11,8 @@ import {
   Line,
   Points,
   Object3D,
-  Vector3
+  Vector3,
+  LoopOnce
 } from '@enable3d/three-wrapper/dist/index'
 import PhysicsBody from './physicsBody'
 import { AnimationAction } from '@enable3d/three-wrapper/dist/index'
@@ -78,7 +79,8 @@ export class ExtendedObject3D extends Object3D {
     return {
       current: this._currentAnimation,
       add: (key: string, animation: AnimationClip) => this.animationAdd(key, animation),
-      play: (name: string, transitionDuration = 500) => this.animationPlay(name, transitionDuration),
+      play: (name: string, transitionDuration = 500, loop: boolean = true) =>
+        this.animationPlay(name, transitionDuration, loop),
       mixer: this.animationMixer
     }
   }
@@ -96,19 +98,20 @@ export class ExtendedObject3D extends Object3D {
     this._animationActions.set(key, this.animationMixer.clipAction(animation))
   }
 
-  private animationPlay(name: string, transitionDuration = 500) {
+  private animationPlay(name: string, transitionDuration = 500, loop: boolean = true) {
     const next = this._animationActions.get(name)
     const current = this._animationActions.get(this._currentAnimation)
 
     if (next) {
+      next.reset()
+
       if (current) {
-        next.reset()
         next.crossFadeFrom(current, transitionDuration / 1000, true)
-        next.play()
-      } else {
-        next.reset()
-        next.play()
+        next.clampWhenFinished = true
       }
+
+      if (!loop) next.setLoop(LoopOnce, 0)
+      next.play()
     }
 
     this._currentAnimation = name
