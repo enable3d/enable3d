@@ -26,9 +26,8 @@ export default class Loaders {
   private _textureLoader: TextureLoader
   private _gltfLoader: GLTFLoader
   private _fbxLoader: FBXLoader
-  private preloads: Map<string, string> = new Map()
 
-  constructor(private _cache: typeof Cache, private textureAnisotropy: number) {}
+  constructor(private cache: typeof Cache, private textureAnisotropy: number) {}
 
   private get fileLoader() {
     if (!this._fileLoader) this._fileLoader = new FileLoader()
@@ -56,7 +55,7 @@ export default class Loaders {
   }
 
   public async preload(key: string, url: string) {
-    this.preloads.set(key, url)
+    this.cache.add(key, url)
 
     return new Promise(resolve => {
       const isModel = /\.fbx$|\.glb$|\.gltf$/.test(url)
@@ -76,7 +75,7 @@ export default class Loaders {
   }
 
   public file(url: string) {
-    const key = this.preloads.get(url)
+    const key = this.cache.get(url)
     url = key ? key : url
 
     return new Promise(resolve => {
@@ -87,7 +86,7 @@ export default class Loaders {
   }
 
   public svg(url: string): Promise<SVGResult> {
-    const key = this.preloads.get(url)
+    const key = this.cache.get(url)
     url = key ? key : url
 
     return new Promise(resolve => {
@@ -98,7 +97,7 @@ export default class Loaders {
   }
 
   public texture(url: string): Promise<Texture> {
-    const key = this.preloads.get(url)
+    const key = this.cache.get(url)
     url = key ? key : url
 
     return new Promise(resolve => {
@@ -115,7 +114,8 @@ export default class Loaders {
   }
 
   public gltf(url: string): Promise<GLTF> {
-    const key = this.preloads.get(url)
+    const key = this.cache.get(url)
+    console.log('key', key)
     url = key ? key : url
 
     return new Promise(resolve => {
@@ -126,7 +126,7 @@ export default class Loaders {
   }
 
   public fbx(url: string): Promise<Group> {
-    const key = this.preloads.get(url)
+    const key = this.cache.get(url)
     url = key ? key : url
 
     return new Promise(resolve => {
