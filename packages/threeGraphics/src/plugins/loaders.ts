@@ -115,7 +115,6 @@ export default class Loaders {
 
   public gltf(url: string): Promise<GLTF> {
     const key = this.cache.get(url)
-    console.log('key', key)
     url = key ? key : url
 
     return new Promise(resolve => {
