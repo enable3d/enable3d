@@ -6,8 +6,9 @@
 
 import EventEmitter from 'eventemitter3'
 import { ExtendedObject3D, CollisionEvent } from '@enable3d/common/dist/types'
+import { Types } from './physics'
 
-export default class Events extends EventEmitter {
+export class CollisionEvents extends EventEmitter {
   public tmpTrans: Ammo.btTransform
   public physicsWorld: Ammo.btDiscreteDynamicsWorld
 
@@ -21,7 +22,7 @@ export default class Events extends EventEmitter {
     object1.body.checkCollisions = true
     object2.body.checkCollisions = true
 
-    this.on('collision', data => {
+    this.on('collision', (data: { bodies: ExtendedObject3D[]; event: CollisionEvent }) => {
       const { bodies, event } = data
       if (bodies[0]?.name && bodies[1]?.name && object1?.name && object2?.name) {
         if (bodies[0].name === object1.name && bodies[1].name === object2.name) eventCallback(event)

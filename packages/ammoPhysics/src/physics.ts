@@ -23,7 +23,7 @@ import { Vector3, Quaternion, Scene, Mesh, Euler } from '@enable3d/three-wrapper
 import { createCollisionShapes } from './three-to-ammo'
 import { addTorusShape } from './torusShape'
 import Factories from '@enable3d/common/dist/factories'
-import Events from './colliderEvents'
+import { CollisionEvents } from './collisionEvents'
 import { REVISION } from '@enable3d/three-wrapper/dist/index'
 
 import DebugDrawer from './debugDrawer'
@@ -75,7 +75,7 @@ class AmmoPhysics extends EventEmitter {
 
   private shapes: Shapes
   private constraints: Constraints
-  private events: Events
+  private collisionEvents: CollisionEvents
 
   constructor(public scene: Scene | 'headless', public config: Types.ThreeGraphicsConfig = {}) {
     super()
@@ -170,7 +170,7 @@ class AmmoPhysics extends EventEmitter {
       }
     }
 
-    this.events = new Events()
+    this.collisionEvents = new CollisionEvents()
     this.factory = new Factories(this.scene)
     this.shapes = new Shapes(this.factory, (object: ExtendedObject3D, config?: Types.AddExistingConfig) =>
       this.addExisting(object, config)
@@ -195,7 +195,6 @@ class AmmoPhysics extends EventEmitter {
     const solver = new Ammo.btSequentialImpulseConstraintSolver()
     this.physicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration)
     this.physicsWorld.setGravity(new Ammo.btVector3(g.x, g.y, g.z))
-
     this.dispatcher = dispatcher
     this.tmpTrans = new Ammo.btTransform()
   }
@@ -332,6 +331,9 @@ class AmmoPhysics extends EventEmitter {
 
       let contact = false
       let maxImpulse = 0
+
+      let event: Types.CollisionEvent = 'start'
+
       for (let j = 0, jl = contactManifold.getNumContacts(); j < jl; j++) {
         const contactPoint = contactManifold.getContactPoint(j)
 
@@ -340,32 +342,25 @@ class AmmoPhysics extends EventEmitter {
         if (contactPoint.getDistance() <= 0) {
           contact = true
           const impulse = contactPoint.getAppliedImpulse()
+          const impactPoint = contactPoint.get_m_positionWorldOnB()
+          const impactNormal = contactPoint.get_m_normalWorldOnB()
 
-          if (impulse > maxImpulse) {
-            maxImpulse = impulse
-            const impactPoint = contactPoint.get_m_positionWorldOnB()
-            const impactNormal = contactPoint.get_m_normalWorldOnB()
+          // handle collision events
+          if (checkCollisions0 || checkCollisions1) {
+            const names = [threeObject0.name, threeObject1.name].sort()
+            const combinedName = `${names[0]}__${names[1]}`
 
-            // handle collision events
-            if (checkCollisions0 || checkCollisions1) {
-              const names = [threeObject0.name, threeObject1.name].sort()
-              const combinedName = `${names[0]}__${names[1]}`
+            if (this.earlierDetectedCollisions.find(el => el.combinedName === combinedName)) event = 'collision'
 
-              let event: Types.CollisionEvent = {
-                name: 'start',
-                impactPoint: { x: impactPoint.x(), y: impactPoint.y(), z: impactPoint.z() },
-                impactNormal: { x: impactNormal.x(), y: impactNormal.y(), z: impactNormal.z() }
-              }
-
-              if (this.earlierDetectedCollisions.find(el => el.combinedName === combinedName)) event.name = 'collision'
-              // else event = 'start'
-
-              if (!detectedCollisions.find(el => el.combinedName === combinedName)) {
-                detectedCollisions.push({ combinedName, collision: true })
-                this.emit('collision', { bodies: [threeObject0, threeObject1], event })
-              }
+            if (!detectedCollisions.find(el => el.combinedName === combinedName)) {
+              detectedCollisions.push({ combinedName, collision: true })
+              this.collisionEvents.emit('collision', { bodies: [threeObject0, threeObject1], event })
             }
+          }
 
+          // get impactPoint and impactNormal of the hight impulse point (for breakable objects)
+          if (impulse >= maxImpulse) {
+            maxImpulse = impulse
             // get what ween need for the convex breaking
             if (breakable0 || breakable1) {
               this.impactPoint.set(impactPoint.x(), impactPoint.y(), impactPoint.z())
@@ -460,8 +455,8 @@ class AmmoPhysics extends EventEmitter {
         const split = combinedName.split('__')
         const obj0 = this.rigidBodies.find(obj => obj.name === split[0])
         const obj1 = this.rigidBodies.find(obj => obj.name === split[1])
-        const event: Types.CollisionEvent = { name: 'end' }
-        if (obj0 && obj1) this.emit('collision', { bodies: [obj0, obj1], event })
+        const event = 'end'
+        if (obj0 && obj1) this.collisionEvents.emit('collision', { bodies: [obj0, obj1], event })
       }
     })
     this.earlierDetectedCollisions = [...detectedCollisions]
@@ -507,7 +502,7 @@ class AmmoPhysics extends EventEmitter {
         object1: ExtendedObject3D,
         object2: ExtendedObject3D,
         eventCallback: (event: Types.CollisionEvent) => void
-      ) => this.events.addCollider(object1, object2, eventCallback),
+      ) => this.collisionEvents.addCollider(object1, object2, eventCallback),
       constraints: this.constraints.addConstraints,
       existing: (object: ExtendedObject3D, config?: Types.AddExistingConfig) => this.addExisting(object, config),
       plane: (planeConfig: Types.PlaneConfig = {}, materialConfig: Types.MaterialConfig = {}) =>

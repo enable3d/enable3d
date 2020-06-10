@@ -90,7 +90,7 @@ class PhysicsBody {
   private onCollision(collisionCallback: (otherObject: ExtendedObject3D, event: CollisionEvent) => void) {
     this.checkCollisions = true
 
-    this.physics.on('collision', (data: { bodies: ExtendedObject3D[]; event: CollisionEvent }) => {
+    this.physics.collisionEvents.on('collision', (data: { bodies: ExtendedObject3D[]; event: CollisionEvent }) => {
       const { bodies, event } = data
       if (bodies[0].name === this.name) collisionCallback(bodies[1], event)
       else if (bodies[1].name === this.name) collisionCallback(bodies[0], event)
