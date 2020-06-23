@@ -3,3 +3,5 @@
 **/.tmp/**
 **/screenshots/**
 test/**/*.tmp.test.js
+package-lock.json
+**/*/package-lock.json
