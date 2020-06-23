@@ -34,7 +34,7 @@
     "@enable3d/common": "^0.19.1",
     "@enable3d/three-graphics": "^0.19.1",
     "@enable3d/three-wrapper": "^0.19.1",
-    "eventemitter3": "^4.0.0",
+    "eventemitter3": "^4.0.4",
     "phaser": "^3.22.0"
   },
   "funding": {
