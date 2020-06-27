@@ -16,7 +16,8 @@ import {
   SVGResult,
   RGBAFormat,
   FileLoader,
-  ImageLoader
+  ImageLoader,
+  ObjectLoader
 } from '@enable3d/three-wrapper/dist/index'
 
 export default class Loaders {
@@ -24,6 +25,7 @@ export default class Loaders {
   private _imgLoader: ImageLoader
   private _svgLoader: SVGLoader
   private _textureLoader: TextureLoader
+  private _objectLoader: ObjectLoader
   private _gltfLoader: GLTFLoader
   private _fbxLoader: FBXLoader
 
@@ -44,6 +46,10 @@ export default class Loaders {
   private get textureLoader() {
     if (!this._textureLoader) this._textureLoader = new TextureLoader()
     return this._textureLoader
+  }
+  private get objectLoader() {
+    if (!this._objectLoader) this._objectLoader = new ObjectLoader()
+    return this._objectLoader
   }
   private get gltfLoader() {
     if (!this._gltfLoader) this._gltfLoader = new GLTFLoader()
@@ -109,6 +115,18 @@ export default class Loaders {
         texture.anisotropy = this.textureAnisotropy
         // texture.encoding = sRGBEncoding
         resolve(texture)
+      })
+    })
+  }
+
+  // examples: https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4
+  public object(url: string): Promise<any> {
+    const key = this.cache.get(url)
+    url = key ? key : url
+
+    return new Promise(resolve => {
+      this.objectLoader.load(url, (json: any) => {
+        resolve(json)
       })
     })
   }
