@@ -4,7 +4,8 @@ import {
   OrthographicCamera,
   WebGLRenderer,
   AmbientLight,
-  DirectionalLight
+  DirectionalLight,
+  Color
 } from '@enable3d/three-wrapper/dist'
 
 import { Sky, OrbitControls } from '@enable3d/three-wrapper/dist/index'
@@ -78,48 +79,56 @@ export default class WarpSpeed {
     }
 
     if (features.includes('sky')) {
-      const sky = new Sky()
-      sky.scale.setScalar(450000)
-      this.scene.add(sky)
+      // https://github.com/mrdoob/three.js/blob/master/examples/webgl_lights_hemisphere.html
 
-      const sunSphere = new THREE.Mesh(
-        new THREE.SphereBufferGeometry(20000, 16, 8),
-        new THREE.MeshBasicMaterial({ color: 0xffffff })
-      )
-      sunSphere.position.y = -700000
-      sunSphere.visible = false
-      this.scene.add(sunSphere)
+      // SKYDOME
 
-      const effectController = {
-        turbidity: 10,
-        rayleigh: 2,
-        mieCoefficient: 0.005,
-        mieDirectionalG: 0.8,
-        luminance: 1,
-        inclination: 0.25, // elevation / inclination
-        azimuth: 0.25, // Facing front,
-        sun: !true
+      const vertexShader = [
+        'varying vec3 vWorldPosition;',
+        '',
+        'void main() {',
+        '',
+        'vec4 worldPosition = modelMatrix * vec4( position, 1.0 );',
+        'vWorldPosition = worldPosition.xyz;',
+        '',
+        'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
+        '',
+        '}'
+      ].join('\n')
+
+      const fragmentShader = [
+        'uniform vec3 topColor;',
+        'uniform vec3 bottomColor;',
+        'uniform float offset;',
+        'uniform float exponent;',
+        '',
+        'varying vec3 vWorldPosition;',
+        '',
+        'void main() {',
+        '',
+        'float h = normalize( vWorldPosition + offset ).y;',
+        'gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( max( h , 0.0), exponent ), 0.0 ) ), 1.0 );',
+        '',
+        '}'
+      ].join('\n')
+
+      const uniforms = {
+        topColor: { value: new THREE.Color(0x0077ff) },
+        bottomColor: { value: new THREE.Color(0xedf5ff) },
+        offset: { value: 33 },
+        exponent: { value: 0.6 }
       }
 
-      const distance = 400000
+      var skyGeo = new THREE.SphereBufferGeometry(500, 32, 15)
+      var skyMat = new THREE.ShaderMaterial({
+        uniforms: uniforms,
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+        side: THREE.BackSide
+      })
 
-      const uniforms = sky.material.uniforms
-      uniforms['turbidity'].value = effectController.turbidity
-      uniforms['rayleigh'].value = effectController.rayleigh
-      uniforms['mieCoefficient'].value = effectController.mieCoefficient
-      uniforms['mieDirectionalG'].value = effectController.mieDirectionalG
-      uniforms['luminance'].value = effectController.luminance
-
-      const theta = Math.PI * (effectController.inclination - 0.5)
-      const phi = 2 * Math.PI * (effectController.azimuth - 0.5)
-
-      sunSphere.position.x = distance * Math.cos(phi)
-      sunSphere.position.y = distance * Math.sin(phi) * Math.sin(theta)
-      sunSphere.position.z = distance * Math.sin(phi) * Math.cos(theta)
-
-      sunSphere.visible = effectController.sun
-
-      uniforms['sunPosition'].value.copy(sunSphere.position)
+      var sky = new THREE.Mesh(skyGeo, skyMat)
+      this.scene.add(sky)
     }
 
     if (features.includes('camera')) {
