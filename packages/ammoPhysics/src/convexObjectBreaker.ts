@@ -392,6 +392,7 @@ ConvexObjectBreaker.prototype = {
         object1 = new Mesh(new ConvexBufferGeometry(points1), object.material)
         object1.position.copy(this.tempCM1)
         object1.quaternion.copy(object.quaternion)
+        object1.userData = object.userData
         
         this.prepareBreakableObject(
           object1,
@@ -413,6 +414,7 @@ ConvexObjectBreaker.prototype = {
         object2 = new Mesh(new ConvexBufferGeometry(points2), object.material)
         object2.position.copy(this.tempCM2)
         object2.quaternion.copy(object.quaternion)
+        object2.userData = object.userData
 
         this.prepareBreakableObject(
           object2,
