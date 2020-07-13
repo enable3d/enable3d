@@ -17,7 +17,7 @@
     "@enable3d/phaser-extension": "^0.19.1",
     "@enable3d/three-graphics": "^0.19.1",
     "enable3d": "^0.19.1",
-    "phaser": "^3.22.0"
+    "phaser": "~3.23.0"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^5.1.1",
