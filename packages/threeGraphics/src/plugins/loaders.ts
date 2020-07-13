@@ -91,17 +91,6 @@ export default class Loaders {
     })
   }
 
-  public image(url: string): Promise<HTMLImageElement> {
-    const key = this.cache.get(url)
-    url = key ? key : url
-
-    return new Promise(resolve => {
-      this.imageLoader.load(url, img => {
-        return resolve(img)
-      })
-    })
-  }
-
   public svg(url: string): Promise<SVGResult> {
     const key = this.cache.get(url)
     url = key ? key : url
