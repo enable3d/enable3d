@@ -97,11 +97,12 @@ ConvexObjectBreaker.prototype = {
       console.error('THREE.ConvexObjectBreaker.prepareBreakableObject(): Parameter object must have a BufferGeometry.')
     }
 
-    var userData = object.userData
-    userData.mass = mass
-    userData.velocity = velocity.clone()
-    userData.angularVelocity = angularVelocity.clone()
-    userData.breakable = breakable
+    object.userData.ammoPhysicsData = {} // initialise our new data container
+    var ammoPhysicsData = object.userData.ammoPhysicsData // get reference to it
+    ammoPhysicsData.mass = mass
+    ammoPhysicsData.velocity = velocity.clone()
+    ammoPhysicsData.angularVelocity = angularVelocity.clone()
+    ammoPhysicsData.breakable = breakable
   },
 
   /*
@@ -344,7 +345,11 @@ ConvexObjectBreaker.prototype = {
     }
 
     // Calculate debris mass (very fast and imprecise):
-    var newMass = object.userData.mass * 0.5
+
+    var newMass = 0.5
+    // if(object.userData.ammoPhysicsData) {
+      newMass = object.userData.ammoPhysicsData.mass * 0.5
+    // }
 
     // Calculate debris Center of Mass (again fast and imprecise)
     this.tempCM1.set(0, 0, 0)
@@ -383,6 +388,14 @@ ConvexObjectBreaker.prototype = {
 
     var numObjects = 0
 
+
+    var newVelocity = 0
+    var newAngularVelocity = 0
+    // if (object.userData.ammoPhysicsData !== undefined) {
+      newVelocity = object.userData.ammoPhysicsData.velocity
+      newAngularVelocity = object.userData.ammoPhysicsData.angularVelocity
+    // }
+    
     /**
      * MOD: Wrapped in try catch block to avoid errors
      */
@@ -391,18 +404,19 @@ ConvexObjectBreaker.prototype = {
         object1 = new Mesh(new ConvexBufferGeometry(points1), object.material)
         object1.position.copy(this.tempCM1)
         object1.quaternion.copy(object.quaternion)
-
+        
         this.prepareBreakableObject(
           object1,
           newMass,
-          object.userData.velocity,
-          object.userData.angularVelocity,
+          newVelocity,
+          newAngularVelocity,
           2 * radius1 > this.minSizeForBreak
         )
 
         numObjects++
       } catch (error) {
         logger('Error in ConvexObjectBreaker.ts')
+        logger(error)
       }
     }
 
@@ -415,14 +429,15 @@ ConvexObjectBreaker.prototype = {
         this.prepareBreakableObject(
           object2,
           newMass,
-          object.userData.velocity,
-          object.userData.angularVelocity,
+          newVelocity,
+          newAngularVelocity,
           2 * radius2 > this.minSizeForBreak
         )
 
         numObjects++
       } catch (error) {
         logger('Error in ConvexObjectBreaker.ts')
+        logger(error)
       }
     }
 

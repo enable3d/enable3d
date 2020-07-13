@@ -383,19 +383,19 @@ class AmmoPhysics extends EventEmitter {
       const fractureImpulse = 5 //250
       const MAX_FRAGMENT_DEPTH = 2
 
-      // since the library convexBreaker makes use of three's userData
-      // we have to clone the necessary params to threeObjectX.userData
+      // since the library convexBreaker makes use of three's userData.ammoPhysicsData
+      // we have to clone the necessary params to threeObjectX.userData.ammoPhysicsData
       // TODO improve this
 
       this.emptyV3.set(0, 0, 0)
-      threeObject0.userData = {
+      threeObject0.userData.ammoPhysicsData = {
         mass: 1,
         velocity: this.emptyV3,
         angularVelocity: this.emptyV3,
         breakable: breakable0,
         physicsBody: body0
       }
-      threeObject1.userData = {
+      threeObject1.userData.ammoPhysicsData = {
         mass: 1,
         velocity: this.emptyV3,
         angularVelocity: this.emptyV3,
@@ -414,8 +414,8 @@ class AmmoPhysics extends EventEmitter {
           const vel = body0.getLinearVelocity()
           const angVel = body0.getAngularVelocity()
           const fragment = debris[j] as ExtendedObject3D
-          fragment.userData.velocity.set(vel.x(), vel.y(), vel.z())
-          fragment.userData.angularVelocity.set(angVel.x(), angVel.y(), angVel.z())
+          fragment.userData.ammoPhysicsData.velocity.set(vel.x(), vel.y(), vel.z())
+          fragment.userData.ammoPhysicsData.angularVelocity.set(angVel.x(), angVel.y(), angVel.z())
 
           this.createDebrisFromBreakableObject(fragment, threeObject0)
         }
@@ -432,8 +432,8 @@ class AmmoPhysics extends EventEmitter {
           const vel = body1.getLinearVelocity()
           const angVel = body1.getAngularVelocity()
           const fragment = debris[j] as ExtendedObject3D
-          fragment.userData.velocity.set(vel.x(), vel.y(), vel.z())
-          fragment.userData.angularVelocity.set(angVel.x(), angVel.y(), angVel.z())
+          fragment.userData.ammoPhysicsData.velocity.set(vel.x(), vel.y(), vel.z())
+          fragment.userData.ammoPhysicsData.angularVelocity.set(angVel.x(), angVel.y(), angVel.z())
 
           this.createDebrisFromBreakableObject(fragment, threeObject1)
         }
