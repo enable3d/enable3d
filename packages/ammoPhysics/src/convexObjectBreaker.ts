@@ -97,7 +97,7 @@ ConvexObjectBreaker.prototype = {
       console.error('THREE.ConvexObjectBreaker.prepareBreakableObject(): Parameter object must have a BufferGeometry.')
     }
 
-    object.userData.ammoPhysicsData = {} // initialise our new data container
+    object.userData.ammoPhysicsData = {} // initialise our new data container - would be best to move this to ExtendedObject and not rely on userData at all for best compatibility
     var ammoPhysicsData = object.userData.ammoPhysicsData // get reference to it
     ammoPhysicsData.mass = mass
     ammoPhysicsData.velocity = velocity.clone()
@@ -345,11 +345,7 @@ ConvexObjectBreaker.prototype = {
     }
 
     // Calculate debris mass (very fast and imprecise):
-
-    var newMass = 0.5
-    // if(object.userData.ammoPhysicsData) {
-      newMass = object.userData.ammoPhysicsData.mass * 0.5
-    // }
+    var newMass = object.userData.ammoPhysicsData.mass * 0.5
 
     // Calculate debris Center of Mass (again fast and imprecise)
     this.tempCM1.set(0, 0, 0)
@@ -387,14 +383,6 @@ ConvexObjectBreaker.prototype = {
     var object2 = null
 
     var numObjects = 0
-
-
-    var newVelocity = 0
-    var newAngularVelocity = 0
-    // if (object.userData.ammoPhysicsData !== undefined) {
-      newVelocity = object.userData.ammoPhysicsData.velocity
-      newAngularVelocity = object.userData.ammoPhysicsData.angularVelocity
-    // }
     
     /**
      * MOD: Wrapped in try catch block to avoid errors
@@ -408,8 +396,8 @@ ConvexObjectBreaker.prototype = {
         this.prepareBreakableObject(
           object1,
           newMass,
-          newVelocity,
-          newAngularVelocity,
+          object.userData.ammoPhysicsData.velocity,
+          object.userData.ammoPhysicsData.angularVelocity,
           2 * radius1 > this.minSizeForBreak
         )
 
@@ -429,8 +417,8 @@ ConvexObjectBreaker.prototype = {
         this.prepareBreakableObject(
           object2,
           newMass,
-          newVelocity,
-          newAngularVelocity,
+          object.userData.ammoPhysicsData.velocity,
+          object.userData.ammoPhysicsData.angularVelocity,
           2 * radius2 > this.minSizeForBreak
         )
 
