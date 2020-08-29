@@ -48,9 +48,9 @@ class ThirdPersonControls {
   /** Phi in deg */
   public phi: number
   /** Max Phi in deg */
-  public maxPhi?: number
+  public maxPhi: number
   /** Min Phi in deg */
-  public minPhi?: number
+  public minPhi: number
 
   constructor(
     private camera: PerspectiveCamera | OrthographicCamera,
