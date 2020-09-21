@@ -30,7 +30,11 @@ export interface ThirdPersonControlsConfig {
   /** Theta in deg */
   theta?: number
   /** Phi in deg */
-  phi?: number
+  phi?: number,
+  /** Max Phi in deg */
+  maxPhi?: number,
+  /** Min Phi in deg */
+  minPhi?: number
 }
 
 class ThirdPersonControls {
@@ -43,6 +47,10 @@ class ThirdPersonControls {
   public theta: number
   /** Phi in deg */
   public phi: number
+  /** Max Phi in deg */
+  public maxPhi: number
+  /** Min Phi in deg */
+  public minPhi: number
 
   constructor(
     private camera: PerspectiveCamera | OrthographicCamera,
@@ -58,7 +66,11 @@ class ThirdPersonControls {
       pointerLock = true,
       autoUpdate = true,
       theta = 0,
-      phi = 0
+      phi = 0,
+      /** Max Phi in deg */
+      maxPhi = 85,
+      /** Min Phi in deg */
+      minPhi = -85
     } = config
 
     this.offset = offset
@@ -68,6 +80,8 @@ class ThirdPersonControls {
     this.interpolationFactor = interpolationFactor
     this.theta = theta
     this.phi = phi
+    this.maxPhi = maxPhi
+    this.minPhi = minPhi
 
     // if (pointerLock) {
     //   scene.input.on('pointerdown', () => {
@@ -93,13 +107,14 @@ class ThirdPersonControls {
     this.theta -= deltaX * (this.sensitivity.x / 2)
     this.theta %= 360
     this.phi += deltaY * (this.sensitivity.y / 2)
-    this.phi = Math.min(85, Math.max(-85, this.phi))
+    this.phi = Math.min(this.maxPhi, Math.max(this.minPhi, this.phi))
 
     this.radius = THREE_Math.lerp(this.radius, this.targetRadius, this.interpolationFactor)
 
     this.camera.position.x =
       target.x + this.radius * Math.sin((this.theta * Math.PI) / 180) * Math.cos((this.phi * Math.PI) / 180)
     this.camera.position.y = target.y + this.radius * Math.sin((this.phi * Math.PI) / 180)
+
     this.camera.position.z =
       target.z + this.radius * Math.cos((this.theta * Math.PI) / 180) * Math.cos((this.phi * Math.PI) / 180)
 
