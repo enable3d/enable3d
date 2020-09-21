@@ -6,6 +6,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "webpack-dev-server --config webpack.dev.js",
+    "start-worker": "webpack-dev-server --config webpack.worker.js",
     "build": "webpack --config webpack.prod.js"
   },
   "keywords": [],
