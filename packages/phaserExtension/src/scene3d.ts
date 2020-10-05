@@ -8,6 +8,7 @@ import Third from './third'
 import * as Phaser from 'phaser'
 import { ThreeGraphicsConfig } from '@enable3d/common/dist/types'
 import { WarpedStartFeatures } from '@enable3d/three-graphics/dist/plugins'
+import { Color } from '@enable3d/three-wrapper/dist'
 
 export class Scene3D extends Phaser.Scene {
   constructor(config: string | Phaser.Types.Scenes.SettingsConfig) {
@@ -38,13 +39,21 @@ export class Scene3D extends Phaser.Scene {
 
   /** Place this in the init() function */
   public accessThirdDimension(config: ThreeGraphicsConfig = {}) {
-    // set default background color to white
-    this.cameras.main.setBackgroundColor(0xffffff)
     // @ts-ignore
     for (let key in this.third) delete this.third[key]
     delete this.third
     // create new third
     this.third = new Third(this, config)
+
+    // set phaser background color to white
+    // this.cameras.main.setBackgroundColor(0xffffff)
+
+    // set phaser background color to transparent
+    this.cameras.main.transparent = true
+    this.cameras.main.setBackgroundColor('rgba(0,0,0,0)')
+
+    // set three.js background color to white
+    this.third.scene.background = new Color('white')
   }
 
   /** Combines the 3 XR update methods */
