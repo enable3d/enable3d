@@ -18,7 +18,7 @@ export { ExtendedGroup }
 
 import Shapes from './shapes'
 import Constraints from './constraints'
-import EventEmitter from 'eventemitter3'
+import { EventEmitter } from 'eventemitter3'
 import { Vector3, Quaternion, Scene, Mesh, Euler } from '@enable3d/three-wrapper/dist/index'
 import { createCollisionShapes } from './three-to-ammo'
 import { addTorusShape } from './torusShape'

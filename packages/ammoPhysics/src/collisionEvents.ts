@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import EventEmitter from 'eventemitter3'
+import { EventEmitter } from 'eventemitter3'
 import { ExtendedObject3D, CollisionEvent } from '@enable3d/common/dist/types'
 import { Types } from './physics'
 

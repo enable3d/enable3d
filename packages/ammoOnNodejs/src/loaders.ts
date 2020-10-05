@@ -16,7 +16,7 @@ declare global {
 /**
  * Imports
  */
-import fs from 'fs'
+import { readFile, existsSync } from 'fs'
 import * as THREE from 'three'
 global.THREE = THREE
 
@@ -51,9 +51,9 @@ export class FBXLoader extends Loader {
   public load(absolutePath: string) {
     return new Promise((resolve, reject) => {
       try {
-        if (!fs.existsSync(absolutePath)) return reject('fbx file not found')
+        if (!existsSync(absolutePath)) return reject('fbx file not found')
 
-        fs.readFile(absolutePath, (err: any, buffer: Buffer) => {
+        readFile(absolutePath, (err: any, buffer: Buffer) => {
           if (err) throw err
           const trimmed = this.trimBuffer(buffer)
           try {
@@ -78,9 +78,9 @@ export class GLTFLoader extends Loader {
   public load(absolutePath: string) {
     return new Promise((resolve, reject) => {
       try {
-        if (!fs.existsSync(absolutePath)) return reject('gltf file not found')
+        if (!existsSync(absolutePath)) return reject('gltf file not found')
 
-        fs.readFile(absolutePath, (err: any, buffer: Buffer) => {
+        readFile(absolutePath, (err: any, buffer: Buffer) => {
           if (err) throw err
           const trimmed = this.trimBuffer(buffer)
           this.loader.parse(

@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import EventEmitter from 'eventemitter3'
+import { EventEmitter } from 'eventemitter3'
 
 export interface JoyStickButton {
   id: number
@@ -144,8 +144,9 @@ export class JoyStick extends EventEmitter {
     const { size } = styles
 
     const thumb = document.createElement('div')
-    thumb.style.cssText = `position: absolute; left: ${size / 4}px; top: ${size / 4}px; width: ${size /
-      2}px; height: ${size / 2}px; border-radius: 50%; background: #fff; `
+    thumb.style.cssText = `position: absolute; left: ${size / 4}px; top: ${size / 4}px; width: ${size / 2}px; height: ${
+      size / 2
+    }px; border-radius: 50%; background: #fff; `
     return thumb
   }
 

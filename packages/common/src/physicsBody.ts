@@ -6,7 +6,7 @@
 
 import { ExtendedObject3D, XYZ } from './types'
 
-import EventEmitter from 'eventemitter3'
+import { EventEmitter } from 'eventemitter3'
 import { Euler, Quaternion } from '@enable3d/three-wrapper/dist/index'
 import { CollisionEvent } from './types'
 
@@ -28,7 +28,7 @@ class PhysicsBody {
   private tmpBtVector3_1 = new Ammo.btVector3()
   private tmpBtQuaternion = new Ammo.btQuaternion(0, 0, 0, 1)
 
-  private eventEmitter: EventEmitter
+  private eventEmitter = new EventEmitter()
 
   constructor(private physics: any, public ammo: Ammo.btRigidBody) {
     // @ts-ignore
