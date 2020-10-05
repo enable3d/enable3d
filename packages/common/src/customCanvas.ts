@@ -62,14 +62,14 @@ const customCanvas = (
 
   //  default context config for phaser
   const contextCreationConfig = {
-    alpha: false,
-    depth: false,
-    antialias: true,
-    premultipliedAlpha: true,
-    stencil: true,
-    preserveDrawingBuffer: false,
-    failIfMajorPerformanceCaveat: false,
-    powerPreference: 'default',
+    // alpha: false,
+    // depth: false,
+    // antialias: true,
+    // premultipliedAlpha: true,
+    // stencil: true,
+    // preserveDrawingBuffer: false,
+    // failIfMajorPerformanceCaveat: false,
+    // powerPreference: 'default',
     // merge bots context attributes
     ...contextAttributes
   }
