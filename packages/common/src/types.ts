@@ -14,7 +14,7 @@ import {
   PerspectiveCamera,
   OrthographicCamera,
   Shape,
-  ExtrudeGeometryOptions,
+  // ExtrudeGeometryOptions, // missing since three.js r121
   MeshLambertMaterialParameters,
   Texture,
   MeshToonMaterialParameters,
@@ -202,7 +202,7 @@ export interface TorusConfig extends GeometryConfig, XYZ {
   arc?: number
 }
 
-export interface ExtrudeConfig extends GeometryConfig, XYZ, ExtrudeGeometryOptions {
+export interface ExtrudeConfig extends GeometryConfig, XYZ /*, ExtrudeGeometryOptions */ {
   shape: Shape
   autoCenter?: boolean
 }

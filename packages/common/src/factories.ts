@@ -177,6 +177,7 @@ export default class Factories {
 
   private makeExtrude(extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig) {
     const { x, y, z, name, shape, autoCenter = true, breakable = false, bufferGeometry = true, ...rest } = extrudeConfig
+    // @ts-ignore // ExtrudeGeometryOptions interface missing since three.js r121
     const { depth = 1, bevelEnabled = false } = rest
     const geometry =
       bufferGeometry || breakable || this.isHeadless
