@@ -35,7 +35,7 @@ const customCanvas = (
   const parameters: any = { antialias }
 
   // https://github.com/mrdoob/three.js/blob/9549909d9c631aaa20d81c2fec863a470fa2e3f0/src/renderers/WebGLRenderer.js#L58
-  const _alpha = parameters.alpha !== undefined ? parameters.alpha : false
+  const _alpha = parameters.alpha !== undefined ? parameters.alpha : true
   const _depth = parameters.depth !== undefined ? parameters.depth : true
   const _stencil = parameters.stencil !== undefined ? parameters.stencil : true
   const _antialias = parameters.antialias !== undefined ? parameters.antialias : false
