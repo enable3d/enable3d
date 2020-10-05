@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": "./packages",
     "baseUrl": "./packages",
-    "target": "ES5",
+    "target": "ES6",
     "module": "ESNext",
     "lib": ["DOM", "ESNext", "ScriptHost"],
     "declaration": true,
