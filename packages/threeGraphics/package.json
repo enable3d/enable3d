@@ -4,7 +4,7 @@
   "description": "3D library wrapping three.js and ammo.js",
   "main": "dist/index.js",
   "scripts": {
-    "tsc": "tsc",
+    "tsc": "node version.js && tsc",
     "update": "npm update",
     "fix": "npm audit fix"
   },

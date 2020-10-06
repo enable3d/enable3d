@@ -95,16 +95,16 @@ class AmmoPhysics extends EventEmitter {
     if (scene !== 'headless') {
       this.defaultMaterial = new DefaultMaterial()
 
-      const version = `three.js version ${REVISION}`
-      console.log(
-        `%c %c %c %c %c ${version} %c https://threejs.org/`,
-        'background: #ff0000',
-        'background: #ffff00',
-        'background: #00ff00',
-        'background: #00ffff',
-        'color: #fff; background: #000000;',
-        'background: none'
-      )
+      // const info = `Ammo.js physics provided by enable3d`
+      // console.log(
+      //   `%c %c %c %c %c ${info} %c https://enable3d.io/`,
+      //   'background: #ff0000',
+      //   'background: #ffff00',
+      //   'background: #00ff00',
+      //   'background: #00ffff',
+      //   'color: #fff; background: #000000;',
+      //   'background: none'
+      // )
     }
 
     this.start()

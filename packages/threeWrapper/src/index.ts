@@ -29,3 +29,16 @@ export { OrbitControls }
 
 import { WEBGL } from 'three/examples/jsm/WebGL'
 export { WEBGL }
+
+import { REVISION } from 'three'
+
+const info = `Three.js r${REVISION}`
+console.log(
+  `%c %c %c %c %c ${info} %c https://threejs.org/`,
+  'background: #ff0000',
+  'background: #ffff00',
+  'background: #00ff00',
+  'background: #00ffff',
+  'color: #fff; background: #000000;',
+  'background: none'
+)
