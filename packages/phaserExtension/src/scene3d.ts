@@ -37,11 +37,17 @@ export class Scene3D extends Phaser.Scene {
     )
   }
 
-  /** Place this in the init() function */
-  public accessThirdDimension(config: ThreeGraphicsConfig = {}) {
+  public clearThirdDimension() {
     // @ts-ignore
     for (let key in this.third) delete this.third[key]
+    // @ts-ignore
     delete this.third
+  }
+
+  /** Place this in the init() function */
+  public accessThirdDimension(config: ThreeGraphicsConfig = {}) {
+    this.clearThirdDimension()
+
     // create new third
     this.third = new Third(this, config)
 

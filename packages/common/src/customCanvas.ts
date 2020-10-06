@@ -22,7 +22,7 @@ interface CustomCanvasConfig {
 const customCanvas = (
   customCanvasConfig: CustomCanvasConfig = {}
 ): { canvas: HTMLCanvasElement; context: CanvasRenderingContext2D } => {
-  const { antialias = false, parent: p = undefined, canvasId = 'myCustomCanvas' } = customCanvasConfig
+  const { antialias = true, parent: p = undefined, canvasId = 'enable3d-phaser-canvas' } = customCanvasConfig
 
   // create canvas
   const myCustomCanvas: any = document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas')

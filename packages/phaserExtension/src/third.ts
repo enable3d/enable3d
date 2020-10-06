@@ -38,19 +38,66 @@ class Third extends ThreeGraphics {
    * @param config Phaser3D Config
    */
   constructor(scene3D: Scene3D, config: ThreeGraphicsConfig = {}) {
+    const canvas = document.getElementById('enable3d-three-canvas')
+    let options = {}
+    if (canvas)
+      options = {
+        canvas: canvas
+      }
+
     // add a custom renderer to ThreeGraphics
-    config.renderer = new WebGLRenderer({
-      canvas: scene3D.sys.game.canvas as HTMLCanvasElement,
-      context: scene3D.sys.game.context as WebGLRenderingContext
-    })
+    config.renderer = new WebGLRenderer({ ...options, antialias: config.antialias || false })
 
     super(config)
+
+    scene3D.sys.game.canvas.parentElement?.insertBefore(config.renderer.domElement, scene3D.sys.game.canvas)
+    scene3D.sys.game.canvas.style.position = 'relative'
+
+    console.log()
+
+    const resize = () => {
+      if (!config.renderer) return
+
+      const { width, height, marginLeft, marginTop } = scene3D.sys.game.canvas.style
+
+      config.renderer.domElement.id = 'enable3d-three-canvas'
+
+      // @ts-ignore
+      this.camera?.aspect = scene3D.sys.game.scale.baseSize.width / scene3D.sys.game.scale.baseSize.height
+      this.camera?.updateProjectionMatrix()
+
+      config.renderer.setSize(scene3D.sys.game.scale.baseSize.width, scene3D.sys.game.scale.baseSize.height)
+
+      config.renderer.domElement.style.width = width
+      config.renderer.domElement.style.height = height
+      config.renderer.domElement.style.marginLeft = marginLeft
+      config.renderer.domElement.style.marginTop = marginTop
+    }
+
+    resize()
+
+    scene3D.scale.on('resize', () => {
+      resize()
+    })
+
+    const style = document.createElement('style')
+    style.innerText = `
+      #enable3d-phaser-canvas:focus,
+      #enable3d-three-canvas:focus {
+        outline: none;
+      }
+
+      #enable3d-three-canvas {
+        position: absolute;
+      }
+    `
+    document.head.appendChild(style)
 
     const { enableXR = false } = config
     this.isXrEnabled = enableXR
 
     //  We don't want three.js to wipe our gl context!
-    this.renderer.autoClear = false
+    // this.renderer.autoClear = false
 
     this.scene3D = scene3D
 
@@ -81,12 +128,13 @@ class Third extends ThreeGraphics {
       })
     }
 
-    const view: any = scene3D.add.extern()
+    const view = scene3D.add.extern()
     // phaser renderer
+    // @ts-ignore
     view.render = (_renderer: WebGLRenderer) => {
       if (!this.renderer.xr.isPresenting) {
         scene3D.updateLoopXR(scene3D.sys.game.loop.time, scene3D.sys.game.loop.delta)
-        this.renderer.state.reset()
+        // this.renderer.state.reset()
         this.renderer.render(this.scene, this.camera)
       }
     }
@@ -113,6 +161,10 @@ class Third extends ThreeGraphics {
 
     // remove the update event which is used by ThreeGraphics.ts and AmmoPhysics.ts
     scene3D.events.once('shutdown', () => {
+      // view.destroy(true)
+      // this.renderer.dispose()
+      // this.renderer.domElement.remove()
+      scene3D.clearThirdDimension()
       scene3D.events.removeListener('update')
     })
   }

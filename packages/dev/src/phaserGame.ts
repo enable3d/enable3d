@@ -6,12 +6,12 @@ import { enable3d, Canvas, ExtendedObject3D } from '@enable3d/phaser-extension'
 const startPhaserGame = () => {
   const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.WEBGL,
-    backgroundColor: '#ffffff',
+    transparent: true,
     scale: {
       mode: Phaser.Scale.FIT,
       autoCenter: Phaser.Scale.CENTER_BOTH,
-      width: window.innerWidth, // * window.devicePixelRatio,
-      height: window.innerHeight // * window.devicePixelRatio
+      width: 1280,
+      height: 720
     },
     scene: [PreloadScene, MainScene],
     ...Canvas()

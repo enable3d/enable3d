@@ -194,7 +194,11 @@ export default class WarpSpeed {
       // for phaser
       // this.root is the phaser scene (scene3D)
       // this.root.scale.parent instead of this.renderer.domElement
-      const orbitControls = new OrbitControls(this.camera, this.renderer.domElement)
+
+      const orbitControls = new OrbitControls(
+        this.camera,
+        document.getElementById('enable3d-phaser-canvas') || this.renderer.domElement
+      )
       Features = { orbitControls, ...Features }
     }
 
