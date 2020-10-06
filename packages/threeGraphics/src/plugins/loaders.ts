@@ -103,8 +103,13 @@ export default class Loaders {
   }
 
   public texture(url: string): Promise<Texture> {
-    const key = this.cache.get(url)
-    url = key ? key : url
+    const isBase64 = /^data:image\/[\S]+;base64,/gm.test(url)
+
+    // we do not want to cache base64 images
+    if (!isBase64) {
+      const key = this.cache.get(url)
+      url = key ? key : url
+    }
 
     return new Promise(resolve => {
       this.textureLoader.load(url, (texture: Texture) => {
