@@ -27,6 +27,25 @@ Written in TypeScript, uses three.js and ammo.js, brings physics to your three.j
 
 Visit the [enable3d website](https://enable3d.io) for documentation and examples.
 
+## Upgrade to v0.20.0
+
+If you are using the Phaser 3D Extension, you have to add `{ transparent: true }` to the Phaser game config.
+
+```js
+const config = {
+  type: Phaser.WEBGL,
+  transparent: true,
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    width: 1280,
+    height: 720
+  },
+  scene: [MainScene],
+  ...Canvas()
+}
+```
+
 ## Packages
 
 This project is split into many separate npm packages. To better understand the structure and relationships between the packages, see the diagram.

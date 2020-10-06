@@ -1,6 +1,6 @@
 {
   "name": "@enable3d/three-graphics",
-  "version": "0.19.1",
+  "version": "0.20.0",
   "description": "3D library wrapping three.js and ammo.js",
   "main": "dist/index.js",
   "scripts": {
@@ -26,9 +26,9 @@
   },
   "homepage": "https://enable3d.io",
   "dependencies": {
-    "@enable3d/ammo-physics": "^0.19.1",
-    "@enable3d/common": "^0.19.1",
-    "@enable3d/three-wrapper": "^0.19.1"
+    "@enable3d/ammo-physics": "^0.20.0",
+    "@enable3d/common": "^0.20.0",
+    "@enable3d/three-wrapper": "^0.20.0"
   },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"
