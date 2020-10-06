@@ -7,7 +7,7 @@
     "tsc": "tsc",
     "update": "npm update",
     "fix": "npm audit fix",
-    "bundle": "webpack --config ../../webpack/webpack.enable3d.js --path=../bundles --packageVersion=${npm_package_version}"
+    "bundle": "cross-env-shell webpack --config ../../webpack/webpack.enable3d.js --path=../bundles --packageVersion=${npm_package_version}"
   },
   "keywords": [
     "3d",
