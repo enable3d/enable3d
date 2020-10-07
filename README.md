@@ -29,7 +29,17 @@ Visit the [enable3d website](https://enable3d.io) for documentation and examples
 
 ## Upgrade to v0.20.0
 
-If you are using the Phaser 3D Extension, you have to add `{ transparent: true }` to the Phaser game config.
+### ES2015
+
+enable3d now targets es2015+. If you use TypeScript or Babel, set your target to es2015 (es6) or higher.
+
+### Dual Canvas Mode in Phaser
+
+Since three.js r118, it is hard (impossible) to share the WebGL context with Phaser. Enable3d will therefore create a second canvas for 3d elements. It does this automatically. You do not have to make any changes manually.
+
+### Phaser Config
+
+If you are using the Phaser 3D Extension, you have to add `{ transparent: true }` to the Phaser game config and remove `backgroundColor` (if present).
 
 ```js
 const config = {
