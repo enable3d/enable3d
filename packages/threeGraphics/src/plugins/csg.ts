@@ -39,7 +39,6 @@ export default class CSGWrapper {
     const meshC = this.doCSG(meshA, meshB, 'union')
     this.toBufferGeometry(meshC)
 
-    this.scene.add(meshC)
     return meshC
   }
 
@@ -49,7 +48,6 @@ export default class CSGWrapper {
     const meshC = this.doCSG(meshA, meshB, 'subtract')
     this.toBufferGeometry(meshC)
 
-    this.scene.add(meshC)
     return meshC
   }
 
@@ -59,7 +57,6 @@ export default class CSGWrapper {
     const meshC = this.doCSG(meshA, meshB, 'intersect')
     this.toBufferGeometry(meshC)
 
-    this.scene.add(meshC)
     return meshC
   }
 
