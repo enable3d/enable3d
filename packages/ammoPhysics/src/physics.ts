@@ -683,6 +683,8 @@ class AmmoPhysics extends EventEmitter {
       compound = [],
       mass = 1,
       collisionFlags = 0,
+      collisionGroup = 1,
+      collisionMask = 65535, // collide with all other bodies
       offset = undefined,
       breakable = false,
       addChildren = true
@@ -742,18 +744,20 @@ class AmmoPhysics extends EventEmitter {
     //   Ammo.destroy(localScale)
     // }
 
-    this.addRigidBodyToWorld(object, rigidBody, collisionFlags, breakable, offset)
+    this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, breakable, offset)
   }
 
   public addRigidBodyToWorld(
     object: ExtendedObject3D,
     rigidBody: Ammo.btRigidBody,
     collisionFlags = 0,
+    collisionGroup = 1,
+    collisionMask = 65535, // collide with all other bodies ("1111111111111111")
     breakable?: boolean,
     offset?: { x?: number; y?: number; z?: number }
   ) {
     this.rigidBodies.push(object)
-    this.physicsWorld.addRigidBody(rigidBody)
+    this.physicsWorld.addRigidBody(rigidBody, collisionGroup, collisionMask)
 
     const ptr = Object.values(rigidBody)[0]
     // @ts-ignore

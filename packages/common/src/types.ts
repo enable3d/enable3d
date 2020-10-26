@@ -137,12 +137,17 @@ export interface AddMaterial {
   (materialConfig?: MaterialConfig): Material | Material[]
 }
 
-interface GeometryConfig {
-  name?: string
+interface GeometryPhysicsOptions {
   /** Set the collision flags. 0 is DYNAMIC, 1 is STATIC, 2 is KINEMATIC, 4 GHOST */
   collisionFlags?: number
+  collisionGroup?: number
+  collisionMask?: number
   breakable?: boolean
   mass?: number
+}
+
+interface GeometryConfig extends GeometryPhysicsOptions {
+  name?: string
   bufferGeometry?: boolean
 }
 
@@ -215,19 +220,15 @@ export interface HeightMapConfig {
 
 export type CustomCompoundShape = { shape: string; [property: string]: any }[]
 
-export interface AddExistingConfig extends XYZ {
+export interface AddExistingConfig extends XYZ, GeometryPhysicsOptions {
   width?: number
   height?: number
   depth?: number
   radius?: number
   shape?: string
   compound?: CustomCompoundShape
-  mass?: number
-  /** Set the collision flags. 0 is DYNAMIC, 1 is STATIC, 2 is KINEMATIC, 4 GHOST */
-  collisionFlags?: number
   autoCenter?: boolean
   offset?: { x?: number; y?: number; z?: number }
-  breakable?: boolean
   addChildren?: boolean
 }
 
