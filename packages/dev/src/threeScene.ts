@@ -1,48 +1,28 @@
 import { Project, Scene3D, PhysicsLoader, ExtendedObject3D } from 'enable3d'
-import { SpotLight, SpotLightHelper, PointLight, DirectionalLight } from '../../threeWrapper/dist'
+import { Vehicle } from '@enable3d/ammo-physics/dist/vehicle'
 
 const isTouchDevice = 'ontouchstart' in window
 
 class MainScene extends Scene3D {
+  car: Vehicle
+
   async create() {
-    this.warpSpeed()
+    this.warpSpeed('-ground')
+
     this.camera.position.set(2, 2, 4)
+    this.physics.debug?.enable()
 
-    this.load.gltf('/assets/box_man.glb').then(gltf => {
-      const child = gltf.scene.children[0]
+    this.physics.add.ground({ y: -1, width: 500, height: 500 })
 
-      const boxMan = new ExtendedObject3D()
-      boxMan.add(child)
-      this.scene.add(boxMan)
+    const chassis = this.physics.add.box({ depth: 3, height: 0.8, width: 1.5 })
 
-      let i = 0
-      let anims = ['run', 'sprint', 'jump_running', 'idle', 'driving', 'falling']
+    const wheelMesh = this.make.cylinder({ radiusBottom: 0.4, radiusTop: 0.4, height: 0.2 })
 
-      // ad the box man's animation mixer to the animationMixers array (for auto updates)
-      this.animationMixers.add(boxMan.animation.mixer)
+    this.car = new Vehicle(this.scene, this.physics, chassis, wheelMesh)
+  }
 
-      gltf.animations.forEach(animation => {
-        if (animation.name) {
-          // add a new animation to the box man
-          boxMan.animation.add(animation.name, animation)
-        }
-      })
-
-      // play the run animation
-      boxMan.animation.play('idle')
-
-      const nextAnimation = (time: number) => {
-        setTimeout(() => {
-          i++
-          let next = anims[i % 5]
-          boxMan.animation.play(next, 200, next === 'jump_running' ? false : true)
-          console.log('current animation', boxMan.animation.current)
-          nextAnimation(next === 'jump_running' ? 650 : 2500)
-        }, time)
-      }
-
-      nextAnimation(2500)
-    })
+  update() {
+    this.car.update()
   }
 }
 

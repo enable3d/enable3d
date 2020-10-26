@@ -35,6 +35,7 @@ export { PhysicsLoader }
 
 import * as Types from '@enable3d/common/dist/types'
 import { ClosestRaycaster, AllHitsRaycaster } from './raycaster/raycaster'
+import { Vehicle } from './vehicle'
 export { ClosestRaycaster, AllHitsRaycaster }
 export { Types }
 
