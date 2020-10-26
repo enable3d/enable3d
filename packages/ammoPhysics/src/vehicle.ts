@@ -1,7 +1,14 @@
+/**
+ * @author       Yannick Deubel (https://github.com/yandeu)
+ * @copyright    Copyright (c) 2020 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
+ * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
+ */
+
 import { ExtendedObject3D } from '@enable3d/common/dist/types'
 import { Scene } from '@enable3d/three-wrapper/dist'
 import { AmmoPhysics } from './physics'
 
+// https://github.com/kripken/ammo.js/blob/master/examples/webgl_demo_vehicle/index.html
 export class Vehicle {
   vehicle: Ammo.btRaycastVehicle
   tuning: Ammo.btVehicleTuning
@@ -69,13 +76,24 @@ export class Vehicle {
       BACK_RIGHT
     )
 
-    var engineForce = 0.2
+    var engineForce = 50
 
     this.vehicle.applyEngineForce(engineForce, BACK_LEFT)
     this.vehicle.applyEngineForce(engineForce, BACK_RIGHT)
 
     this.vehicle.setSteeringValue(0.5, FRONT_LEFT)
     this.vehicle.setSteeringValue(0.5, FRONT_RIGHT)
+
+    let bla = 0.5
+    let dir = -0.01
+
+    setInterval(() => {
+      bla += dir
+      if (bla < -0.5) dir *= -1
+      if (bla > 0.5) dir *= -1
+      this.vehicle.setSteeringValue(bla, FRONT_LEFT)
+      this.vehicle.setSteeringValue(bla, FRONT_RIGHT)
+    }, 100)
   }
 
   update() {

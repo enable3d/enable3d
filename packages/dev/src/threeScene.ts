@@ -9,14 +9,20 @@ class MainScene extends Scene3D {
   async create() {
     this.warpSpeed('-ground')
 
-    this.camera.position.set(2, 2, 4)
+    this.camera.position.set(0, 5, -5)
+    this.camera.lookAt(0, 0, 0)
     this.physics.debug?.enable()
 
-    this.physics.add.ground({ y: -1, width: 500, height: 500 })
+    this.physics.add.ground({ y: -1, width: 50, height: 50 })
 
-    const chassis = this.physics.add.box({ depth: 3, height: 0.8, width: 1.5 })
+    const chassis = this.physics.add.box({ depth: 3, height: 0.8, width: 1.5, mass: 800 })
 
-    const wheelMesh = this.make.cylinder({ radiusBottom: 0.4, radiusTop: 0.4, height: 0.2 })
+    const wheelMesh = this.make.cylinder({
+      radiusBottom: 0.4,
+      radiusTop: 0.4,
+      height: 0.2,
+      radiusSegments: 12
+    })
 
     this.car = new Vehicle(this.scene, this.physics, chassis, wheelMesh)
   }
