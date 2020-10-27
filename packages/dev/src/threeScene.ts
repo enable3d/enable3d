@@ -51,7 +51,7 @@ class MainScene extends Scene3D {
     })
 
     const chassis = this.physics.add.box(
-      { depth: 3, height: 0.5, width: 1.75, mass: 1200 },
+      { depth: 3, height: 0.8, width: 1.75, mass: 1200 },
       { lambert: { color: 'red' } }
     )
     chassis.add(this.camera)
@@ -108,7 +108,7 @@ class MainScene extends Scene3D {
     let breakingForce = 0
     const steeringIncrement = 0.04
     const steeringClamp = 0.3
-    const maxEngineForce = 3000
+    const maxEngineForce = 5000
     const maxBreakingForce = 100
 
     const speed = this.car.vehicle.getCurrentSpeedKmHour()
@@ -128,6 +128,7 @@ class MainScene extends Scene3D {
     } else {
       if (this.vehicleSteering > 0) this.vehicleSteering -= steeringIncrement / 2
       if (this.vehicleSteering < 0) this.vehicleSteering += steeringIncrement / 2
+      if (Math.abs(this.vehicleSteering) <= steeringIncrement) this.vehicleSteering = 0
     }
 
     // break

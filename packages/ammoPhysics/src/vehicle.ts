@@ -44,13 +44,13 @@ export class Vehicle {
 
     const wheelAxisPositionBack = -1
     const wheelRadiusBack = 0.4
-    const wheelHalfTrackBack = 0.9
-    const wheelAxisHeightBack = 0.3
+    const wheelHalfTrackBack = 1
+    const wheelAxisHeightBack = 0
 
     const wheelAxisFrontPosition = 1
     const wheelRadiusFront = 0.4
-    const wheelHalfTrackFront = 0.9
-    const wheelAxisHeightFront = 0.3
+    const wheelHalfTrackFront = 1
+    const wheelAxisHeightFront = 0
 
     this.addWheel(
       true,
@@ -100,12 +100,13 @@ export class Vehicle {
   }
 
   addWheel(isFront: any, pos: any, radius: number, index: number) {
-    const friction = 1000
-    const suspensionStiffness = 20.0
-    const suspensionDamping = 2.3
-    const suspensionCompression = 4.4
-    const suspensionRestLength = 0.6
-    const rollInfluence = 0.2
+    var suspensionStiffness = 50.0
+    var suspensionDamping = 2.3
+    var suspensionCompression = 4.4
+    var suspensionRestLength = 0.3
+
+    const friction = 50
+    const rollInfluence = 0.01
 
     const wheelDirectionCS0 = new Ammo.btVector3(0, -1, 0)
     const wheelAxleCS = new Ammo.btVector3(-1, 0, 0)
@@ -123,6 +124,7 @@ export class Vehicle {
     wheelInfo.set_m_suspensionStiffness(suspensionStiffness)
     wheelInfo.set_m_wheelsDampingRelaxation(suspensionDamping)
     wheelInfo.set_m_wheelsDampingCompression(suspensionCompression)
+
     wheelInfo.set_m_frictionSlip(friction)
     wheelInfo.set_m_rollInfluence(rollInfluence)
 
