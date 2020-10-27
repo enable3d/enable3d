@@ -41,15 +41,13 @@ export class Vehicle {
 
     var wheelAxisPositionBack = -1
     var wheelRadiusBack = 0.4
-    // var wheelWidthBack = 0.3
     var wheelHalfTrackBack = 1
     var wheelAxisHeightBack = 0.3
 
-    var wheelAxisFrontPosition = 1.7
+    var wheelAxisFrontPosition = 1
+    var wheelRadiusFront = 0.4
     var wheelHalfTrackFront = 1
     var wheelAxisHeightFront = 0.3
-    var wheelRadiusFront = 0.35
-    // var wheelWidthFront = 0.2
 
     this.addWheel(
       true,

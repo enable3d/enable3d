@@ -32,23 +32,37 @@ class MainScene extends Scene3D {
 
     this.camera.position.set(10, 10, 20)
     this.camera.lookAt(0, 0, 0)
-    this.physics.debug?.enable()
+    // this.physics.debug?.enable()
 
-    this.physics.add.ground({ y: -1, width: 50, height: 50 })
+    this.load.texture('/assets/grass.jpg').then(grass => {
+      const grassGround = grass.clone()
+      grassGround.needsUpdate = true
+      grassGround.wrapS = grassGround.wrapT = 1000 // RepeatWrapping
+      grassGround.offset.set(0, 0)
+      grassGround.repeat.set(5, 5)
 
-    const ramp = this.add.box({ width: 5, height: 10, z: -20 })
-    ramp.rotateX(-Math.PI / 3)
-    this.physics.add.existing(ramp, { collisionFlags: 1, mass: 0 })
+      this.physics.add.ground({ y: -1, width: 50, height: 50 }, { lambert: { map: grassGround } })
 
-    const chassis = this.physics.add.box({ depth: 3, height: 0.8, width: 1.5, mass: 800 })
-    // chassis.add(this.camera)
-
-    const wheelMesh = this.make.cylinder({
-      radiusBottom: 0.4,
-      radiusTop: 0.4,
-      height: 0.2,
-      radiusSegments: 12
+      const ramp = this.add.box({ width: 5, height: 10, z: -20 }, { lambert: { map: grass } })
+      ramp.rotateX(-Math.PI / 3)
+      this.physics.add.existing(ramp, { collisionFlags: 1, mass: 0 })
     })
+
+    const chassis = this.physics.add.box(
+      { depth: 3, height: 0.8, width: 1.5, mass: 800 },
+      { lambert: { color: 'red' } }
+    )
+    chassis.add(this.camera)
+
+    const wheelMesh = this.make.cylinder(
+      {
+        radiusBottom: 0.4,
+        radiusTop: 0.4,
+        height: 0.2,
+        radiusSegments: 12
+      },
+      { lambert: { color: 'black' } }
+    )
 
     this.car = new Vehicle(this.scene, this.physics, chassis, wheelMesh)
 
