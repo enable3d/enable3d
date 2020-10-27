@@ -18,6 +18,7 @@ class MainScene extends Scene3D {
 
   async create() {
     const { lights } = await this.warpSpeed('-ground')
+
     if (lights) {
       this.light = lights.directionalLight
       const d = 3
@@ -26,11 +27,12 @@ class MainScene extends Scene3D {
       this.light.shadow.camera.left = -d
       this.light.shadow.camera.right = d
 
-      const shadowHelper = new THREE.CameraHelper(this.light.shadow.camera)
-      this.scene.add(shadowHelper)
+      // debug shadow
+      // const shadowHelper = new THREE.CameraHelper(this.light.shadow.camera)
+      // this.scene.add(shadowHelper)
     }
 
-    this.camera.position.set(10, 10, 20)
+    this.camera.position.set(5, 10, -20)
     this.camera.lookAt(0, 0, 0)
     // this.physics.debug?.enable()
 
@@ -39,9 +41,9 @@ class MainScene extends Scene3D {
       grassGround.needsUpdate = true
       grassGround.wrapS = grassGround.wrapT = 1000 // RepeatWrapping
       grassGround.offset.set(0, 0)
-      grassGround.repeat.set(5, 5)
+      grassGround.repeat.set(10, 10)
 
-      this.physics.add.ground({ y: -1, width: 50, height: 50 }, { lambert: { map: grassGround } })
+      this.physics.add.ground({ y: -1, width: 100, height: 100 }, { lambert: { map: grassGround } })
 
       const ramp = this.add.box({ width: 5, height: 10, z: -20 }, { lambert: { map: grass } })
       ramp.rotateX(-Math.PI / 3)
@@ -49,7 +51,7 @@ class MainScene extends Scene3D {
     })
 
     const chassis = this.physics.add.box(
-      { depth: 3, height: 0.8, width: 1.5, mass: 800 },
+      { depth: 3, height: 0.5, width: 1.75, mass: 1200 },
       { lambert: { color: 'red' } }
     )
     chassis.add(this.camera)
@@ -105,8 +107,8 @@ class MainScene extends Scene3D {
     let engineForce = 0
     let breakingForce = 0
     const steeringIncrement = 0.04
-    const steeringClamp = 0.5
-    const maxEngineForce = 1500
+    const steeringClamp = 0.3
+    const maxEngineForce = 3000
     const maxBreakingForce = 100
 
     const speed = this.car.vehicle.getCurrentSpeedKmHour()
@@ -117,9 +119,6 @@ class MainScene extends Scene3D {
     if (this.keys.w) engineForce = maxEngineForce
     else if (this.keys.s) engineForce = -maxEngineForce
     else engineForce = 0
-
-    this.car.vehicle.applyEngineForce(engineForce, BACK_LEFT)
-    this.car.vehicle.applyEngineForce(engineForce, BACK_RIGHT)
 
     // left/right
     if (this.keys.a) {

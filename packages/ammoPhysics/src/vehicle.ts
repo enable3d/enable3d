@@ -31,6 +31,9 @@ export class Vehicle {
     const rayCaster = new Ammo.btDefaultVehicleRaycaster(physicsWorld)
     this.vehicle = new Ammo.btRaycastVehicle(this.tuning, chassis.body.ammo, rayCaster)
 
+    // do not automatically sync the mesh to the physics body
+    chassis.body.skipUpdate = true
+
     this.vehicle.setCoordinateSystem(0, 1, 2)
     physicsWorld.addAction(this.vehicle)
 
@@ -39,15 +42,15 @@ export class Vehicle {
     const BACK_LEFT = 2
     const BACK_RIGHT = 3
 
-    var wheelAxisPositionBack = -1
-    var wheelRadiusBack = 0.4
-    var wheelHalfTrackBack = 1
-    var wheelAxisHeightBack = 0.3
+    const wheelAxisPositionBack = -1
+    const wheelRadiusBack = 0.4
+    const wheelHalfTrackBack = 0.9
+    const wheelAxisHeightBack = 0.3
 
-    var wheelAxisFrontPosition = 1
-    var wheelRadiusFront = 0.4
-    var wheelHalfTrackFront = 1
-    var wheelAxisHeightFront = 0.3
+    const wheelAxisFrontPosition = 1
+    const wheelRadiusFront = 0.4
+    const wheelHalfTrackFront = 0.9
+    const wheelAxisHeightFront = 0.3
 
     this.addWheel(
       true,
@@ -76,10 +79,10 @@ export class Vehicle {
   }
 
   update() {
-    var tm, p, q, i
-    var n = this.vehicle.getNumWheels()
+    let tm, p, q, i
+    const n = this.vehicle.getNumWheels()
     for (i = 0; i < n; i++) {
-      this.vehicle.updateWheelTransform(i, true)
+      // this.vehicle.updateWheelTransform(i, true)
       tm = this.vehicle.getWheelTransformWS(i)
       p = tm.getOrigin()
       q = tm.getRotation()
@@ -88,26 +91,26 @@ export class Vehicle {
       this.wheelMeshes[i].rotateZ(Math.PI / 2)
     }
 
-    // tm = this.vehicle.getChassisWorldTransform()
-    // p = tm.getOrigin()
-    // q = tm.getRotation()
+    tm = this.vehicle.getChassisWorldTransform()
+    p = tm.getOrigin()
+    q = tm.getRotation()
 
-    // this.chassisMesh.position.set(p.x(), p.y(), p.z())
-    // this.chassisMesh.quaternion.set(q.x(), q.y(), q.z(), q.w())
+    this.chassis.position.set(p.x(), p.y(), p.z())
+    this.chassis.quaternion.set(q.x(), q.y(), q.z(), q.w())
   }
 
   addWheel(isFront: any, pos: any, radius: number, index: number) {
-    var friction = 1000
-    var suspensionStiffness = 20.0
-    var suspensionDamping = 2.3
-    var suspensionCompression = 4.4
-    var suspensionRestLength = 0.6
-    var rollInfluence = 0.2
+    const friction = 1000
+    const suspensionStiffness = 20.0
+    const suspensionDamping = 2.3
+    const suspensionCompression = 4.4
+    const suspensionRestLength = 0.6
+    const rollInfluence = 0.2
 
-    var wheelDirectionCS0 = new Ammo.btVector3(0, -1, 0)
-    var wheelAxleCS = new Ammo.btVector3(-1, 0, 0)
+    const wheelDirectionCS0 = new Ammo.btVector3(0, -1, 0)
+    const wheelAxleCS = new Ammo.btVector3(-1, 0, 0)
 
-    var wheelInfo = this.vehicle.addWheel(
+    const wheelInfo = this.vehicle.addWheel(
       pos,
       wheelDirectionCS0,
       wheelAxleCS,
