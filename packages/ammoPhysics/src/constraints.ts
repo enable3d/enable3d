@@ -24,9 +24,9 @@ export default class Constraints {
 
   public get addConstraints() {
     return {
-      lock: (bodyA: PhysicsBody, bodyB: PhysicsBody, disableCollisionsBetweenLinkedBodies: boolean) =>
+      lock: (bodyA: PhysicsBody, bodyB: PhysicsBody, disableCollisionsBetweenLinkedBodies?: boolean) =>
         this.lock(bodyA, bodyB, disableCollisionsBetweenLinkedBodies),
-      fixed: (bodyA: PhysicsBody, bodyB: PhysicsBody, disableCollisionsBetweenLinkedBodies: boolean) =>
+      fixed: (bodyA: PhysicsBody, bodyB: PhysicsBody, disableCollisionsBetweenLinkedBodies?: boolean) =>
         this.fixed(bodyA, bodyB, disableCollisionsBetweenLinkedBodies),
       pointToPoint: (
         bodyA: PhysicsBody,
@@ -35,7 +35,7 @@ export default class Constraints {
           pivotA?: XYZ
           pivotB?: XYZ
         },
-        disableCollisionsBetweenLinkedBodies: boolean
+        disableCollisionsBetweenLinkedBodies?: boolean
       ) => this.pointToPoint(bodyA, bodyB, config, disableCollisionsBetweenLinkedBodies),
       hinge: (
         bodyA: PhysicsBody,
@@ -46,7 +46,7 @@ export default class Constraints {
           axisA?: XYZ
           axisB?: XYZ
         },
-        disableCollisionsBetweenLinkedBodies: boolean
+        disableCollisionsBetweenLinkedBodies?: boolean
       ) => this.hinge(bodyA, bodyB, config, disableCollisionsBetweenLinkedBodies),
       slider: (
         bodyA: PhysicsBody,
@@ -59,7 +59,7 @@ export default class Constraints {
           angularLowerLimit?: number
           angularUpperLimit?: number
         } = {},
-        disableCollisionsBetweenLinkedBodies: boolean
+        disableCollisionsBetweenLinkedBodies?: boolean
       ) => this.slider(bodyA, bodyB, config, disableCollisionsBetweenLinkedBodies),
       spring: (
         bodyA: PhysicsBody,
@@ -76,7 +76,7 @@ export default class Constraints {
           offset?: XYZ
           enableSpring?: boolean
         } = {},
-        disableCollisionsBetweenLinkedBodies: boolean
+        disableCollisionsBetweenLinkedBodies?: boolean
       ) => this.spring(bodyA, bodyB, config, disableCollisionsBetweenLinkedBodies),
       coneTwist: (
         bodyA: PhysicsBody,
@@ -85,7 +85,7 @@ export default class Constraints {
           frameA: XYZ
           frameB: XYZ
         } = { frameA: {}, frameB: {} },
-        disableCollisionsBetweenLinkedBodies: boolean
+        disableCollisionsBetweenLinkedBodies?: boolean
       ) => this.coneTwist(bodyA, bodyB, config, disableCollisionsBetweenLinkedBodies),
       dof: (
         bodyA: PhysicsBody,
@@ -98,7 +98,7 @@ export default class Constraints {
           center?: boolean
           offset?: XYZ
         },
-        disableCollisionsBetweenLinkedBodies: boolean = true
+        disableCollisionsBetweenLinkedBodies?: boolean
       ) => this.dof(bodyA, bodyB, config, disableCollisionsBetweenLinkedBodies)
     }
   }
