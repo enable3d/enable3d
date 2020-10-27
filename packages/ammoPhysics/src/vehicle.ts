@@ -22,7 +22,7 @@ export class Vehicle {
   constructor(
     private scene: Scene,
     public physics: AmmoPhysics,
-    chassis: ExtendedObject3D,
+    public chassis: ExtendedObject3D,
     private wheelMesh: ExtendedObject3D
   ) {
     const { physicsWorld } = physics
@@ -34,10 +34,10 @@ export class Vehicle {
     this.vehicle.setCoordinateSystem(0, 1, 2)
     physicsWorld.addAction(this.vehicle)
 
-    var FRONT_LEFT = 0
-    var FRONT_RIGHT = 1
-    var BACK_LEFT = 2
-    var BACK_RIGHT = 3
+    const FRONT_LEFT = 0
+    const FRONT_RIGHT = 1
+    const BACK_LEFT = 2
+    const BACK_RIGHT = 3
 
     var wheelAxisPositionBack = -1
     var wheelRadiusBack = 0.4
@@ -75,25 +75,6 @@ export class Vehicle {
       wheelRadiusBack,
       BACK_RIGHT
     )
-
-    var engineForce = 50
-
-    this.vehicle.applyEngineForce(engineForce, BACK_LEFT)
-    this.vehicle.applyEngineForce(engineForce, BACK_RIGHT)
-
-    this.vehicle.setSteeringValue(0.5, FRONT_LEFT)
-    this.vehicle.setSteeringValue(0.5, FRONT_RIGHT)
-
-    let bla = 0.5
-    let dir = -0.01
-
-    setInterval(() => {
-      bla += dir
-      if (bla < -0.5) dir *= -1
-      if (bla > 0.5) dir *= -1
-      this.vehicle.setSteeringValue(bla, FRONT_LEFT)
-      this.vehicle.setSteeringValue(bla, FRONT_RIGHT)
-    }, 100)
   }
 
   update() {
