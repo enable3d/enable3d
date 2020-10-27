@@ -113,8 +113,8 @@ class MainScene extends Scene3D {
     } else if (this.keys.d) {
       if (this.vehicleSteering > -steeringClamp) this.vehicleSteering -= steeringIncrement
     } else {
-      if (this.vehicleSteering > 0) this.vehicleSteering -= steeringIncrement / 4
-      if (this.vehicleSteering < 0) this.vehicleSteering += steeringIncrement / 4
+      if (this.vehicleSteering > 0) this.vehicleSteering -= steeringIncrement / 2
+      if (this.vehicleSteering < 0) this.vehicleSteering += steeringIncrement / 2
     }
 
     // break
