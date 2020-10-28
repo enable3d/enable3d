@@ -699,8 +699,8 @@ class AmmoPhysics extends EventEmitter {
       // if we want a custom compound shape, we simply do
       const collisionShapes = compound.map((s: any) => this.createCollisionShape(s.shape, s))
       const compoundShape = this.mergeCollisionShapesToCompoundShape(collisionShapes)
-      const rigidBody = this.collisionShapeToRigidBody(compoundShape, object.position, object.quaternion, 1)
-      this.addRigidBodyToWorld(object, rigidBody)
+      const rigidBody = this.collisionShapeToRigidBody(compoundShape, object.position, object.quaternion, mass)
+      this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, breakable, offset)
       return
     }
 
@@ -755,10 +755,10 @@ class AmmoPhysics extends EventEmitter {
   public addRigidBodyToWorld(
     object: ExtendedObject3D,
     rigidBody: Ammo.btRigidBody,
-    collisionFlags = 0,
-    collisionGroup = 1,
-    collisionMask = 65535, // collide with all other bodies ("1111111111111111")
-    breakable?: boolean,
+    collisionFlags: number,
+    collisionGroup: number,
+    collisionMask: number,
+    breakable: boolean,
     offset?: { x?: number; y?: number; z?: number }
   ) {
     this.rigidBodies.push(object)
