@@ -1,6 +1,7 @@
 import { Project, Scene3D, PhysicsLoader, ExtendedObject3D, THREE } from 'enable3d'
 import { Vehicle } from '@enable3d/ammo-physics/dist/vehicle'
 import { DirectionalLight } from '../../common/node_modules/@enable3d/three-wrapper/dist'
+import { chdir } from 'process'
 
 const isTouchDevice = 'ontouchstart' in window
 
@@ -17,19 +18,29 @@ class MainScene extends Scene3D {
   light: DirectionalLight
 
   async create() {
+    this.physics.debug?.enable()
+
     const { lights } = await this.warpSpeed('-ground')
 
     if (lights) {
       this.light = lights.directionalLight
-      const d = 3
+      const d = 4
       this.light.shadow.camera.top = d
       this.light.shadow.camera.bottom = -d
       this.light.shadow.camera.left = -d
       this.light.shadow.camera.right = d
 
+      this.light.shadow.mapSize.set(2048, 2048)
+
+      this.light.shadow.camera.near = 200
+      this.light.shadow.camera.far = 240
+
+      // https://stackoverflow.com/a/48939256
+      this.light.shadow.bias = -0.01
+
       // debug shadow
-      // const shadowHelper = new THREE.CameraHelper(this.light.shadow.camera)
-      // this.scene.add(shadowHelper)
+      const shadowHelper = new THREE.CameraHelper(this.light.shadow.camera)
+      this.scene.add(shadowHelper)
     }
 
     this.camera.position.set(5, 10, -20)
@@ -50,23 +61,51 @@ class MainScene extends Scene3D {
       this.physics.add.existing(ramp, { collisionFlags: 1, mass: 0 })
     })
 
-    const chassis = this.physics.add.box(
-      { depth: 3, height: 0.8, width: 1.75, mass: 1200 },
-      { lambert: { color: 'red' } }
-    )
+    const gltf = await this.load.gltf('/assets/car.glb')
+    const scene = gltf.scenes[0]
+
+    let chassis: ExtendedObject3D
+    let tire: ExtendedObject3D
+
+    scene.traverse(child => {
+      // @ts-ignore
+      if (child.isMesh) {
+        if (child.name === 'Chassis') {
+          chassis = child as ExtendedObject3D
+          chassis.receiveShadow = chassis.castShadow = true
+          console.log(chassis.material)
+        }
+        if (child.name === 'Tire') {
+          tire = child as ExtendedObject3D
+          tire.receiveShadow = tire.castShadow = true
+          tire.geometry.center()
+        }
+      }
+    })
+    // this.add.existing(gltf.scenes[0])
+
+    if (!chassis || !tire) return
+
+    this.add.existing(chassis)
+    this.physics.add.existing(chassis, { shape: 'convex', mass: 1200 })
+
+    // const chassis = this.physics.add.box(
+    //   { depth: 3, height: 0.8, width: 1.75, mass: 1200 },
+    //   { lambert: { color: 'red' } }
+    // )
     chassis.add(this.camera)
 
-    const wheelMesh = this.make.cylinder(
-      {
-        radiusBottom: 0.4,
-        radiusTop: 0.4,
-        height: 0.2,
-        radiusSegments: 12
-      },
-      { lambert: { color: 'black' } }
-    )
+    // const wheelMesh = this.make.cylinder(
+    //   {
+    //     radiusBottom: 0.4,
+    //     radiusTop: 0.4,
+    //     height: 0.2,
+    //     radiusSegments: 12
+    //   },
+    //   { lambert: { color: 'black' } }
+    // )
 
-    this.car = new Vehicle(this.scene, this.physics, chassis, wheelMesh)
+    this.car = new Vehicle(this.scene, this.physics, chassis, tire)
 
     // keys
     const keyEvent = (e: KeyboardEvent, down: boolean) => {

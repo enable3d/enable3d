@@ -42,14 +42,14 @@ export class Vehicle {
     const BACK_LEFT = 2
     const BACK_RIGHT = 3
 
-    const wheelAxisPositionBack = -1
+    const wheelAxisPositionBack = -1.3
     const wheelRadiusBack = 0.4
-    const wheelHalfTrackBack = 1
+    const wheelHalfTrackBack = 1.1
     const wheelAxisHeightBack = 0
 
-    const wheelAxisFrontPosition = 1
+    const wheelAxisFrontPosition = 1.2
     const wheelRadiusFront = 0.4
-    const wheelHalfTrackFront = 1
+    const wheelHalfTrackFront = 1.1
     const wheelAxisHeightFront = 0
 
     this.addWheel(
@@ -88,7 +88,7 @@ export class Vehicle {
       q = tm.getRotation()
       this.wheelMeshes[i].position.set(p.x(), p.y(), p.z())
       this.wheelMeshes[i].quaternion.set(q.x(), q.y(), q.z(), q.w())
-      this.wheelMeshes[i].rotateZ(Math.PI / 2)
+      // this.wheelMeshes[i].rotateZ(Math.PI / 2)
     }
 
     tm = this.vehicle.getChassisWorldTransform()
@@ -103,7 +103,7 @@ export class Vehicle {
     var suspensionStiffness = 50.0
     var suspensionDamping = 2.3
     var suspensionCompression = 4.4
-    var suspensionRestLength = 0.3
+    var suspensionRestLength = 0
 
     const friction = 50
     const rollInfluence = 0.01
