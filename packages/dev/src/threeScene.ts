@@ -18,7 +18,7 @@ class MainScene extends Scene3D {
   light: DirectionalLight
 
   async create() {
-    this.physics.debug?.enable()
+    //this.physics.debug?.enable()
 
     const { lights } = await this.warpSpeed('-ground')
 
@@ -70,12 +70,15 @@ class MainScene extends Scene3D {
     scene.traverse(child => {
       // @ts-ignore
       if (child.isMesh) {
-        if (child.name === 'Chassis') {
+        if (/window/gi.test(child.name)) {
+          // @ts-ignore
+          child.material.transparent = true
+          // @ts-ignore
+          child.material.opacity = 0.5
+        } else if (child.name === 'Chassis') {
           chassis = child as ExtendedObject3D
           chassis.receiveShadow = chassis.castShadow = true
-          console.log(chassis.material)
-        }
-        if (child.name === 'Tire') {
+        } else if (child.name === 'Tire') {
           tire = child as ExtendedObject3D
           tire.receiveShadow = tire.castShadow = true
           tire.geometry.center()
