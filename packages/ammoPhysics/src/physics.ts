@@ -120,7 +120,7 @@ class AmmoPhysics extends EventEmitter {
 
     const ptr = Object.values(b.ammo)[0]
     const name = Object.values(b.ammo)[1]
-    const obj = this.objectsAmmo[ptr]
+    let obj: ExtendedObject3D | null = this.objectsAmmo[ptr] as ExtendedObject3D
 
     // TODO: Remember why I track objectsAmmo and rigidBodies?
     // console.log(this.objectsAmmo)
@@ -151,7 +151,6 @@ class AmmoPhysics extends EventEmitter {
       }
     }
 
-    // @ts-ignore
     if (this.scene === 'headless' && obj) obj = null
   }
 
