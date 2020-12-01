@@ -2,6 +2,7 @@
  * @author       Yannick Deubel (https://github.com/yandeu)
  * @copyright    Copyright (c) 2020 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
  * @description  This is a modified version of the original code from Kevin Lee
+ * (Includes latest three-to-ammo commit from August 6, 2020)
  */
 
 /**
@@ -10,10 +11,12 @@
  * @license      {@link https://github.com/InfiniteLee/three-to-ammo/blob/master/LICENSE|MPL-2.0}
  */
 
-'use strict'
+import { Vector3, Matrix4, Quaternion, Box3 } from '@enable3d/three-wrapper/dist/index'
+
+  ; ('use strict')
 /* global Ammo */
 
-const TYPE = {
+export const TYPE = {
   BOX: 'box',
   CYLINDER: 'cylinder',
   SPHERE: 'sphere',
@@ -26,60 +29,53 @@ const TYPE = {
   HEIGHTFIELD: 'heightfield'
 }
 
-const FIT = {
+export const FIT = {
   ALL: 'all', //A single shape is automatically sized to bound all meshes within the entity.
   MANUAL: 'manual' //A single shape is sized manually. Requires halfExtents or sphereRadius.
 }
 
-const HEIGHTFIELD_DATA_TYPE = {
+export const HEIGHTFIELD_DATA_TYPE = {
   short: 'short',
   float: 'float'
 }
 
-import ExtendedObject3d from '@enable3d/common/dist/extendedObject3D'
-import { Vector3, Matrix4, BufferGeometry, Quaternion, Box3 } from '@enable3d/three-wrapper/dist/index'
-import logger from '@enable3d/common/dist/logger'
-
-const hasUpdateMatricesFunction = ExtendedObject3d.prototype.hasOwnProperty('updateMatrices')
-
-export const createCollisionShapes = function (root, options) {
+export const createCollisionShapes = function (vertices, matrices, indexes, matrixWorld, options = {}) {
   switch (options.type) {
     case TYPE.BOX:
-      return createBoxShape(root, options)
+      return [createBoxShape(vertices, matrices, matrixWorld, options)]
     case TYPE.CYLINDER:
-      return createCylinderShape(root, options)
+      return [createCylinderShape(vertices, matrices, matrixWorld, options)]
     case TYPE.CAPSULE:
-      return createCapsuleShape(root, options)
+      return [createCapsuleShape(vertices, matrices, matrixWorld, options)]
     case TYPE.CONE:
-      return createConeShape(root, options)
+      return [createConeShape(vertices, matrices, matrixWorld, options)]
     case TYPE.SPHERE:
-      return createSphereShape(root, options)
+      return [createSphereShape(vertices, matrices, matrixWorld, options)]
     case TYPE.HULL:
-      return createHullShape(root, options)
+      return [createHullShape(vertices, matrices, matrixWorld, options)]
     case TYPE.HACD:
-      return createHACDShapes(root, options)
+      return createHACDShapes(vertices, matrices, indexes, matrixWorld, options)
     case TYPE.VHACD:
-      return createVHACDShapes(root, options)
+      return createVHACDShapes(vertices, matrices, indexes, matrixWorld, options)
     case TYPE.MESH:
-      return createTriMeshShape(root, options)
+      return [createTriMeshShape(vertices, matrices, indexes, matrixWorld, options)]
     case TYPE.HEIGHTFIELD:
-      return createHeightfieldTerrainShape(root, options)
+      return [createHeightfieldTerrainShape(options)]
     default:
-      logger(options.type + ' is not currently supported')
+      console.warn(options.type + ' is not currently supported')
       return []
   }
 }
 
 //TODO: support gimpact (dynamic trimesh) and heightmap
 
-export const createBoxShape = function (root, options) {
+export const createBoxShape = function (vertices, matrices, matrixWorld, options = {}) {
   options.type = TYPE.BOX
   _setOptions(options)
 
   if (options.fit === FIT.ALL) {
     options.halfExtents = _computeHalfExtents(
-      root,
-      _computeBounds(root, options),
+      _computeBounds(vertices, matrices),
       options.minHalfExtent,
       options.maxHalfExtent
     )
@@ -89,18 +85,17 @@ export const createBoxShape = function (root, options) {
   const collisionShape = new Ammo.btBoxShape(btHalfExtents)
   Ammo.destroy(btHalfExtents)
 
-  _finishCollisionShape(collisionShape, options, _computeScale(root, options))
+  _finishCollisionShape(collisionShape, options, _computeScale(matrixWorld, options))
   return collisionShape
 }
 
-export const createCylinderShape = function (root, options) {
+export const createCylinderShape = function (vertices, matrices, matrixWorld, options = {}) {
   options.type = TYPE.CYLINDER
   _setOptions(options)
 
   if (options.fit === FIT.ALL) {
     options.halfExtents = _computeHalfExtents(
-      root,
-      _computeBounds(root, options),
+      _computeBounds(vertices, matrices),
       options.minHalfExtent,
       options.maxHalfExtent
     )
@@ -120,18 +115,17 @@ export const createCylinderShape = function (root, options) {
   })()
   Ammo.destroy(btHalfExtents)
 
-  _finishCollisionShape(collisionShape, options, _computeScale(root, options))
+  _finishCollisionShape(collisionShape, options, _computeScale(matrixWorld, options))
   return collisionShape
 }
 
-export const createCapsuleShape = function (root, options) {
+export const createCapsuleShape = function (vertices, matrices, matrixWorld, options = {}) {
   options.type = TYPE.CAPSULE
   _setOptions(options)
 
   if (options.fit === FIT.ALL) {
     options.halfExtents = _computeHalfExtents(
-      root,
-      _computeBounds(root, options),
+      _computeBounds(vertices, matrices),
       options.minHalfExtent,
       options.maxHalfExtent
     )
@@ -150,18 +144,17 @@ export const createCapsuleShape = function (root, options) {
     return null
   })()
 
-  _finishCollisionShape(collisionShape, options, _computeScale(root, options))
+  _finishCollisionShape(collisionShape, options, _computeScale(matrixWorld, options))
   return collisionShape
 }
 
-export const createConeShape = function (root, options) {
+export const createConeShape = function (vertices, matrices, matrixWorld, options = {}) {
   options.type = TYPE.CONE
   _setOptions(options)
 
   if (options.fit === FIT.ALL) {
     options.halfExtents = _computeHalfExtents(
-      root,
-      _computeBounds(root, options),
+      _computeBounds(vertices, matrices),
       options.minHalfExtent,
       options.maxHalfExtent
     )
@@ -180,11 +173,11 @@ export const createConeShape = function (root, options) {
     return null
   })()
 
-  _finishCollisionShape(collisionShape, options, _computeScale(root, options))
+  _finishCollisionShape(collisionShape, options, _computeScale(matrixWorld, options))
   return collisionShape
 }
 
-export const createSphereShape = function (root, options) {
+export const createSphereShape = function (vertices, matrices, matrixWorld, options = {}) {
   options.type = TYPE.SPHERE
   _setOptions(options)
 
@@ -192,11 +185,11 @@ export const createSphereShape = function (root, options) {
   if (options.fit === FIT.MANUAL && !isNaN(options.sphereRadius)) {
     radius = options.sphereRadius
   } else {
-    radius = _computeRadius(root, options, _computeBounds(root, options))
+    radius = _computeRadius(vertices, matrices, _computeBounds(vertices, matrices))
   }
 
   const collisionShape = new Ammo.btSphereShape(radius)
-  _finishCollisionShape(collisionShape, options, _computeScale(root, options))
+  _finishCollisionShape(collisionShape, options, _computeScale(matrixWorld, options))
 
   return collisionShape
 }
@@ -204,7 +197,8 @@ export const createSphereShape = function (root, options) {
 export const createHullShape = (function () {
   const vertex = new Vector3()
   const center = new Vector3()
-  return function (root, options) {
+  const matrix = new Matrix4()
+  return function (vertices, matrices, matrixWorld, options = {}) {
     options.type = TYPE.HULL
     _setOptions(options)
 
@@ -213,7 +207,7 @@ export const createHullShape = (function () {
       return null
     }
 
-    const bounds = _computeBounds(root, options)
+    const bounds = _computeBounds(vertices, matrices)
 
     const btVertex = new Ammo.btVector3()
     const originalHull = new Ammo.btConvexHullShape()
@@ -221,9 +215,9 @@ export const createHullShape = (function () {
     center.addVectors(bounds.max, bounds.min).multiplyScalar(0.5)
 
     let vertexCount = 0
-    _iterateGeometries(root, options, geo => {
-      vertexCount += geo.attributes.position.array.length / 3
-    })
+    for (let i = 0; i < vertices.length; i++) {
+      vertexCount += vertices[i].length / 3
+    }
 
     const maxVertices = options.hullMaxVertices || 100000
     // todo: might want to implement this in a deterministic way that doesn't do O(verts) calls to Math.random
@@ -232,21 +226,22 @@ export const createHullShape = (function () {
     }
     const p = Math.min(1, maxVertices / vertexCount)
 
-    _iterateGeometries(root, options, (geo, transform) => {
-      adjustGeometryTranslateEXPERIMENTAL(geo, transform)
-
-      const components = geo.attributes.position.array
-      for (let i = 0; i < components.length; i += 3) {
-        if (Math.random() <= p) {
+    for (let i = 0; i < vertices.length; i++) {
+      const components = vertices[i]
+      matrix.fromArray(matrices[i])
+      for (let j = 0; j < components.length; j += 3) {
+        const isLastVertex = i === vertices.length - 1 && j === components.length - 3
+        if (Math.random() <= p || isLastVertex) {
+          // always include the last vertex
           vertex
-            .set(components[i], components[i + 1], components[i + 2])
-            .applyMatrix4(transform)
+            .set(components[j], components[j + 1], components[j + 2])
+            .applyMatrix4(matrix)
             .sub(center)
           btVertex.setValue(vertex.x, vertex.y, vertex.z)
-          originalHull.addPoint(btVertex, i === components.length - 3) // todo: better to recalc AABB only on last geometry
+          originalHull.addPoint(btVertex, isLastVertex) // recalc AABB only on last geometry
         }
       }
-    })
+    }
 
     let collisionShape = originalHull
     if (originalHull.getNumVertices() >= 100) {
@@ -263,15 +258,16 @@ export const createHullShape = (function () {
 
     Ammo.destroy(btVertex)
 
-    _finishCollisionShape(collisionShape, options, _computeScale(root, options))
+    _finishCollisionShape(collisionShape, options, _computeScale(matrixWorld, options))
     return collisionShape
   }
 })()
 
 export const createHACDShapes = (function () {
-  const v = new Vector3()
+  const vector = new Vector3()
   const center = new Vector3()
-  return function (root, options) {
+  const matrix = new Matrix4()
+  return function (vertices, matrices, indexes, matrixWorld, options = {}) {
     options.type = TYPE.HACD
     _setOptions(options)
 
@@ -287,21 +283,21 @@ export const createHACDShapes = (function () {
       return []
     }
 
-    const bounds = _computeBounds(root)
-    const scale = _computeScale(root, options)
+    const bounds = _computeBounds(vertices, matrices)
+    const scale = _computeScale(matrixWorld, options)
 
     let vertexCount = 0
     let triCount = 0
     center.addVectors(bounds.max, bounds.min).multiplyScalar(0.5)
 
-    _iterateGeometries(root, options, geo => {
-      vertexCount += geo.attributes.position.array.length / 3
-      if (geo.index) {
-        triCount += geo.index.array.length / 3
+    for (let i = 0; i < vertices.length; i++) {
+      vertexCount += vertices[i].length / 3
+      if (indexes && indexes[i]) {
+        triCount += indexes[i].length / 3
       } else {
-        triCount += geo.attributes.position.array.length / 9
+        triCount += vertices[i].length / 9
       }
-    })
+    }
 
     const hacd = new Ammo.HACD()
     if (options.hasOwnProperty('compacityWeight')) hacd.SetCompacityWeight(options.compacityWeight)
@@ -317,31 +313,35 @@ export const createHACDShapes = (function () {
     hacd.SetNPoints(vertexCount)
     hacd.SetNTriangles(triCount)
 
-    const pptr = points / 8,
+    let pptr = points / 8,
       tptr = triangles / 4
-    _iterateGeometries(root, options, (geo, transform) => {
-      adjustGeometryTranslateEXPERIMENTAL(geo, transform)
 
-      const components = geo.attributes.position.array
-      const indices = geo.index ? geo.index.array : null
-      for (let i = 0; i < components.length; i += 3) {
-        v.set(components[i + 0], components[i + 1], components[i + 2])
-          .applyMatrix4(transform)
+    for (let i = 0; i < vertices.length; i++) {
+      const components = vertices[i]
+      matrix.fromArray(matrices[i])
+      for (let j = 0; j < components.length; j += 3) {
+        vector
+          .set(components[j + 0], components[j + 1], components[j + 2])
+          .applyMatrix4(matrix)
           .sub(center)
-        Ammo.HEAPF64[pptr + i + 0] = v.x
-        Ammo.HEAPF64[pptr + i + 1] = v.y
-        Ammo.HEAPF64[pptr + i + 2] = v.z
+        Ammo.HEAPF64[pptr + 0] = vector.x
+        Ammo.HEAPF64[pptr + 1] = vector.y
+        Ammo.HEAPF64[pptr + 2] = vector.z
+        pptr += 3
       }
-      if (indices) {
-        for (let i = 0; i < indices.length; i++) {
-          Ammo.HEAP32[tptr + i] = indices[i]
+      if (indexes[i]) {
+        const indices = indexes[i]
+        for (let j = 0; j < indices.length; j++) {
+          Ammo.HEAP32[tptr] = indices[j]
+          tptr++
         }
       } else {
-        for (let i = 0; i < components.length / 3; i++) {
-          Ammo.HEAP32[tptr + i] = i
+        for (let j = 0; j < components.length / 3; j++) {
+          Ammo.HEAP32[tptr] = j
+          tptr++
         }
       }
-    })
+    }
 
     hacd.Compute()
     Ammo._free(points)
@@ -378,9 +378,10 @@ export const createHACDShapes = (function () {
 })()
 
 export const createVHACDShapes = (function () {
-  const v = new Vector3()
+  const vector = new Vector3()
   const center = new Vector3()
-  return function (root, options) {
+  const matrix = new Matrix4()
+  return function (vertices, matrices, indexes, matrixWorld, options = {}) {
     options.type = TYPE.VHACD
     _setOptions(options)
 
@@ -396,21 +397,21 @@ export const createVHACDShapes = (function () {
       return []
     }
 
-    const bounds = _computeBounds(root, options)
-    const scale = _computeScale(root, options)
+    const bounds = _computeBounds(vertices, matrices)
+    const scale = _computeScale(matrixWorld, options)
 
     let vertexCount = 0
     let triCount = 0
     center.addVectors(bounds.max, bounds.min).multiplyScalar(0.5)
 
-    _iterateGeometries(root, options, geo => {
-      vertexCount += geo.attributes.position.count
-      if (geo.index) {
-        triCount += geo.index.count / 3
+    for (let i = 0; i < vertices.length; i++) {
+      vertexCount += vertices[i].length / 3
+      if (indexes && indexes[i]) {
+        triCount += indexes[i].length / 3
       } else {
-        triCount += geo.attributes.position.count / 3
+        triCount += vertices[i].length / 9
       }
-    })
+    }
 
     const vhacd = new Ammo.VHACD()
     const params = new Ammo.Parameters()
@@ -432,38 +433,38 @@ export const createVHACDShapes = (function () {
       params.set_m_convexhullApproximation(options.convexhullApproximation)
     if (options.hasOwnProperty('oclAcceleration')) params.set_m_oclAcceleration(options.oclAcceleration)
 
-    const points = Ammo._malloc(vertexCount * 3 * 8)
+    const points = Ammo._malloc(vertexCount * 3 * 8 + 3)
     const triangles = Ammo._malloc(triCount * 3 * 4)
 
     let pptr = points / 8,
       tptr = triangles / 4
-    _iterateGeometries(root, options, (geo, transform) => {
-      adjustGeometryTranslateEXPERIMENTAL(geo, transform)
 
-      const components = geo.attributes.position.array
-      const indices = geo.index ? geo.index.array : null
-      for (let i = 0; i < components.length; i += 3) {
-        v.set(components[i + 0], components[i + 1], components[i + 2])
-          .applyMatrix4(transform)
+    for (let i = 0; i < vertices.length; i++) {
+      const components = vertices[i]
+      matrix.fromArray(matrices[i])
+      for (let j = 0; j < components.length; j += 3) {
+        vector
+          .set(components[j + 0], components[j + 1], components[j + 2])
+          .applyMatrix4(matrix)
           .sub(center)
-        Ammo.HEAPF64[pptr + 0] = v.x
-        Ammo.HEAPF64[pptr + 1] = v.y
-        Ammo.HEAPF64[pptr + 2] = v.z
+        Ammo.HEAPF64[pptr + 0] = vector.x
+        Ammo.HEAPF64[pptr + 1] = vector.y
+        Ammo.HEAPF64[pptr + 2] = vector.z
         pptr += 3
       }
-      if (indices) {
-        for (let i = 0; i < indices.length; i++) {
-          Ammo.HEAP32[tptr] = indices[i]
+      if (indexes[i]) {
+        const indices = indexes[i]
+        for (let j = 0; j < indices.length; j++) {
+          Ammo.HEAP32[tptr] = indices[j]
           tptr++
         }
       } else {
-        for (let i = 0; i < components.length / 3; i++) {
-          Ammo.HEAP32[tptr] = i
+        for (let j = 0; j < components.length / 3; j++) {
+          Ammo.HEAP32[tptr] = j
           tptr++
         }
       }
-    })
-
+    }
     vhacd.Compute(points, 3, vertexCount, triangles, 3, triCount, params)
     Ammo._free(points)
     Ammo._free(triangles)
@@ -503,7 +504,8 @@ export const createTriMeshShape = (function () {
   const va = new Vector3()
   const vb = new Vector3()
   const vc = new Vector3()
-  return function (root, options) {
+  const matrix = new Matrix4()
+  return function (vertices, matrices, indexes, matrixWorld, options = {}) {
     options.type = TYPE.MESH
     _setOptions(options)
 
@@ -512,57 +514,60 @@ export const createTriMeshShape = (function () {
       return null
     }
 
-    const scale = _computeScale(root, options)
+    const scale = _computeScale(matrixWorld, options)
 
     const bta = new Ammo.btVector3()
     const btb = new Ammo.btVector3()
     const btc = new Ammo.btVector3()
     const triMesh = new Ammo.btTriangleMesh(true, false)
 
-    _iterateGeometries(root, options, (geo, transform) => {
-      const components = geo.attributes.position.array
-      if (geo.index) {
-        for (let i = 0; i < geo.index.count; i += 3) {
-          const ai = geo.index.array[i] * 3
-          const bi = geo.index.array[i + 1] * 3
-          const ci = geo.index.array[i + 2] * 3
-          va.set(components[ai], components[ai + 1], components[ai + 2]).applyMatrix4(transform)
-          vb.set(components[bi], components[bi + 1], components[bi + 2]).applyMatrix4(transform)
-          vc.set(components[ci], components[ci + 1], components[ci + 2]).applyMatrix4(transform)
+    for (let i = 0; i < vertices.length; i++) {
+      const components = vertices[i]
+      const index = indexes[i] ? indexes[i] : null
+      matrix.fromArray(matrices[i])
+      if (index) {
+        for (let j = 0; j < index.length; j += 3) {
+          const ai = index[j] * 3
+          const bi = index[j + 1] * 3
+          const ci = index[j + 2] * 3
+          va.set(components[ai], components[ai + 1], components[ai + 2]).applyMatrix4(matrix)
+          vb.set(components[bi], components[bi + 1], components[bi + 2]).applyMatrix4(matrix)
+          vc.set(components[ci], components[ci + 1], components[ci + 2]).applyMatrix4(matrix)
           bta.setValue(va.x, va.y, va.z)
           btb.setValue(vb.x, vb.y, vb.z)
           btc.setValue(vc.x, vc.y, vc.z)
           triMesh.addTriangle(bta, btb, btc, false)
         }
       } else {
-        for (let i = 0; i < components.length; i += 9) {
-          va.set(components[i + 0], components[i + 1], components[i + 2]).applyMatrix4(transform)
-          vb.set(components[i + 3], components[i + 4], components[i + 5]).applyMatrix4(transform)
-          vc.set(components[i + 6], components[i + 7], components[i + 8]).applyMatrix4(transform)
+        for (let j = 0; j < components.length; j += 9) {
+          va.set(components[j + 0], components[j + 1], components[j + 2]).applyMatrix4(matrix)
+          vb.set(components[j + 3], components[j + 4], components[j + 5]).applyMatrix4(matrix)
+          vc.set(components[j + 6], components[j + 7], components[j + 8]).applyMatrix4(matrix)
           bta.setValue(va.x, va.y, va.z)
           btb.setValue(vb.x, vb.y, vb.z)
           btc.setValue(vc.x, vc.y, vc.z)
           triMesh.addTriangle(bta, btb, btc, false)
         }
       }
-    })
+    }
 
-    let collisionShape
-    if (options.concave) collisionShape = new Ammo.btBvhTriangleMeshShape(triMesh, true, true)
-    else collisionShape = new Ammo.btConvexTriangleMeshShape(triMesh, true)
+    const localScale = new Ammo.btVector3(scale.x, scale.y, scale.z)
+    triMesh.setScaling(localScale)
+    Ammo.destroy(localScale)
 
+    const collisionShape = new Ammo.btBvhTriangleMeshShape(triMesh, true, true)
     collisionShape.resources = [triMesh]
 
     Ammo.destroy(bta)
     Ammo.destroy(btb)
     Ammo.destroy(btc)
 
-    _finishCollisionShape(collisionShape, options, scale)
+    _finishCollisionShape(collisionShape, options)
     return collisionShape
   }
 })()
 
-export const createHeightfieldTerrainShape = function (root, options) {
+export const createHeightfieldTerrainShape = function (options = {}) {
   _setOptions(options)
 
   if (options.fit === FIT.ALL) {
@@ -632,7 +637,7 @@ function _setOptions(options) {
   options.minHalfExtent = options.hasOwnProperty('minHalfExtent') ? options.minHalfExtent : 0
   options.maxHalfExtent = options.hasOwnProperty('maxHalfExtent') ? options.maxHalfExtent : Number.POSITIVE_INFINITY
   options.cylinderAxis = options.cylinderAxis || 'y'
-  options.margin = options.hasOwnProperty('margin') ? options.margin : 0.05
+  options.margin = options.hasOwnProperty('margin') ? options.margin : 0.01
   options.includeInvisible = options.hasOwnProperty('includeInvisible') ? options.includeInvisible : false
 
   if (!options.offset) {
@@ -657,15 +662,15 @@ const _finishCollisionShape = function (collisionShape, options, scale) {
     Ammo.destroy(collisionShape)
   }
 
-  // const localTransform = new Ammo.btTransform()
-  // const rotation = new Ammo.btQuaternion()
-  // localTransform.setIdentity()
+  const localTransform = new Ammo.btTransform()
+  const rotation = new Ammo.btQuaternion()
+  localTransform.setIdentity()
 
-  // localTransform.getOrigin().setValue(options.offset.x, options.offset.y, options.offset.z)
-  // rotation.setValue(options.orientation.x, options.orientation.y, options.orientation.z, options.orientation.w)
+  localTransform.getOrigin().setValue(options.offset.x, options.offset.y, options.offset.z)
+  rotation.setValue(options.orientation.x, options.orientation.y, options.orientation.z, options.orientation.w)
 
-  // localTransform.setRotation(rotation)
-  // Ammo.destroy(rotation)
+  localTransform.setRotation(rotation)
+  Ammo.destroy(rotation)
 
   if (scale) {
     const localScale = new Ammo.btVector3(scale.x, scale.y, scale.z)
@@ -673,113 +678,120 @@ const _finishCollisionShape = function (collisionShape, options, scale) {
     Ammo.destroy(localScale)
   }
 
-  // collisionShape.localTransform = localTransform
+  collisionShape.localTransform = localTransform
 }
 
-// Calls `cb(geo, transform)` for each geometry under `root` whose vertices we should take into account for the physics shape.
-// `transform` is the transform required to transform the given geometry's vertices into root-local space.
-const _iterateGeometries = (function () {
-  const transform = new Matrix4()
+export const iterateGeometries = (function () {
   const inverse = new Matrix4()
-  const bufferGeometry = new BufferGeometry()
   return function (root, options, cb) {
     inverse.getInverse(root.matrixWorld)
+    const scale = new Vector3()
+    scale.setFromMatrixScale(root.matrixWorld)
     root.traverse(mesh => {
+      const transform = new Matrix4()
       if (
-        mesh.isMesh /*&&
-        (!Sky || mesh.__proto__ != Sky.prototype) &&
-        (options.includeInvisible || (mesh.el && mesh.el.object3D.visible) || mesh.visible)*/
+        mesh.isMesh &&
+        mesh.name !== 'Sky' &&
+        (options.includeInvisible || (mesh.el && mesh.el.object3D.visible) || mesh.visible)
       ) {
         if (mesh === root) {
           transform.identity()
         } else {
-          if (hasUpdateMatricesFunction) mesh.updateMatrices()
+          mesh.updateWorldMatrix(true)
           transform.multiplyMatrices(inverse, mesh.matrixWorld)
         }
         // todo: might want to return null xform if this is the root so that callers can avoid multiplying
         // things by the identity matrix
-        cb(mesh.geometry.isBufferGeometry ? mesh.geometry : bufferGeometry.fromGeometry(mesh.geometry), transform)
+        cb(
+          mesh.geometry.isBufferGeometry ? mesh.geometry.attributes.position.array : mesh.geometry.vertices,
+          transform.elements,
+          mesh.geometry.index ? mesh.geometry.index.array : null
+        )
       }
     })
   }
 })()
 
-const _computeScale = function (root, options) {
-  // const scale = new Vector3(1, 1, 1)
-  // if (options.fit === FIT.ALL) {
-  //   scale.setFromMatrixScale(root.matrixWorld)
-  // }
-  // return scale
-  const { scale } = root
-  return scale
-}
+const _computeScale = (function () {
+  const matrix = new Matrix4()
+  return function (matrixWorld, options = {}) {
+    const scale = new Vector3(1, 1, 1)
+    if (options.fit === FIT.ALL) {
+      matrix.fromArray(matrixWorld)
+      scale.setFromMatrixScale(matrix)
+    }
+    return scale
+  }
+})()
 
 const _computeRadius = (function () {
-  const v = new Vector3()
   const center = new Vector3()
-  return function (root, options, bounds) {
+  return function (vertices, matrices, bounds) {
     let maxRadiusSq = 0
     let { x: cx, y: cy, z: cz } = bounds.getCenter(center)
-    _iterateGeometries(root, options, (geo, transform) => {
-      const components = geo.attributes.position.array
-      for (let i = 0; i < components.length; i += 3) {
-        v.set(components[i], components[i + 1], components[i + 2]).applyMatrix4(transform)
-        const dx = cx - v.x
-        const dy = cy - v.y
-        const dz = cz - v.z
-        maxRadiusSq = Math.max(maxRadiusSq, dx * dx + dy * dy + dz * dz)
-      }
+
+    _iterateVertices(vertices, matrices, v => {
+      const dx = cx - v.x
+      const dy = cy - v.y
+      const dz = cz - v.z
+      maxRadiusSq = Math.max(maxRadiusSq, dx * dx + dy * dy + dz * dz)
     })
     return Math.sqrt(maxRadiusSq)
   }
 })()
 
-const _computeHalfExtents = function (root, bounds, minHalfExtent, maxHalfExtent) {
+const _computeHalfExtents = function (bounds, minHalfExtent, maxHalfExtent) {
   const halfExtents = new Vector3()
-  return halfExtents.subVectors(bounds.max, bounds.min).multiplyScalar(0.5).clampScalar(minHalfExtent, maxHalfExtent)
+  return halfExtents
+    .subVectors(bounds.max, bounds.min)
+    .multiplyScalar(0.5)
+    .clampScalar(minHalfExtent, maxHalfExtent)
 }
 
 const _computeLocalOffset = function (matrix, bounds, target) {
-  target.addVectors(bounds.max, bounds.min).multiplyScalar(0.5).applyMatrix4(matrix)
+  target
+    .addVectors(bounds.max, bounds.min)
+    .multiplyScalar(0.5)
+    .applyMatrix4(matrix)
   return target
 }
 
 // returns the bounding box for the geometries underneath `root`.
-const _computeBounds = (function () {
-  const v = new Vector3()
-  return function (root, options) {
-    const bounds = new Box3()
-    let minX = +Infinity
-    let minY = +Infinity
-    let minZ = +Infinity
-    let maxX = -Infinity
-    let maxY = -Infinity
-    let maxZ = -Infinity
-    bounds.min.set(0, 0, 0)
-    bounds.max.set(0, 0, 0)
-    _iterateGeometries(root, options, (geo, transform) => {
-      const components = geo.attributes.position.array
-      for (let i = 0; i < components.length; i += 3) {
-        v.set(components[i], components[i + 1], components[i + 2]).applyMatrix4(transform)
-        if (v.x < minX) minX = v.x
-        if (v.y < minY) minY = v.y
-        if (v.z < minZ) minZ = v.z
-        if (v.x > maxX) maxX = v.x
-        if (v.y > maxY) maxY = v.y
-        if (v.z > maxZ) maxZ = v.z
+const _computeBounds = function (vertices, matrices) {
+  const bounds = new Box3()
+  let minX = +Infinity
+  let minY = +Infinity
+  let minZ = +Infinity
+  let maxX = -Infinity
+  let maxY = -Infinity
+  let maxZ = -Infinity
+  bounds.min.set(0, 0, 0)
+  bounds.max.set(0, 0, 0)
+
+  _iterateVertices(vertices, matrices, v => {
+    if (v.x < minX) minX = v.x
+    if (v.y < minY) minY = v.y
+    if (v.z < minZ) minZ = v.z
+    if (v.x > maxX) maxX = v.x
+    if (v.y > maxY) maxY = v.y
+    if (v.z > maxZ) maxZ = v.z
+  })
+
+  bounds.min.set(minX, minY, minZ)
+  bounds.max.set(maxX, maxY, maxZ)
+  return bounds
+}
+
+const _iterateVertices = (function () {
+  const vertex = new Vector3()
+  const matrix = new Matrix4()
+  return function (vertices, matrices, cb) {
+    for (let i = 0; i < vertices.length; i++) {
+      matrix.fromArray(matrices[i])
+      for (let j = 0; j < vertices[i].length; j += 3) {
+        vertex.set(vertices[i][j], vertices[i][j + 1], vertices[i][j + 2]).applyMatrix4(matrix)
+        cb(vertex)
       }
-    })
-    bounds.min.set(minX, minY, minZ)
-    bounds.max.set(maxX, maxY, maxZ)
-    return bounds
+    }
   }
 })()
-
-// adjusts the translate of the geometry
-// https://threejs.org/docs/#api/en/core/BufferGeometry.translate
-const adjustGeometryTranslateEXPERIMENTAL = (geo, transform) => {
-  geo.computeBoundingBox()
-  const target = new Vector3()
-  geo.boundingBox.getCenter(target)
-  transform.makeTranslation(target.x, target.y, target.z)
-}
