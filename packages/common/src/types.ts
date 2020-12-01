@@ -20,7 +20,9 @@ import {
   MeshToonMaterialParameters,
   MeshPhysicalMaterialParameters,
   Material,
-  WebGLRenderer
+  WebGLRenderer,
+  Vector3,
+  Quaternion
 } from '@enable3d/three-wrapper/dist/index'
 import { ExtendedObject3D } from './extendedObject3D'
 import { ExtendedMesh } from './extendedMesh'
@@ -137,8 +139,20 @@ export interface AddMaterial {
   (materialConfig?: MaterialConfig): Material | Material[]
 }
 
+export interface ColliderOptions {
+  cylinderAxis?: string
+  fit?: string
+  includeInvisible?: boolean
+  margin?: number
+  maxHalfExtent?: number
+  minHalfExtent?: number
+  offset?: Vector3
+  orientation?: Quaternion
+}
+
 interface GeometryPhysicsOptions {
   /** Set the collision flags. 0 is DYNAMIC, 1 is STATIC, 2 is KINEMATIC, 4 GHOST */
+  collider?: ColliderOptions
   collisionFlags?: number
   collisionGroup?: number
   collisionMask?: number
