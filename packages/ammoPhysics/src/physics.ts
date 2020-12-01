@@ -622,22 +622,22 @@ class AmmoPhysics extends EventEmitter {
         collisionShape = new Ammo.btCapsuleShape(params.radius, params.height)
         break
       case 'plane':
-        collisionShape = createCollisionShapes(object, { type: 'mesh', concave: false, ...params.collider })
+        collisionShape = createCollisionShapes(object, { type: 'mesh', concave: false, ...params.collider }) as any
         break
       case 'hull':
-        collisionShape = createCollisionShapes(object, { type: 'hull', ...params.collider })
+        collisionShape = createCollisionShapes(object, { type: 'hull', ...params.collider }) as any
         break
       case 'hacd':
-        collisionShape = createCollisionShapes(object, { type: 'hacd', ...params.collider })
+        collisionShape = createCollisionShapes(object, { type: 'hacd', ...params.collider }) as any
         break
       case 'vhacd':
-        collisionShape = createCollisionShapes(object, { type: 'vhacd', ...params.collider })
+        collisionShape = createCollisionShapes(object, { type: 'vhacd', ...params.collider }) as any
         break
       case 'convexMesh':
-        collisionShape = createCollisionShapes(object, { type: 'mesh', concave: false, ...params.collider })
+        collisionShape = createCollisionShapes(object, { type: 'mesh', concave: false, ...params.collider }) as any
         break
       case 'concaveMesh':
-        collisionShape = createCollisionShapes(object, { type: 'mesh', concave: true, ...params.collider })
+        collisionShape = createCollisionShapes(object, { type: 'mesh', concave: true, ...params.collider }) as any
         break
     }
 
