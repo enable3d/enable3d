@@ -48,6 +48,12 @@ class PhysicsBody {
     Ammo.destroy(this.tmpBtVector3)
     Ammo.destroy(this.tmpBtVector3_1)
     Ammo.destroy(this.tmpBtQuaternion)
+
+    // destory collision shape
+    Ammo.destroy(this.ammo.getCollisionShape())
+
+    // destroy body
+    Ammo.destroy(this.ammo)
   }
 
   private setupEventEmitter() {
