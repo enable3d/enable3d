@@ -19,12 +19,22 @@ export { ExtendedGroup }
 import Shapes from './shapes'
 import Constraints from './constraints'
 import { EventEmitter } from 'eventemitter3'
-import { Vector3, Quaternion, Scene, Mesh, Euler } from '@enable3d/three-wrapper/dist/index'
-import { createCollisionShapes } from './three-to-ammo'
-import { addTorusShape } from './torusShape'
+import { Vector3, Quaternion, Scene, Mesh, Euler, Matrix4 } from '@enable3d/three-wrapper/dist/index'
+import {
+  createBoxShape,
+  createCapsuleShape,
+  createConeShape,
+  createCylinderShape,
+  createHACDShapes,
+  createHullShape,
+  createSphereShape,
+  createTriMeshShape,
+  createVHACDShapes,
+  iterateGeometries
+} from './three-to-ammo'
+import { createTorusShape } from './torusShape'
 import Factories from '@enable3d/common/dist/factories'
 import { CollisionEvents } from './collisionEvents'
-import { REVISION } from '@enable3d/three-wrapper/dist/index'
 
 import DebugDrawer from './debugDrawer'
 import { ConvexObjectBreaker } from './convexObjectBreaker'
@@ -128,7 +138,8 @@ class AmmoPhysics extends EventEmitter {
     if (ptr && name && obj) {
       if (obj?.body?.ammo) {
         // remove from physics world
-        this.physicsWorld.removeRigidBody(obj.body.ammo)
+        this.physicsWorld.removeCollisionObject(obj.body.ammo)
+        // this.physicsWorld.removeRigidBody(obj.body.ammo)
 
         // call destructor on body
         obj.body.destructor()
@@ -598,46 +609,70 @@ class AmmoPhysics extends EventEmitter {
   public createCollisionShape(shape: string, params: any, object?: ExtendedObject3D): Ammo.btCollisionShape {
     const quat = object?.quaternion ? object?.quaternion : new Quaternion(0, 0, 0, 1)
 
+    // prepare data to pass to three-to-ammo.js
+    const extractData = (object: any) => {
+      const matrixWorld = new Matrix4().elements
+      const vertices: any[] = []
+      const matrices: any[] = []
+      const indexes: any[] = []
+      iterateGeometries(object, {}, (vertexArray: any, matrixArray: any, indexArray: any) => {
+        vertices.push(vertexArray)
+        matrices.push(matrixArray)
+        indexes.push(indexArray)
+      })
+
+      return { vertices, matrices, indexes, matrixWorld }
+    }
+
+    const d = extractData(object)
+
     let collisionShape
     switch (shape) {
       case 'box':
-        collisionShape = new Ammo.btBoxShape(new Ammo.btVector3(params.width / 2, params.height / 2, params.depth / 2))
+        collisionShape = createBoxShape(d.vertices, d.matrices, d.matrixWorld)
         break
       case 'sphere':
-        collisionShape = new Ammo.btSphereShape(params.radius)
+        collisionShape = createSphereShape(d.vertices, d.matrices, d.matrixWorld)
         break
       case 'cylinder':
-        // https://pybullet.org/Bullet/phpBB3/viewtopic.php?p=20562
-        collisionShape = new Ammo.btCylinderShape(
-          new Ammo.btVector3(params.radiusTop, params.height / 2, params.radiusTop)
-        )
+        collisionShape = createCylinderShape(d.vertices, d.matrices, d.matrixWorld)
         break
       case 'cone':
-        collisionShape = new Ammo.btConeShape(params.radius, params.height)
+        collisionShape = createConeShape(d.vertices, d.matrices, d.matrixWorld)
         break
       case 'torus':
-        collisionShape = addTorusShape(params, quat)
+        collisionShape = createTorusShape(params, quat)
         break
       case 'capsule':
-        collisionShape = new Ammo.btCapsuleShape(params.radius, params.height)
+        collisionShape = createCapsuleShape(d.vertices, d.matrices, d.matrixWorld)
         break
       case 'plane':
-        collisionShape = createCollisionShapes(object, { type: 'mesh', concave: false, ...params.collider }) as any
+        // uses a convex shape
+        collisionShape = createTriMeshShape(d.vertices, d.matrices, d.indexes, d.matrixWorld, {
+          concave: false,
+          ...params.collider
+        })
         break
       case 'hull':
-        collisionShape = createCollisionShapes(object, { type: 'hull', ...params.collider }) as any
+        collisionShape = createHullShape(d.vertices, d.matrices, d.matrixWorld, params.collider)
         break
       case 'hacd':
-        collisionShape = createCollisionShapes(object, { type: 'hacd', ...params.collider }) as any
+        collisionShape = createHACDShapes(d.vertices, d.matrices, d.indexes, d.matrixWorld, params.collider)
         break
       case 'vhacd':
-        collisionShape = createCollisionShapes(object, { type: 'vhacd', ...params.collider }) as any
+        collisionShape = createVHACDShapes(d.vertices, d.matrices, d.indexes, d.matrixWorld, params.collider)
         break
       case 'convexMesh':
-        collisionShape = createCollisionShapes(object, { type: 'mesh', concave: false, ...params.collider }) as any
+        collisionShape = createTriMeshShape(d.vertices, d.matrices, d.indexes, d.matrixWorld, {
+          concave: false,
+          ...params.collider
+        })
         break
       case 'concaveMesh':
-        collisionShape = createCollisionShapes(object, { type: 'mesh', concave: true, ...params.collider }) as any
+        collisionShape = createTriMeshShape(d.vertices, d.matrices, d.indexes, d.matrixWorld, {
+          concave: true,
+          ...params.collider
+        })
         break
     }
 
@@ -663,7 +698,7 @@ class AmmoPhysics extends EventEmitter {
 
       const transform = new Ammo.btTransform()
       transform.setIdentity()
-      if (offset) transform.setOrigin(new Ammo.btVector3(offset.x || 0, offset.y || 0, offset.z || 0))
+      if (offset) transform.getOrigin().setValue(offset.x || 0, offset.y || 0, offset.z || 0)
       compoundShape.addChildShape(transform, shape)
     })
     return compoundShape
@@ -693,7 +728,8 @@ class AmmoPhysics extends EventEmitter {
       // if we want a custom compound shape, we simply do
       const collisionShapes = compound.map((s: any) => this.createCollisionShape(s.shape, s))
       const compoundShape = this.mergeCollisionShapesToCompoundShape(collisionShapes)
-      const rigidBody = this.collisionShapeToRigidBody(compoundShape, object.position, object.quaternion, mass)
+      const localTransform = this.finishCollisionShape(compoundShape, object.position, object.quaternion)
+      const rigidBody = this.collisionShapeToRigidBody(compoundShape, localTransform, mass)
       this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, breakable, offset)
       return
     }
@@ -734,14 +770,8 @@ class AmmoPhysics extends EventEmitter {
     // object.position.copy(pos)
     // object.quaternion.copy(quat)
 
-    const rigidBody = this.collisionShapeToRigidBody(collisionShape, pos, quat, mass)
-
-    // const scale = { x: 1, y: 1, z: 1 }
-    // if (scale) {
-    //   const localScale = new Ammo.btVector3(scale.x, scale.y, scale.z)
-    //   Shape.setLocalScaling(localScale)
-    //   Ammo.destroy(localScale)
-    // }
+    const localTransform = this.finishCollisionShape(collisionShape, pos, quat)
+    const rigidBody = this.collisionShapeToRigidBody(collisionShape, localTransform, mass)
 
     this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, breakable, offset)
   }
@@ -773,20 +803,43 @@ class AmmoPhysics extends EventEmitter {
     object.body.setCollisionFlags(collisionFlags)
   }
 
-  public collisionShapeToRigidBody(
-    physicsShape: Ammo.btCollisionShape,
+  public finishCollisionShape(
+    collisionShape: Ammo.btCollisionShape,
     pos: Vector3,
     quat: Quaternion,
+    margin: number = 0.01
+  ) {
+    collisionShape.setMargin(margin)
+
+    const rotation = new Ammo.btQuaternion(0, 0, 0, 1)
+    rotation.setValue(quat.x, quat.y, quat.z, quat.w)
+
+    const localTransform = new Ammo.btTransform()
+    localTransform.setIdentity()
+    localTransform.getOrigin().setValue(pos.x, pos.y, pos.z)
+    localTransform.setRotation(rotation)
+
+    Ammo.destroy(rotation)
+
+    const scale = { x: 1, y: 1, z: 1 }
+    if (scale) {
+      const localScale = new Ammo.btVector3(scale.x, scale.y, scale.z)
+      collisionShape.setLocalScaling(localScale)
+      Ammo.destroy(localScale)
+    }
+
+    return localTransform
+  }
+
+  public collisionShapeToRigidBody(
+    collisionShape: Ammo.btCollisionShape,
+    localTransform: Ammo.btTransform,
     mass: number = 1
   ) {
-    const transform = new Ammo.btTransform()
-    transform.setIdentity()
-    transform.setOrigin(new Ammo.btVector3(pos.x, pos.y, pos.z))
-    transform.setRotation(new Ammo.btQuaternion(quat.x, quat.y, quat.z, quat.w))
-    const motionState = new Ammo.btDefaultMotionState(transform)
+    const motionState = new Ammo.btDefaultMotionState(localTransform)
     const localInertia = new Ammo.btVector3(0, 0, 0)
-    if (mass > 0) physicsShape.calculateLocalInertia(mass, localInertia)
-    const rbInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, physicsShape, localInertia)
+    if (mass > 0) collisionShape.calculateLocalInertia(mass, localInertia)
+    const rbInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, collisionShape, localInertia)
     const rigidBody = new Ammo.btRigidBody(rbInfo)
     if (mass > 0) rigidBody.setActivationState(4) // Disable deactivation
     return rigidBody

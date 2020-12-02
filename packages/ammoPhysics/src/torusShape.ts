@@ -7,7 +7,10 @@
 import { Quaternion } from '@enable3d/three-wrapper/dist/index'
 
 // https://pybullet.org/Bullet/phpBB3/viewtopic.php?t=7228
-export const addTorusShape = (config: { radius: number; tube: number; tubularSegments: number }, quat: Quaternion) => {
+export const createTorusShape = (
+  config: { radius: number; tube: number; tubularSegments: number },
+  quat: Quaternion
+) => {
   const { radius = 1, tube = 0.4, tubularSegments = 8 } = config
 
   const SIMD_PI = Math.PI

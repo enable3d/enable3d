@@ -7,13 +7,12 @@
 
 /**
  * @author       Kevin Lee (https://github.com/InfiniteLee)
- * @copyright    Copyright (c) 2019 Kevin Lee; Project Url: https://github.com/InfiniteLee/three-to-ammo
+ * @copyright    Copyright (c) 2020 Kevin Lee; Project Url: https://github.com/InfiniteLee/three-to-ammo
  * @license      {@link https://github.com/InfiniteLee/three-to-ammo/blob/master/LICENSE|MPL-2.0}
  */
 
 import { Vector3, Matrix4, Quaternion, Box3 } from '@enable3d/three-wrapper/dist/index'
-
-  ; ('use strict')
+;('use strict')
 /* global Ammo */
 
 export const TYPE = {
@@ -555,7 +554,13 @@ export const createTriMeshShape = (function () {
     triMesh.setScaling(localScale)
     Ammo.destroy(localScale)
 
-    const collisionShape = new Ammo.btBvhTriangleMeshShape(triMesh, true, true)
+    // MOD (yandeu): Use btConvexTriangleMeshShape for concave shapes
+    let collisionShape
+    if (options.concave) collisionShape = new Ammo.btBvhTriangleMeshShape(triMesh, true, true)
+    else collisionShape = new Ammo.btConvexTriangleMeshShape(triMesh, true)
+
+    // const collisionShape = new Ammo.btBvhTriangleMeshShape(triMesh, true, true)
+
     collisionShape.resources = [triMesh]
 
     Ammo.destroy(bta)
@@ -650,6 +655,9 @@ function _setOptions(options) {
 }
 
 const _finishCollisionShape = function (collisionShape, options, scale) {
+  // MOD (yandeu): All of this will be done in physics.ts
+  return
+
   collisionShape.type = options.type
   collisionShape.setMargin(options.margin)
   collisionShape.destroy = () => {
@@ -691,7 +699,8 @@ export const iterateGeometries = (function () {
       const transform = new Matrix4()
       if (
         mesh.isMesh &&
-        mesh.name !== 'Sky' &&
+        // MOD (yandeu): No need to check if name is 'Sky'
+        // mesh.name !== 'Sky' &&
         (options.includeInvisible || (mesh.el && mesh.el.object3D.visible) || mesh.visible)
       ) {
         if (mesh === root) {
@@ -742,17 +751,11 @@ const _computeRadius = (function () {
 
 const _computeHalfExtents = function (bounds, minHalfExtent, maxHalfExtent) {
   const halfExtents = new Vector3()
-  return halfExtents
-    .subVectors(bounds.max, bounds.min)
-    .multiplyScalar(0.5)
-    .clampScalar(minHalfExtent, maxHalfExtent)
+  return halfExtents.subVectors(bounds.max, bounds.min).multiplyScalar(0.5).clampScalar(minHalfExtent, maxHalfExtent)
 }
 
 const _computeLocalOffset = function (matrix, bounds, target) {
-  target
-    .addVectors(bounds.max, bounds.min)
-    .multiplyScalar(0.5)
-    .applyMatrix4(matrix)
+  target.addVectors(bounds.max, bounds.min).multiplyScalar(0.5).applyMatrix4(matrix)
   return target
 }
 
