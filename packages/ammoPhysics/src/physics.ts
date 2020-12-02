@@ -611,8 +611,40 @@ class AmmoPhysics extends EventEmitter {
     return { shape, params, object }
   }
 
+  /** Returns a very simple provitive collision shape, without the use of three-to-ammo.js */
+  public createPrimitiveCollisionShape(shape: string, params: any) {
+    let collisionShape
+    switch (shape) {
+      case 'box':
+        const tmp1 = new Ammo.btVector3(params.width / 2, params.height / 2, params.depth / 2)
+        collisionShape = new Ammo.btBoxShape(tmp1)
+        Ammo.destroy(tmp1)
+        break
+      case 'sphere':
+        collisionShape = new Ammo.btSphereShape(params.radius)
+        break
+      case 'cylinder':
+        // https://pybullet.org/Bullet/phpBB3/viewtopic.php?p=20562
+        const tmp2 = new Ammo.btVector3(params.radiusTop, params.height / 2, params.radiusTop)
+        collisionShape = new Ammo.btCylinderShape(tmp2)
+        Ammo.destroy(tmp2)
+        break
+      case 'cone':
+        collisionShape = new Ammo.btConeShape(params.radius, params.height)
+        break
+      case 'capsule':
+        collisionShape = new Ammo.btCapsuleShape(params.radius, params.height)
+        break
+    }
+
+    return collisionShape
+  }
+
   public createCollisionShape(shape: string, params: any, object?: ExtendedObject3D): Ammo.btCollisionShape {
     const quat = object?.quaternion ? object?.quaternion : new Quaternion(0, 0, 0, 1)
+
+    // if there is not object, we probably are about to assemble a custom compound shape
+    if (!object) return this.createPrimitiveCollisionShape(shape, params) as Ammo.btCollisionShape
 
     // prepare data to pass to three-to-ammo.js
     const extractData = (object: any) => {
