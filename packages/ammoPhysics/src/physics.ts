@@ -19,7 +19,15 @@ export { ExtendedGroup }
 import Shapes from './shapes'
 import Constraints from './constraints'
 import { EventEmitter } from 'eventemitter3'
-import { Vector3, Quaternion, Scene, Mesh, Euler, Matrix4 } from '@enable3d/three-wrapper/dist/index'
+import {
+  Vector3,
+  Quaternion,
+  Scene,
+  Euler,
+  Matrix4,
+  Geometry,
+  BufferGeometry
+} from '@enable3d/three-wrapper/dist/index'
 import {
   createBoxShape,
   createCapsuleShape,
@@ -645,6 +653,12 @@ class AmmoPhysics extends EventEmitter {
 
     // if there is not object, we probably are about to assemble a custom compound shape
     if (!object) return this.createPrimitiveCollisionShape(shape, params) as Ammo.btCollisionShape
+
+    // transform geometry to bufferGeometry (because three-to-ammo works only with bufferGeometry)
+    const geometry = object.geometry as Geometry
+    if (geometry?.isGeometry) {
+      object.geometry = new BufferGeometry().fromGeometry(geometry)
+    }
 
     // prepare data to pass to three-to-ammo.js
     const extractData = (object: any) => {
