@@ -314,7 +314,11 @@ class AmmoPhysics extends EventEmitter {
           this.tmpVector3.set(p.x() + o.x, p.y() + o.y, p.z() + o.z)
           this.tmpQuaternion.set(q.x(), q.y(), q.z(), q.w())
           this.tmpMatrix4.compose(this.tmpVector3, this.tmpQuaternion, this.tmpVector3a);
-          this.tmpMatrix4a.getInverse(objThree.parent!.matrixWorld);
+          if (objThree.parent) {
+            this.tmpMatrix4a.getInverse(objThree.parent.matrixWorld);
+          } else {
+            this.tmpMatrix4a.identity();
+          }
           this.tmpMatrix4a.multiply(this.tmpMatrix4);
           this.tmpMatrix4a.decompose(objThree.position, objThree.quaternion, objThree.scale);
           //console.log(`${objThree.name}: [${p.x()+o.x},${p.y()+o.y},${p.z()+o.z}] / [${q.x()},${q.y()},${q.z()},${q.w()}]`)
