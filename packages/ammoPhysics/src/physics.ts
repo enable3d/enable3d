@@ -310,18 +310,18 @@ class AmmoPhysics extends EventEmitter {
           // body offset
           let o = objThree.body.offset
           // set position and rotation
-          const scale = objThree.body.ammo.getCollisionShape().getLocalScaling();
-          this.tmpVector3a.set(scale.x(), scale.y(), scale.z());
+          const scale = objThree.body.ammo.getCollisionShape().getLocalScaling()
+          this.tmpVector3a.set(scale.x(), scale.y(), scale.z())
           this.tmpVector3.set(p.x() + o.x, p.y() + o.y, p.z() + o.z)
           this.tmpQuaternion.set(q.x(), q.y(), q.z(), q.w())
-          this.tmpMatrix4.compose(this.tmpVector3, this.tmpQuaternion, this.tmpVector3a);
+          this.tmpMatrix4.compose(this.tmpVector3, this.tmpQuaternion, this.tmpVector3a)
           if (objThree.parent) {
-            this.tmpMatrix4a.getInverse(objThree.parent.matrixWorld);
+            this.tmpMatrix4a.getInverse(objThree.parent.matrixWorld)
           } else {
-            this.tmpMatrix4a.identity();
+            this.tmpMatrix4a.identity()
           }
           this.tmpMatrix4a.multiply(this.tmpMatrix4);
-          this.tmpMatrix4a.decompose(objThree.position, objThree.quaternion, objThree.scale);
+          this.tmpMatrix4a.decompose(objThree.position, objThree.quaternion, objThree.scale)
         }
       }
     }
@@ -774,7 +774,7 @@ class AmmoPhysics extends EventEmitter {
 
     const pos = new Vector3()
     const quat = new Quaternion()
-    const scale = new Vector3();
+    const scale = new Vector3()
     object.getWorldPosition(pos)
     object.getWorldQuaternion(quat)
     object.getWorldScale(scale)
