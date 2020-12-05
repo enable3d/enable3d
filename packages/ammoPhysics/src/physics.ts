@@ -74,6 +74,9 @@ class AmmoPhysics extends EventEmitter {
   protected tmpEuler: Euler
   protected tmpQuaternion: Quaternion
   protected tmpVector3: Vector3
+  protected tmpVector3a: Vector3
+  protected tmpMatrix4: Matrix4
+  protected tmpMatrix4a: Matrix4
   protected tmpBtVector3: Ammo.btVector3
   protected tmpBtQuaternion: Ammo.btQuaternion
 
@@ -104,6 +107,9 @@ class AmmoPhysics extends EventEmitter {
     this.tmpEuler = new Euler()
     this.tmpQuaternion = new Quaternion()
     this.tmpVector3 = new Vector3()
+    this.tmpVector3a = new Vector3()
+    this.tmpMatrix4 = new Matrix4();
+    this.tmpMatrix4a = new Matrix4();
     this.tmpBtVector3 = new Ammo.btVector3()
     this.tmpBtQuaternion = new Ammo.btQuaternion(0, 0, 0, 1)
     this.emptyV3 = new Vector3()
@@ -304,8 +310,14 @@ class AmmoPhysics extends EventEmitter {
           // body offset
           let o = objThree.body.offset
           // set position and rotation
-          objThree.position.set(p.x() + o.x, p.y() + o.y, p.z() + o.z)
-          objThree.quaternion.set(q.x(), q.y(), q.z(), q.w())
+          this.tmpVector3a.setScalar(1); // TODO get body.localscale?
+          this.tmpVector3.set(p.x() + o.x, p.y() + o.y, p.z() + o.z)
+          this.tmpQuaternion.set(q.x(), q.y(), q.z(), q.w())
+          this.tmpMatrix4.compose(this.tmpVector3, this.tmpQuaternion, this.tmpVector3a);
+          this.tmpMatrix4a.getInverse(objThree.parent!.matrixWorld);
+          this.tmpMatrix4a.multiply(this.tmpMatrix4);
+          this.tmpMatrix4a.decompose(objThree.position, objThree.quaternion, objThree.scale);
+          //console.log(`${objThree.name}: [${p.x()+o.x},${p.y()+o.y},${p.z()+o.z}] / [${q.x()},${q.y()},${q.z()},${q.w()}]`)
         }
       }
     }
@@ -551,7 +563,6 @@ class AmmoPhysics extends EventEmitter {
   }
 
   private prepareThreeObjectForCollisionShape(object: ExtendedObject3D, config: Types.AddExistingConfig = {}) {
-    const { position: pos, quaternion: quat, hasBody } = object
     const { autoCenter = false } = config
 
     // set default params
@@ -757,7 +768,11 @@ class AmmoPhysics extends EventEmitter {
       return
     }
 
-    const { position: pos, quaternion: quat } = object
+    const pos = new Vector3()
+    const quat = new Quaternion()
+    object.getWorldPosition(pos)
+    object.getWorldQuaternion(quat)
+
     const {
       shape = 'unknown',
       compound = [],
