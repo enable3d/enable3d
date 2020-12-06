@@ -657,7 +657,9 @@ class AmmoPhysics extends EventEmitter {
       return { vertices, matrices, indexes, matrixWorld }
     }
 
-    const d = extractData(object)
+    let d = {} as any
+    // extract data for complex shapes generated with three-to-ammo.js
+    if (['plane', 'hull', 'hacd', 'vhacd', 'convexMesh', 'concaveMesh'].indexOf(shape) > 0) d = extractData(object)
 
     let collisionShape
     switch (shape) {
