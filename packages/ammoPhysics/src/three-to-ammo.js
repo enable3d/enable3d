@@ -637,6 +637,9 @@ export const createHeightfieldTerrainShape = function (options = {}) {
 }
 
 function _setOptions(options) {
+  // MOD (yandeu): All of this will be done in physics.ts
+  return
+
   options.fit = options.hasOwnProperty('fit') ? options.fit : FIT.ALL
   options.type = options.type || TYPE.HULL
   options.minHalfExtent = options.hasOwnProperty('minHalfExtent') ? options.minHalfExtent : 0

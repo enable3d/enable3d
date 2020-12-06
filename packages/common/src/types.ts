@@ -139,20 +139,8 @@ export interface AddMaterial {
   (materialConfig?: MaterialConfig): Material | Material[]
 }
 
-export interface ColliderOptions {
-  cylinderAxis?: string
-  fit?: string
-  includeInvisible?: boolean
-  margin?: number
-  maxHalfExtent?: number
-  minHalfExtent?: number
-  offset?: Vector3
-  orientation?: Quaternion
-}
-
 interface GeometryPhysicsOptions {
   /** Set the collision flags. 0 is DYNAMIC, 1 is STATIC, 2 is KINEMATIC, 4 GHOST */
-  collider?: ColliderOptions
   collisionFlags?: number
   collisionGroup?: number
   collisionMask?: number
@@ -195,6 +183,7 @@ export interface GroundConfig extends BoxConfig {
 export interface CylinderConfig extends GeometryConfig, XYZ, WH {
   radiusTop?: number
   radiusBottom?: number
+  radiusBody?: number
   height?: number
   radiusSegments?: number
   heightSegments?: number
@@ -239,10 +228,15 @@ export interface AddExistingConfig extends XYZ, GeometryPhysicsOptions {
   height?: number
   depth?: number
   radius?: number
+  radiusTop?: number
+  radiusBottom?: number
   shape?: string
   compound?: CustomCompoundShape
   autoCenter?: boolean
-  offset?: { x?: number; y?: number; z?: number }
+  axis?: string
+  margin?: number
+  offset?: XYZ
+  orientation?: Quaternion
   addChildren?: boolean
 }
 

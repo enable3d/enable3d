@@ -29,16 +29,11 @@ import {
   BufferGeometry
 } from '@enable3d/three-wrapper/dist/index'
 import {
-  createBoxShape,
-  createCapsuleShape,
-  createConeShape,
-  createCylinderShape,
-  createHACDShapes,
+  iterateGeometries,
   createHullShape,
-  createSphereShape,
-  createTriMeshShape,
+  createHACDShapes,
   createVHACDShapes,
-  iterateGeometries
+  createTriMeshShape
 } from './three-to-ammo'
 import { createTorusShape } from './torusShape'
 import Factories from '@enable3d/common/dist/factories'
@@ -617,6 +612,10 @@ class AmmoPhysics extends EventEmitter {
     // auto adjust the center for custom shapes
     if (autoCenter) object.geometry.center()
 
+    // adjust the cylinder radius for its physcis body
+    if (shape === 'cylinder' && config.radius) params.radiusTop = config.radius
+    else if (shape === 'cylinder' && config.radiusTop) params.radius = config.radiusTop
+
     // some aliases
     if (shape === 'extrude') shape = 'hacd'
     if (shape === 'mesh' || shape === 'convex') shape = 'convexMesh'
@@ -631,44 +630,15 @@ class AmmoPhysics extends EventEmitter {
     return { shape, params, object }
   }
 
-  /** Returns a very simple provitive collision shape, without the use of three-to-ammo.js */
-  public createPrimitiveCollisionShape(shape: string, params: any) {
-    let collisionShape
-    switch (shape) {
-      case 'box':
-        const tmp1 = new Ammo.btVector3(params.width / 2, params.height / 2, params.depth / 2)
-        collisionShape = new Ammo.btBoxShape(tmp1)
-        Ammo.destroy(tmp1)
-        break
-      case 'sphere':
-        collisionShape = new Ammo.btSphereShape(params.radius)
-        break
-      case 'cylinder':
-        // https://pybullet.org/Bullet/phpBB3/viewtopic.php?p=20562
-        const tmp2 = new Ammo.btVector3(params.radiusTop, params.height / 2, params.radiusTop)
-        collisionShape = new Ammo.btCylinderShape(tmp2)
-        Ammo.destroy(tmp2)
-        break
-      case 'cone':
-        collisionShape = new Ammo.btConeShape(params.radius, params.height)
-        break
-      case 'capsule':
-        collisionShape = new Ammo.btCapsuleShape(params.radius, params.height)
-        break
-    }
-
-    return collisionShape
-  }
-
   public createCollisionShape(shape: string, params: any, object?: ExtendedObject3D): Ammo.btCollisionShape {
     const quat = object?.quaternion ? object?.quaternion : new Quaternion(0, 0, 0, 1)
+    const { axis = 'y' } = params
 
-    // if there is not object, we probably are about to assemble a custom compound shape
-    if (!object) return this.createPrimitiveCollisionShape(shape, params) as Ammo.btCollisionShape
+    const btHalfExtents = new Ammo.btVector3()
 
     // transform geometry to bufferGeometry (because three-to-ammo works only with bufferGeometry)
-    const geometry = object.geometry as Geometry
-    if (geometry?.isGeometry) {
+    const geometry = object?.geometry as Geometry
+    if (object && geometry?.isGeometry) {
       object.geometry = new BufferGeometry().fromGeometry(geometry)
     }
 
@@ -692,25 +662,59 @@ class AmmoPhysics extends EventEmitter {
     let collisionShape
     switch (shape) {
       case 'box':
-        collisionShape = createBoxShape(d.vertices, d.matrices, d.matrixWorld)
+        btHalfExtents.setValue(params.width / 2, params.height / 2, params.depth / 2)
+        collisionShape = new Ammo.btBoxShape(btHalfExtents)
         break
       case 'sphere':
-        collisionShape = createSphereShape(d.vertices, d.matrices, d.matrixWorld)
+        collisionShape = new Ammo.btSphereShape(params.radius)
         break
       case 'cylinder':
-        collisionShape = createCylinderShape(d.vertices, d.matrices, d.matrixWorld)
+        switch (axis) {
+          case 'y':
+            btHalfExtents.setValue(params.radius, params.height / 2, params.radius)
+            collisionShape = new Ammo.btCylinderShape(btHalfExtents)
+            break
+          case 'x':
+            btHalfExtents.setValue(params.height / 2, params.radius, params.radius)
+            collisionShape = new Ammo.btCylinderShapeX(btHalfExtents)
+            break
+          case 'z':
+            btHalfExtents.setValue(params.radius, params.radius, params.height / 2)
+            collisionShape = new Ammo.btCylinderShapeZ(btHalfExtents)
+            break
+        }
         break
       case 'cone':
-        collisionShape = createConeShape(d.vertices, d.matrices, d.matrixWorld)
+        switch (axis) {
+          case 'y':
+            collisionShape = new Ammo.btConeShape(params.radius, params.height)
+            break
+          case 'x':
+            collisionShape = new Ammo.btConeShapeX(params.radius, params.height)
+            break
+          case 'z':
+            collisionShape = new Ammo.btConeShapeZ(params.radius, params.height)
+            break
+        }
+        break
+      case 'capsule':
+        switch (axis) {
+          case 'y':
+            collisionShape = new Ammo.btCapsuleShape(params.radius, params.height)
+            break
+          case 'x':
+            collisionShape = new Ammo.btCapsuleShapeX(params.radius, params.height)
+            break
+          case 'z':
+            collisionShape = new Ammo.btCapsuleShapeZ(params.radius, params.height)
+            break
+        }
         break
       case 'torus':
         collisionShape = createTorusShape(params, quat)
         break
-      case 'capsule':
-        collisionShape = createCapsuleShape(d.vertices, d.matrices, d.matrixWorld)
-        break
       case 'plane':
-        // uses a convex shape
+        // uses a triMeshShape for the plane
         collisionShape = createTriMeshShape(d.vertices, d.matrices, d.indexes, d.matrixWorld, {
           concave: false,
           ...params.collider
@@ -738,6 +742,8 @@ class AmmoPhysics extends EventEmitter {
         })
         break
     }
+
+    Ammo.destroy(btHalfExtents)
 
     // if there is a x, y or z, take is as temporary offset parameter
     const { x, y, z } = params
@@ -790,14 +796,15 @@ class AmmoPhysics extends EventEmitter {
       collisionMask = 65535, // collide with all other bodies
       offset = undefined,
       breakable = false,
-      addChildren = true
+      addChildren = true,
+      margin = 0.01
     } = config
 
     if (compound.length >= 1) {
       // if we want a custom compound shape, we simply do
       const collisionShapes = compound.map((s: any) => this.createCollisionShape(s.shape, s))
       const compoundShape = this.mergeCollisionShapesToCompoundShape(collisionShapes)
-      const localTransform = this.finishCollisionShape(compoundShape, pos, quat, scale)
+      const localTransform = this.finishCollisionShape(compoundShape, pos, quat, scale, margin)
       const rigidBody = this.collisionShapeToRigidBody(compoundShape, localTransform, mass)
       this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, breakable, offset)
       return
@@ -839,7 +846,7 @@ class AmmoPhysics extends EventEmitter {
     // object.position.copy(pos)
     // object.quaternion.copy(quat)
 
-    const localTransform = this.finishCollisionShape(collisionShape, pos, quat, scale)
+    const localTransform = this.finishCollisionShape(collisionShape, pos, quat, scale, margin)
     const rigidBody = this.collisionShapeToRigidBody(collisionShape, localTransform, mass)
 
     this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, breakable, offset)
