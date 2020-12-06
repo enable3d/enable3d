@@ -638,6 +638,9 @@ export const createHeightfieldTerrainShape = function (options = {}) {
 
 function _setOptions(options) {
   // MOD (yandeu): All of this will be done in physics.ts
+  // we only keep type and margin
+  options.type = options.type || TYPE.HULL
+  options.margin = options.hasOwnProperty('margin') ? options.margin : 0.01
   return
 
   options.fit = options.hasOwnProperty('fit') ? options.fit : FIT.ALL

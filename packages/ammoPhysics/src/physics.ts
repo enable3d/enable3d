@@ -720,29 +720,29 @@ class AmmoPhysics extends EventEmitter {
       case 'plane':
         // uses a triMeshShape for the plane
         collisionShape = createTriMeshShape(d.vertices, d.matrices, d.indexes, d.matrixWorld, {
-          concave: false,
-          ...params.collider
+          ...params,
+          concave: false
         })
         break
       case 'hull':
-        collisionShape = createHullShape(d.vertices, d.matrices, d.matrixWorld, params.collider)
+        collisionShape = createHullShape(d.vertices, d.matrices, d.matrixWorld, params)
         break
       case 'hacd':
-        collisionShape = createHACDShapes(d.vertices, d.matrices, d.indexes, d.matrixWorld, params.collider)
+        collisionShape = createHACDShapes(d.vertices, d.matrices, d.indexes, d.matrixWorld, params)
         break
       case 'vhacd':
-        collisionShape = createVHACDShapes(d.vertices, d.matrices, d.indexes, d.matrixWorld, params.collider)
+        collisionShape = createVHACDShapes(d.vertices, d.matrices, d.indexes, d.matrixWorld, params)
         break
       case 'convexMesh':
         collisionShape = createTriMeshShape(d.vertices, d.matrices, d.indexes, d.matrixWorld, {
-          concave: false,
-          ...params.collider
+          ...params,
+          concave: false
         })
         break
       case 'concaveMesh':
         collisionShape = createTriMeshShape(d.vertices, d.matrices, d.indexes, d.matrixWorld, {
-          concave: true,
-          ...params.collider
+          ...params,
+          concave: true
         })
         break
     }
@@ -888,7 +888,7 @@ class AmmoPhysics extends EventEmitter {
     pos: Vector3,
     quat: Quaternion,
     scale: Vector3,
-    margin: number = 0.01
+    margin: number
   ) {
     collisionShape.setMargin(margin)
 
