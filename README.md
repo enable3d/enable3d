@@ -32,6 +32,8 @@ Visit the [enable3d website](https://enable3d.io) for documentation and examples
 - Fix physics offset issue [#62](https://github.com/enable3d/enable3d/issues/62)
 - Finish and merge vehicle and car branch
 - Support Post-Processing
+- Support for Soft Bodies
+- Update to three.js r123
 - Publish examples:
   - Post-Processing
   - Sync 3D object in 2D world
