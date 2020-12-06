@@ -108,8 +108,8 @@ class AmmoPhysics extends EventEmitter {
     this.tmpQuaternion = new Quaternion()
     this.tmpVector3 = new Vector3()
     this.tmpVector3a = new Vector3()
-    this.tmpMatrix4 = new Matrix4();
-    this.tmpMatrix4a = new Matrix4();
+    this.tmpMatrix4 = new Matrix4()
+    this.tmpMatrix4a = new Matrix4()
     this.tmpBtVector3 = new Ammo.btVector3()
     this.tmpBtQuaternion = new Ammo.btQuaternion(0, 0, 0, 1)
     this.emptyV3 = new Vector3()
@@ -320,7 +320,7 @@ class AmmoPhysics extends EventEmitter {
           } else {
             this.tmpMatrix4a.identity()
           }
-          this.tmpMatrix4a.multiply(this.tmpMatrix4);
+          this.tmpMatrix4a.multiply(this.tmpMatrix4)
           this.tmpMatrix4a.decompose(objThree.position, objThree.quaternion, objThree.scale)
         }
       }
