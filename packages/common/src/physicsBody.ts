@@ -17,6 +17,8 @@ class PhysicsBody {
   public checkCollisions = false
   public breakable = false
   public didUpdate = false
+  /** Skip syncing the mesh to the physics body. */
+  public skipUpdate = false
 
   private _emitUpdateEvents = false
   private _needUpdate = false

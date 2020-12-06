@@ -303,6 +303,8 @@ class AmmoPhysics extends EventEmitter {
           ms.setWorldTransform(this.tmpTrans)
           // reset needsUpdate
           objThree.body.needUpdate = false
+        } else if (objThree.body.skipUpdate) {
+          // do nothing ...
         } else if (!objThree.body.ammo.isStaticObject()) {
           // get position and rotation
           let p = this.tmpTrans.getOrigin()
