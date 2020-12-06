@@ -313,7 +313,7 @@ class AmmoPhysics extends EventEmitter {
           this.tmpQuaternion.set(q.x(), q.y(), q.z(), q.w())
           this.tmpMatrix4.compose(this.tmpVector3, this.tmpQuaternion, this.tmpVector3a)
           if (objThree.parent) {
-            this.tmpMatrix4a.getInverse(objThree.parent.matrixWorld)
+            this.tmpMatrix4a.copy(objThree.parent.matrixWorld).invert()
           } else {
             this.tmpMatrix4a.identity()
           }

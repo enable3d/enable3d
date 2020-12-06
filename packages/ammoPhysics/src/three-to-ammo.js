@@ -695,7 +695,8 @@ const _finishCollisionShape = function (collisionShape, options, scale) {
 export const iterateGeometries = (function () {
   const inverse = new Matrix4()
   return function (root, options, cb) {
-    inverse.getInverse(root.matrixWorld)
+    // MOD (yandeu): Update to three.js r123
+    inverse.copy(root.matrixWorld).invert() // inverse.getInverse(root.matrixWorld)
     const scale = new Vector3()
     scale.setFromMatrixScale(root.matrixWorld)
     root.traverse(mesh => {
