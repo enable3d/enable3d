@@ -140,7 +140,7 @@ class Third extends ThreeGraphics {
     }
 
     // plugins
-    this.load = new Plugins.Loaders(this.cache, this.textureAnisotropy)
+    this.load = new Plugins.Loaders(this.cache, this.textureAnisotropy, this.renderer.outputEncoding)
     this.lights = new Plugins.Lights(this.scene)
     this.transform = new Plugins.Transform(this.camera, this.renderer)
     this.csg = new Plugins.CSG(this.scene, this.transform)

@@ -73,7 +73,7 @@ export class Scene3D implements Partial<ThreeGraphics> {
     const { autoStart, textureAnisotropy } = sceneConfig
 
     // plugins
-    this.load = new Plugins.Loaders(this.cache, textureAnisotropy)
+    this.load = new Plugins.Loaders(this.cache, textureAnisotropy, this.renderer.outputEncoding)
     this.lights = new Plugins.Lights(this.scene)
     this.transform = new Plugins.Transform(this.camera, this.renderer)
     this.csg = new Plugins.CSG(this.scene, this.transform)

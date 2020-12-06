@@ -8,6 +8,7 @@ import * as THREE from '@enable3d/three-wrapper/dist/index'
 import * as Types from '@enable3d/common/dist/types'
 import Cameras from './plugins/cameras'
 import { AmmoPhysics } from '@enable3d/ammo-physics/dist/index'
+import { sRGBEncoding } from '@enable3d/three-wrapper/dist/index'
 
 export class ThreeGraphics {
   public cache: typeof THREE.Cache
@@ -36,8 +37,11 @@ export class ThreeGraphics {
 
     // this.renderer.physicallyCorrectLights = true
     this.renderer = renderer || new THREE.WebGLRenderer({ antialias })
-    this.renderer.outputEncoding = THREE.GammaEncoding
-    this.renderer.gammaFactor = 1
+    // this.renderer.outputEncoding = THREE.GammaEncoding
+    // this.renderer.gammaFactor = 1
+
+    // this.renderer.physicallyCorrectLights = true
+    this.renderer.outputEncoding = sRGBEncoding
 
     // shadow
     this.renderer.shadowMap.enabled = true
