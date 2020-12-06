@@ -74,6 +74,9 @@ class AmmoPhysics extends EventEmitter {
   protected tmpEuler: Euler
   protected tmpQuaternion: Quaternion
   protected tmpVector3: Vector3
+  protected tmpVector3a: Vector3
+  protected tmpMatrix4: Matrix4
+  protected tmpMatrix4a: Matrix4
   protected tmpBtVector3: Ammo.btVector3
   protected tmpBtQuaternion: Ammo.btQuaternion
 
@@ -104,6 +107,9 @@ class AmmoPhysics extends EventEmitter {
     this.tmpEuler = new Euler()
     this.tmpQuaternion = new Quaternion()
     this.tmpVector3 = new Vector3()
+    this.tmpVector3a = new Vector3()
+    this.tmpMatrix4 = new Matrix4()
+    this.tmpMatrix4a = new Matrix4()
     this.tmpBtVector3 = new Ammo.btVector3()
     this.tmpBtQuaternion = new Ammo.btQuaternion(0, 0, 0, 1)
     this.emptyV3 = new Vector3()
@@ -297,15 +303,25 @@ class AmmoPhysics extends EventEmitter {
           ms.setWorldTransform(this.tmpTrans)
           // reset needsUpdate
           objThree.body.needUpdate = false
-        } else {
+        } else if (!objThree.body.ammo.isStaticObject()) {
           // get position and rotation
           let p = this.tmpTrans.getOrigin()
           let q = this.tmpTrans.getRotation()
           // body offset
           let o = objThree.body.offset
           // set position and rotation
-          objThree.position.set(p.x() + o.x, p.y() + o.y, p.z() + o.z)
-          objThree.quaternion.set(q.x(), q.y(), q.z(), q.w())
+          const scale = objThree.body.ammo.getCollisionShape().getLocalScaling()
+          this.tmpVector3a.set(scale.x(), scale.y(), scale.z())
+          this.tmpVector3.set(p.x() + o.x, p.y() + o.y, p.z() + o.z)
+          this.tmpQuaternion.set(q.x(), q.y(), q.z(), q.w())
+          this.tmpMatrix4.compose(this.tmpVector3, this.tmpQuaternion, this.tmpVector3a)
+          if (objThree.parent) {
+            this.tmpMatrix4a.getInverse(objThree.parent.matrixWorld)
+          } else {
+            this.tmpMatrix4a.identity()
+          }
+          this.tmpMatrix4a.multiply(this.tmpMatrix4)
+          this.tmpMatrix4a.decompose(objThree.position, objThree.quaternion, objThree.scale)
         }
       }
     }
@@ -551,7 +567,6 @@ class AmmoPhysics extends EventEmitter {
   }
 
   private prepareThreeObjectForCollisionShape(object: ExtendedObject3D, config: Types.AddExistingConfig = {}) {
-    const { position: pos, quaternion: quat, hasBody } = object
     const { autoCenter = false } = config
 
     // set default params
@@ -757,7 +772,13 @@ class AmmoPhysics extends EventEmitter {
       return
     }
 
-    const { position: pos, quaternion: quat } = object
+    const pos = new Vector3()
+    const quat = new Quaternion()
+    const scale = new Vector3()
+    object.getWorldPosition(pos)
+    object.getWorldQuaternion(quat)
+    object.getWorldScale(scale)
+
     const {
       shape = 'unknown',
       compound = [],
@@ -774,7 +795,7 @@ class AmmoPhysics extends EventEmitter {
       // if we want a custom compound shape, we simply do
       const collisionShapes = compound.map((s: any) => this.createCollisionShape(s.shape, s))
       const compoundShape = this.mergeCollisionShapesToCompoundShape(collisionShapes)
-      const localTransform = this.finishCollisionShape(compoundShape, object.position, object.quaternion)
+      const localTransform = this.finishCollisionShape(compoundShape, pos, quat, scale)
       const rigidBody = this.collisionShapeToRigidBody(compoundShape, localTransform, mass)
       this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, breakable, offset)
       return
@@ -816,7 +837,7 @@ class AmmoPhysics extends EventEmitter {
     // object.position.copy(pos)
     // object.quaternion.copy(quat)
 
-    const localTransform = this.finishCollisionShape(collisionShape, pos, quat)
+    const localTransform = this.finishCollisionShape(collisionShape, pos, quat, scale)
     const rigidBody = this.collisionShapeToRigidBody(collisionShape, localTransform, mass)
 
     this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, breakable, offset)
@@ -853,6 +874,7 @@ class AmmoPhysics extends EventEmitter {
     collisionShape: Ammo.btCollisionShape,
     pos: Vector3,
     quat: Quaternion,
+    scale: Vector3,
     margin: number = 0.01
   ) {
     collisionShape.setMargin(margin)
@@ -867,12 +889,9 @@ class AmmoPhysics extends EventEmitter {
 
     Ammo.destroy(rotation)
 
-    const scale = { x: 1, y: 1, z: 1 }
-    if (scale) {
-      const localScale = new Ammo.btVector3(scale.x, scale.y, scale.z)
-      collisionShape.setLocalScaling(localScale)
-      Ammo.destroy(localScale)
-    }
+    const localScale = new Ammo.btVector3(scale.x, scale.y, scale.z)
+    collisionShape.setLocalScaling(localScale)
+    Ammo.destroy(localScale)
 
     return localTransform
   }
