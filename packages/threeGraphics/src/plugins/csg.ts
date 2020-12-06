@@ -154,7 +154,8 @@ class CSG {
         geom.faces.push(fc)
       }
     }
-    const inv = new Matrix4().copy(toMatrix).invert()
+    // compatibility fix for three.js >= r123 (Dezember 2020)
+    const inv = new Matrix4().copy(toMatrix).invert?.() ?? new Matrix4().getInverse(toMatrix) as Matrix4
     geom.applyMatrix4(inv)
     geom.verticesNeedUpdate = geom.elementsNeedUpdate = geom.normalsNeedUpdate = true
     geom.computeBoundingSphere()

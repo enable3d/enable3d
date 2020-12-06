@@ -696,7 +696,10 @@ export const iterateGeometries = (function () {
   const inverse = new Matrix4()
   return function (root, options, cb) {
     // MOD (yandeu): Update to three.js r123
-    inverse.copy(root.matrixWorld).invert() // inverse.getInverse(root.matrixWorld)
+    // compatibility fix for three.js >= r123 (Dezember 2020)
+    if (typeof inverse.copy(root.matrixWorld).invert() === 'object') {
+    } else inverse.getInverse(root.matrixWorld)
+
     const scale = new Vector3()
     scale.setFromMatrixScale(root.matrixWorld)
     root.traverse(mesh => {
