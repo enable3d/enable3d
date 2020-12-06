@@ -26,7 +26,8 @@ import {
   Euler,
   Matrix4,
   Geometry,
-  BufferGeometry
+  BufferGeometry,
+  REVISION
 } from '@enable3d/three-wrapper/dist/index'
 import {
   iterateGeometries,
@@ -314,8 +315,8 @@ class AmmoPhysics extends EventEmitter {
           this.tmpMatrix4.compose(this.tmpVector3, this.tmpQuaternion, this.tmpVector3a)
           if (objThree.parent) {
             // compatibility fix for three.js >= r123 (Dezember 2020)
-            this.tmpMatrix4a.copy(objThree.parent.matrixWorld).invert?.() ??
-              this.tmpMatrix4a.getInverse(objThree.parent.matrixWorld)
+            if (+REVISION >= 123) this.tmpMatrix4a.copy(objThree.parent.matrixWorld).invert()
+            else this.tmpMatrix4a.getInverse(objThree.parent.matrixWorld)
           } else {
             this.tmpMatrix4a.identity()
           }

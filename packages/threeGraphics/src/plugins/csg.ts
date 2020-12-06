@@ -8,7 +8,7 @@
 // which is a typescript rewrite of https://github.com/manthrax/THREE-CSGMesh
 // which as originally written by Copyright (c) 2011 Evan Wallace (http://madebyevan.com/), under the MIT license.
 
-import { Vector3, Geometry, Matrix3, Face3, Mesh, Matrix4, Scene } from '@enable3d/three-wrapper/dist/index'
+import { Vector3, Geometry, Matrix3, Face3, Mesh, Matrix4, Scene, REVISION } from '@enable3d/three-wrapper/dist/index'
 import Transform from './transform'
 
 /**
@@ -155,7 +155,8 @@ class CSG {
       }
     }
     // compatibility fix for three.js >= r123 (Dezember 2020)
-    const inv = new Matrix4().copy(toMatrix).invert?.() ?? new Matrix4().getInverse(toMatrix) as Matrix4
+    const inv =
+      +REVISION >= 123 ? new Matrix4().copy(toMatrix).invert() : (new Matrix4().getInverse(toMatrix) as Matrix4)
     geom.applyMatrix4(inv)
     geom.verticesNeedUpdate = geom.elementsNeedUpdate = geom.normalsNeedUpdate = true
     geom.computeBoundingSphere()

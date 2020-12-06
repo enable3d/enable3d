@@ -11,7 +11,7 @@
  * @license      {@link https://github.com/InfiniteLee/three-to-ammo/blob/master/LICENSE|MPL-2.0}
  */
 
-import { Vector3, Matrix4, Quaternion, Box3 } from '@enable3d/three-wrapper/dist/index'
+import { Vector3, Matrix4, Quaternion, Box3, REVISION } from '@enable3d/three-wrapper/dist/index'
 ;('use strict')
 /* global Ammo */
 
@@ -700,8 +700,8 @@ export const iterateGeometries = (function () {
   return function (root, options, cb) {
     // MOD (yandeu): Update to three.js r123
     // compatibility fix for three.js >= r123 (Dezember 2020)
-    if (typeof inverse.copy(root.matrixWorld).invert() === 'object') {
-    } else inverse.getInverse(root.matrixWorld)
+    if (+REVISION >= 123) inverse.copy(root.matrixWorld).invert()
+    else inverse.getInverse(root.matrixWorld)
 
     const scale = new Vector3()
     scale.setFromMatrixScale(root.matrixWorld)
