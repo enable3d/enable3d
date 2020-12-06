@@ -26,11 +26,11 @@ class PointerDrag {
       this._element.addEventListener('touchend', e => this.onTouchEnd(e))
       this._element.addEventListener('touchmove', e => this.onTouchMove(e))
     } else {
-      this._element.addEventListener('pointerdown', e => this.onPointerDown(e))
-      this._element.addEventListener('pointerup', e => this.onPointerUp(e))
-      this._element.addEventListener('pointerleave', e => this.onPointerLeave(e))
-      this._element.addEventListener('pointerover', e => this.onPointerOver(e))
-      this._element.addEventListener('pointermove', e => this.onPointerMove(e))
+      this._element.addEventListener('mousedown', e => this.onPointerDown(e))
+      this._element.addEventListener('mouseup', e => this.onPointerUp(e))
+      this._element.addEventListener('mouseleave', e => this.onPointerLeave(e))
+      this._element.addEventListener('mouseover', e => this.onPointerOver(e))
+      this._element.addEventListener('mousemove', e => this.onPointerMove(e))
     }
   }
 
@@ -40,11 +40,11 @@ class PointerDrag {
       this._element.removeEventListener('touchend', e => this.onTouchEnd(e))
       this._element.removeEventListener('touchmove', e => this.onTouchMove(e))
     } else {
-      this._element.removeEventListener('pointerdown', e => this.onPointerDown(e))
-      this._element.removeEventListener('pointerleave', e => this.onPointerLeave(e))
-      this._element.removeEventListener('pointerup', e => this.onPointerUp(e))
-      this._element.removeEventListener('pointerover', e => this.onPointerOver(e))
-      this._element.removeEventListener('pointermove', e => this.onPointerMove(e))
+      this._element.removeEventListener('mousedown', e => this.onPointerDown(e))
+      this._element.removeEventListener('mouseleave', e => this.onPointerLeave(e))
+      this._element.removeEventListener('mouseup', e => this.onPointerUp(e))
+      this._element.removeEventListener('mouseover', e => this.onPointerOver(e))
+      this._element.removeEventListener('mousemove', e => this.onPointerMove(e))
     }
 
     this._isRunning = false
@@ -58,19 +58,19 @@ class PointerDrag {
     this._onMoveCallback = onMoveCallback
   }
 
-  private onPointerDown(_e: PointerEvent): void {
+  private onPointerDown(_e: MouseEvent): void {
     this._isPointerDown = true
   }
 
-  private onPointerUp(_e: PointerEvent): void {
+  private onPointerUp(_e: MouseEvent): void {
     this._isPointerDown = false
   }
 
-  private onPointerLeave(_e: PointerEvent): void {
+  private onPointerLeave(_e: MouseEvent): void {
     this._isPointerDown = false
   }
 
-  private onPointerMove(e: PointerEvent): void {
+  private onPointerMove(e: MouseEvent): void {
     const clientX = e.movementX
     const clientY = e.movementY
 
@@ -78,7 +78,7 @@ class PointerDrag {
     this._onMoveCallback(this._delta)
   }
 
-  private onPointerOver(_e: PointerEvent): void {}
+  private onPointerOver(_e: MouseEvent): void {}
 
   private onTouchStart(e: TouchEvent): void {
     const clientX = e.touches[0].clientX
