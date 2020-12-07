@@ -9,6 +9,7 @@ import { ThreeGraphicsConfig, ExtendedObject3D, ExtendedMesh } from '@enable3d/c
 import { Scene3D } from './scene3d'
 
 import * as Plugins from '@enable3d/three-graphics/dist/plugins/index'
+import { EffectComposer } from '@enable3d/three-wrapper/dist'
 
 /**
  * The phaser wrapper for ThreeGraphics, which is a separate module
@@ -16,6 +17,7 @@ import * as Plugins from '@enable3d/three-graphics/dist/plugins/index'
 class Third extends ThreeGraphics {
   public scene3D: Scene3D
   public isXrEnabled: boolean
+  public composer: EffectComposer
   // public camera: THREE.PerspectiveCamera | THREE.OrthographicCamera,
 
   // plugins
@@ -115,7 +117,8 @@ class Third extends ThreeGraphics {
           lastTime = time
           scene3D.updateLoopXR(time, delta)
           this.renderer.state.reset()
-          this.renderer.render(this.scene, this.camera)
+          if (this.composer) this.composer.render()
+          else this.renderer.render(this.scene, this.camera)
         }
       })
     }
@@ -135,7 +138,8 @@ class Third extends ThreeGraphics {
       if (!this.renderer.xr.isPresenting) {
         scene3D.updateLoopXR(scene3D.sys.game.loop.time, scene3D.sys.game.loop.delta)
         // this.renderer.state.reset()
-        this.renderer.render(this.scene, this.camera)
+        if (this.composer) this.composer.render()
+        else this.renderer.render(this.scene, this.camera)
       }
     }
 

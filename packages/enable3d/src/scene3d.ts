@@ -5,7 +5,7 @@
  */
 
 import { ThreeGraphics } from '@enable3d/three-graphics/dist/index'
-import { Clock, WebGLRenderer } from '@enable3d/three-wrapper/dist/index'
+import { Clock, EffectComposer, WebGLRenderer } from '@enable3d/three-wrapper/dist/index'
 import { ExtendedObject3D, ExtendedMesh } from '@enable3d/common/dist/types'
 import { AmmoPhysics } from '@enable3d/ammo-physics'
 
@@ -21,6 +21,7 @@ export class Scene3D implements Partial<ThreeGraphics> {
   public cache: ThreeGraphics['cache']
   public physics: AmmoPhysics
   public renderer: WebGLRenderer
+  public composer: EffectComposer
   public parent: HTMLElement
   public canvas: HTMLCanvasElement
   public clock: Clock
@@ -219,6 +220,7 @@ export class Scene3D implements Partial<ThreeGraphics> {
     this.physics?.updateDebugger()
 
     this.animationMixers.update(delta)
-    this.renderer.render(this.scene, this.camera)
+    if (this.composer) this.composer.render()
+    else this.renderer.render(this.scene, this.camera)
   }
 }

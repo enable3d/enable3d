@@ -14,7 +14,6 @@ export class ThreeGraphics {
   public cache: typeof THREE.Cache
   public scene: THREE.Scene
   public renderer: THREE.WebGLRenderer
-  private composer: null
   public camera: THREE.PerspectiveCamera | THREE.OrthographicCamera
   protected textureAnisotropy: number
 
@@ -46,9 +45,6 @@ export class ThreeGraphics {
     // shadow
     this.renderer.shadowMap.enabled = true
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
-
-    // no implemented yet
-    this.composer = null
 
     // enable cache
     this.cache = THREE.Cache
