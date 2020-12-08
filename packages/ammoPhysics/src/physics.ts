@@ -792,10 +792,12 @@ class AmmoPhysics extends EventEmitter {
     object.getWorldQuaternion(quat)
     object.getWorldScale(scale)
 
+    const isStaticObject = (config.collisionFlags || 0).toString(2).slice(-1) === '1'
+
     const {
       shape = 'unknown',
       compound = [],
-      mass = 1,
+      mass = isStaticObject ? config.mass || 0 : 1, // set default mass of 0 for static objects, and 1 for all other objects
       collisionFlags = 0,
       collisionGroup = 1,
       collisionMask = 65535, // collide with all other bodies
