@@ -616,8 +616,7 @@ class AmmoPhysics extends EventEmitter {
     if (autoCenter) object.geometry.center()
 
     // adjust the cylinder radius for its physcis body
-    if (shape === 'cylinder' && config.radius) params.radiusTop = config.radius
-    else if (shape === 'cylinder' && config.radiusTop) params.radius = config.radiusTop
+    if (shape === 'cylinder') params.radius = config.radius || params.radiusTop
 
     // some aliases
     if (shape === 'extrude') shape = 'hacd'
