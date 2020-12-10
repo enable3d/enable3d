@@ -1,3 +1,4 @@
+import { ExtendedObject3D } from '@enable3d/ammo-physics'
 import {
   Geometry,
   BufferGeometry,
@@ -6,7 +7,11 @@ import {
   Vector2,
   WebGLRenderer,
   PerspectiveCamera,
-  OrthographicCamera
+  OrthographicCamera,
+  Raycaster,
+  PlaneBufferGeometry,
+  MeshBasicMaterial,
+  Mesh
 } from '@enable3d/three-wrapper/dist/index'
 import { SVGLoader } from '@enable3d/three-wrapper/dist/index'
 
@@ -17,6 +22,10 @@ import { SVGLoader } from '@enable3d/three-wrapper/dist/index'
  */
 
 export default class Transform {
+  tmpPlane: Mesh
+  tmpRaycaster: Raycaster
+  tmpVector3: Vector3
+
   constructor(private camera: PerspectiveCamera | OrthographicCamera, private renderer: WebGLRenderer) {}
 
   public geometryToBufferGeometry(geometry: Geometry | BufferGeometry) {
@@ -64,29 +73,42 @@ export default class Transform {
 
   /**
    *
-   * @param x X Position in Phaser Pixels.
-   * @param y Y Position in Phaser Pixels.
-   * @param z Z-Index of THREE Camera.
+   * @param x X coordinate in normalized device coordinate (NDC) (-1 to +1).
+   * @param y Y coordinate in normalized device coordinate (NDC) (-1 to +1).
+   * @param distanceFromCamera The distance from the camera.
    */
-  public from2dto3d(x: number, y: number, z: number = 0): Vector3 {
-    const pps = this.getPixelsPerSquare(z)
-    const canvas = this.renderer.domElement
+  public from2dto3d(x: number, y: number, distanceFromCamera: number): Vector3 | undefined {
+    // initialize temporary variables
+    if (!this.tmpPlane) {
+      const geo = new PlaneBufferGeometry(10_000, 10_000)
+      const mat = new MeshBasicMaterial({ transparent: true, opacity: 0.25 })
+      this.tmpPlane = new Mesh(geo, mat)
+      this.tmpPlane.name = '_tmp_raycast_plane'
+    }
+    if (!this.tmpRaycaster) this.tmpRaycaster = new Raycaster()
+    if (!this.tmpVector3) this.tmpVector3 = new Vector3()
 
-    const centerX = canvas.width / 2 / pps
-    const centerY = canvas.height / 2 / pps
+    // holds the position we want to return later
+    let position
 
-    return new Vector3(-(centerX - x / pps), centerY - y / pps, z)
-  }
+    // add plane parallel to camera
+    this.tmpPlane.setRotationFromEuler(this.camera.rotation)
+    const p = this.camera.position
+    this.tmpPlane.position.set(p.x, p.y, p.z)
 
-  /**
-   * Get the PixelPerSquare to be able to add to place 3D elements on a 2D surface.
-   * The camera must have no rotation!
-   * The camera must have no transformation on the x and y axis!
-   * @param z The Z value of the THREE Camera you want to get the PixelPerSquare (PPS) from.
-   */
-  public getPixelsPerSquare(z: number = 0): number {
-    let center = this.from3dto2d(new Vector3(0, 0, z))
-    let right = this.from3dto2d(new Vector3(1, 0, z))
-    return Math.abs(center.x - right.x)
+    // adjust the distance of the plane
+    this.camera.getWorldDirection(this.tmpVector3)
+    this.tmpPlane.position.add(this.tmpVector3.clone().multiplyScalar(distanceFromCamera))
+    this.tmpPlane.updateMatrix()
+    this.tmpPlane.updateMatrixWorld(true)
+
+    // raycast
+    this.tmpRaycaster.setFromCamera({ x, y }, this.camera)
+
+    // check intersection with plane
+    const intersects = this.tmpRaycaster.intersectObjects([this.tmpPlane])
+    if (intersects[0]?.object.name === '_tmp_raycast_plane') position = intersects[0].point
+
+    return position
   }
 }
