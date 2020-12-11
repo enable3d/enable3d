@@ -793,11 +793,12 @@ class AmmoPhysics extends EventEmitter {
     object.getWorldScale(scale)
 
     const isStaticObject = (config.collisionFlags || 0).toString(2).slice(-1) === '1'
+    const isKinematicObject = (config.collisionFlags || 0).toString(2).slice(-2, -1) === '1'
 
     const {
       shape = 'unknown',
       compound = [],
-      mass = isStaticObject ? config.mass || 0 : 1, // set default mass of 0 for static objects, and 1 for all other objects
+      mass = isStaticObject || isKinematicObject ? 0 : 1, // set default mass of 0 for static objects, and 1 for all other objects
       collisionFlags = 0,
       collisionGroup = 1,
       collisionMask = 65535, // collide with all other bodies
@@ -812,7 +813,7 @@ class AmmoPhysics extends EventEmitter {
       const collisionShapes = compound.map((s: any) => this.createCollisionShape(s.shape, s))
       const compoundShape = this.mergeCollisionShapesToCompoundShape(collisionShapes)
       const localTransform = this.finishCollisionShape(compoundShape, pos, quat, scale, margin)
-      const rigidBody = this.collisionShapeToRigidBody(compoundShape, localTransform, mass)
+      const rigidBody = this.collisionShapeToRigidBody(compoundShape, localTransform, mass, isKinematicObject)
       this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, breakable, offset)
       return
     }
@@ -854,7 +855,7 @@ class AmmoPhysics extends EventEmitter {
     // object.quaternion.copy(quat)
 
     const localTransform = this.finishCollisionShape(collisionShape, pos, quat, scale, margin)
-    const rigidBody = this.collisionShapeToRigidBody(collisionShape, localTransform, mass)
+    const rigidBody = this.collisionShapeToRigidBody(collisionShape, localTransform, mass, isKinematicObject)
 
     this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, breakable, offset)
   }
@@ -915,14 +916,15 @@ class AmmoPhysics extends EventEmitter {
   public collisionShapeToRigidBody(
     collisionShape: Ammo.btCollisionShape,
     localTransform: Ammo.btTransform,
-    mass: number = 1
+    mass: number,
+    disableDeactivation: boolean
   ) {
     const motionState = new Ammo.btDefaultMotionState(localTransform)
     const localInertia = new Ammo.btVector3(0, 0, 0)
     if (mass > 0) collisionShape.calculateLocalInertia(mass, localInertia)
     const rbInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, collisionShape, localInertia)
     const rigidBody = new Ammo.btRigidBody(rbInfo)
-    if (mass > 0) rigidBody.setActivationState(4) // Disable deactivation
+    if (mass > 0 || disableDeactivation) rigidBody.setActivationState(4) // Disable deactivation
     return rigidBody
   }
 }
