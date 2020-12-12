@@ -63,7 +63,6 @@ class AmmoPhysics extends EventEmitter {
   public isHeadless: boolean
 
   public rigidBodies: ExtendedObject3D[] = []
-  public objectsAmmo: { [ptr: number]: ExtendedObject3D } = {}
   protected earlierDetectedCollisions: { combinedName: string; collision: boolean }[] = []
   protected gravity: { x: number; y: number; z: number }
 
@@ -137,15 +136,12 @@ class AmmoPhysics extends EventEmitter {
 
     if (typeof b?.ammo === 'undefined') return
 
-    const ptr = Object.values(b.ammo)[0]
-    const name = Object.values(b.ammo)[1]
-    let obj: ExtendedObject3D | null = this.objectsAmmo[ptr] as ExtendedObject3D
+    // @ts-ignore
+    const name = b.ammo.name
+    // @ts-ignore
+    let obj: ExtendedObject3D | null = b.ammo.threeObject as ExtendedObject3D
 
-    // TODO: Remember why I track objectsAmmo and rigidBodies?
-    // console.log(this.objectsAmmo)
-    // console.log(this.rigidBodies)
-
-    if (ptr && name && obj) {
+    if (name && obj) {
       if (obj?.body?.ammo) {
         // remove from physics world
         this.physicsWorld.removeCollisionObject(obj.body.ammo)
@@ -160,7 +156,8 @@ class AmmoPhysics extends EventEmitter {
         obj.hasBody = false
 
         // remove from this.objectAmmo
-        delete this.objectsAmmo[ptr]
+        // @ts-ignore
+        delete b.ammo.threeObject
         // remove from this.rigidBodies
         for (let i = 0; i < this.rigidBodies.length; i++) {
           if (this.rigidBodies[i].name === name) {
@@ -244,27 +241,23 @@ class AmmoPhysics extends EventEmitter {
     if (this.scene === 'headless') return
 
     this.scene.remove(object)
-    this.physicsWorld.removeRigidBody(object.body.ammo)
-    delete this.objectsAmmo[object.ptr]
+    this.destroy(object)
   }
 
   public update(delta: number) {
-    // reset these vectors
-    this.impactPoint.set(0, 0, 0)
-    this.impactNormal.set(0, 0, 0)
+    this.updatePhysics(delta)
+    this.detectCollisions()
+  }
 
-    const detectedCollisions: { combinedName: string; collision: boolean }[] = []
-
-    // Step world
+  private updatePhysics(delta: number) {
+    // step world
     const deltaTime = delta / 1000
 
     // must always satisfy the equation timeStep < maxSubSteps * fixedTimeStep
     this.physicsWorld.stepSimulation(deltaTime, this.config.maxSubSteps || 4, this.config.fixedTimeStep || 1 / 60)
 
-    /**
-     * Update rigid bodies
-     */
-    for (let i = 0, il = this.rigidBodies.length; i < il; i++) {
+    // update rigid bodies
+    for (let i = 0; i < this.rigidBodies.length; i++) {
       const objThree = this.rigidBodies[i]
       const objPhys = objThree.body.ammo
       const ms = objPhys.getMotionState()
@@ -326,32 +319,38 @@ class AmmoPhysics extends EventEmitter {
         }
       }
     }
+  }
+
+  private detectCollisions() {
+    const detectedCollisions: { combinedName: string; collision: boolean }[] = []
+
+    // reset these vectors
+    this.impactPoint.set(0, 0, 0)
+    this.impactNormal.set(0, 0, 0)
+
+    const dispatcher = this.physicsWorld.getDispatcher()
+    const numManifolds = this.dispatcher.getNumManifolds()
 
     // check collisions
-    for (let i = 0, il = this.dispatcher.getNumManifolds(); i < il; i++) {
-      const contactManifold = this.dispatcher.getManifoldByIndexInternal(i)
-      const key = Object.keys(contactManifold.getBody0())[0]
+    for (let i = 0; i < numManifolds; i++) {
+      let contactManifold = dispatcher.getManifoldByIndexInternal(i)
+      let numContacts = contactManifold.getNumContacts()
 
       // @ts-ignore
-      const body0 = Ammo.castObject(contactManifold.getBody0(), Ammo.btRigidBody)
+      const rb0 = Ammo.castObject(contactManifold.getBody0(), Ammo.btRigidBody)
       // @ts-ignore
-      const body1 = Ammo.castObject(contactManifold.getBody1(), Ammo.btRigidBody)
+      const rb1 = Ammo.castObject(contactManifold.getBody1(), Ammo.btRigidBody)
 
-      // do not check collision between 2 unnamed objects
-      // (fragments do not have a name, for example)
-      if (body0.name === '' && body1.name === '') continue
-
-      // @ts-ignore
-      const ptr0 = body0[key]
-      // @ts-ignore
-      const ptr1 = body1[key]
-
-      const threeObject0 = this.objectsAmmo[ptr0] as ExtendedObject3D
-      const threeObject1 = this.objectsAmmo[ptr1] as ExtendedObject3D
+      let threeObject0 = rb0.threeObject as ExtendedObject3D
+      let threeObject1 = rb1.threeObject as ExtendedObject3D
 
       if (!threeObject0 || !threeObject1) {
         continue
       }
+
+      // do not check collision between 2 unnamed objects
+      // (fragments do not have a name, for example)
+      if (rb0.name === '' && rb1.name === '') continue
 
       /**
        * Get some information
@@ -362,19 +361,21 @@ class AmmoPhysics extends EventEmitter {
       const checkCollisions0 = threeObject0.body?.checkCollisions
       const checkCollisions1 = threeObject1.body?.checkCollisions
 
-      if (!checkCollisions0 && !checkCollisions1 && !breakable0 && !breakable1) continue
+      if (!checkCollisions0 && !checkCollisions1) continue
+      if (!breakable0 && !breakable1) continue
 
       let contact = false
       let maxImpulse = 0
 
       let event: Types.CollisionEvent = 'start'
 
-      for (let j = 0, jl = contactManifold.getNumContacts(); j < jl; j++) {
+      for (let j = 0; j < numContacts; j++) {
         const contactPoint = contactManifold.getContactPoint(j)
+        const distance = contactPoint.getDistance()
 
         // Distance definition: when the distance between objects is positive, they are separated. When the distance is negative, they are penetrating. Zero distance means exactly touching.
         // https://pybullet.org/Bullet/phpBB3/viewtopic.php?t=5831
-        if (contactPoint.getDistance() <= 0) {
+        if (distance <= 0) {
           contact = true
           const impulse = contactPoint.getAppliedImpulse()
           const impactPoint = contactPoint.get_m_positionWorldOnB()
@@ -428,14 +429,14 @@ class AmmoPhysics extends EventEmitter {
         velocity: this.emptyV3,
         angularVelocity: this.emptyV3,
         breakable: breakable0,
-        physicsBody: body0
+        physicsBody: rb0
       }
       threeObject1.userData.ammoPhysicsData = {
         mass: 1,
         velocity: this.emptyV3,
         angularVelocity: this.emptyV3,
         breakable: breakable1,
-        physicsBody: body1
+        physicsBody: rb1
       }
       if (typeof threeObject0.fragmentDepth === 'undefined') threeObject0.fragmentDepth = 0
       if (typeof threeObject1.fragmentDepth === 'undefined') threeObject1.fragmentDepth = 0
@@ -446,8 +447,8 @@ class AmmoPhysics extends EventEmitter {
 
         const numObjects = debris.length
         for (let j = 0; j < numObjects; j++) {
-          const vel = body0.getLinearVelocity()
-          const angVel = body0.getAngularVelocity()
+          const vel = rb0.getLinearVelocity()
+          const angVel = rb0.getAngularVelocity()
           const fragment = debris[j] as ExtendedObject3D
           fragment.userData.ammoPhysicsData.velocity.set(vel.x(), vel.y(), vel.z())
           fragment.userData.ammoPhysicsData.angularVelocity.set(angVel.x(), angVel.y(), angVel.z())
@@ -464,8 +465,8 @@ class AmmoPhysics extends EventEmitter {
 
         const numObjects = debris.length
         for (let j = 0; j < numObjects; j++) {
-          const vel = body1.getLinearVelocity()
-          const angVel = body1.getAngularVelocity()
+          const vel = rb1.getLinearVelocity()
+          const angVel = rb1.getAngularVelocity()
           const fragment = debris[j] as ExtendedObject3D
           fragment.userData.ammoPhysicsData.velocity.set(vel.x(), vel.y(), vel.z())
           fragment.userData.ammoPhysicsData.angularVelocity.set(angVel.x(), angVel.y(), angVel.z())
@@ -879,7 +880,8 @@ class AmmoPhysics extends EventEmitter {
     object.hasBody = true
     // @ts-ignore
     object.ptr = ptr
-    this.objectsAmmo[ptr] = object
+    // @ts-ignore
+    rigidBody.threeObject = object
 
     if (breakable) object.body.breakable = true
     if (offset) object.body.offset = { x: 0, y: 0, z: 0, ...offset }

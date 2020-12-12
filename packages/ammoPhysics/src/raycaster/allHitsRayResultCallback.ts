@@ -43,17 +43,15 @@ export default class AllHitsRayResultCallback {
   }
 
   getCollisionObjects() {
-    const getPtr = (obj: any) => {
-      return Object.values(obj)[0]
-    }
+    const threeObjects: ExtendedObject3D[] = []
+    const objects = this._btRayCallback.get_m_collisionObjects()
 
-    const obs: ExtendedObject3D[] = []
-    const o = this._btRayCallback.get_m_collisionObjects()
-    for (let i = o.size() - 1; i >= 0; i--) {
-      const ptr = getPtr(o.at(i))
+    for (let i = objects.size() - 1; i >= 0; i--) {
       // @ts-ignore
-      obs.push(this.physics.objectsAmmo[ptr])
+      const rb = Ammo.castObject(objects.at(i), Ammo.btRigidBody)
+      // @ts-ignore
+      threeObjects.push(rb.threeObject)
     }
-    return obs
+    return threeObjects
   }
 }

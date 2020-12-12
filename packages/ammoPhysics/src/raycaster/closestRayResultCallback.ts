@@ -29,12 +29,9 @@ export default class ClosestRayResultCallback {
   }
 
   getCollisionObject(): ExtendedObject3D {
-    const getPtr = (obj: any) => {
-      return Object.values(obj)[0]
-    }
-
-    const ptr = getPtr(this._btRayCallback.get_m_collisionObject())
     // @ts-ignore
-    return this.physics.objectsAmmo[ptr]
+    const rb = Ammo.castObject(this._btRayCallback.get_m_collisionObject(), Ammo.btRigidBody)
+    // @ts-ignore
+    return rb.threeObject
   }
 }

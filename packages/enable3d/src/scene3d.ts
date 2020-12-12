@@ -167,8 +167,8 @@ export class Scene3D implements Partial<ThreeGraphics> {
     this._deconstructorFunctions = []
 
     // destroy all rigid bodies
-    for (let i = Object.keys(this.physics.objectsAmmo).length - 1; i >= 0; i--) {
-      this.physics.destroy(Object.values(this.physics.objectsAmmo)[i].body)
+    for (let i = this.physics.rigidBodies.length - 1; i >= 0; i--) {
+      this.physics.destroy(this.physics.rigidBodies[i])
     }
 
     // destroy all three objects
