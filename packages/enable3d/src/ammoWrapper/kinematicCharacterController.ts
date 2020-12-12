@@ -63,7 +63,7 @@ class KinematicCharacterController {
     // controller.setGravity(-this.physicsWorld.getGravity().y())
 
     // addCollisionObject(collisionObject: Ammo.btCollisionObject, collisionFilterGroup?: number | undefined, collisionFilterMask?: number | undefined): void
-    this.physicsWorld.addCollisionObject(ghostObject)
+    this.physicsWorld.addCollisionObject(ghostObject, 32, -1)
     this.physicsWorld.addAction(controller)
 
     return { controller, ghostObject }
