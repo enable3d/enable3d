@@ -802,7 +802,7 @@ class AmmoPhysics extends EventEmitter {
       mass = isStaticObject || isKinematicObject ? 0 : 1, // set default mass of 0 for static objects, and 1 for all other objects
       collisionFlags = 0,
       collisionGroup = 1,
-      collisionMask = 65535, // collide with all other bodies
+      collisionMask = -1,
       offset = undefined,
       breakable = false,
       addChildren = true,
