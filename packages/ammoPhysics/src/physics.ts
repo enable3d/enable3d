@@ -355,14 +355,17 @@ class AmmoPhysics extends EventEmitter {
       /**
        * Get some information
        */
-      const breakable0 = threeObject0.body.breakable
-      const breakable1 = threeObject1.body.breakable
 
       const checkCollisions0 = threeObject0.body?.checkCollisions
       const checkCollisions1 = threeObject1.body?.checkCollisions
 
-      if (!checkCollisions0 && !checkCollisions1) continue
-      if (!breakable0 && !breakable1) continue
+      const breakable0 = threeObject0.body.breakable
+      const breakable1 = threeObject1.body.breakable
+
+      const checkCollisions = checkCollisions0 || checkCollisions1
+      const checkBreakable = breakable0 || breakable1
+
+      if (!checkCollisions && !checkBreakable) continue
 
       let contact = false
       let maxImpulse = 0
@@ -408,13 +411,14 @@ class AmmoPhysics extends EventEmitter {
         }
       }
 
-      // If no point has contact, abort
+      // if no point has contact, abort
       if (!contact) continue
 
-      if (!breakable0 && !breakable1) continue
+      // if no objects are breakable, abort
+      if (!checkBreakable) continue
 
       /**
-       * Check for breakable objects (subdivision)
+       * check for breakable objects (subdivision)
        */
       const fractureImpulse = 5 //250
       const MAX_FRAGMENT_DEPTH = 2
