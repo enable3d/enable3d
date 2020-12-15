@@ -58,6 +58,7 @@ export interface ThreeGraphicsConfig {
   renderer?: WebGLRenderer
   usePhysics?: boolean
   softBodies?: boolean
+  setupPhysicsWorld?: () => Ammo.btDiscreteDynamicsWorld | Ammo.btSoftRigidDynamicsWorld
 }
 
 export interface XYZ {

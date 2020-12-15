@@ -74,7 +74,6 @@ class AmmoPhysics extends EventEmitter {
   protected tmpBtQuaternion: Ammo.btQuaternion
 
   public physicsWorld: Ammo.btSoftRigidDynamicsWorld
-  protected dispatcher: Ammo.btCollisionDispatcher
   protected debugDrawer: DebugDrawer
   private convexBreaker: any
   protected addRigidBody: (threeObject: ExtendedObject3D, physicsShape: any, mass: any, pos: any, quat: any) => void
@@ -127,6 +126,11 @@ class AmmoPhysics extends EventEmitter {
     this.start()
   }
 
+  get tmpTrans() {
+    console.warn('tmpTrans has been renamed to worldTransform.')
+    return this.worldTransform
+  }
+
   /** Destroys a physics body. */
   public destroy(body: PhysicsBody | ExtendedObject3D | ExtendedMesh) {
     // @ts-ignore
@@ -170,8 +174,12 @@ class AmmoPhysics extends EventEmitter {
   }
 
   protected setup() {
+    // add worldTransform
+    this.worldTransform = new Ammo.btTransform()
+
     // setup ammo physics
-    this.setupPhysicsWorld()
+    if (typeof this.config.setupPhysicsWorld === 'function') this.physicsWorld = this.config.setupPhysicsWorld() as any
+    else this.physicsWorld = this.setupPhysicsWorld()
 
     if (this.scene !== 'headless') {
       // Initialize convexBreaker
@@ -212,10 +220,11 @@ class AmmoPhysics extends EventEmitter {
     const dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration)
     const broadphase = new Ammo.btDbvtBroadphase()
     const solver = new Ammo.btSequentialImpulseConstraintSolver()
+    let physicsWorld: any
 
     if (softBodies) {
       const softBodySolver = new Ammo.btDefaultSoftBodySolver()
-      this.physicsWorld = new Ammo.btSoftRigidDynamicsWorld(
+      physicsWorld = new Ammo.btSoftRigidDynamicsWorld(
         dispatcher,
         broadphase,
         solver,
@@ -223,13 +232,12 @@ class AmmoPhysics extends EventEmitter {
         softBodySolver
       )
     } else {
-      // @ts-ignore
-      this.physicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration)
+      physicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration)
     }
 
-    this.physicsWorld.setGravity(new Ammo.btVector3(g.x, g.y, g.z))
-    this.dispatcher = dispatcher
-    this.worldTransform = new Ammo.btTransform()
+    physicsWorld.setGravity(new Ammo.btVector3(g.x, g.y, g.z))
+
+    return physicsWorld
   }
 
   private createDebrisFromBreakableObject(object: ExtendedObject3D, parent: ExtendedObject3D) {
@@ -345,7 +353,7 @@ class AmmoPhysics extends EventEmitter {
     this.impactNormal.set(0, 0, 0)
 
     const dispatcher = this.physicsWorld.getDispatcher()
-    const numManifolds = this.dispatcher.getNumManifolds()
+    const numManifolds = dispatcher.getNumManifolds()
 
     // check collisions
     for (let i = 0; i < numManifolds; i++) {
