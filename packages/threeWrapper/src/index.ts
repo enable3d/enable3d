@@ -30,6 +30,13 @@ export { OrbitControls }
 import { WEBGL } from 'three/examples/jsm/WebGL'
 export { WEBGL }
 
+// post-processing
+export { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+export { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+export { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
+export { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass.js'
+export { DotScreenShader } from 'three/examples/jsm/shaders/DotScreenShader.js'
+
 import { REVISION } from 'three'
 
 const info = `Three.js r${REVISION}`

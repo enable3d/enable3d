@@ -5,7 +5,7 @@
  */
 
 import { ThreeGraphics } from '@enable3d/three-graphics/dist/index'
-import { Clock, WebGLRenderer } from '@enable3d/three-wrapper/dist/index'
+import { Clock, EffectComposer, WebGLRenderer } from '@enable3d/three-wrapper/dist/index'
 import { ExtendedObject3D, ExtendedMesh } from '@enable3d/common/dist/types'
 import { AmmoPhysics } from '@enable3d/ammo-physics'
 
@@ -21,6 +21,7 @@ export class Scene3D implements Partial<ThreeGraphics> {
   public cache: ThreeGraphics['cache']
   public physics: AmmoPhysics
   public renderer: WebGLRenderer
+  public composer: EffectComposer
   public parent: HTMLElement
   public canvas: HTMLCanvasElement
   public clock: Clock
@@ -166,8 +167,8 @@ export class Scene3D implements Partial<ThreeGraphics> {
     this._deconstructorFunctions = []
 
     // destroy all rigid bodies
-    for (let i = Object.keys(this.physics.objectsAmmo).length - 1; i >= 0; i--) {
-      this.physics.destroy(Object.values(this.physics.objectsAmmo)[i].body)
+    for (let i = this.physics.rigidBodies.length - 1; i >= 0; i--) {
+      this.physics.destroy(this.physics.rigidBodies[i])
     }
 
     // destroy all three objects
@@ -219,6 +220,7 @@ export class Scene3D implements Partial<ThreeGraphics> {
     this.physics?.updateDebugger()
 
     this.animationMixers.update(delta)
-    this.renderer.render(this.scene, this.camera)
+    if (this.composer) this.composer.render()
+    else this.renderer.render(this.scene, this.camera)
   }
 }

@@ -80,7 +80,7 @@ describe.each([EXAMPLES_PLACEHOLDER])('Example: (%s)', example => {
 
     if (injected) {
       // wait for the game to be started
-      await page.waitFor(10000)
+      await page.waitForTimeout(10000)
       // await page.screenshot({ path: path.resolve(__dirname, `../screenshots/${example}.png`) })
       done()
     } else done(new Error('Could not inject script'))

@@ -138,7 +138,7 @@ export default class WarpSpeed {
 
     if (features.includes('light')) {
       const ambientLight = this.lights.ambientLight({ color: 0xffffff, intensity: 0.5 })
-      const directionalLight = this.lights.directionalLight({ color: 0xffffff, intensity: 2.5 })
+      const directionalLight = this.lights.directionalLight({ color: 0xffffff, intensity: 1 })
       directionalLight.position.set(-10, 18, 5)
       const d = 20
       directionalLight.shadow.camera.top = d

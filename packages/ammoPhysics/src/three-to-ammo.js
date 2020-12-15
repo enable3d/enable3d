@@ -11,7 +11,7 @@
  * @license      {@link https://github.com/InfiniteLee/three-to-ammo/blob/master/LICENSE|MPL-2.0}
  */
 
-import { Vector3, Matrix4, Quaternion, Box3 } from '@enable3d/three-wrapper/dist/index'
+import { Vector3, Matrix4, Quaternion, Box3, REVISION } from '@enable3d/three-wrapper/dist/index'
 ;('use strict')
 /* global Ammo */
 
@@ -637,6 +637,12 @@ export const createHeightfieldTerrainShape = function (options = {}) {
 }
 
 function _setOptions(options) {
+  // MOD (yandeu): All of this will be done in physics.ts
+  // we only keep type and margin
+  options.type = options.type || TYPE.HULL
+  options.margin = options.hasOwnProperty('margin') ? options.margin : 0.01
+  return
+
   options.fit = options.hasOwnProperty('fit') ? options.fit : FIT.ALL
   options.type = options.type || TYPE.HULL
   options.minHalfExtent = options.hasOwnProperty('minHalfExtent') ? options.minHalfExtent : 0
@@ -692,7 +698,11 @@ const _finishCollisionShape = function (collisionShape, options, scale) {
 export const iterateGeometries = (function () {
   const inverse = new Matrix4()
   return function (root, options, cb) {
-    inverse.getInverse(root.matrixWorld)
+    // MOD (yandeu): Update to three.js r123
+    // compatibility fix for three.js >= r123 (Dezember 2020)
+    if (+REVISION >= 123) inverse.copy(root.matrixWorld).invert()
+    else inverse.getInverse(root.matrixWorld)
+
     const scale = new Vector3()
     scale.setFromMatrixScale(root.matrixWorld)
     root.traverse(mesh => {

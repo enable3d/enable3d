@@ -8,7 +8,7 @@
 // which is a typescript rewrite of https://github.com/manthrax/THREE-CSGMesh
 // which as originally written by Copyright (c) 2011 Evan Wallace (http://madebyevan.com/), under the MIT license.
 
-import { Vector3, Geometry, Matrix3, Face3, Mesh, Matrix4, Scene } from '@enable3d/three-wrapper/dist/index'
+import { Vector3, Geometry, Matrix3, Face3, Mesh, Matrix4, Scene, REVISION } from '@enable3d/three-wrapper/dist/index'
 import Transform from './transform'
 
 /**
@@ -154,7 +154,10 @@ class CSG {
         geom.faces.push(fc)
       }
     }
-    const inv = new Matrix4().getInverse(toMatrix)
+    // compatibility fix for three.js >= r123 (Dezember 2020)
+    const inv =
+      // @ts-ignore
+      +REVISION >= 123 ? new Matrix4().copy(toMatrix).invert() : (new Matrix4().getInverse(toMatrix) as Matrix4)
     geom.applyMatrix4(inv)
     geom.verticesNeedUpdate = geom.elementsNeedUpdate = geom.normalsNeedUpdate = true
     geom.computeBoundingSphere()
@@ -189,7 +192,9 @@ class CSG {
 
   static eval(tokens: Mesh, doRemove: boolean) {
     // [['add',mesh,mesh,mesh,mesh],['sub',mesh,mesh,mesh,mesh]]
+    // @ts-ignore
     delete CSG.currentOp
+    // @ts-ignore
     delete CSG.sourceMesh
     CSG.doRemove = doRemove
     CSG.iEval(tokens)
@@ -281,6 +286,7 @@ class Vector extends Vector3 {
     } else if (Array.isArray(x)) {
       super(x[0], x[1], x[2])
     } else if (typeof x === 'object') {
+      // @ts-ignore
       this.copy(x)
     } else {
       throw new Error('Invalid constructor to vector')
@@ -513,8 +519,11 @@ class Node {
   private back: Node
 
   constructor(polygons?: Polygon[]) {
+    // @ts-ignore
     delete this.plane
+    // @ts-ignore
     delete this.front
+    // @ts-ignore
     delete this.back
     this.polygons = []
     if (polygons) {

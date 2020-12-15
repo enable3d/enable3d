@@ -23,3 +23,6 @@ export { ThirdPersonControls, ThirdPersonControlsConfig } from '@enable3d/common
 export { FirstPersonControls, FirstPersonControlsConfig } from '@enable3d/common/dist/misc/firstPersonControls'
 export { PointerLock } from '@enable3d/common/dist/misc/pointerLock'
 export { PointerDrag } from '@enable3d/common/dist/misc/pointerDrag'
+
+// post-processing
+export { EffectComposer, RenderPass, ShaderPass, GlitchPass, DotScreenShader } from '@enable3d/three-wrapper/dist/index'

@@ -57,6 +57,8 @@ export interface ThreeGraphicsConfig {
   fixedTimeStep?: number
   renderer?: WebGLRenderer
   usePhysics?: boolean
+  softBodies?: boolean
+  setupPhysicsWorld?: () => Ammo.btDiscreteDynamicsWorld | Ammo.btSoftRigidDynamicsWorld
 }
 
 export interface XYZ {
@@ -195,6 +197,7 @@ export interface GroundConfig extends BoxConfig {
 export interface CylinderConfig extends GeometryConfig, XYZ, WH {
   radiusTop?: number
   radiusBottom?: number
+  radiusBody?: number
   height?: number
   radiusSegments?: number
   heightSegments?: number
@@ -239,10 +242,15 @@ export interface AddExistingConfig extends XYZ, GeometryPhysicsOptions {
   height?: number
   depth?: number
   radius?: number
+  radiusTop?: number
+  radiusBottom?: number
   shape?: string
   compound?: CustomCompoundShape
   autoCenter?: boolean
-  offset?: { x?: number; y?: number; z?: number }
+  axis?: string
+  margin?: number
+  offset?: XYZ
+  orientation?: Quaternion
   addChildren?: boolean
 }
 

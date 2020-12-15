@@ -9,7 +9,7 @@ import { ExtendedObject3D, CollisionEvent } from '@enable3d/common/dist/types'
 import { Types } from './physics'
 
 export class CollisionEvents extends EventEmitter {
-  public tmpTrans: Ammo.btTransform
+  public worldTransform: Ammo.btTransform
   public physicsWorld: Ammo.btDiscreteDynamicsWorld
 
   public addCollider(

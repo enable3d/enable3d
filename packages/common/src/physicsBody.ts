@@ -107,13 +107,13 @@ class PhysicsBody {
 
   /** You have to call transform() before you can get or set the body's position or rotation. (for headless mode only) */
   public transform() {
-    const t = this.physics.tmpTrans
+    const t = this.physics.worldTransform
     this.ammo.getMotionState().getWorldTransform(t)
   }
 
   /** You have to call refresh() after you set the position or rotation of the body. (for headless mode only) */
   public refresh() {
-    const t = this.physics.tmpTrans
+    const t = this.physics.worldTransform
     this.ammo.getMotionState().setWorldTransform(t)
   }
 
@@ -127,39 +127,47 @@ class PhysicsBody {
     const ammoQuat = this.tmpBtQuaternion
     ammoQuat.setValue(q.x, q.y, q.z, q.w)
 
-    const t = this.physics.tmpTrans
+    const t = this.physics.worldTransform
     t.setRotation(ammoQuat)
   }
 
   /** Get the rotation in radians. (for headless mode only) */
   public get rotation() {
-    const t = this.physics.tmpTrans
-    const ammoQuat = t.getRotation()
-    const q = this.tmpQuaternion.set(ammoQuat.x(), ammoQuat.y(), ammoQuat.z(), ammoQuat.w())
-
-    const qx = q.x
-    const qy = q.y
-    const qz = q.z
-    const qw = q.w
-
     // https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/index.htm
-    const angle = 2 * Math.acos(qw)
-    const x = qx / Math.sqrt(1 - qw * qw)
-    const y = qy / Math.sqrt(1 - qw * qw)
-    const z = qz / Math.sqrt(1 - qw * qw)
+    let x, y, z
 
-    return { x: x * angle || 0, y: y * angle || 0, z: z * angle || 0 }
+    const t = this.physics.worldTransform
+    const ammoQuat = t.getRotation()
+
+    let q1 = this.tmpQuaternion.set(ammoQuat.x(), ammoQuat.y(), ammoQuat.z(), ammoQuat.w())
+    if (q1.w > 1) q1 = q1.normalize() // if w>1 acos and sqrt will produce errors, this cant happen if quaternion is normalized
+
+    const angle = 2 * Math.acos(q1.w)
+    const s = Math.sqrt(1 - q1.w * q1.w) // assuming quaternion normalized then w is less than 1, so term always positive.
+
+    if (s < 0.001) {
+      // test to avoid divide by zero, s is always positive due to sqrt
+      // if s close to zero then direction of axis not important
+      x = q1.x // if it is important that axis is normalized then replace with x=1; y=z=0;
+      y = q1.y
+      z = q1.z
+    } else {
+      x = q1.x / s // normalized axis
+      y = q1.y / s
+      z = q1.z / s
+    }
+    return { x: x * angle, y: y * angle, z: z * angle }
   }
 
   /** Set position. (for headless mode only) */
   public setPosition(x: number, y: number, z: number) {
-    const t = this.physics.tmpTrans
+    const t = this.physics.worldTransform
     t.getOrigin().setValue(x, y, z)
   }
 
   /** Get position. (for headless mode only) */
   public get position() {
-    const t = this.physics.tmpTrans
+    const t = this.physics.worldTransform
     return { x: t.getOrigin().x(), y: t.getOrigin().y(), z: t.getOrigin().z() }
   }
 
