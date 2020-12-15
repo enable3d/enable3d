@@ -11,6 +11,7 @@ import { Euler, Quaternion } from '@enable3d/three-wrapper/dist/index'
 import { CollisionEvent } from './types'
 
 class PhysicsBody {
+  public isSoftBody = false
   public offset = { x: 0, y: 0, z: 0 }
   public name: string
   public errors: string[] = []

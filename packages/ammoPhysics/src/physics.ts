@@ -153,8 +153,9 @@ class AmmoPhysics extends EventEmitter {
     if (name && obj) {
       if (obj?.body?.ammo) {
         // remove from physics world
-        this.physicsWorld.removeCollisionObject(obj.body.ammo)
-        // this.physicsWorld.removeRigidBody(obj.body.ammo)
+        !obj.body.isSoftBody
+          ? this.physicsWorld.removeRigidBody(obj.body.ammo)
+          : this.physicsWorld.removeSoftBody(obj.body.ammo as any)
 
         // call destructor on body
         obj.body.destructor()
