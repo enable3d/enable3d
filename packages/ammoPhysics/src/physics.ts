@@ -126,9 +126,16 @@ class AmmoPhysics extends EventEmitter {
     this.start()
   }
 
+  /** @deprecated Use worldTransform instead of tmpTrans. */
   get tmpTrans() {
-    console.warn('tmpTrans has been renamed to worldTransform.')
+    console.warn('Use worldTransform instead of tmpTrans.')
     return this.worldTransform
+  }
+
+  /** @deprecated Use worldTransform instead of tmpTrans. */
+  set tmpTrans(transform: Ammo.btTransform) {
+    console.warn('Use worldTransform instead of tmpTrans.')
+    this.worldTransform = transform
   }
 
   /** Destroys a physics body. */
