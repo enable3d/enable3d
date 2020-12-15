@@ -55,8 +55,6 @@ export { Types }
 // Export THREE.Clock
 export { Clock } from './lib/Clock'
 
-interface AmmoPhysics {}
-
 class AmmoPhysics extends EventEmitter {
   public tmpTrans: Ammo.btTransform
   public factory: Factories
@@ -75,7 +73,7 @@ class AmmoPhysics extends EventEmitter {
   protected tmpBtVector3: Ammo.btVector3
   protected tmpBtQuaternion: Ammo.btQuaternion
 
-  public physicsWorld: Ammo.btDiscreteDynamicsWorld
+  public physicsWorld: Ammo.btSoftRigidDynamicsWorld
   protected dispatcher: Ammo.btCollisionDispatcher
   protected debugDrawer: DebugDrawer
   private convexBreaker: any
@@ -205,12 +203,30 @@ class AmmoPhysics extends EventEmitter {
 
   protected setupPhysicsWorld() {
     const g = this.gravity
+    const { softBodies = false } = this.config
 
-    const collisionConfiguration = new Ammo.btDefaultCollisionConfiguration()
+    const collisionConfiguration = softBodies
+      ? new Ammo.btSoftBodyRigidBodyCollisionConfiguration()
+      : new Ammo.btDefaultCollisionConfiguration()
+
     const dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration)
     const broadphase = new Ammo.btDbvtBroadphase()
     const solver = new Ammo.btSequentialImpulseConstraintSolver()
-    this.physicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration)
+
+    if (softBodies) {
+      const softBodySolver = new Ammo.btDefaultSoftBodySolver()
+      this.physicsWorld = new Ammo.btSoftRigidDynamicsWorld(
+        dispatcher,
+        broadphase,
+        solver,
+        collisionConfiguration,
+        softBodySolver
+      )
+    } else {
+      // @ts-ignore
+      this.physicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration)
+    }
+
     this.physicsWorld.setGravity(new Ammo.btVector3(g.x, g.y, g.z))
     this.dispatcher = dispatcher
     this.tmpTrans = new Ammo.btTransform()

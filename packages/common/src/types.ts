@@ -57,6 +57,7 @@ export interface ThreeGraphicsConfig {
   fixedTimeStep?: number
   renderer?: WebGLRenderer
   usePhysics?: boolean
+  softBodies?: boolean
 }
 
 export interface XYZ {
