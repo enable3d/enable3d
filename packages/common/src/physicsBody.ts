@@ -107,13 +107,13 @@ class PhysicsBody {
 
   /** You have to call transform() before you can get or set the body's position or rotation. (for headless mode only) */
   public transform() {
-    const t = this.physics.tmpTrans
+    const t = this.physics.worldTransform
     this.ammo.getMotionState().getWorldTransform(t)
   }
 
   /** You have to call refresh() after you set the position or rotation of the body. (for headless mode only) */
   public refresh() {
-    const t = this.physics.tmpTrans
+    const t = this.physics.worldTransform
     this.ammo.getMotionState().setWorldTransform(t)
   }
 
@@ -127,7 +127,7 @@ class PhysicsBody {
     const ammoQuat = this.tmpBtQuaternion
     ammoQuat.setValue(q.x, q.y, q.z, q.w)
 
-    const t = this.physics.tmpTrans
+    const t = this.physics.worldTransform
     t.setRotation(ammoQuat)
   }
 
@@ -136,7 +136,7 @@ class PhysicsBody {
     // https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/index.htm
     let x, y, z
 
-    const t = this.physics.tmpTrans
+    const t = this.physics.worldTransform
     const ammoQuat = t.getRotation()
 
     let q1 = this.tmpQuaternion.set(ammoQuat.x(), ammoQuat.y(), ammoQuat.z(), ammoQuat.w())
@@ -161,13 +161,13 @@ class PhysicsBody {
 
   /** Set position. (for headless mode only) */
   public setPosition(x: number, y: number, z: number) {
-    const t = this.physics.tmpTrans
+    const t = this.physics.worldTransform
     t.getOrigin().setValue(x, y, z)
   }
 
   /** Get position. (for headless mode only) */
   public get position() {
-    const t = this.physics.tmpTrans
+    const t = this.physics.worldTransform
     return { x: t.getOrigin().x(), y: t.getOrigin().y(), z: t.getOrigin().z() }
   }
 

@@ -56,7 +56,7 @@ export { Types }
 export { Clock } from './lib/Clock'
 
 class AmmoPhysics extends EventEmitter {
-  public tmpTrans: Ammo.btTransform
+  public worldTransform: Ammo.btTransform
   public factory: Factories
   public isHeadless: boolean
 
@@ -190,7 +190,7 @@ class AmmoPhysics extends EventEmitter {
     this.shapes = new Shapes(this.factory, (object: ExtendedObject3D, config?: Types.AddExistingConfig) =>
       this.addExisting(object, config)
     )
-    this.constraints = new Constraints(this.tmpTrans, this.physicsWorld)
+    this.constraints = new Constraints(this.worldTransform, this.physicsWorld)
 
     if (this.scene !== 'headless') this.debugDrawer = new DebugDrawer(this.scene, this.physicsWorld, {})
   }
@@ -229,7 +229,7 @@ class AmmoPhysics extends EventEmitter {
 
     this.physicsWorld.setGravity(new Ammo.btVector3(g.x, g.y, g.z))
     this.dispatcher = dispatcher
-    this.tmpTrans = new Ammo.btTransform()
+    this.worldTransform = new Ammo.btTransform()
   }
 
   private createDebrisFromBreakableObject(object: ExtendedObject3D, parent: ExtendedObject3D) {
@@ -279,7 +279,7 @@ class AmmoPhysics extends EventEmitter {
       const ms = objPhys.getMotionState()
 
       if (ms) {
-        ms.getWorldTransform(this.tmpTrans)
+        ms.getWorldTransform(this.worldTransform)
 
         // check if object did an update since last call
         if (objThree.body.didUpdate) {
@@ -302,18 +302,18 @@ class AmmoPhysics extends EventEmitter {
             this.tmpQuaternion.w
           )
           // set position and rotation
-          this.tmpTrans.setOrigin(this.tmpBtVector3)
-          this.tmpTrans.setRotation(this.tmpBtQuaternion)
+          this.worldTransform.setOrigin(this.tmpBtVector3)
+          this.worldTransform.setRotation(this.tmpBtQuaternion)
           // set transform
-          ms.setWorldTransform(this.tmpTrans)
+          ms.setWorldTransform(this.worldTransform)
           // reset needsUpdate
           objThree.body.needUpdate = false
         } else if (objThree.body.skipUpdate) {
           // do nothing ...
         } else if (!objThree.body.ammo.isStaticObject()) {
           // get position and rotation
-          let p = this.tmpTrans.getOrigin()
-          let q = this.tmpTrans.getRotation()
+          let p = this.worldTransform.getOrigin()
+          let q = this.worldTransform.getRotation()
           // body offset
           let o = objThree.body.offset
           // set position and rotation
