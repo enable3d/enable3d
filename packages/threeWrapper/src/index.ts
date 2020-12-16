@@ -9,6 +9,9 @@ export { FBXLoader }
 import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 export { GLTFLoader, GLTF }
 
+import { XRControllerModelFactory } from 'three/examples/jsm/webxr/XRControllerModelFactory'
+export { XRControllerModelFactory }
+
 import { SVGLoader, SVGResult } from 'three/examples/jsm/loaders/SVGLoader'
 export { SVGLoader, SVGResult }
 

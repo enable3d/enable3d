@@ -73,7 +73,7 @@ export class Scene3D extends Phaser.Scene {
   private preUpdateXR(_time: number, _delta: number) {}
 
   /** Update the WebXR. Use this to update your game loop in XR mode instead the normal update method provided by phaser.
-   * It will overwrite the default Phaser clock and do some other things behind the scene for you.
+   * It will overwrite the default Phaser clock and do some other things behind the scene for you. (The Phaser update loop will not run in WebXR mode!)
    */
   public updateXR(_time: number, _delta: number) {}
 

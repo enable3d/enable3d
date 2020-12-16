@@ -7,35 +7,31 @@
 import * as THREE from '@enable3d/three-wrapper/dist/index'
 
 export default class WebXR {
+  // dot: THREE.Mesh
+  cameraGroup: THREE.Group
+  controllerModelFactory = new THREE.XRControllerModelFactory()
+
   constructor(
     private _renderer: THREE.WebGLRenderer,
-    private _camera: THREE.PerspectiveCamera | THREE.OrthographicCamera,
-    /** Attach the camera to this object */
-    public cameraObject: THREE.Object3D
-  ) {}
+    private _scene: THREE.Scene,
+    private _camera: THREE.PerspectiveCamera | THREE.OrthographicCamera
+  ) {
+    // https://medium.com/samsung-internet-dev/vr-locomotion-740dafa85914
 
-  /** Creates a new WebXR instance to initialize the Plugin */
-  static Enable(renderer: THREE.WebGLRenderer, camera: THREE.PerspectiveCamera | THREE.OrthographicCamera) {
-    // create red sphere
-    const geo = new THREE.SphereGeometry(0.1)
-    const mat = new THREE.MeshLambertMaterial({ transparent: true, opacity: 0.5, color: 0xff0000 })
-    const mesh = new THREE.Mesh(geo, mat)
-    mesh.position.set(0, 5, 2)
+    // const geo = new THREE.SphereGeometry(0.5)
+    // const mat = new THREE.MeshLambertMaterial({ color: 0xff0000 })
+    // this.dot = new THREE.Mesh(geo, mat)
+    // this.dot.position.set(0, 1, 0)
+    this.cameraGroup = new THREE.Group()
+    this.cameraGroup.add(_camera)
+    _scene.add(this.cameraGroup)
 
-    // the xr renderer is always window.innerWidth and window.innerHeight
-    renderer.xr.enabled = true
-    const webXR = new WebXR(renderer, camera, mesh)
-    webXR.addCamera()
+    _renderer.xr.enabled = true
+
     // add vr button
-    const vrButton = THREE.VRButton.createButton(renderer)
+    const vrButton = THREE.VRButton.createButton(_renderer)
     vrButton.style.cssText += 'background: rgba(0, 0, 0, 0.8); '
     document.body.appendChild(vrButton)
-
-    return webXR
-  }
-
-  public addCamera() {
-    this.cameraObject.add(this._camera)
   }
 
   public get isPresenting() {
@@ -43,7 +39,44 @@ export default class WebXR {
   }
 
   public getController(id: number) {
-    return this._renderer.xr.getController(id)
+    const controller = this._renderer.xr.getController(id)
+    this.cameraGroup.add(controller)
+    return controller
+  }
+
+  public getControllerGrip(id: number) {
+    const controllerGrip = this._renderer.xr.getControllerGrip(id)
+    const model = this.controllerModelFactory.createControllerModel(controllerGrip)
+
+    controllerGrip.add(model)
+    this.cameraGroup.add(controllerGrip)
+    return controllerGrip
+  }
+
+  public getControllerRay(data: any) {
+    // https://github.com/mrdoob/three.js/blob/master/examples/webxr_vr_ballshooter.html
+
+    const { targetRayMode } = data
+
+    if (targetRayMode === 'tracked-pointer') {
+      let geometry = new THREE.BufferGeometry()
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, -1], 3))
+      geometry.setAttribute('color', new THREE.Float32BufferAttribute([1, 0, 0, 1, 1, 1], 3))
+
+      let material = new THREE.LineBasicMaterial({
+        vertexColors: true
+      })
+
+      return new THREE.Line(geometry, material)
+    }
+
+    if (targetRayMode === 'gaze') {
+      let geometry = new THREE.RingBufferGeometry(0.02, 0.04, 32).translate(0, 0, -1)
+      let material = new THREE.MeshBasicMaterial({ color: 'red', opacity: 0.5, transparent: true })
+      return new THREE.Mesh(geometry, material)
+    }
+
+    return
   }
 
   public get camera() {
@@ -52,8 +85,8 @@ export default class WebXR {
 
   private get WebXRCamera() {
     return {
-      object3D: this.cameraObject,
-      position: this.cameraObject?.position,
+      group: this.cameraGroup,
+      position: this.cameraGroup?.position,
       rotation: this.isPresenting ? this._renderer.xr.getCamera(this._camera).rotation : undefined,
       getWorldDirection: (target: THREE.Vector3) =>
         this.isPresenting ? this._renderer.xr.getCamera(this._camera).getWorldDirection(target) : undefined

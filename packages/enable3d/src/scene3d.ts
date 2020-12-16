@@ -89,7 +89,7 @@ export class Scene3D implements Partial<ThreeGraphics> {
 
     // add vr camera
     if (this.__config.enableXR) {
-      this.webXR = Plugins.WebXR.Enable(this.renderer, this.camera)
+      this.webXR = new Plugins.WebXR(this.renderer, this.scene, this.camera)
     }
 
     if (autoStart) this.start(this.__config.sceneKey)
@@ -141,6 +141,8 @@ export class Scene3D implements Partial<ThreeGraphics> {
     await this.init?.(data)
     await this._preload()
     await this._create()
+
+    // console.log('start')
 
     this.renderer.setAnimationLoop(() => {
       this._update()

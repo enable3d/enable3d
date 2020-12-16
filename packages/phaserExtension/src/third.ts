@@ -105,7 +105,7 @@ class Third extends ThreeGraphics {
 
     // load xr plugin
     if (enableXR) {
-      this.webXR = Plugins.WebXR.Enable(this.renderer, this.camera)
+      this.webXR = new Plugins.WebXR(this.renderer, this.scene, this.camera)
     }
 
     // xr renderer
@@ -123,25 +123,24 @@ class Third extends ThreeGraphics {
       })
     }
 
-    if (!this.isXrEnabled) {
-      scene3D.events.on('postupdate', (_time: number, delta: number) => {
-        this.animationMixers?.update(delta)
-        this.physics?.update(delta)
-        this.physics?.updateDebugger()
-      })
-    }
-
     const view = scene3D.add.extern()
-    // phaser renderer
     // @ts-ignore
     view.render = (_renderer: WebGLRenderer) => {
       if (!this.renderer.xr.isPresenting) {
-        scene3D.updateLoopXR(scene3D.sys.game.loop.time, scene3D.sys.game.loop.delta)
+        // scene3D.updateLoopXR(scene3D.sys.game.loop.time, scene3D.sys.game.loop.delta)
         // this.renderer.state.reset()
         if (this.composer) this.composer.render()
         else this.renderer.render(this.scene, this.camera)
       }
     }
+
+    // if (!this.isXrEnabled) {
+    scene3D.events.on('postupdate', (_time: number, delta: number) => {
+      this.animationMixers?.update(delta)
+      this.physics?.update(delta)
+      this.physics?.updateDebugger()
+    })
+    // }
 
     // plugins
     this.load = new Plugins.Loaders(this.cache, this.textureAnisotropy, this.renderer.outputEncoding)
