@@ -90,6 +90,8 @@ class AmmoPhysics extends EventEmitter {
   private constraints: Constraints
   private collisionEvents: CollisionEvents
 
+  private readonly complexShapes = ['plane', 'hull', 'hacd', 'vhacd', 'convexMesh', 'concaveMesh']
+
   constructor(public scene: Scene | 'headless', public config: Types.ThreeGraphicsConfig = {}) {
     super()
 
@@ -699,7 +701,7 @@ class AmmoPhysics extends EventEmitter {
 
     let d = {} as any
     // extract data for complex shapes generated with three-to-ammo.js
-    if (['plane', 'hull', 'hacd', 'vhacd', 'convexMesh', 'concaveMesh'].indexOf(shape) > 0) d = extractData(object)
+    if (this.complexShapes.indexOf(shape) > 0) d = extractData(object)
 
     let collisionShape
     switch (shape) {
@@ -828,6 +830,9 @@ class AmmoPhysics extends EventEmitter {
     object.getWorldPosition(pos)
     object.getWorldQuaternion(quat)
     object.getWorldScale(scale)
+
+    // set scale to 1, 1, 1 if the user provides a primitive shape.
+    if (this.complexShapes.indexOf(config.shape || 'unknown') === -1) scale.set(1, 1, 1)
 
     const isStaticObject = (config.collisionFlags || 0).toString(2).slice(-1) === '1'
     const isKinematicObject = (config.collisionFlags || 0).toString(2).slice(-2, -1) === '1'
