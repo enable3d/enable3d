@@ -4,17 +4,15 @@ const path = require('path')
 const MainScene = () => {
   const physics = new Physics()
 
-  let ground = physics.add.ground({ width: 20, height: 20 })
+  let ground = physics.add.ground({ width: 20, height: 20, name: 'ground' })
 
   ground.body.on.collision((otherObject, event) => {
-    if (otherObject.name === 'robot') {
-      console.log(`${ground.name} > ${event} > ${otherObject.name}`)
-      if (event === 'start')
-        setTimeout(() => {
-          console.log('destroy otherObject')
-          physics.destroy(otherObject)
-        }, 100)
-    }
+    console.log(`${ground.name} > ${event} > ${otherObject.name}`)
+    if (event === 'start')
+      setTimeout(() => {
+        console.log(`destroy ${otherObject.name}`)
+        physics.destroy(otherObject)
+      }, 100)
   })
 
   const FBXLoader = new Loaders.FBXLoader()
@@ -24,7 +22,7 @@ const MainScene = () => {
 
     robot.add(fbx)
     robot.scale.set(0.05, 0.05, 0.05)
-    robot.position.set(0, 10, 0)
+    robot.position.set(5, 12, 0)
 
     const physicsOptions = {
       addChildren: false,
@@ -43,7 +41,7 @@ const MainScene = () => {
     hero.name = 'hero'
 
     hero.add(child)
-    hero.position.set(0, 5, 0)
+    hero.position.set(-10, 12, 0)
 
     const physicsOptions = {
       addChildren: false,
@@ -66,14 +64,14 @@ const MainScene = () => {
   const animate = delta => {
     physics.update(delta * 1000)
 
-    if (this.hero) {
+    if (this.hero?.body) {
       const pos = this.hero.position.y.toFixed(2)
-      if (pos > 2) console.log(this.hero.name, pos)
+      if (pos > 10) console.log(this.hero.name, pos)
     }
 
-    if (this.robot) {
+    if (this.robot?.body) {
       const pos = this.robot.position.y.toFixed(2)
-      if (pos > 3) console.log(this.robot.name, pos)
+      if (pos > 10) console.log(this.robot.name, pos)
     }
   }
   clock.onTick(delta => {
