@@ -5,7 +5,8 @@ import {
   WebGLRenderer,
   AmbientLight,
   DirectionalLight,
-  Color
+  Color,
+  HemisphereLight
 } from '@enable3d/three-wrapper/dist'
 
 import { Sky, OrbitControls } from '@enable3d/three-wrapper/dist/index'
@@ -51,6 +52,7 @@ export default class WarpSpeed {
       lights?: {
         ambientLight: AmbientLight
         directionalLight: DirectionalLight
+        hemisphereLight: HemisphereLight
       }
       ground?: ExtendedObject3D
       orbitControls?: OrbitControls
@@ -137,8 +139,9 @@ export default class WarpSpeed {
     }
 
     if (features.includes('light')) {
-      const ambientLight = this.lights.ambientLight({ color: 0xffffff, intensity: 0.5 })
-      const directionalLight = this.lights.directionalLight({ color: 0xffffff, intensity: 1 })
+      const hemisphereLight = this.lights.hemisphereLight({ skyColor: 0xffffff, groundColor: 0x000000, intensity: 0.5 })
+      const ambientLight = this.lights.ambientLight({ color: 0xffffff, intensity: 0.1 })
+      const directionalLight = this.lights.directionalLight({ color: 0xffffff, intensity: 0.5 })
       directionalLight.position.set(-10, 18, 5)
       const d = 20
       directionalLight.shadow.camera.top = d
@@ -150,7 +153,8 @@ export default class WarpSpeed {
       // this.directionalLight = light
       const lights = {
         ambientLight,
-        directionalLight
+        directionalLight,
+        hemisphereLight
       }
 
       Features = { lights, ...Features }
