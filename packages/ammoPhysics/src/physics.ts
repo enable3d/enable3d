@@ -335,8 +335,12 @@ class AmmoPhysics extends EventEmitter {
           // body offset
           let o = objThree.body.offset
           // set position and rotation
-          const scale = objThree.body.ammo.getCollisionShape().getLocalScaling()
-          this.tmpVector3a.set(scale.x(), scale.y(), scale.z())
+          if (objThree.body.ignoreScale) {
+            this.tmpVector3a.set(objThree.scale.x, objThree.scale.y, objThree.scale.z)
+          } else {
+            const scale = objThree.body.ammo.getCollisionShape().getLocalScaling()
+            this.tmpVector3a.set(scale.x(), scale.y(), scale.z())
+          }
           this.tmpVector3.set(p.x() + o.x, p.y() + o.y, p.z() + o.z)
           this.tmpQuaternion.set(q.x(), q.y(), q.z(), q.w())
           this.tmpMatrix4.compose(this.tmpVector3, this.tmpQuaternion, this.tmpVector3a)
@@ -831,9 +835,6 @@ class AmmoPhysics extends EventEmitter {
     object.getWorldQuaternion(quat)
     object.getWorldScale(scale)
 
-    // set scale to 1, 1, 1 if the user provides a primitive shape.
-    if (this.complexShapes.indexOf(config.shape || 'unknown') === -1) scale.set(1, 1, 1)
-
     const isStaticObject = (config.collisionFlags || 0).toString(2).slice(-1) === '1'
     const isKinematicObject = (config.collisionFlags || 0).toString(2).slice(-2, -1) === '1'
 
@@ -847,8 +848,11 @@ class AmmoPhysics extends EventEmitter {
       offset = undefined,
       breakable = false,
       addChildren = true,
-      margin = 0.01
+      margin = 0.01,
+      ignoreScale = false
     } = config
+
+    if (ignoreScale) scale.set(1, 1, 1)
 
     if (compound.length >= 1) {
       // if we want a custom compound shape, we simply do
@@ -857,6 +861,7 @@ class AmmoPhysics extends EventEmitter {
       const localTransform = this.finishCollisionShape(compoundShape, pos, quat, scale, margin)
       const rigidBody = this.collisionShapeToRigidBody(compoundShape, localTransform, mass, isKinematicObject)
       this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, breakable, offset)
+      object.body.ignoreScale = ignoreScale
       return
     }
 
@@ -900,6 +905,7 @@ class AmmoPhysics extends EventEmitter {
     const rigidBody = this.collisionShapeToRigidBody(collisionShape, localTransform, mass, isKinematicObject)
 
     this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, breakable, offset)
+    object.body.ignoreScale = ignoreScale
   }
 
   public addRigidBodyToWorld(

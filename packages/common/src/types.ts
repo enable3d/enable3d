@@ -240,6 +240,7 @@ export interface AddExistingConfig extends XYZ, GeometryPhysicsOptions {
   offset?: XYZ
   orientation?: Quaternion
   addChildren?: boolean
+  ignoreScale?: boolean
 }
 
 export type CollisionEvent = 'start' | 'collision' | 'end'
