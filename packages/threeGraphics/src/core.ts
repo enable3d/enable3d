@@ -38,7 +38,7 @@ export class ThreeGraphics {
     this.renderer = renderer || new THREE.WebGLRenderer({ antialias })
 
     // see https://threejs.org/docs/#examples/en/loaders/GLTFLoader
-    this.renderer.outputEncoding = sRGBEncoding
+    // this.renderer.outputEncoding = sRGBEncoding
 
     // shadow
     this.renderer.shadowMap.enabled = true

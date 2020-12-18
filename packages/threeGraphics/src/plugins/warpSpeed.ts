@@ -134,15 +134,17 @@ export default class WarpSpeed {
     }
 
     if (features.includes('camera')) {
-      this.camera.position.set(5, 5, 10)
+      this.camera.position.set(0, 6, 12)
       Features = { camera: this.camera, ...Features }
     }
 
     if (features.includes('light')) {
-      const hemisphereLight = this.lights.hemisphereLight({ skyColor: 0xffffff, groundColor: 0x000000, intensity: 0.5 })
-      const ambientLight = this.lights.ambientLight({ color: 0xffffff, intensity: 0.1 })
-      const directionalLight = this.lights.directionalLight({ color: 0xffffff, intensity: 0.5 })
-      directionalLight.position.set(-10, 18, 5)
+      const intensity = 0.35
+      const hemisphereLight = this.lights.hemisphereLight({ skyColor: 0xffffff, groundColor: 0x000000, intensity })
+      const ambientLight = this.lights.ambientLight({ color: 0xffffff, intensity })
+      const directionalLight = this.lights.directionalLight({ color: 0xffffff, intensity })
+
+      directionalLight.position.set(100, 200, 50)
       const d = 20
       directionalLight.shadow.camera.top = d
       directionalLight.shadow.camera.bottom = -d
