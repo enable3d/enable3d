@@ -223,17 +223,22 @@ class AmmoPhysics extends EventEmitter {
     const g = this.gravity
     const { softBodies = false } = this.config
 
-    const collisionConfiguration = softBodies
-      ? new Ammo.btSoftBodyRigidBodyCollisionConfiguration()
-      : new Ammo.btDefaultCollisionConfiguration()
-
-    const dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration)
-    const broadphase = new Ammo.btDbvtBroadphase()
-    const solver = new Ammo.btSequentialImpulseConstraintSolver()
     let physicsWorld: any
 
+    if (!softBodies) {
+      const collisionConfiguration = new Ammo.btDefaultCollisionConfiguration(),
+        dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration),
+        broadphase = new Ammo.btDbvtBroadphase(),
+        solver = new Ammo.btSequentialImpulseConstraintSolver()
+      physicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration)
+    }
+
     if (softBodies) {
-      const softBodySolver = new Ammo.btDefaultSoftBodySolver()
+      const collisionConfiguration = new Ammo.btSoftBodyRigidBodyCollisionConfiguration(),
+        dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration),
+        broadphase = new Ammo.btDbvtBroadphase(),
+        solver = new Ammo.btSequentialImpulseConstraintSolver(),
+        softBodySolver = new Ammo.btDefaultSoftBodySolver()
       physicsWorld = new Ammo.btSoftRigidDynamicsWorld(
         dispatcher,
         broadphase,
@@ -241,12 +246,9 @@ class AmmoPhysics extends EventEmitter {
         collisionConfiguration,
         softBodySolver
       )
-    } else {
-      physicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration)
     }
 
     physicsWorld.setGravity(new Ammo.btVector3(g.x, g.y, g.z))
-
     return physicsWorld
   }
 
