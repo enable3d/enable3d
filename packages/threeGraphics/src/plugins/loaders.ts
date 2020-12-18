@@ -17,9 +17,7 @@ import {
   RGBAFormat,
   FileLoader,
   ImageLoader,
-  ObjectLoader,
-  sRGBEncoding,
-  TextureEncoding
+  ObjectLoader
 } from '@enable3d/three-wrapper/dist/index'
 
 export default class Loaders {
@@ -31,7 +29,7 @@ export default class Loaders {
   private _gltfLoader: GLTFLoader
   private _fbxLoader: FBXLoader
 
-  constructor(private cache: typeof Cache, private textureAnisotropy: number, private encoding: TextureEncoding) {}
+  constructor(private cache: typeof Cache, private textureAnisotropy: number) {}
 
   private get fileLoader() {
     if (!this._fileLoader) this._fileLoader = new FileLoader()
@@ -119,9 +117,7 @@ export default class Loaders {
         texture.anisotropy = this.textureAnisotropy
         texture.format = RGBAFormat
         texture.needsUpdate = true
-        texture.anisotropy = this.textureAnisotropy
 
-        texture.encoding = this.encoding
         resolve(texture)
       })
     })

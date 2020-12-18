@@ -36,10 +36,8 @@ export class ThreeGraphics {
 
     // this.renderer.physicallyCorrectLights = true
     this.renderer = renderer || new THREE.WebGLRenderer({ antialias })
-    // this.renderer.outputEncoding = THREE.GammaEncoding
-    // this.renderer.gammaFactor = 1
 
-    // this.renderer.physicallyCorrectLights = true
+    // see https://threejs.org/docs/#examples/en/loaders/GLTFLoader
     this.renderer.outputEncoding = sRGBEncoding
 
     // shadow
