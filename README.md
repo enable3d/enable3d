@@ -27,21 +27,6 @@ Written in TypeScript, uses three.js and ammo.js, brings physics to your three.j
 
 Visit the [enable3d website](https://enable3d.io) for documentation and examples.
 
-## TODOs before releasing v21 (0.21.0)
-
-- Fix physics offset issue [#62](https://github.com/enable3d/enable3d/issues/62)
-- Finish and merge vehicle and car branch
-- Support Post-Processing
-- Support for Soft Bodies
-- Update to three.js r123
-- Publish examples:
-  - Post-Processing
-  - Sync 3D object in 2D world
-  - Sync 2D object in 3D world
-  - Car with physics constraints
-  - Car with raycast vehicle
-  - CollisionGroup and CollisionMask
-
 ## Upgrade to v0.20.0
 
 ### ES2015
