@@ -707,7 +707,7 @@ class AmmoPhysics extends EventEmitter {
 
     let d = {} as any
     // extract data for complex shapes generated with three-to-ammo.js
-    if (this.complexShapes.indexOf(shape) > 0) d = extractData(object)
+    if (this.complexShapes.indexOf(shape) !== -1) d = extractData(object)
 
     let collisionShape
     switch (shape) {
