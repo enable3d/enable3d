@@ -88,7 +88,7 @@ class AmmoPhysics extends EventEmitter {
 
   private shapes: Shapes
   private constraints: Constraints
-  private collisionEvents: CollisionEvents
+  public collisionEvents: CollisionEvents
 
   private readonly complexShapes = ['plane', 'hull', 'hacd', 'vhacd', 'convexMesh', 'concaveMesh']
 
