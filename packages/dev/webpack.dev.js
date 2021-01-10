@@ -6,7 +6,7 @@ module.exports = {
   devtool: 'inline-source-map',
   entry: './src/game.ts',
   output: {
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
     pathinfo: false
   },
   devServer: {
@@ -38,6 +38,6 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({ template: './src/index.html' }),
-    new CopyPlugin([{ from: 'src/assets', to: 'assets' }])
+    new CopyPlugin({ patterns: [{ from: 'src/assets', to: 'assets' }] })
   ]
 }
