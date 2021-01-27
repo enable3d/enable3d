@@ -152,7 +152,6 @@ interface GeometryPhysicsOptions {
 
 interface GeometryConfig extends GeometryPhysicsOptions {
   name?: string
-  bufferGeometry?: boolean
 }
 
 export interface PlaneConfig extends GeometryConfig, XYZ, WH {

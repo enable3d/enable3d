@@ -25,8 +25,6 @@ import {
   ConeConfig
 } from './types'
 import {
-  SphereGeometry,
-  BoxGeometry,
   Scene,
   MathUtils as THREE_Math,
   Object3D,
@@ -40,8 +38,6 @@ import {
   LineBasicMaterial,
   PointsMaterial,
   MeshBasicMaterial,
-  CylinderGeometry,
-  ExtrudeGeometry,
   MeshLambertMaterial,
   BoxBufferGeometry,
   SphereBufferGeometry,
@@ -49,10 +45,8 @@ import {
   CylinderBufferGeometry,
   MeshPhysicalMaterial,
   MeshToonMaterial,
-  TorusGeometry,
   TorusBufferGeometry,
   PlaneBufferGeometry,
-  PlaneGeometry,
   DoubleSide,
   ConeBufferGeometry
 } from '@enable3d/three-wrapper/dist/index'
@@ -176,13 +170,10 @@ export default class Factories {
   }
 
   private makeExtrude(extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig) {
-    const { x, y, z, name, shape, autoCenter = true, breakable = false, bufferGeometry = true, ...rest } = extrudeConfig
+    const { x, y, z, name, shape, autoCenter = true, breakable = false, ...rest } = extrudeConfig
     // @ts-ignore // ExtrudeGeometryOptions interface missing since three.js r121
     const { depth = 1, bevelEnabled = false } = rest
-    const geometry =
-      bufferGeometry || breakable || this.isHeadless
-        ? new ExtrudeBufferGeometry(shape, { depth, bevelEnabled, ...rest })
-        : new ExtrudeGeometry(shape, { depth, bevelEnabled, ...rest })
+    const geometry = new ExtrudeBufferGeometry(shape, { depth, bevelEnabled, ...rest })
     const material = this.addMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     // auto adjust the center for custom shapes
@@ -199,11 +190,14 @@ export default class Factories {
   }
 
   private makePlane(planeConfig: PlaneConfig, materialConfig: MaterialConfig): ExtendedObject3D {
-    const { x, y, z, name, breakable = false, bufferGeometry = true, ...rest } = planeConfig
-    const geometry =
-      bufferGeometry || breakable || this.isHeadless
-        ? new PlaneBufferGeometry(rest.width || 1, rest.height || 1, rest.widthSegments || 1, rest.heightSegments || 1)
-        : new PlaneGeometry(rest.width || 1, rest.height || 1, rest.widthSegments || 1, rest.heightSegments || 1)
+    const { x, y, z, name, breakable = false, ...rest } = planeConfig
+    const geometry = new PlaneBufferGeometry(
+      rest.width || 1,
+      rest.height || 1,
+      rest.widthSegments || 1,
+      rest.heightSegments || 1
+    )
+
     const material = this.addMaterial(materialConfig) as Material
     material.side = DoubleSide
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
@@ -219,27 +213,17 @@ export default class Factories {
   }
 
   private makeSphere(sphereConfig: SphereConfig, materialConfig: MaterialConfig): ExtendedObject3D {
-    const { x, y, z, name, breakable = false, bufferGeometry = true, ...rest } = sphereConfig
-    const geometry =
-      bufferGeometry || breakable || this.isHeadless
-        ? new SphereBufferGeometry(
-            rest.radius || 1,
-            rest.widthSegments || 16,
-            rest.heightSegments || 12,
-            rest.phiStart || undefined,
-            rest.phiLength || undefined,
-            rest.thetaStart || undefined,
-            rest.thetaLength || undefined
-          )
-        : new SphereGeometry(
-            rest.radius || 1,
-            rest.widthSegments || 16,
-            rest.heightSegments || 12,
-            rest.phiStart || undefined,
-            rest.phiLength || undefined,
-            rest.thetaStart || undefined,
-            rest.thetaLength || undefined
-          )
+    const { x, y, z, name, breakable = false, ...rest } = sphereConfig
+    const geometry = new SphereBufferGeometry(
+      rest.radius || 1,
+      rest.widthSegments || 16,
+      rest.heightSegments || 12,
+      rest.phiStart || undefined,
+      rest.phiLength || undefined,
+      rest.thetaStart || undefined,
+      rest.thetaLength || undefined
+    )
+
     const material = this.addMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
@@ -254,25 +238,16 @@ export default class Factories {
   }
 
   private makeBox(boxConfig: BoxConfig, materialConfig: MaterialConfig): ExtendedObject3D {
-    const { x, y, z, name, breakable = false, bufferGeometry = true, ...rest } = boxConfig
-    const geometry =
-      bufferGeometry || breakable || this.isHeadless
-        ? new BoxBufferGeometry(
-            rest.width || 1,
-            rest.height || 1,
-            rest.depth || 1,
-            rest.widthSegments || undefined,
-            rest.heightSegments || undefined,
-            rest.depthSegments || undefined
-          )
-        : new BoxGeometry(
-            rest.width || 1,
-            rest.height || 1,
-            rest.depth || 1,
-            rest.widthSegments || undefined,
-            rest.heightSegments || undefined,
-            rest.depthSegments || undefined
-          )
+    const { x, y, z, name, breakable = false, ...rest } = boxConfig
+    const geometry = new BoxBufferGeometry(
+      rest.width || 1,
+      rest.height || 1,
+      rest.depth || 1,
+      rest.widthSegments || undefined,
+      rest.heightSegments || undefined,
+      rest.depthSegments || undefined
+    )
+
     const material = this.addMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
@@ -294,29 +269,18 @@ export default class Factories {
   }
 
   private makeCylinder(cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
-    const { x, y, z, name, breakable = false, bufferGeometry = true, ...rest } = cylinderConfig
-    const geometry =
-      bufferGeometry || breakable || this.isHeadless
-        ? new CylinderBufferGeometry(
-            rest.radiusTop || 1,
-            rest.radiusBottom || 1,
-            rest.height || 1,
-            rest.radiusSegments || undefined,
-            rest.heightSegments || undefined,
-            rest.openEnded || undefined,
-            rest.thetaStart || undefined,
-            rest.thetaLength || undefined
-          )
-        : new CylinderGeometry(
-            rest.radiusTop || 1,
-            rest.radiusBottom || 1,
-            rest.height || 1,
-            rest.radiusSegments || undefined,
-            rest.heightSegments || undefined,
-            rest.openEnded || undefined,
-            rest.thetaStart || undefined,
-            rest.thetaLength || undefined
-          )
+    const { x, y, z, name, breakable = false, ...rest } = cylinderConfig
+    const geometry = new CylinderBufferGeometry(
+      rest.radiusTop || 1,
+      rest.radiusBottom || 1,
+      rest.height || 1,
+      rest.radiusSegments || undefined,
+      rest.heightSegments || undefined,
+      rest.openEnded || undefined,
+      rest.thetaStart || undefined,
+      rest.thetaLength || undefined
+    )
+
     const material = this.addMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
@@ -331,27 +295,17 @@ export default class Factories {
   }
 
   private makeCone(coneConfig: ConeConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
-    const { x, y, z, name, breakable = false, bufferGeometry = true, ...rest } = coneConfig
-    const geometry =
-      bufferGeometry || breakable || this.isHeadless
-        ? new ConeBufferGeometry(
-            rest.radius || 1,
-            rest.height || 1,
-            rest.radiusSegments || 8,
-            rest.heightSegments || 1,
-            rest.openEnded || false,
-            rest.thetaStart || 0,
-            rest.thetaLength || 2 * Math.PI
-          )
-        : new ConeBufferGeometry(
-            rest.radius || 1,
-            rest.height || 1,
-            rest.radiusSegments || 8,
-            rest.heightSegments || 1,
-            rest.openEnded || false,
-            rest.thetaStart || 0,
-            rest.thetaLength || 2 * Math.PI
-          )
+    const { x, y, z, name, breakable = false, ...rest } = coneConfig
+    const geometry = new ConeBufferGeometry(
+      rest.radius || 1,
+      rest.height || 1,
+      rest.radiusSegments || 8,
+      rest.heightSegments || 1,
+      rest.openEnded || false,
+      rest.thetaStart || 0,
+      rest.thetaLength || 2 * Math.PI
+    )
+
     const material = this.addMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
@@ -367,23 +321,15 @@ export default class Factories {
 
   // https://threejs.org/docs/index.html#api/en/geometries/TorusBufferGeometry
   private makeTorus(torusConfig: TorusConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
-    const { x, y, z, name, breakable = false, bufferGeometry = true, ...rest } = torusConfig
-    const geometry =
-      bufferGeometry || breakable || this.isHeadless
-        ? new TorusBufferGeometry(
-            rest.radius || undefined,
-            rest.tube || undefined,
-            rest.radialSegments || undefined,
-            rest.tubularSegments || undefined,
-            rest.arc || undefined
-          )
-        : new TorusGeometry(
-            rest.radius || undefined,
-            rest.tube || undefined,
-            rest.radialSegments || undefined,
-            rest.tubularSegments || undefined,
-            rest.arc || undefined
-          )
+    const { x, y, z, name, breakable = false, ...rest } = torusConfig
+    const geometry = new TorusBufferGeometry(
+      rest.radius || undefined,
+      rest.tube || undefined,
+      rest.radialSegments || undefined,
+      rest.tubularSegments || undefined,
+      rest.arc || undefined
+    )
+
     const material = this.addMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     mesh.name = name || `body_id_${mesh.id}`
