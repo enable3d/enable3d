@@ -34,7 +34,7 @@
  */
 
 import { Line3, Mesh, Plane, Vector3 } from '@enable3d/three-wrapper/dist/index'
-import { ConvexBufferGeometry } from '@enable3d/three-wrapper/dist/index'
+import { ConvexGeometry } from '@enable3d/three-wrapper/dist/index'
 import logger from '@enable3d/common/dist/logger'
 
 const ConvexObjectBreaker = function (minSizeForBreak?: number, smallDelta?: number) {
@@ -383,17 +383,17 @@ ConvexObjectBreaker.prototype = {
     var object2 = null
 
     var numObjects = 0
-    
+
     /**
      * MOD: Wrapped in try catch block to avoid errors
      */
     if (numPoints1 > 4) {
       try {
-        object1 = new Mesh(new ConvexBufferGeometry(points1), object.material)
+        object1 = new Mesh(new ConvexGeometry(points1), object.material)
         object1.position.copy(this.tempCM1)
         object1.quaternion.copy(object.quaternion)
         object1.userData = object.userData
-        
+
         this.prepareBreakableObject(
           object1,
           newMass,
@@ -411,7 +411,7 @@ ConvexObjectBreaker.prototype = {
 
     if (numPoints2 > 4) {
       try {
-        object2 = new Mesh(new ConvexBufferGeometry(points2), object.material)
+        object2 = new Mesh(new ConvexGeometry(points2), object.material)
         object2.position.copy(this.tempCM2)
         object2.quaternion.copy(object.quaternion)
         object2.userData = object.userData

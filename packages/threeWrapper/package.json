@@ -1,6 +1,6 @@
 {
   "name": "@enable3d/three-wrapper",
-  "version": "0.21.0",
+  "version": "0.22.0-dev.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
   "dependencies": {
-    "three": "~0.124.0"
+    "three": "~0.125.2"
   },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"

@@ -4,12 +4,14 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
+// TODO(yandeu) Replace this CSG lib with one that works natively with Buffer Geometries.
+
 // Originally copied from https://github.com/Hi-Level/three-csg
 // which is a typescript rewrite of https://github.com/manthrax/THREE-CSGMesh
 // which as originally written by Copyright (c) 2011 Evan Wallace (http://madebyevan.com/), under the MIT license.
 
 import { Vector3, Geometry, Matrix3, Face3, Mesh, Matrix4, Scene, REVISION } from '@enable3d/three-wrapper/dist/index'
-import Transform from './transform'
+import Transform from '../transform'
 
 /**
  * CSG wrapper for enable3d
@@ -22,14 +24,12 @@ export default class CSGWrapper {
   constructor(private scene: Scene, private transform: Transform) {}
 
   private toGeometry(meshA: Mesh, meshB: Mesh) {
-    // @ts-ignore
     meshA.geometry = this.transform.bufferGeometryToGeometry(meshA.geometry)
-    // @ts-ignore
     meshB.geometry = this.transform.bufferGeometryToGeometry(meshB.geometry)
   }
 
   private toBufferGeometry(meshC: Mesh) {
-    // @ts-ignore
+    // @ts-expect-error
     meshC.geometry = this.transform.geometryToBufferGeometry(meshC.geometry)
   }
 
@@ -157,11 +157,14 @@ class CSG {
     // compatibility fix for three.js >= r123 (Dezember 2020)
     const inv =
       // @ts-ignore
-      +REVISION >= 123 ? new Matrix4().copy(toMatrix).invert() : (new Matrix4().getInverse(toMatrix) as Matrix4)
+      parseInt(REVISION) >= 123
+        ? new Matrix4().copy(toMatrix).invert()
+        : (new Matrix4().getInverse(toMatrix) as Matrix4)
     geom.applyMatrix4(inv)
     geom.verticesNeedUpdate = geom.elementsNeedUpdate = geom.normalsNeedUpdate = true
     geom.computeBoundingSphere()
     geom.computeBoundingBox()
+    // @ts-expect-error
     const m = new Mesh(geom)
     m.matrix.copy(toMatrix)
     m.matrix.decompose(m.position, m.rotation as any, m.scale)

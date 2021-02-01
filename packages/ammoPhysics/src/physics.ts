@@ -349,7 +349,7 @@ class AmmoPhysics extends EventEmitter {
           if (objThree.parent) {
             // compatibility fix for three.js >= r123 (Dezember 2020)
             // @ts-ignore
-            if (+REVISION >= 123) this.tmpMatrix4a.copy(objThree.parent.matrixWorld).invert()
+            if (parseInt(REVISION) >= 123) this.tmpMatrix4a.copy(objThree.parent.matrixWorld).invert()
             else this.tmpMatrix4a.getInverse(objThree.parent.matrixWorld)
           } else {
             this.tmpMatrix4a.identity()
@@ -685,8 +685,10 @@ class AmmoPhysics extends EventEmitter {
     const btHalfExtents = new Ammo.btVector3()
 
     // transform geometry to bufferGeometry (because three-to-ammo works only with bufferGeometry)
+    // @ts-expect-error
     const geometry = object?.geometry as Geometry
     if (object && geometry?.isGeometry) {
+      // @ts-expect-error
       object.geometry = new BufferGeometry().fromGeometry(geometry)
     }
 

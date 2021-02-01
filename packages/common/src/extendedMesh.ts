@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Mesh, Vector3, Geometry, BufferGeometry, Material } from '@enable3d/three-wrapper/dist/index'
+import { Mesh, Vector3, BufferGeometry, Material } from '@enable3d/three-wrapper/dist/index'
 import PhysicsBody from './physicsBody'
 
 export interface ExtendedMesh extends Mesh {}
@@ -19,7 +19,7 @@ export class ExtendedMesh extends Mesh {
   public hasBody: boolean = false
   public fragmentDepth: number
   public breakable: boolean
-  constructor(geometry?: Geometry | BufferGeometry | undefined, material?: Material | Material[] | undefined) {
+  constructor(geometry?: BufferGeometry | undefined, material?: Material | Material[] | undefined) {
     super(geometry, material)
     this.name = `object-${this.id}`
   }

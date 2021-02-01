@@ -1,7 +1,7 @@
 {
   "name": "dev",
   "private": true,
-  "version": "0.21.0",
+  "version": "0.22.0-dev.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -11,11 +11,11 @@
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
   "dependencies": {
-    "@enable3d/ammo-on-nodejs": "^0.21.0",
-    "@enable3d/ammo-physics": "^0.21.0",
-    "@enable3d/phaser-extension": "^0.21.0",
-    "@enable3d/three-graphics": "^0.21.0",
-    "enable3d": "^0.21.0",
+    "@enable3d/ammo-on-nodejs": "^0.22.0-dev.0",
+    "@enable3d/ammo-physics": "^0.22.0-dev.0",
+    "@enable3d/phaser-extension": "^0.22.0-dev.0",
+    "@enable3d/three-graphics": "^0.22.0-dev.0",
+    "enable3d": "^0.22.0-dev.0",
     "phaser": "~3.24.1"
   },
   "funding": {

@@ -4,36 +4,36 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
+// TODO(yandeu) Make heightmap work with Buffer Geometries.
+
 import {
   Scene,
-  PlaneGeometry,
+  PlaneBufferGeometry,
   MeshPhongMaterial,
-  Mesh,
   Geometry,
   DoubleSide,
-  FaceColors,
   Face3,
   Color,
-  Texture
+  Texture,
+  MeshPhongMaterialParameters,
+  BufferGeometry
 } from '@enable3d/three-wrapper/dist/index'
 import { HeightMapConfig, ExtendedMesh } from '@enable3d/common/dist/types'
-import logger from '@enable3d/common/dist/logger'
+import { fromGeometry } from './csg/_fromGeometry'
 
 export default class HeightMap {
   constructor(private scene: Scene) {}
 
   public add(texture: Texture, config: HeightMapConfig = {}) {
     const heightMap = this.make(texture, config)
+
     if (heightMap) this.scene.add(heightMap)
-    else logger('Could not make heightmap')
+    else console.warn('Could not make heightmap')
+
     return heightMap
   }
 
   public make(texture: Texture, config: HeightMapConfig = {}) {
-    // var spacingX = 3
-    // var spacingZ = 3
-    // var heightOffset = 2
-
     const { image } = texture
     const { width, height } = image
     const { colorScale } = config
@@ -48,16 +48,16 @@ export default class HeightMap {
     ctx.drawImage(texture.image, 0, 0)
     const pixel = ctx.getImageData(0, 0, width, height)
 
-    // geometry
-    const plane = new PlaneGeometry(10, 10, width - 1, height - 1)
+    // geometry (convert buffer geometry to deprecated geometry)
+    const plane: any = new Geometry().fromBufferGeometry(new PlaneBufferGeometry(10, 10, width - 1, height - 1))
 
     // material
-    let materialConfig: any = { color: 0xcccccc, side: DoubleSide }
-    if (colorScale) materialConfig = { ...materialConfig, vertexColors: FaceColors }
+    let materialConfig: MeshPhongMaterialParameters = { color: 0xcccccc, side: DoubleSide }
+    if (colorScale) materialConfig = { ...materialConfig, vertexColors: true }
     const material = new MeshPhongMaterial(materialConfig)
 
     // mesh
-    const mesh = new ExtendedMesh(plane, material)
+    const mesh: any = new ExtendedMesh(plane, material)
     mesh.receiveShadow = mesh.castShadow = true
     mesh.shape = 'concave'
 
@@ -87,6 +87,9 @@ export default class HeightMap {
 
     mesh.name = 'heightmap'
 
-    return mesh
+    // back to buffer geometry
+    mesh.geometry = fromGeometry(new BufferGeometry(), mesh.geometry)
+
+    return mesh as ExtendedMesh
   }
 }

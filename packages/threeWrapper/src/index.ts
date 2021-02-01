@@ -1,7 +1,15 @@
 export * from 'three'
 
-import { ConvexBufferGeometry } from 'three/examples/jsm/geometries/ConvexGeometry'
-export { ConvexBufferGeometry }
+import { ConvexGeometry } from 'three/examples/jsm/geometries/ConvexGeometry'
+export { ConvexGeometry }
+
+// TODO(yandeu) Remove this soon.
+import { Geometry } from 'three/examples/jsm/deprecated/Geometry'
+export { Geometry }
+
+// TODO(yandeu) Try to remove soon.
+import { Face3 } from './deprecated.face3'
+export { Face3 }
 
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 export { FBXLoader }

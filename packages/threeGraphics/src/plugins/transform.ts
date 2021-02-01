@@ -14,6 +14,7 @@ import {
   Mesh
 } from '@enable3d/three-wrapper/dist/index'
 import { SVGLoader } from '@enable3d/three-wrapper/dist/index'
+import { fromGeometry } from './csg/_fromGeometry'
 
 /**
  * @author       Yannick Deubel (https://github.com/yandeu)
@@ -28,16 +29,14 @@ export default class Transform {
 
   constructor(private camera: PerspectiveCamera | OrthographicCamera, private renderer: WebGLRenderer) {}
 
-  public geometryToBufferGeometry(geometry: Geometry | BufferGeometry) {
-    // @ts-ignore
-    if (geometry.isGeometry) return new BufferGeometry().fromGeometry(geometry)
-    else return geometry as BufferGeometry
+  public geometryToBufferGeometry(geometry: Geometry) {
+    if (geometry.isGeometry) return fromGeometry(new BufferGeometry(), geometry)
+    else return geometry as any
   }
 
-  public bufferGeometryToGeometry(bufferGeometry: Geometry | BufferGeometry) {
-    // @ts-ignore
+  public bufferGeometryToGeometry(bufferGeometry: BufferGeometry) {
     if (bufferGeometry.isBufferGeometry) return new Geometry().fromBufferGeometry(bufferGeometry)
-    else return bufferGeometry as Geometry
+    else return bufferGeometry as any
   }
 
   /**

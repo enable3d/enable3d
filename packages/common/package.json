@@ -1,6 +1,6 @@
 {
   "name": "@enable3d/common",
-  "version": "0.21.0",
+  "version": "0.22.0-dev.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
   "dependencies": {
-    "@enable3d/three-wrapper": "^0.21.0"
+    "@enable3d/three-wrapper": "^0.22.0-dev.0"
   },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"
