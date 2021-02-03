@@ -311,6 +311,15 @@ class PhysicsBody {
     this.ammo.setFriction(value)
   }
 
+  /**
+   * Set the linear and angular damping
+   * @param linear A number from 0 to 1.
+   * @param angular A number from 0 to 1.
+   */
+  public setDamping(linear: number, angular: number) {
+    this.ammo.setDamping(linear, angular);
+  }
+
   /** Set per body gravity */
   public setGravity(x: number, y: number, z: number) {
     this.tmpBtVector3.setValue(x, y, z)
