@@ -6,8 +6,10 @@
 
 import { AmmoPhysics, Types } from '@enable3d/ammo-physics/dist/index'
 
+type PhysicsConfig = Omit<Types.ThreeGraphicsConfig, 'anisotropy' | 'antialias' | 'camera' | 'enableXR' | 'renderer'>
+
 export class Physics extends AmmoPhysics {
-  constructor(public config: Types.ThreeGraphicsConfig = {}) {
+  constructor(public config: PhysicsConfig = {}) {
     super('headless', config)
   }
 }
