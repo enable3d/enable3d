@@ -4,10 +4,10 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { AmmoPhysics } from '@enable3d/ammo-physics/dist/index'
+import { AmmoPhysics, Types } from '@enable3d/ammo-physics/dist/index'
 
 export class Physics extends AmmoPhysics {
-  constructor() {
-    super('headless')
+  constructor(public config: Types.ThreeGraphicsConfig = {}) {
+    super('headless', config)
   }
 }
