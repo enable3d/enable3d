@@ -55,8 +55,6 @@ class Third extends ThreeGraphics {
     scene3D.sys.game.canvas.parentElement?.insertBefore(config.renderer.domElement, scene3D.sys.game.canvas)
     scene3D.sys.game.canvas.style.position = 'relative'
 
-    console.log()
-
     const resize = () => {
       if (!config.renderer) return
 
@@ -115,10 +113,14 @@ class Third extends ThreeGraphics {
         if (this.renderer.xr.isPresenting) {
           const delta = time - lastTime
           lastTime = time
+
           scene3D.updateLoopXR(time, delta)
           this.renderer.state.reset()
+
+          this.preRender()
           if (this.composer) this.composer.render()
           else this.renderer.render(this.scene, this.camera)
+          this.postRender()
         }
       })
     }
@@ -129,8 +131,10 @@ class Third extends ThreeGraphics {
       if (!this.renderer.xr.isPresenting) {
         // scene3D.updateLoopXR(scene3D.sys.game.loop.time, scene3D.sys.game.loop.delta)
         // this.renderer.state.reset()
+        this.preRender()
         if (this.composer) this.composer.render()
         else this.renderer.render(this.scene, this.camera)
+        this.postRender()
       }
     }
 
@@ -171,6 +175,11 @@ class Third extends ThreeGraphics {
       scene3D.events.removeListener('update')
     })
   }
+
+  /** Will be called before THREE.WebGLRenderer.render() */
+  public preRender() {}
+  /** Will be called after THREE.WebGLRenderer.render() */
+  public postRender() {}
 
   /** Destroys a object and its body. */
   public destroy(obj: ExtendedObject3D | ExtendedMesh) {

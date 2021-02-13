@@ -207,6 +207,11 @@ export class Scene3D implements Partial<ThreeGraphics> {
   public preload() {}
   public create() {}
   public update(_time: number, _delta: number) {}
+  /** Will be called before THREE.WebGLRenderer.render() */
+  public preRender() {}
+  /** Will be called after THREE.WebGLRenderer.render() */
+  public postRender() {}
+
   private async _preload() {
     await this.preload?.()
   }
@@ -222,7 +227,10 @@ export class Scene3D implements Partial<ThreeGraphics> {
     this.physics?.updateDebugger()
 
     this.animationMixers.update(delta)
+
+    this.preRender()
     if (this.composer) this.composer.render()
     else this.renderer.render(this.scene, this.camera)
+    this.postRender()
   }
 }
