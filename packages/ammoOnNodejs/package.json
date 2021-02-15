@@ -31,7 +31,8 @@
   "dependencies": {
     "@enable3d/ammo-physics": "^0.22.0-dev.0",
     "@enable3d/common": "^0.22.0-dev.0",
-    "three": "~0.116.0"
+    "fflate": "^0.6.3",
+    "three": "~0.125.2"
   },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"

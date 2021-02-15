@@ -9,6 +9,7 @@ declare global {
     interface Global {
       THREE: any
       Zlib: any
+      fflate: any
     }
   }
 }
@@ -22,12 +23,12 @@ global.THREE = THREE
 
 /**
  * FXBLoader imports
- * inflate.min is (Zlib) required by the fbx loader
+ * fflate is required by the fbx loader
  */
-import 'three/examples/js/loaders/FBXLoader'
-// @ts-ignore
-import * as Zlib from 'three/examples/js/libs/inflate.min.js'
-global.Zlib = Zlib.Zlib
+import './lib/FBXLoader'
+
+import * as fflate from 'fflate'
+global.fflate = fflate
 
 /**
  * GLTFLoader imports
@@ -72,7 +73,6 @@ export class FBXLoader extends Loader {
 }
 
 export class GLTFLoader extends Loader {
-  // @ts-ignore
   private loader = new THREE.GLTFLoader()
 
   public load(absolutePath: string) {
@@ -83,6 +83,7 @@ export class GLTFLoader extends Loader {
         readFile(absolutePath, (err: any, buffer: Buffer) => {
           if (err) throw err
           const trimmed = this.trimBuffer(buffer)
+          // @ts-ignore
           this.loader.parse(
             trimmed,
             '',
