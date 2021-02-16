@@ -16,10 +16,13 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  
+
+    env:
+      CI: true
 
     steps:
-      - name: install required packages for puppeteer
+      - name: Install required packages for puppeteer
         run: |
           sudo apt-get update
           sudo apt-get install -y libgbm-dev
@@ -27,11 +30,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: npm install, bundle, and test
+      - name: Install dependencies
         run: |
           npm install
+
+      - name: Make bundles
+        run: |
           npm run clean:bundles
           npm run bundle
+
+      - name: Run tests
+        run: |
           npm test
-        env:
-          CI: true
