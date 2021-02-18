@@ -21,7 +21,7 @@ const MainScene = () => {
   renderer.setPixelRatio(Math.min(2, DPR))
 
   // orbit controls
-  // const controls = new THREE.OrbitControls(camera, renderer.domElement)
+  const controls = new THREE.OrbitControls(camera, renderer.domElement)
 
   // light
   scene.add(new THREE.HemisphereLight(0xffffbb, 0x080820, 1))
@@ -35,10 +35,13 @@ const MainScene = () => {
   physics.debug?.enable()
   const { factory } = physics
 
+  // add ground
+  physics.add.ground({ width: 50, height: 50 })
+
   /**
    * Add your objects below here
    */
-  physics.add.ground({ width: 50, height: 50 })
+  physics.add.box({ y: 10 }, { lambert: { color: 'red' } })
 
   // clock
   const clock = new THREE.Clock()

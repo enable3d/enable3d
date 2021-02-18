@@ -1,10 +1,14 @@
-import { Project, Scene3D, PhysicsLoader, ExtendedObject3D } from 'enable3d'
+import { Project, Scene3D, PhysicsLoader, ExtendedObject3D, THREE } from 'enable3d'
+import { REVISION } from 'three'
 import { SpotLight, SpotLightHelper, PointLight, DirectionalLight } from '../../threeWrapper/dist'
 
 const isTouchDevice = 'ontouchstart' in window
 
 class MainScene extends Scene3D {
   async create() {
+    console.log('REVISION', THREE.REVISION)
+    console.log('REVISION', REVISION)
+
     this.warpSpeed()
     this.camera.position.set(2, 2, 4)
 

@@ -9,7 +9,7 @@ const MainScene = () => {
   let ground = physics.add.ground({ width: 20, height: 20 })
 
   ground.body.on.collision((otherObject: any, event: string) => {
-    // console.log(otherObject.name, event)
+    console.log(otherObject.name, event)
   })
 
   // clock
@@ -19,9 +19,13 @@ const MainScene = () => {
   const animate = () => {
     physics.update(clock.getDelta() * 1000)
     box.body.transform()
-    // console.log(box.body.position.y)
 
-    requestAnimationFrame(animate)
+    if (box.body.position.y > 2) {
+      console.log(box.body.position.y)
+      requestAnimationFrame(animate)
+    } else {
+      console.log('Done!')
+    }
   }
   requestAnimationFrame(animate)
 }

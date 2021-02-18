@@ -16,11 +16,6 @@ class MainScene extends Scene3D {
   shapes: string
 
   async preload() {
-    this.load.preload('hero', '/assets/adventurer-Sheet.png')
-    this.load.preload('ninja.png', '/assets/ninja-texture-atlas.png')
-    this.load.preload('ninja.json', '/assets/ninja-texture-atlas.json')
-    this.load.preload('grass', '/assets/grass.jpg')
-
     // physics (fruits) TextureAtlas + Shapes
     this.atlas = await this.load.textureAtlas('/assets/fruit/fruit-sprites.png', '/assets/fruit/fruit-sprites.json')
     this.shapes = (await this.load.file('/assets/fruit/fruit-shapes.json')) as string
