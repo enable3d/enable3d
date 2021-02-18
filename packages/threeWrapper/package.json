@@ -4,15 +4,14 @@
   "description": "",
   "main": "lib/index.js",
   "scripts": {
-    "tsc": "npm run webpack",
-    "webpack": "webpack --config webpack.index.js",
+    "tsc": "tsc",
     "update": "npm update",
     "fix": "npm audit fix"
   },
   "keywords": [],
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
-  "dependencies": {
+  "peerDependencies": {
     "three": "~0.125.2"
   },
   "funding": {

@@ -34,8 +34,10 @@
     "@enable3d/common": "^0.22.0-dev.0",
     "@enable3d/three-graphics": "^0.22.0-dev.0",
     "@enable3d/three-wrapper": "^0.22.0-dev.0",
-    "eventemitter3": "^4.0.4",
-    "phaser": "~3.24.1"
+    "eventemitter3": "^4.0.4"
+  },
+  "peerDependencies": {
+    "phaser": "^3.52.0"
   },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"

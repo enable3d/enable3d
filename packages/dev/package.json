@@ -15,8 +15,7 @@
     "@enable3d/ammo-physics": "^0.22.0-dev.0",
     "@enable3d/phaser-extension": "^0.22.0-dev.0",
     "@enable3d/three-graphics": "^0.22.0-dev.0",
-    "enable3d": "^0.22.0-dev.0",
-    "phaser": "~3.24.1"
+    "enable3d": "^0.22.0-dev.0"
   },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"

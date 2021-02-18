@@ -1,7 +1,18 @@
+// copied for three.js and ported to typescript
+
 import { Color, Vector3 } from 'three'
 
 export class Face3 {
-  constructor(a, b, c, normal, color, materialIndex = 0) {
+  a: number
+  b: number
+  c: number
+  normal: Vector3
+  vertexNormals: any
+  color: Color
+  vertexColors: any
+  materialIndex: number
+
+  constructor(a: number, b: number, c: number, normal?: any, color?: Color, materialIndex = 0) {
     this.a = a
     this.b = b
     this.c = c
@@ -16,10 +27,11 @@ export class Face3 {
   }
 
   clone() {
+    // @ts-ignore
     return new this.constructor().copy(this)
   }
 
-  copy(source) {
+  copy(source: any) {
     this.a = source.a
     this.b = source.b
     this.c = source.c

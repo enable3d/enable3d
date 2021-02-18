@@ -19,7 +19,7 @@
     "headless": "nodemon packages/dev/src/headless-node.js",
     "start": "npm-run-all --parallel start:*",
     "start:common": "cd packages/common && tsc --watch",
-    "start:threeWrapper": "cd packages/threeWrapper && npm run webpack",
+    "start:threeWrapper": "cd packages/threeWrapper && tsc --watch",
     "start:ammoPhysics": "cd packages/ammoPhysics && tsc --watch",
     "start:ammoOnNodejs": "cd packages/ammoOnNodejs && tsc --watch",
     "start:threeGraphics": "cd packages/threeGraphics && tsc --watch",
@@ -54,7 +54,9 @@
   "dependencies": {
     "@types/matter-js": "^0.14.10",
     "matter-js": "^0.16.1",
-    "poly-decomp": "^0.3.0"
+    "phaser": "^3.52.0",
+    "poly-decomp": "^0.3.0",
+    "three": "~0.125.2"
   },
   "devDependencies": {
     "@types/node": "^14.14.28",
