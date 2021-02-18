@@ -298,9 +298,13 @@ export class MatterPhysics {
           height: this.height,
           background: 'transparent',
           wireframeBackground: 'transparent',
-          wireframes: false
+          wireframes: false,
+          showConvexHulls: true,
+          showPositions: true,
+          showVelocity: true
         }
-      })
+      } as Matter.IRenderDefinition)
+
       Render.run(this.render)
     }
 
