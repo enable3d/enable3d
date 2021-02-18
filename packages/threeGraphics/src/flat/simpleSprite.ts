@@ -5,6 +5,7 @@
  */
 
 import { Texture, Sprite, SpriteMaterial } from '@enable3d/three-wrapper/dist'
+import { Vector, Body } from 'matter-js'
 
 import { addObject } from './_misc'
 
@@ -15,6 +16,8 @@ export class SimpleSprite extends Sprite {
   private _isInteractive = false
   private _depth = 0
 
+  _bodyOffset = { x: 0, y: 0 }
+
   public texture: Texture
   public width: number
   public height: number
@@ -22,7 +25,13 @@ export class SimpleSprite extends Sprite {
   protected _internalScale = { x: 1, y: 1 }
 
   body: Matter.Body
-  bodyOffset = { x: 0, y: 0 }
+
+  public setBodyPosition(x: number, y: number) {
+    Body.setPosition(this.body, {
+      x: x - this._bodyOffset.x,
+      y: y - this._bodyOffset.y
+    })
+  }
 
   public onInputOver = () => {}
   protected _onInputOver() {}

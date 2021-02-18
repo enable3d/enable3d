@@ -35,7 +35,6 @@ class MainScene extends Scene3D {
 
     for (const fruit in this.atlas.json.frames) {
       if (fruit === 'background') continue
-      //if (fruit !== 'banana') continue
 
       const f = new FLAT.TextureAtlas(this.atlas, fruit)
       this.ui.scene.add(f)
@@ -50,8 +49,11 @@ class MainScene extends Scene3D {
 
       f.body = this.matter.addBodyFromFixtures(x, y, bodies[fruit])
       this.matter.add.existing(f)
+      f.setBodyPosition(x, y)
 
-      if (fruit === 'ground') Matter.Body.setStatic(f.body, true)
+      if (fruit === 'ground') {
+        Matter.Body.setStatic(f.body, true)
+      }
     }
   }
 

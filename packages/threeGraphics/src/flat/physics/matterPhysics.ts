@@ -4,7 +4,8 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Engine, World, Runner, Bodies, Body, Vertices, Render, Events } from 'matter-js'
+import { Engine, World, Runner, Bodies, Body, Vertices, Render, Events, Vector } from 'matter-js'
+import { Vector2 } from 'three'
 import { SimpleSprite } from '../simpleSprite'
 
 const debugSettings = {
@@ -129,10 +130,7 @@ export class MatterPhysics {
       })
     else body = bodies[0]
 
-    // [dirty fix?] set body offset (works not all the time)
-    const c = Vertices.centre(body.vertices)
-    Body.setCentre(body, c)
-    Body.setPosition(body, { x, y: y })
+    Body.setPosition(body, { x, y })
 
     return body
   }
@@ -198,8 +196,32 @@ export class MatterPhysics {
   }
 
   private existing(sprite: SimpleSprite) {
-    this.add.body(sprite.body)
+    this.add.bodyToSprite(sprite)
     this._objects.set(sprite.body.id.toString(), sprite)
+  }
+
+  private calcBodyOffset(sprite: SimpleSprite) {
+    const body = sprite.body
+
+    // https://github.com/liabru/matter-js/issues/211#issuecomment-184804576
+    const width = body.bounds.max.x - body.bounds.min.x
+    const height = body.bounds.max.y - body.bounds.min.y
+
+    const topLeft = Vector.sub(body.bounds.min, body.position)
+
+    const centerOfBody = { x: width / 2, y: height / 2 }
+    const centerOfMass = body.position
+
+    const offsetX = topLeft.x + width / 2
+    const offsetY = topLeft.y + height / 2
+    const offset = { x: offsetX, y: offsetY }
+
+    sprite._bodyOffset = offset
+  }
+
+  private _addBodyToSprite(sprite: SimpleSprite) {
+    this.add.body(sprite.body)
+    this.calcBodyOffset(sprite)
   }
 
   private _addBody(
@@ -218,6 +240,7 @@ export class MatterPhysics {
   get add() {
     return {
       body: this._addBody.bind(this),
+      bodyToSprite: this._addBodyToSprite.bind(this),
       fromVertices: this.fromVertices.bind(this),
       circle: this.circle.bind(this),
       existing: this.existing.bind(this),
@@ -235,8 +258,13 @@ export class MatterPhysics {
       const { angle, position } = body
       const { x, y } = position
 
-      object.setPosition(x, this.height - y)
+      // https://github.com/liabru/matter-js/issues/211#issuecomment-184804576
+      const offset = new Vector2(object._bodyOffset.x, object._bodyOffset.y)
+      offset.rotateAround(new Vector2(), angle)
+
+      object.setPosition(x + offset.x, this.height - y - offset.y)
       object.setRotation(-angle)
+
       adjustDebugColor(body)
     })
   }
