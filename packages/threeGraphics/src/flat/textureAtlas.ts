@@ -138,8 +138,8 @@ export class TextureAtlas extends ActionSprite {
 
     // if the frame is trimmed
     if (trimmed) {
-      const newOffX = ((sourceSize.w - frame.w) / 2 - spriteSourceSize.x) / 100
-      const newOffY = ((sourceSize.h - frame.h) / 2 - spriteSourceSize.y) / 100
+      const newOffX = ((sourceSize.w - frame.w) / 2 - spriteSourceSize.x) / (1 / this._internalScale.x)
+      const newOffY = ((sourceSize.h - frame.h) / 2 - spriteSourceSize.y) / (1 / this._internalScale.x)
 
       // x
       if (!this._flipX) this.position.x -= newOffX - this.positionOffset.x
