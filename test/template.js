@@ -43,7 +43,7 @@ describe.each([EXAMPLES_PLACEHOLDER])('Example: (%s)', example => {
     const bundles = ['ammoPhysics', 'framework', 'phaserExtension'].map(n => {
       return {
         bundle: n,
-        regex: new RegExp(`https://enable3d.io/lib/enable3d.${n}.[\\S]+.min.js$`, 'gm')
+        regex: new RegExp(`https://enable3d.io/lib/enable3d/enable3d.${n}.[\\S]+.min.js$`, 'gm')
       }
     })
 
