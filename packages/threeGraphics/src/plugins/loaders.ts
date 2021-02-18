@@ -14,11 +14,12 @@ import {
   Texture,
   SVGLoader,
   SVGResult,
-  RGBAFormat,
   FileLoader,
   ImageLoader,
   ObjectLoader
 } from '@enable3d/three-wrapper/dist/index'
+
+import type { Atlas, JSONHash, JSONArrayFrames } from '../flat/textureAtlas'
 
 export default class Loaders {
   private _fileLoader: FileLoader
@@ -78,6 +79,43 @@ export default class Loaders {
         })
       }
     })
+  }
+
+  public async textureAtlas(texture: string, json: string, _type = 'JSONHash'): Promise<Atlas> {
+    let parsed = JSON.parse((await this.file(json)) as any)
+
+    // convert JSONArray to JSONHash
+    const isJSONArray = parsed.textures
+    if (isJSONArray) {
+      const frames = parsed.textures[0].frames as JSONArrayFrames
+
+      let jsonHash: JSONHash = { frames: {} }
+
+      frames.forEach(frame => {
+        jsonHash = {
+          ...jsonHash,
+          frames: {
+            ...jsonHash.frames,
+            [frame.filename]: {
+              frame: frame.frame,
+              rotated: frame.rotated,
+              sourceSize: frame.sourceSize,
+              spriteSourceSize: frame.spriteSourceSize,
+              trimmed: frame.trimmed
+            }
+          }
+        }
+      })
+
+      parsed = jsonHash
+    }
+
+    const atlas = {
+      texture: await this.texture(texture),
+      json: parsed as JSONHash
+    }
+
+    return atlas
   }
 
   public file(url: string) {

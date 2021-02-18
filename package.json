@@ -51,6 +51,11 @@
     "url": "https://github.com/enable3d/enable3d/issues"
   },
   "homepage": "https://github.com/enable3d/enable3d#readme",
+  "dependencies": {
+    "@types/matter-js": "^0.14.10",
+    "matter-js": "^0.16.1",
+    "poly-decomp": "^0.3.0"
+  },
   "devDependencies": {
     "@types/node": "^14.14.28",
     "copy-webpack-plugin": "^7.0.0",

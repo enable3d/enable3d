@@ -2,7 +2,7 @@ const path = require('path')
 /**
  * Makes the minified bundle
  */
-module.exports = (env) => {
+module.exports = env => {
   return {
     mode: 'production',
     devtool: 'source-map',
@@ -17,7 +17,9 @@ module.exports = (env) => {
       extensions: ['.ts', '.js']
     },
     externals: {
-      phaser: 'Phaser'
+      phaser: 'Phaser',
+      'matter-js': 'Matter',
+      'poly-decomp': 'poly-decomp'
     },
     module: {
       rules: [

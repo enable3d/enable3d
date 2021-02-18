@@ -12,6 +12,9 @@ export { ExtendedMesh } from '@enable3d/common/dist/extendedMesh'
 export { ExtendedObject3D } from '@enable3d/common/dist/extendedObject3D'
 export { ExtendedGroup } from '@enable3d/common/dist/extendedGroup'
 
+// experimantal flat components
+export * as FLAT from '@enable3d/three-graphics/dist/flat/index'
+
 import * as THREE from '@enable3d/three-wrapper/dist/index'
 export { THREE }
 

@@ -25,11 +25,13 @@ export default class Cameras {
       near = 0.1,
       far = 2000,
       x = 0,
-      y = 0,
-      z = 0
+      y = 5,
+      z = 25
     } = config
+
     const camera = new PerspectiveCamera(fov, aspect, near, far)
     camera.position.set(x, y, z)
+
     return camera
   }
 
@@ -38,19 +40,22 @@ export default class Cameras {
     // const { width, height } = scene.cameras.main
     const width = window.innerWidth
     const height = window.innerHeight
+
     const {
-      left = width / -100,
-      right = width / 100,
-      top = height / 100,
-      bottom = height / -100,
+      left = width / -2,
+      right = width / 2,
+      top = height / 2,
+      bottom = height / -2,
       near = 1,
       far = 1000,
       x = 0,
       y = 0,
-      z = 0
+      z = 10
     } = config
+
     const camera = new OrthographicCamera(left, right, top, bottom, near, far)
     camera.position.set(x, y, z)
+
     return camera
   }
 }

@@ -30,6 +30,11 @@
     "@enable3d/common": "^0.22.0-dev.0",
     "@enable3d/three-wrapper": "^0.22.0-dev.0"
   },
+  "peerDependencies": {
+    "@types/matter-js": "^0.14.10",
+    "matter-js": "^0.16.1",
+    "poly-decomp": "^0.3.0"
+  },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"
   }
