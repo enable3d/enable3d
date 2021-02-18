@@ -34,7 +34,7 @@
     "bundle:ammoPhysics": "cd packages/ammoPhysics && npm run bundle",
     "bundle:enable3d": "cd packages/enable3d && npm run bundle",
     "postinstall": "lerna bootstrap --no-ci",
-    "lerna-version": "lerna version --no-commit-hooks --no-git-tag-version && npm run bundle",
+    "lerna-version": "lerna version --no-commit-hooks --no-git-tag-version && npm run build && npm run bundle",
     "test": "npm-run-all test:*",
     "test:pre": "npm run test:clean && node test/preTest.js",
     "test:jest": "jest --maxConcurrency=4 --maxWorkers=4",
