@@ -180,7 +180,7 @@ export default class WarpSpeed {
       // ground
       const geometry = { name: 'ground', width: 21, height: 21, depth: 1, y: -0.5 }
       const material = {
-        phong: { map: addGrid ? texture : null, transparent: true, opacity: 0.8, color: 0xffffff }
+        phong: { map: addGrid ? texture : null, color: 0xffffff }
       }
 
       let ground: ExtendedObject3D
