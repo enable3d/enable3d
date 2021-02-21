@@ -35,8 +35,11 @@ export class ExtendedObject3D extends Object3D {
   public name: string
   public body: PhysicsBody
   public hasBody: boolean = false
-  public fragmentDepth: number
-  public breakable: boolean
+
+  // convex object breaking
+  public fragmentDepth = 0
+  public breakable = false
+  public fractureImpulse = 1
 
   private anims: any = {} // deprecated
 

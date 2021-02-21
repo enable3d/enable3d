@@ -17,8 +17,12 @@ export class ExtendedMesh extends Mesh {
   public name: string
   public body: PhysicsBody
   public hasBody: boolean = false
-  public fragmentDepth: number
-  public breakable: boolean
+
+  // convex object breaking
+  public fragmentDepth = 0
+  public breakable = false
+  public fractureImpulse = 1
+
   constructor(geometry?: BufferGeometry | undefined, material?: Material | Material[] | undefined) {
     super(geometry, material)
     this.name = `object-${this.id}`

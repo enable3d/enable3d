@@ -255,7 +255,7 @@ class AmmoPhysics extends EventEmitter {
   private createDebrisFromBreakableObject(object: ExtendedObject3D, parent: ExtendedObject3D) {
     if (this.scene === 'headless') return
 
-    object.material = this.defaultMaterial.get()
+    object.material = parent.material
     object.shape = 'hull'
     object.fragmentDepth = parent.fragmentDepth + 1
 
@@ -266,6 +266,7 @@ class AmmoPhysics extends EventEmitter {
     // @ts-ignore
     this.addExisting(object)
 
+    object.body.fractureImpulse = parent.body.fractureImpulse
     object.body.breakable = false
     // make this fragment breakable in 2.5seconds
     setTimeout(() => {
@@ -402,6 +403,9 @@ class AmmoPhysics extends EventEmitter {
       const breakable0 = threeObject0.body.breakable
       const breakable1 = threeObject1.body.breakable
 
+      const fractureImpulse0 = threeObject0.body.fractureImpulse
+      const fractureImpulse1 = threeObject1.body.fractureImpulse
+
       const checkCollisions = checkCollisions0 || checkCollisions1
       const checkBreakable = breakable0 || breakable1
 
@@ -460,7 +464,6 @@ class AmmoPhysics extends EventEmitter {
       /**
        * check for breakable objects (subdivision)
        */
-      const fractureImpulse = 5 //250
       const MAX_FRAGMENT_DEPTH = 2
 
       // since the library convexBreaker makes use of three's userData.ammoPhysicsData
@@ -482,11 +485,9 @@ class AmmoPhysics extends EventEmitter {
         breakable: breakable1,
         physicsBody: rb1
       }
-      if (typeof threeObject0.fragmentDepth === 'undefined') threeObject0.fragmentDepth = 0
-      if (typeof threeObject1.fragmentDepth === 'undefined') threeObject1.fragmentDepth = 0
 
       // threeObject0
-      if (breakable0 && maxImpulse > fractureImpulse && threeObject0.fragmentDepth < MAX_FRAGMENT_DEPTH) {
+      if (breakable0 && maxImpulse > fractureImpulse0 && threeObject0.fragmentDepth < MAX_FRAGMENT_DEPTH) {
         const debris = this.convexBreaker.subdivideByImpact(threeObject0, this.impactPoint, this.impactNormal, 1, 2) //, 1.5)
 
         const numObjects = debris.length
@@ -504,7 +505,7 @@ class AmmoPhysics extends EventEmitter {
       }
 
       // threeObject1
-      if (breakable1 && maxImpulse > fractureImpulse && threeObject1.fragmentDepth < MAX_FRAGMENT_DEPTH) {
+      if (breakable1 && maxImpulse > fractureImpulse1 && threeObject1.fragmentDepth < MAX_FRAGMENT_DEPTH) {
         const debris = this.convexBreaker.subdivideByImpact(threeObject1, this.impactPoint, this.impactNormal, 1, 2) //, 1.5)
 
         const numObjects = debris.length
@@ -853,7 +854,8 @@ class AmmoPhysics extends EventEmitter {
       breakable = false,
       addChildren = true,
       margin = 0.01,
-      ignoreScale = false
+      ignoreScale = false,
+      fractureImpulse = 1
     } = config
 
     if (ignoreScale) scale.set(1, 1, 1)
@@ -864,7 +866,9 @@ class AmmoPhysics extends EventEmitter {
       const compoundShape = this.mergeCollisionShapesToCompoundShape(collisionShapes)
       const localTransform = this.finishCollisionShape(compoundShape, pos, quat, scale, margin)
       const rigidBody = this.collisionShapeToRigidBody(compoundShape, localTransform, mass, isKinematicObject)
-      this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, breakable, offset)
+      this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, offset)
+      object.body.breakable = breakable
+      object.body.fractureImpulse = fractureImpulse
       object.body.ignoreScale = ignoreScale
       return
     }
@@ -908,7 +912,9 @@ class AmmoPhysics extends EventEmitter {
     const localTransform = this.finishCollisionShape(collisionShape, pos, quat, scale, margin)
     const rigidBody = this.collisionShapeToRigidBody(collisionShape, localTransform, mass, isKinematicObject)
 
-    this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, breakable, offset)
+    this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, offset)
+    object.body.breakable = breakable
+    object.body.fractureImpulse = fractureImpulse
     object.body.ignoreScale = ignoreScale
   }
 
@@ -918,7 +924,6 @@ class AmmoPhysics extends EventEmitter {
     collisionFlags: number,
     collisionGroup: number,
     collisionMask: number,
-    breakable: boolean,
     offset?: { x?: number; y?: number; z?: number }
   ) {
     this.rigidBodies.push(object)
@@ -934,7 +939,6 @@ class AmmoPhysics extends EventEmitter {
     // @ts-ignore
     rigidBody.threeObject = object
 
-    if (breakable) object.body.breakable = true
     if (offset) object.body.offset = { x: 0, y: 0, z: 0, ...offset }
 
     object.body.setCollisionFlags(collisionFlags)

@@ -17,7 +17,10 @@ class PhysicsBody {
   public name: string
   public errors: string[] = []
   public checkCollisions = false
+
   public breakable = false
+  public fractureImpulse = 1
+
   public didUpdate = false
   /** Skip syncing the mesh to the physics body. */
   public skipUpdate = false
@@ -324,7 +327,7 @@ class PhysicsBody {
    * @param angular A number from 0 to 1.
    */
   public setDamping(linear: number, angular: number) {
-    this.ammo.setDamping(linear, angular);
+    this.ammo.setDamping(linear, angular)
   }
 
   /** Set per body gravity */
