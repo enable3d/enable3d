@@ -10,6 +10,38 @@ import { LinearFilter, Texture } from 'three'
 import { SimpleSprite, canvas } from './index'
 import { createNewTexture } from './_misc'
 
+export interface TextConfig {
+  align?: 'center' | 'left' | 'right'
+  background?: string | CanvasGradient | CanvasPattern
+  baseline?: CanvasTextBaseline
+  borderColor?: string
+  borderRadius?: number
+  borderWidth?: number
+  fillStyle?: string | CanvasGradient | CanvasPattern
+  fontFamily?: string
+  fontSize?: number
+  fontWeight?: string
+  lineHeight?: number
+  lineWidth?: number
+  offset?: { x?: number; y?: number }
+  padding?: number | { x?: number; y?: number }
+  strokeStyle?: string | CanvasGradient | CanvasPattern
+}
+
+// https://stackoverflow.com/a/7838871
+const roundRect = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) => {
+  if (w < 2 * r) r = w / 2
+  if (h < 2 * r) r = h / 2
+
+  ctx.beginPath()
+  ctx.moveTo(x + r, y)
+  ctx.arcTo(x + w, y, x + w, y + h, r)
+  ctx.arcTo(x + w, y + h, x, y + h, r)
+  ctx.arcTo(x, y + h, x, y, r)
+  ctx.arcTo(x, y, x + w, y, r)
+  ctx.closePath()
+}
+
 const fontHeightCache: Map<string, number> = new Map()
 
 const calcHeight = (text: string, fontSize: number, fontFamily: string, lineHeight: number = 1) => {
@@ -42,23 +74,54 @@ const calcWidth = (ctx: CanvasRenderingContext2D, lines: string[]) => {
   return Math.max(...lines.map(line => Math.ceil(ctx.measureText(line).width)))
 }
 
-const createTextImage = (text: string, color: string) => {
+const createTextImage = (text: string, config: TextConfig) => {
+  const {
+    align = 'center',
+    background = 'gray',
+    baseline = 'middle',
+    borderColor = 'yellow',
+    borderRadius = 20,
+    borderWidth = 20,
+    fillStyle = 'DarkSlateBlue',
+    fontFamily = 'Arial',
+    fontSize = 96,
+    fontWeight = 'bold',
+    lineHeight = 1,
+    lineWidth = 8,
+    padding = 12,
+    strokeStyle = 'Red'
+  } = config
+
+  // get offset
+  const { offset: { x: offsetX = 0, y: offsetY = 0 } = {} } = config
+
+  // get padding
+  let paddingX
+  let paddingY
+  if (typeof padding !== 'number') {
+    paddingX = padding.x || 0
+    paddingY = padding.y || 0
+  } else {
+    paddingX = padding
+    paddingY = padding
+  }
+
+  const font = `${fontWeight} ${fontSize}px ${fontFamily}`
+
   const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
 
   // clean up
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-  const fontSize = 72
-  const fontFamily = 'Arial'
-  const lineHeight = 1
   const lines = text.split('\n')
 
-  ctx.font = `bold ${fontSize}px ${fontFamily}`
+  ctx.font = font
 
-  let line_Height = calcHeight(text, fontSize, fontFamily, lineHeight)
+  let line_height = calcHeight(text, fontSize, fontFamily, lineHeight)
+  let line_width = fillStyle ? lineWidth * 2 : lineWidth
 
-  let height = line_Height * lines.length
-  let width = calcWidth(ctx, lines)
+  let height = line_height * lines.length + paddingY * 2 + borderWidth * 2
+  let width = calcWidth(ctx, lines) + line_width + paddingX * 2 + borderWidth * 2
 
   // adjust to PowerOfTwo (WebGL1 only)
   // width = Math.max(2, MathUtils.ceilPowerOfTwo(width))
@@ -67,20 +130,77 @@ const createTextImage = (text: string, color: string) => {
   canvas.height = height
   canvas.width = width
 
+  // border
+  if (borderColor) {
+    ctx.strokeStyle = borderColor
+    roundRect(
+      ctx,
+      borderWidth / 2,
+      borderWidth / 2,
+      canvas.width - borderWidth,
+      canvas.height - borderWidth,
+      borderRadius
+    )
+    ctx.lineWidth = borderWidth
+    ctx.stroke()
+  }
+
   // background
-  // ctx.fillStyle = '#c4c4c4'
-  // ctx.fillRect(0, 0, canvas.width, canvas.height)
+  if (background) {
+    ctx.fillStyle = background
+    roundRect(
+      ctx,
+      borderWidth,
+      borderWidth,
+      canvas.width - borderWidth * 2,
+      canvas.height - borderWidth * 2,
+      borderColor ? borderRadius / 2 : borderRadius
+    )
+    ctx.fill()
+
+    // if (borderColor && borderWidth)
+    //   ctx.fillRect(borderWidth, borderWidth, canvas.width - borderWidth * 2, canvas.height - borderWidth * 2)
+    // else ctx.fillRect(0, 0, canvas.width, canvas.height)
+  }
 
   // text
-  ctx.font = `bold ${fontSize}px ${fontFamily}`
-  ctx.textAlign = 'left'
-  ctx.textBaseline = 'middle'
-  ctx.fillStyle = color
+  ctx.font = font
+  ctx.textAlign = align
+  ctx.textBaseline = baseline
+
+  if (strokeStyle && lineWidth) {
+    ctx.strokeStyle = strokeStyle
+    ctx.lineWidth = line_width
+  }
+
+  if (fillStyle) ctx.fillStyle = fillStyle
 
   for (var i = 0; i < lines.length; i++) {
-    const top = i * line_Height + line_Height / 2
-    const left = 0
-    ctx.fillText(lines[i], left, top)
+    let top = i * line_height + line_height / 2
+    let left = 0
+
+    if (align === 'left') {
+      left = line_width / 2
+      left += paddingX
+      left += borderWidth
+    }
+    if (align === 'center') {
+      left = width / 2
+    }
+    if (align === 'right') {
+      left = width - line_width / 2
+      left -= paddingX
+      left -= borderWidth
+    }
+
+    top += paddingY
+    top += borderWidth
+
+    top += offsetY
+    left += offsetX
+
+    if (strokeStyle && lineWidth) ctx.strokeText(lines[i], left, top)
+    if (fillStyle) ctx.fillText(lines[i], left, top)
   }
 
   // https://github.com/makc/Edelweiss/blob/c3e63135f2f57f1a422c30abbeca35e579b84f02/docs/js/AssetManager.js#L245
@@ -105,8 +225,8 @@ export class TextTexture extends Texture {
     return new this.constructor(this._text).copy(this)
   }
 
-  constructor(text: string, color: string = '#00ff00') {
-    const { imageData, width, height } = createTextImage(text, color)
+  constructor(text: string, config: TextConfig = {}) {
+    const { imageData, width, height } = createTextImage(text, config)
     super(imageData)
 
     this.width = width
@@ -130,14 +250,14 @@ export class TextSprite extends SimpleSprite {
     this._text = texture.getText()
   }
 
-  setText(text: string, color: string = '#00ff00') {
+  setText(text: string, config: TextConfig = {}) {
     this._text = text
 
     // dispose
     this.texture.dispose()
 
     // create
-    this.texture = this.material.map = createNewTexture(createTextImage(text, color).imageData)
+    this.texture = this.material.map = createNewTexture(createTextImage(text, config).imageData)
 
     // update size
     this.height = this.texture.image.height
