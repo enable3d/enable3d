@@ -5,7 +5,7 @@
  */
 
 import { PerspectiveCameraConfig, OrthographicCameraConfig } from '@enable3d/common/dist/types'
-import { PerspectiveCamera, OrthographicCamera } from '@enable3d/three-wrapper/dist/index'
+import { PerspectiveCamera, OrthographicCamera } from 'three'
 
 export default class Cameras {
   public perspectiveCamera(config: PerspectiveCameraConfig = {}): PerspectiveCamera {

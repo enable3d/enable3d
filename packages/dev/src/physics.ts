@@ -1,4 +1,6 @@
-import { THREE } from '@enable3d/three-graphics'
+import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+
 import { AmmoPhysics, PhysicsLoader, ExtendedObject3D, ExtendedMesh } from '@enable3d/ammo-physics'
 
 const MainScene = () => {
@@ -21,7 +23,7 @@ const MainScene = () => {
   renderer.setPixelRatio(Math.min(2, DPR))
 
   // orbit controls
-  const controls = new THREE.OrbitControls(camera, renderer.domElement)
+  const controls = new OrbitControls(camera, renderer.domElement)
 
   // light
   scene.add(new THREE.HemisphereLight(0xffffbb, 0x080820, 1))

@@ -5,12 +5,16 @@ import {
   WebGLRenderer,
   AmbientLight,
   DirectionalLight,
+  HemisphereLight,
+  Mesh,
+  BackSide,
+  ShaderMaterial,
+  SphereBufferGeometry,
   Color,
-  HemisphereLight
-} from '@enable3d/three-wrapper/dist'
+  RepeatWrapping
+} from 'three'
 
-import { Sky, OrbitControls } from '@enable3d/three-wrapper/dist/index'
-import * as THREE from '@enable3d/three-wrapper/dist/index'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { Lights, Loaders, Factories } from '.'
 import { AmmoPhysics, ExtendedObject3D } from '@enable3d/ammo-physics'
 
@@ -115,21 +119,21 @@ export default class WarpSpeed {
       ].join('\n')
 
       const uniforms = {
-        topColor: { value: new THREE.Color(0x0077ff) },
-        bottomColor: { value: new THREE.Color(0xedf5ff) },
+        topColor: { value: new Color(0x0077ff) },
+        bottomColor: { value: new Color(0xedf5ff) },
         offset: { value: 33 },
         exponent: { value: 0.6 }
       }
 
-      var skyGeo = new THREE.SphereBufferGeometry(500, 32, 15)
-      var skyMat = new THREE.ShaderMaterial({
+      var skyGeo = new SphereBufferGeometry(500, 32, 15)
+      var skyMat = new ShaderMaterial({
         uniforms: uniforms,
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
-        side: THREE.BackSide
+        side: BackSide
       })
 
-      var sky = new THREE.Mesh(skyGeo, skyMat)
+      var sky = new Mesh(skyGeo, skyMat)
       this.scene.add(sky)
     }
 
@@ -174,7 +178,7 @@ export default class WarpSpeed {
 
       const texture = await this.load.texture(gridData)
 
-      texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+      texture.wrapS = texture.wrapT = RepeatWrapping
       texture.repeat.set(21, 21)
 
       // ground

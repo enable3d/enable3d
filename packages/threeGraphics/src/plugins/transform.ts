@@ -1,6 +1,5 @@
-import { ExtendedObject3D } from '@enable3d/ammo-physics'
+import { Geometry } from 'three/examples/jsm/deprecated/Geometry'
 import {
-  Geometry,
   BufferGeometry,
   Vector3,
   Shape,
@@ -12,8 +11,8 @@ import {
   PlaneBufferGeometry,
   MeshBasicMaterial,
   Mesh
-} from '@enable3d/three-wrapper/dist/index'
-import { SVGLoader } from '@enable3d/three-wrapper/dist/index'
+} from 'three'
+import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader'
 import { fromGeometry } from './csg/_fromGeometry'
 
 /**

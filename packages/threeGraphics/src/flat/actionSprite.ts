@@ -5,7 +5,7 @@
  */
 
 import { SimpleSprite } from './simpleSprite'
-import { Texture, Sprite, SpriteMaterial, Vector3 } from '@enable3d/three-wrapper/dist'
+import { Texture, Sprite, SpriteMaterial, Vector3 } from 'three'
 import { EventEmitter } from 'eventemitter3'
 
 interface Anims {

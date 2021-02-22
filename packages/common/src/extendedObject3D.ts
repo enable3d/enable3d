@@ -4,18 +4,9 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import {
-  AnimationClip,
-  AnimationMixer,
-  Mesh,
-  Line,
-  Points,
-  Object3D,
-  Vector3,
-  LoopOnce
-} from '@enable3d/three-wrapper/dist/index'
+import { AnimationClip, AnimationMixer, Mesh, Line, Points, Object3D, Vector3, LoopOnce } from 'three'
 import PhysicsBody from './physicsBody'
-import { AnimationAction } from '@enable3d/three-wrapper/dist/index'
+import { AnimationAction } from 'three'
 
 export interface ExtendedObject3D extends Line, Mesh, Points {
   isLine: any

@@ -1,6 +1,6 @@
 // copied from https://github.com/mrdoob/three.js/blob/670b1e9e85356d98efa4c702e93c85dd52f01e1e/src/core/DirectGeometry.js
 
-import { Vector2 } from '@enable3d/three-wrapper/dist/index'
+import { Vector2 } from 'three'
 
 export class DirectGeometry {
   vertices: any[] = []

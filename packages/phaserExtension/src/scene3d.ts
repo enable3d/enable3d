@@ -8,7 +8,7 @@ import Third from './third'
 import * as Phaser from 'phaser'
 import { ThreeGraphicsConfig } from '@enable3d/common/dist/types'
 import { WarpedStartFeatures } from '@enable3d/three-graphics/dist/plugins'
-import { Color } from '@enable3d/three-wrapper/dist'
+import { Color } from 'three'
 
 export class Scene3D extends Phaser.Scene {
   constructor(config: string | Phaser.Types.Scenes.SettingsConfig) {

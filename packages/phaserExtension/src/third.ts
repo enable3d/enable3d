@@ -4,12 +4,13 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { WebGLRenderer, ThreeGraphics } from '@enable3d/three-graphics/dist/index'
+import { ThreeGraphics } from '@enable3d/three-graphics/dist/index'
 import { ThreeGraphicsConfig, ExtendedObject3D, ExtendedMesh } from '@enable3d/common/dist/types'
 import { Scene3D } from './scene3d'
 
 import * as Plugins from '@enable3d/three-graphics/dist/plugins/index'
-import { EffectComposer } from '@enable3d/three-wrapper/dist'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { WebGLRenderer } from 'three'
 
 /**
  * The phaser wrapper for ThreeGraphics, which is a separate module

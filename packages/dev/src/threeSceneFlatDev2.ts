@@ -1,7 +1,7 @@
 import { Project, Scene3D, PhysicsLoader, ExtendedMesh, FLAT, THREE } from 'enable3d'
 import * as Matter from 'matter-js'
 
-import { Camera, Scene } from '../../common/node_modules/@enable3d/three-wrapper/dist'
+import { Camera, Scene } from 'three'
 
 class MainScene extends Scene3D {
   ui: {

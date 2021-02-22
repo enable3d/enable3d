@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Mesh, Vector3, BufferGeometry, Material } from '@enable3d/three-wrapper/dist/index'
+import { Mesh, Vector3, BufferGeometry, Material } from 'three'
 import PhysicsBody from './physicsBody'
 
 export interface ExtendedMesh extends Mesh {}

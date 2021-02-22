@@ -8,7 +8,7 @@
 // https://felixmariotto.github.io/from_indexed_texture
 // https://github.com/felixmariotto/three-SpriteMixer/blob/master/examples/from_indexed_texture.html
 
-import { RepeatWrapping, Texture } from '@enable3d/three-wrapper/dist'
+import { RepeatWrapping, Texture } from 'three'
 import { ActionSprite } from './actionSprite'
 
 export interface SpriteSheetFrameOptions {

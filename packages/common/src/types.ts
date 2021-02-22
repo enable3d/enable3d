@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import {
+import type {
   MeshStandardMaterialParameters,
   MeshBasicMaterialParameters,
   MeshPhongMaterialParameters,
@@ -14,34 +14,20 @@ import {
   PerspectiveCamera,
   OrthographicCamera,
   Shape,
-  // ExtrudeGeometryOptions, // missing since three.js r121
   MeshLambertMaterialParameters,
   Texture,
   MeshToonMaterialParameters,
   MeshPhysicalMaterialParameters,
   Material,
   WebGLRenderer,
-  Vector3,
   Quaternion
-} from '@enable3d/three-wrapper/dist/index'
-import { ExtendedObject3D } from './extendedObject3D'
-import { ExtendedMesh } from './extendedMesh'
+} from 'three'
+
+import type { ExtendedObject3D } from './extendedObject3D'
+import type { ExtendedMesh } from './extendedMesh'
 
 export { ExtendedObject3D }
 export { ExtendedMesh }
-// TODO fix this export
-// export { ThirdPersonControls } from '../misc/thirdPersonControls'
-export {
-  AnimationMixer,
-  AnimationClip,
-  AnimationAction,
-  Object3D,
-  Mesh,
-  Material,
-  Line,
-  Points,
-  Group
-} from '@enable3d/three-wrapper/dist/index'
 
 export interface ThreeGraphicsConfig {
   anisotropy?: number

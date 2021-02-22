@@ -33,9 +33,15 @@
  *
  */
 
-import { Line3, Mesh, Plane, Vector3 } from '@enable3d/three-wrapper/dist/index'
-import { ConvexGeometry } from '@enable3d/three-wrapper/dist/index'
+import { Line3, Mesh, Plane, Vector3 } from 'three'
+import { ConvexGeometry } from './externals'
 import logger from '@enable3d/common/dist/logger'
+
+const newConvexGeometry = (points: Vector3[]) => {
+  // @ts-ignore
+  let _newConvexGeometry = window.THREE && window.THREE.ConvexGeometry ? window.THREE.ConvexGeometry : ConvexGeometry
+  return new _newConvexGeometry(points)
+}
 
 const ConvexObjectBreaker = function (minSizeForBreak?: number, smallDelta?: number) {
   // @ts-ignore
@@ -389,7 +395,7 @@ ConvexObjectBreaker.prototype = {
      */
     if (numPoints1 > 4) {
       try {
-        object1 = new Mesh(new ConvexGeometry(points1), object.material)
+        object1 = new Mesh(newConvexGeometry(points1), object.material)
         object1.position.copy(this.tempCM1)
         object1.quaternion.copy(object.quaternion)
         object1.userData = object.userData
@@ -411,7 +417,7 @@ ConvexObjectBreaker.prototype = {
 
     if (numPoints2 > 4) {
       try {
-        object2 = new Mesh(new ConvexGeometry(points2), object.material)
+        object2 = new Mesh(newConvexGeometry(points2), object.material)
         object2.position.copy(this.tempCM2)
         object2.quaternion.copy(object.quaternion)
         object2.userData = object.userData

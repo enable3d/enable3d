@@ -18,10 +18,13 @@ module.exports = env => {
       extensions: ['.ts', '.js']
     },
     externals: {
-      '@enable3d/three-wrapper/dist/index': 'THREE',
+      three: 'THREE',
       phaser: 'Phaser',
       'matter-js': 'Matter',
-      'poly-decomp': 'poly-decomp'
+      'poly-decomp': 'poly-decomp',
+      // some externals
+      'three/examples/jsm/geometries/ConvexGeometry': 'ConvexGeometry',
+      'three/examples/jsm/deprecated/Geometry': 'Geometry'
     },
     module: {
       rules: [

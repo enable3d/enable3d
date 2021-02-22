@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Group } from '@enable3d/three-wrapper/dist/index'
+import { Group } from 'three'
 import PhysicsBody from './physicsBody'
 
 export interface ExtendedGroup extends Group {}

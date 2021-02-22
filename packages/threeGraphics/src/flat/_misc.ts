@@ -14,7 +14,7 @@ import {
   Vector2,
   WebGLRenderer,
   WebGLRenderTarget
-} from '@enable3d/three-wrapper/dist'
+} from 'three'
 import { SimpleSprite } from './simpleSprite'
 
 export const createNewTexture = (image: any) => {

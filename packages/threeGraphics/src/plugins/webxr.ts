@@ -4,12 +4,15 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import * as THREE from '@enable3d/three-wrapper/dist/index'
+import * as THREE from 'three'
+
+import { VRButton } from 'three/examples/jsm/webxr/VRButton'
+import { XRControllerModelFactory } from 'three/examples/jsm/webxr/XRControllerModelFactory'
 
 export default class WebXR {
   // dot: THREE.Mesh
   cameraGroup: THREE.Group
-  controllerModelFactory = new THREE.XRControllerModelFactory()
+  controllerModelFactory = new XRControllerModelFactory()
 
   constructor(
     private _renderer: THREE.WebGLRenderer,
@@ -29,7 +32,7 @@ export default class WebXR {
     _renderer.xr.enabled = true
 
     // add vr button
-    const vrButton = THREE.VRButton.createButton(_renderer)
+    const vrButton = VRButton.createButton(_renderer)
     vrButton.style.cssText += 'background: rgba(0, 0, 0, 0.8); '
     document.body.appendChild(vrButton)
   }

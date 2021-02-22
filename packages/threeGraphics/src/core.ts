@@ -4,11 +4,11 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import * as THREE from '@enable3d/three-wrapper/dist/index'
+import * as THREE from 'three'
 import * as Types from '@enable3d/common/dist/types'
 import Cameras from './plugins/cameras'
 import { AmmoPhysics } from '@enable3d/ammo-physics/dist/index'
-import { sRGBEncoding } from '@enable3d/three-wrapper/dist/index'
+import { sRGBEncoding } from 'three'
 
 export class ThreeGraphics {
   public cache: typeof THREE.Cache

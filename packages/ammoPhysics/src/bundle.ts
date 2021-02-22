@@ -3,5 +3,5 @@
  */
 export * from './index'
 
-// import * as THREE from '@enable3d/three-wrapper/dist/index'
+// import * as THREE from 'three'
 // export { THREE }

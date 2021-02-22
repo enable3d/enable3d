@@ -7,7 +7,7 @@
 import { ExtendedObject3D, XYZ } from './types'
 
 import { EventEmitter } from 'eventemitter3'
-import { Euler, Quaternion } from '@enable3d/three-wrapper/dist/index'
+import { Euler, Quaternion } from 'three'
 import { CollisionEvent } from './types'
 
 class PhysicsBody {

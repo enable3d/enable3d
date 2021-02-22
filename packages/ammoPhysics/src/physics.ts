@@ -19,16 +19,8 @@ export { ExtendedGroup }
 import Shapes from './shapes'
 import Constraints from './constraints'
 import { EventEmitter } from 'eventemitter3'
-import {
-  Vector3,
-  Quaternion,
-  Scene,
-  Euler,
-  Matrix4,
-  Geometry,
-  BufferGeometry,
-  REVISION
-} from '@enable3d/three-wrapper/dist/index'
+import { Geometry } from './externals'
+import { Vector3, Quaternion, Scene, Euler, Matrix4, BufferGeometry, REVISION } from 'three'
 import {
   iterateGeometries,
   createHullShape,
@@ -686,10 +678,10 @@ class AmmoPhysics extends EventEmitter {
     const btHalfExtents = new Ammo.btVector3()
 
     // transform geometry to bufferGeometry (because three-to-ammo works only with bufferGeometry)
-    // @ts-expect-error
+    // @ts-ignore
     const geometry = object?.geometry as Geometry
     if (object && geometry?.isGeometry) {
-      // @ts-expect-error
+      // @ts-ignore
       object.geometry = new BufferGeometry().fromGeometry(geometry)
     }
 

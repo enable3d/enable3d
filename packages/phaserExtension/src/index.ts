@@ -8,19 +8,20 @@ export { Scene3D } from './scene3d'
 export { enable3d } from './enable3d'
 export { PhysicsLoader } from '@enable3d/common/dist/physicsLoader'
 
-import Canvas from '@enable3d/common/dist/customCanvas'
-export { Canvas }
+export { Canvas } from '@enable3d/common/dist/customCanvas'
 
 export { ExtendedMesh } from '@enable3d/common/dist/extendedMesh'
 export { ExtendedObject3D } from '@enable3d/common/dist/extendedObject3D'
 export { ExtendedGroup } from '@enable3d/common/dist/extendedGroup'
 
-import * as THREE from '@enable3d/three-wrapper/dist/index'
-export { THREE }
+// experimantal flat components
+export * as FLAT from '@enable3d/three-graphics/dist/flat/index'
 
-import * as Types from '@enable3d/common/dist/types'
-export { Types }
+// three.js
+export * as THREE from 'three'
+export * as Types from '@enable3d/common/dist/types'
 
+// misc
 export { JoyStick, JoyStickAxis, JoyStickButton } from '@enable3d/common/dist/misc/joystick'
 export { ThirdPersonControls, ThirdPersonControlsConfig } from '@enable3d/common/dist/misc/thirdPersonControls'
 export { FirstPersonControls, FirstPersonControlsConfig } from '@enable3d/common/dist/misc/firstPersonControls'
@@ -28,4 +29,8 @@ export { PointerLock } from '@enable3d/common/dist/misc/pointerLock'
 export { PointerDrag } from '@enable3d/common/dist/misc/pointerDrag'
 
 // post-processing
-export { EffectComposer, RenderPass, ShaderPass, GlitchPass, DotScreenShader } from '@enable3d/three-wrapper/dist/index'
+export { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+export { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+export { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
+export { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass.js'
+export { DotScreenShader } from 'three/examples/jsm/shaders/DotScreenShader.js'

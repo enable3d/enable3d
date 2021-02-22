@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Texture, Sprite, SpriteMaterial } from '@enable3d/three-wrapper/dist'
+import { Texture, Sprite, SpriteMaterial } from 'three'
 import { Vector, Body } from 'matter-js'
 
 import { addObject } from './_misc'

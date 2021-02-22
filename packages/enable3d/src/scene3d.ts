@@ -5,7 +5,8 @@
  */
 
 import { ThreeGraphics } from '@enable3d/three-graphics/dist/index'
-import { Clock, EffectComposer, WebGLRenderer } from '@enable3d/three-wrapper/dist/index'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { Clock, WebGLRenderer } from 'three'
 import { ExtendedObject3D, ExtendedMesh } from '@enable3d/common/dist/types'
 import { AmmoPhysics } from '@enable3d/ammo-physics'
 

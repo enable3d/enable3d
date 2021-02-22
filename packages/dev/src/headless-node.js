@@ -1,8 +1,15 @@
-const { Ammo, Physics, ServerClock, Loaders, ExtendedObject3D, ExtendedMesh } = require('@enable3d/ammo-on-nodejs')
+var _ammo = require('@enable3d/ammo-on-nodejs/ammo/ammo.js')
+
+const { Physics, ServerClock, Loaders, ExtendedObject3D, ExtendedMesh } = require('@enable3d/ammo-on-nodejs')
+
 const path = require('path')
 
 const MainScene = () => {
   const physics = new Physics()
+
+  // test
+  const btVector3 = new Ammo.btVector3()
+  console.log('btVector3', btVector3)
 
   let ground = physics.add.ground({ width: 20, height: 20, name: 'ground' })
 
@@ -64,12 +71,12 @@ const MainScene = () => {
   const animate = delta => {
     physics.update(delta * 1000)
 
-    if (this.hero?.body) {
+    if (this.hero && this.hero.body) {
       const pos = this.hero.position.y.toFixed(2)
       if (pos > 10) console.log(this.hero.name, pos)
     }
 
-    if (this.robot?.body) {
+    if (this.robot && this.robot.body) {
       const pos = this.robot.position.y.toFixed(2)
       if (pos > 10) console.log(this.robot.name, pos)
     }
@@ -79,6 +86,12 @@ const MainScene = () => {
   })
 }
 
-Ammo().then(() => {
+_ammo().then(Ammo => {
+  globalThis.Ammo = Ammo
+
+  // test
+  const btVector3 = new Ammo.btVector3()
+  console.log('btVector3', btVector3)
+
   MainScene()
 })

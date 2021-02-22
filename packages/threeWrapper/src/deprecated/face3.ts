@@ -1,18 +1,19 @@
-// copied for three.js and ported to typescript
-
 import { Color, Vector3 } from 'three'
 
-export class Face3 {
-  a: number
-  b: number
-  c: number
-  normal: Vector3
-  vertexNormals: any
-  color: Color
-  vertexColors: any
-  materialIndex: number
+class Face3 {
+  a: any
+  b: any
+  c: any
 
-  constructor(a: number, b: number, c: number, normal?: any, color?: Color, materialIndex = 0) {
+  normal: any
+  vertexNormals: any
+
+  color: any
+  vertexColors: any
+
+  materialIndex: any
+
+  constructor(a: any, b: any, c: any, normal?: any, color?: any, materialIndex = 0) {
     this.a = a
     this.b = b
     this.c = c
@@ -52,3 +53,5 @@ export class Face3 {
     return this
   }
 }
+
+export { Face3 }

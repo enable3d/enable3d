@@ -10,14 +10,7 @@
  * @license      {@link https://github.com/InfiniteLee/ammo-debug-drawer/blob/master/LICENSE|MPL-2.0}
  */
 
-import {
-  Scene,
-  BufferGeometry,
-  BufferAttribute,
-  LineBasicMaterial,
-  LineSegments,
-  StaticDrawUsage
-} from '@enable3d/three-wrapper/dist/index'
+import { Scene, BufferGeometry, BufferAttribute, LineBasicMaterial, LineSegments, StaticDrawUsage } from 'three'
 
 const AmmoDebugConstants = {
   NoDebug: 0,

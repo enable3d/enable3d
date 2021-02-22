@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Quaternion } from '@enable3d/three-wrapper/dist/index'
+import { Quaternion } from 'three'
 
 // https://pybullet.org/Bullet/phpBB3/viewtopic.php?t=7228
 export const createTorusShape = (

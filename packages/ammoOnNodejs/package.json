@@ -4,7 +4,7 @@
   "description": "Runs ammo.js on your node.js server",
   "main": "dist/index.js",
   "scripts": {
-    "tsc": "tsc",
+    "bundle": "webpack --config webpack.config.js",
     "update": "npm update",
     "fix": "npm audit fix"
   },
@@ -28,7 +28,7 @@
     "url": "https://github.com/enable3d/enable3d/issues"
   },
   "homepage": "https://enable3d.io",
-  "dependencies": {
+  "devDependencies": {
     "@enable3d/ammo-physics": "^0.22.0-dev.0",
     "@enable3d/common": "^0.22.0-dev.0",
     "fflate": "^0.6.3"

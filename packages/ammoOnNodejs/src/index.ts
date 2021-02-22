@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-export { Ammo } from './ammo'
+// export { Ammo } from './ammo'
 export { Physics } from './physics'
 
 import { GLTFLoader, FBXLoader } from './loaders'

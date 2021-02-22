@@ -1,4 +1,4 @@
-import { AnimationMixer, Object3D } from '@enable3d/common/dist/types'
+import { AnimationMixer, Object3D } from 'three'
 
 class Mixers {
   private _mixers: AnimationMixer[] = []

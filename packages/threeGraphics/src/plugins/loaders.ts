@@ -4,20 +4,10 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import {
-  Cache,
-  GLTFLoader,
-  GLTF,
-  FBXLoader,
-  Group,
-  TextureLoader,
-  Texture,
-  SVGLoader,
-  SVGResult,
-  FileLoader,
-  ImageLoader,
-  ObjectLoader
-} from '@enable3d/three-wrapper/dist/index'
+import { Cache, Group, TextureLoader, Texture, FileLoader, ImageLoader, ObjectLoader } from 'three'
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
+import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+import { SVGLoader, SVGResult } from 'three/examples/jsm/loaders/SVGLoader'
 
 import type { Atlas, JSONHash, JSONArrayFrames } from '../flat/textureAtlas'
 

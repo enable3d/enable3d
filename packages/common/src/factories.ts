@@ -49,7 +49,7 @@ import {
   PlaneBufferGeometry,
   DoubleSide,
   ConeBufferGeometry
-} from '@enable3d/three-wrapper/dist/index'
+} from 'three'
 import { ExtendedObject3D } from './extendedObject3D'
 import { ExtendedMesh } from './extendedMesh'
 import logger from './logger'

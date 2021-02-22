@@ -1,11 +1,11 @@
 import { Project, Scene3D, PhysicsLoader, ExtendedMesh, FLAT, THREE } from 'enable3d'
 
-import { NearestFilter, Camera, Scene } from '../../common/node_modules/@enable3d/three-wrapper/dist'
-import { Texture, Vector2 } from '@enable3d/three-graphics'
-import { PlaneGeometry } from '../../common/node_modules/@enable3d/three-wrapper/dist'
-import { MeshLambertMaterial } from '../../common/node_modules/@enable3d/three-wrapper/dist'
-import { Mesh } from '../../common/node_modules/@enable3d/three-wrapper/dist'
-import { DoubleSide } from '../../common/node_modules/@enable3d/three-wrapper/dist'
+import { NearestFilter, Camera, Scene } from 'three'
+import { Texture, Vector2 } from 'three'
+import { PlaneGeometry } from 'three'
+import { MeshLambertMaterial } from 'three'
+import { Mesh } from 'three'
+import { DoubleSide } from 'three'
 
 class MainScene extends Scene3D {
   ui: {

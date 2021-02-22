@@ -4,23 +4,9 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import {
-  Scene,
-  Color,
-  Mesh,
-  Object3D,
-  SphereBufferGeometry,
-  MeshBasicMaterial
-} from '@enable3d/three-wrapper/dist/index'
-import {
-  AmbientLight,
-  DirectionalLight,
-  HemisphereLight,
-  PointLight,
-  RectAreaLight,
-  SpotLight
-} from '@enable3d/three-wrapper/dist/index'
-import { DirectionalLightHelper, SpotLightHelper } from '@enable3d/three-wrapper/dist/index'
+import { Scene, Color, Mesh, Object3D, SphereBufferGeometry, MeshBasicMaterial } from 'three'
+import { AmbientLight, DirectionalLight, HemisphereLight, PointLight, RectAreaLight, SpotLight } from 'three'
+import { DirectionalLightHelper, SpotLightHelper } from 'three'
 
 class PointLightHelper extends Object3D {
   private geo: SphereBufferGeometry

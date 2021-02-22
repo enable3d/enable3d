@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Texture } from 'threeWrapper/dist'
+import { Texture } from 'three'
 import { SpriteSheet, SpriteSheetFrameOptions } from './spriteSheet'
 
 export class Button extends SpriteSheet {

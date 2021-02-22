@@ -10,15 +10,16 @@ import {
   Scene,
   PlaneBufferGeometry,
   MeshPhongMaterial,
-  Geometry,
   DoubleSide,
-  Face3,
   Color,
   Texture,
   MeshPhongMaterialParameters,
   BufferGeometry
-} from '@enable3d/three-wrapper/dist/index'
-import { HeightMapConfig, ExtendedMesh } from '@enable3d/common/dist/types'
+} from 'three'
+import { ExtendedMesh } from '@enable3d/common/dist/extendedMesh'
+import { HeightMapConfig } from '@enable3d/common/dist/types'
+import { Geometry } from 'three/examples/jsm/deprecated/Geometry'
+import { Face3 } from '@enable3d/three-wrapper/dist/deprecated/face3'
 import { fromGeometry } from './csg/_fromGeometry'
 
 export default class HeightMap {

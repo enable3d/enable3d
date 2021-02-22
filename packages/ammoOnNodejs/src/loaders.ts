@@ -18,24 +18,18 @@ declare global {
  * Imports
  */
 import { readFile, existsSync } from 'fs'
-import * as THREE from 'three'
-global.THREE = THREE
 
 /**
  * FXBLoader imports
- * fflate is required by the fbx loader
  */
-import './lib/FBXLoader'
-
-import * as fflate from 'fflate'
-global.fflate = fflate
+import { FBXLoader as _FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 
 /**
  * GLTFLoader imports
- * We import a custom modification of the GLTFLoader from three.js
+ * We import a custom modification of the GLTFLoader from 'three'.js
  * The original file is here 'three/examples/js/loaders/GLTFLoader'
  */
-import './lib/GLTFLoader'
+import { GLTFLoader as _GLTFLoader } from './lib/GLTFLoader'
 
 class Loader {
   // https://gist.github.com/donmccurdy/323c6363ac7ca8a7de6a3362d7fdddb4
@@ -46,8 +40,7 @@ class Loader {
 }
 
 export class FBXLoader extends Loader {
-  // @ts-ignore
-  private loader = new THREE.FBXLoader()
+  private loader = new _FBXLoader()
 
   public load(absolutePath: string) {
     return new Promise((resolve, reject) => {
@@ -73,7 +66,7 @@ export class FBXLoader extends Loader {
 }
 
 export class GLTFLoader extends Loader {
-  private loader = new THREE.GLTFLoader()
+  private loader = new _GLTFLoader()
 
   public load(absolutePath: string) {
     return new Promise((resolve, reject) => {

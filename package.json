@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "npm run tsc",
-    "tsc": "lerna run tsc",
+    "tsc": "lerna run tsc && npm run start:ammoOnNodejs",
     "update-and-fix": "lerna run update && lerna run fix",
     "clean:dist": "rimraf packages/threeWrapper/dist packages/common/dist packages/ammoPhysics/dist packages/ammoOnNodejs/dist packages/enable3d/dist packages/threeGraphics/dist packages/phaserExtension/dist",
     "clean:bundles": "rimraf bundles",
@@ -21,7 +21,7 @@
     "start:common": "cd packages/common && tsc --watch",
     "start:threeWrapper": "cd packages/threeWrapper && tsc --watch",
     "start:ammoPhysics": "cd packages/ammoPhysics && tsc --watch",
-    "start:ammoOnNodejs": "cd packages/ammoOnNodejs && tsc --watch",
+    "start:ammoOnNodejs": "cd packages/ammoOnNodejs && npm run bundle",
     "start:threeGraphics": "cd packages/threeGraphics && tsc --watch",
     "start:phaserExtension": "cd packages/phaserExtension && tsc --watch",
     "start:enable3d": "cd packages/enable3d && tsc --watch",
@@ -74,7 +74,8 @@
     "typescript": "^4.1.2",
     "webpack": "^5.12.3",
     "webpack-cli": "^4.3.1",
-    "webpack-dev-server": "^3.11.1"
+    "webpack-dev-server": "^3.11.1",
+    "webpack-node-externals": "^2.5.2"
   },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"

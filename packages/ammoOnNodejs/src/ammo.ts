@@ -5,5 +5,5 @@
  */
 
 // @ts-ignore
-import * as Ammo from '@enable3d/ammo-physics/ammo/ammo.js'
-export { Ammo }
+// import * as Ammo from 'ammoOnNodejs/ammo/ammo.js'
+// export { Ammo }

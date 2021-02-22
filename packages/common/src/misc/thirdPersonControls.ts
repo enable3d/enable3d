@@ -10,14 +10,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import {
-  Object3D,
-  Vector2,
-  Vector3,
-  MathUtils as THREE_Math,
-  OrthographicCamera,
-  PerspectiveCamera
-} from '@enable3d/three-wrapper/dist'
+import { Object3D, Vector2, Vector3, MathUtils as THREE_Math, OrthographicCamera, PerspectiveCamera } from 'three'
 
 export interface ThirdPersonControlsConfig {
   offset?: Vector3
@@ -30,9 +23,9 @@ export interface ThirdPersonControlsConfig {
   /** Theta in deg */
   theta?: number
   /** Phi in deg */
-  phi?: number,
+  phi?: number
   /** Max Phi in deg */
-  maxPhi?: number,
+  maxPhi?: number
   /** Min Phi in deg */
   minPhi?: number
 }

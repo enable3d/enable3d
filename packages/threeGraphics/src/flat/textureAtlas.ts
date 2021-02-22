@@ -5,7 +5,7 @@
  */
 
 import { ActionSprite } from './actionSprite'
-import { RepeatWrapping, Texture } from '@enable3d/three-wrapper/dist'
+import { RepeatWrapping, Texture } from 'three'
 
 interface JSONArrayFrame {
   filename: string

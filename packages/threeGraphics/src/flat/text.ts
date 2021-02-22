@@ -6,7 +6,7 @@
 
 // https://github.com/gamestdio/three-text2d/blob/master/src/CanvasText.ts
 
-import { LinearFilter, Texture, XRControllerModelFactory, MathUtils } from '@enable3d/three-wrapper/dist'
+import { LinearFilter, Texture } from 'three'
 import { SimpleSprite, canvas } from './index'
 import { createNewTexture } from './_misc'
 

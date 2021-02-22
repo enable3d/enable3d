@@ -33,6 +33,9 @@
     "@enable3d/three-wrapper": "^0.22.0-dev.0",
     "eventemitter3": "^4.0.4"
   },
+  "peerDependencies": {
+    "three": "~0.125.2"
+  },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"
   }

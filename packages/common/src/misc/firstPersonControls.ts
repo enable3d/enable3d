@@ -10,7 +10,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Object3D, Vector2, Vector3, PerspectiveCamera, OrthographicCamera } from '@enable3d/three-wrapper/dist'
+import { Object3D, Vector2, Vector3, PerspectiveCamera, OrthographicCamera } from 'three'
 
 export interface FirstPersonControlsConfig {
   offset?: Vector3
