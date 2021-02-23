@@ -117,19 +117,19 @@ export class TextSprite extends SimpleSprite {
 const createTextImage = (text: string, config: TextConfig) => {
   const {
     align = 'center',
-    background = 'gray',
+    background = '',
     baseline = 'middle',
-    borderColor = 'yellow',
-    borderRadius = 20,
-    borderWidth = 20,
-    fillStyle = 'DarkSlateBlue',
+    borderColor = '',
+    borderRadius = 0,
+    borderWidth = 0,
+    fillStyle = 'SlateBlue',
     fontFamily = 'Arial',
-    fontSize = 96,
-    fontWeight = 'bold',
+    fontSize = 48,
+    fontWeight = '',
     lineHeight = 1,
     lineWidth = 4,
-    padding = 12,
-    strokeStyle = 'Red'
+    padding = 0,
+    strokeStyle = ''
   } = config
 
   // get offset
