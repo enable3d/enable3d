@@ -11,6 +11,7 @@ import { Scene3D } from './scene3d'
 import * as Plugins from '@enable3d/three-graphics/dist/plugins/index'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { WebGLRenderer } from 'three'
+import { CSG } from '@enable3d/three-graphics/dist/csg'
 
 /**
  * The phaser wrapper for ThreeGraphics, which is a separate module
@@ -25,11 +26,12 @@ class Third extends ThreeGraphics {
   public load: Plugins.Loaders
   public lights: Plugins.Lights
   public transform: Plugins.Transform
-  public csg: Plugins.CSG
   public heightMap: Plugins.HeightMap
   public webXR: Plugins.WebXR
   public misc: Plugins.Misc
   public cameras: Plugins.Cameras
+
+  public csg: typeof CSG
 
   private factories: Plugins.Factories
   private ws: Plugins.WarpSpeed
@@ -151,7 +153,7 @@ class Third extends ThreeGraphics {
     this.load = new Plugins.Loaders(this.cache, this.textureAnisotropy)
     this.lights = new Plugins.Lights(this.scene)
     this.transform = new Plugins.Transform(this.camera, this.renderer)
-    this.csg = new Plugins.CSG(this.scene, this.transform)
+    this.csg = CSG
     this.heightMap = new Plugins.HeightMap(this.scene)
     this.factories = new Plugins.Factories(this.scene)
     this.misc = new Plugins.Misc(this.scene, this.renderer, this.factories)

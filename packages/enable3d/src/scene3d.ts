@@ -9,6 +9,7 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { Clock, WebGLRenderer } from 'three'
 import { ExtendedObject3D, ExtendedMesh } from '@enable3d/common/dist/types'
 import { AmmoPhysics } from '@enable3d/ammo-physics'
+import { CSG } from '@enable3d/three-graphics/dist/csg'
 
 import * as Plugins from '@enable3d/three-graphics/dist/plugins/index'
 
@@ -31,11 +32,13 @@ export class Scene3D implements Partial<ThreeGraphics> {
   public load: Plugins.Loaders
   public lights: Plugins.Lights
   public transform: Plugins.Transform
-  public csg: Plugins.CSG
   public heightMap: Plugins.HeightMap
   public webXR: Plugins.WebXR
   public misc: Plugins.Misc
   public cameras: Plugins.Cameras
+
+  // other
+  public csg: typeof CSG
 
   // private plugins
   private factories: Plugins.Factories
@@ -78,7 +81,7 @@ export class Scene3D implements Partial<ThreeGraphics> {
     this.load = new Plugins.Loaders(this.cache, textureAnisotropy)
     this.lights = new Plugins.Lights(this.scene)
     this.transform = new Plugins.Transform(this.camera, this.renderer)
-    this.csg = new Plugins.CSG(this.scene, this.transform)
+    this.csg = CSG
     this.heightMap = new Plugins.HeightMap(this.scene)
     this.factories = new Plugins.Factories(this.scene)
     this.misc = new Plugins.Misc(this.scene, this.renderer, this.factories)

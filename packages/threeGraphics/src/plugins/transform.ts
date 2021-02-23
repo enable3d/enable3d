@@ -13,7 +13,7 @@ import {
   Mesh
 } from 'three'
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader'
-import { fromGeometry } from './csg/_fromGeometry'
+import { fromGeometry } from '../csg/_fromGeometry'
 
 /**
  * @author       Yannick Deubel (https://github.com/yandeu)
@@ -28,12 +28,12 @@ export default class Transform {
 
   constructor(private camera: PerspectiveCamera | OrthographicCamera, private renderer: WebGLRenderer) {}
 
-  public geometryToBufferGeometry(geometry: Geometry) {
+  static geometryToBufferGeometry(geometry: Geometry) {
     if (geometry.isGeometry) return fromGeometry(new BufferGeometry(), geometry)
     else return geometry as any
   }
 
-  public bufferGeometryToGeometry(bufferGeometry: BufferGeometry) {
+  static bufferGeometryToGeometry(bufferGeometry: BufferGeometry) {
     if (bufferGeometry.isBufferGeometry) return new Geometry().fromBufferGeometry(bufferGeometry)
     else return bufferGeometry as any
   }

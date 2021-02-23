@@ -5,7 +5,6 @@
 import Loaders from './loaders'
 import Lights from './lights'
 import Factories from '@enable3d/common/dist/factories'
-import CSG from './csg/csg'
 import HeightMap from './heightmap'
 import WarpSpeed, { WarpedStartFeatures } from './warpSpeed'
 import Mixers from './mixers'
@@ -19,7 +18,6 @@ export {
   Loaders,
   Lights,
   Factories,
-  CSG,
   HeightMap,
   WarpSpeed,
   WarpedStartFeatures,

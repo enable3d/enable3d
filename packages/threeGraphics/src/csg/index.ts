@@ -1,19 +1,29 @@
 /**
+ * @author       Evan Wallace (http://madebyevan.com/))
+ * @copyright    Copyright (c) 2011 Evan Wallace
+ * @license      MIT license
+ *
+ * @author       manthrax (https://github.com/manthrax)
+ *
+ * @author       Jiro-Digital (https://github.com/Jiro-Digital)
+ * @copyright    Copyright (c) 2020 Jiro Digital Ltd
+ * @license      {@link https://github.com/Jiro-Digital/three-csg-ts/blob/master/LICENSE|MIT}
+ *
  * @author       Yannick Deubel (https://github.com/yandeu)
- * @copyright    Copyright (c) 2020 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
+ * @copyright    Copyright (c) 2021 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
 // TODO(yandeu) Replace this CSG lib with one that works natively with Buffer Geometries.
 
-// Originally copied from https://github.com/Hi-Level/three-csg
+// Originally copied from https://github.com/Hi-Level/three-csg (now https://github.com/Jiro-Digital/three-csg-ts)
 // which is a typescript rewrite of https://github.com/manthrax/THREE-CSGMesh
 // which as originally written by Copyright (c) 2011 Evan Wallace (http://madebyevan.com/), under the MIT license.
 
 import { Geometry } from 'three/examples/jsm/deprecated/Geometry'
 import { Face3 } from '@enable3d/three-wrapper/dist/deprecated/face3'
 import { Vector3, Matrix3, Mesh, Matrix4, Scene, REVISION } from 'three'
-import Transform from '../transform'
+import Transform from '../plugins/transform'
 
 /**
  * CSG wrapper for enable3d
@@ -22,57 +32,49 @@ import Transform from '../transform'
  * Means we first make sure we are dealing with geometries
  * and then transform them back to buffer geometries.
  */
-export default class CSGWrapper {
-  constructor(private scene: Scene, private transform: Transform) {}
-
-  private toGeometry(meshA: Mesh, meshB: Mesh) {
-    meshA.geometry = this.transform.bufferGeometryToGeometry(meshA.geometry)
-    meshB.geometry = this.transform.bufferGeometryToGeometry(meshB.geometry)
+class CSGWrapper {
+  static toGeometry(meshA: Mesh, meshB: Mesh) {
+    meshA.geometry = Transform.bufferGeometryToGeometry(meshA.geometry)
+    meshB.geometry = Transform.bufferGeometryToGeometry(meshB.geometry)
   }
 
-  private toBufferGeometry(meshC: Mesh) {
-    // @ts-ignore
-    meshC.geometry = this.transform.geometryToBufferGeometry(meshC.geometry)
+  static toBufferGeometry(meshC: Mesh) {
+    meshC.geometry = Transform.geometryToBufferGeometry(meshC.geometry as any)
   }
 
-  public union(meshA: Mesh, meshB: Mesh): Mesh {
+  static union(meshA: Mesh, meshB: Mesh): Mesh {
     this.toGeometry(meshA, meshB)
-
     const meshC = this.doCSG(meshA, meshB, 'union')
     this.toBufferGeometry(meshC)
-
     return meshC
   }
 
-  public subtract(meshA: Mesh, meshB: Mesh): Mesh {
+  static subtract(meshA: Mesh, meshB: Mesh): Mesh {
     this.toGeometry(meshA, meshB)
-
     const meshC = this.doCSG(meshA, meshB, 'subtract')
     this.toBufferGeometry(meshC)
-
     return meshC
   }
 
-  public intersect(meshA: any, meshB: any): Mesh {
+  static intersect(meshA: any, meshB: any): Mesh {
     this.toGeometry(meshA, meshB)
-
     const meshC = this.doCSG(meshA, meshB, 'intersect')
     this.toBufferGeometry(meshC)
-
     return meshC
   }
 
-  private doCSG(meshA: any, meshB: any, operation: 'union' | 'subtract' | 'intersect'): Mesh {
+  static doCSG(meshA: any, meshB: any, operation: 'union' | 'subtract' | 'intersect'): Mesh {
     meshA.updateMatrix()
     meshB.updateMatrix()
     const bspA = CSG.fromMesh(meshA)
     const bspB = CSG.fromMesh(meshB)
-    // @ts-ignore
     const bspC = bspA[operation](bspB)
     const result = CSG.toMesh(bspC, meshA.matrix)
     return result
   }
 }
+
+export { CSGWrapper as CSG }
 
 /**
  * CSG (Constructive Solid Geometry) library for three.js with Typescript support.
