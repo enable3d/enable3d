@@ -8,7 +8,7 @@ import { LinearFilter, Texture } from 'three'
 import { SimpleSprite } from './simpleSprite'
 import { createNewTexture, canvas, calcHeight, calcWidth, clearObjects, roundRect } from './_misc'
 
-export interface TextConfig {
+export interface TextStyles {
   align?: 'center' | 'left' | 'right'
   background?: string | CanvasGradient | CanvasPattern
   baseline?: CanvasTextBaseline
@@ -28,7 +28,7 @@ export interface TextConfig {
 
 export class TextTexture extends Texture {
   private _text: string
-  private _config: TextConfig
+  private _styles: TextStyles
   private _image: any
 
   width: number
@@ -38,24 +38,24 @@ export class TextTexture extends Texture {
     return this._text
   }
 
-  getConfig() {
-    return this._config
+  getStyles() {
+    return this._styles
   }
 
   clone(): TextTexture {
     // @ts-ignore
-    return new this.constructor(this._text, this._config).copy(this)
+    return new this.constructor(this._text, this._styles).copy(this)
   }
 
-  constructor(text: string, config: TextConfig = {}) {
-    const { imageData, width, height } = createTextImage(text, config)
+  constructor(text: string, styles: TextStyles = {}) {
+    const { imageData, width, height } = createTextImage(text, styles)
     super(imageData)
 
     this.width = width
     this.height = height
 
     this._text = text
-    this._config = config
+    this._styles = styles
     this._image = imageData
 
     this.minFilter = LinearFilter
@@ -67,27 +67,27 @@ export class TextTexture extends Texture {
 
 export class TextSprite extends SimpleSprite {
   private _text: string
-  private _config: TextConfig
+  private _styles: TextStyles
 
   constructor(texture: TextTexture) {
     super(texture, false)
     this._text = texture.getText()
-    this._config = texture.getConfig()
+    this._styles = texture.getStyles()
   }
   getText() {
     return this._text
   }
 
-  getConfig() {
-    return this._config
+  getStyles() {
+    return this._styles
   }
 
-  setConfig(config: TextConfig) {
-    this._config = config
+  setStyles(styles: TextStyles) {
+    this._styles = styles
 
     this.texture.dispose()
 
-    this.setTexture(createNewTexture(createTextImage(this._text, config).imageData))
+    this.setTexture(createNewTexture(createTextImage(this._text, styles).imageData))
   }
 
   setText(text: string) {
@@ -95,7 +95,7 @@ export class TextSprite extends SimpleSprite {
 
     this.texture.dispose()
 
-    this.setTexture(createNewTexture(createTextImage(text, this._config).imageData))
+    this.setTexture(createNewTexture(createTextImage(text, this._styles).imageData))
 
     this._update()
   }
@@ -114,7 +114,7 @@ export class TextSprite extends SimpleSprite {
   }
 }
 
-const createTextImage = (text: string, config: TextConfig) => {
+const createTextImage = (text: string, styles: TextStyles) => {
   const {
     align = 'center',
     background = '',
@@ -130,10 +130,10 @@ const createTextImage = (text: string, config: TextConfig) => {
     lineWidth = 4,
     padding = 0,
     strokeStyle = ''
-  } = config
+  } = styles
 
   // get offset
-  const { offset: { x: offsetX = 0, y: offsetY = 0 } = {} } = config
+  const { offset: { x: offsetX = 0, y: offsetY = 0 } = {} } = styles
 
   // get padding
   let paddingX
