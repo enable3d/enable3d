@@ -6,7 +6,7 @@
     "build": "npm run tsc",
     "tsc": "lerna run tsc && npm run start:ammoOnNodejs",
     "update-and-fix": "lerna run update && lerna run fix",
-    "clean:dist": "rimraf packages/threeWrapper/dist packages/common/dist packages/ammoPhysics/dist packages/ammoOnNodejs/dist packages/enable3d/dist packages/threeGraphics/dist packages/phaserExtension/dist",
+    "clean:dist": "rimraf packages/threeWrapper/dist packages/common/dist packages/ammoPhysics/dist packages/ammoOnNodejs/dist packages/enable3d/dist packages/threeGraphics/jsm packages/phaserExtension/dist",
     "clean:bundles": "rimraf bundles",
     "publish": "npm run clean:dist && npm run tsc && npm-run-all publish:*",
     "publish:threeWrapper": "cd packages/threeWrapper && npm publish",
