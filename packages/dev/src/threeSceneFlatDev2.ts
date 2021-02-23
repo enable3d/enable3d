@@ -9,7 +9,7 @@ class MainScene extends Scene3D {
     scene: Scene
   }
 
-  matter = new FLAT.MatterPhysics()
+  matter = new FLAT.physics()
   ball: FLAT.SimpleSprite
 
   atlas: FLAT.Atlas

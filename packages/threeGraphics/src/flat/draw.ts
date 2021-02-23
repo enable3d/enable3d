@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { LinearFilter, Object3D, Sprite, Texture } from 'three'
+import { LinearFilter, Texture } from 'three'
 import { SimpleSprite } from './simpleSprite'
 import { canvas, createNewTexture } from './_misc'
 

@@ -13,7 +13,7 @@ class MainScene extends Scene3D {
     scene: Scene
   }
 
-  matter = new FLAT.MatterPhysics()
+  matter = new FLAT.physics()
   ball: FLAT.SimpleSprite
 
   async preload() {
@@ -46,6 +46,7 @@ class MainScene extends Scene3D {
     })
 
     this.ball = new FLAT.SimpleSprite(texture)
+    this.ball.setDepth(2)
     this.ball.body = this.matter.add.circle(50, 500, radius)
     this.ball.body.restitution = 0.5
     this.matter.add.existing(this.ball)
@@ -173,7 +174,7 @@ class MainScene extends Scene3D {
     this.physics.add.existing(plane as any)
 
     // multiline 2 text
-    const multiline2 = new FLAT.TextSprite(new FLAT.TextTexture('this is\na very\nlong\ntext', '#c4c4c4'))
+    const multiline2 = new FLAT.TextSprite(new FLAT.TextTexture('this is\na very\nlong\ntext', { fontSize: 32 }))
     multiline2.setPosition(multiline2.width / 2 + 10, 220)
     multiline2.setDepth(1)
     multiline2.setInteractive({ pixelPerfect: true })
@@ -182,13 +183,13 @@ class MainScene extends Scene3D {
     //   multiline2.setText('this is\na very\nlong')
     // }, 1000)
     multiline2.onInputOver = () => {
-      multiline2.setText(multiline2.getText(), '#ff00ff')
+      multiline2.setText(multiline2.getText())
     }
     multiline2.onInputOut = () => {
-      multiline2.setText(multiline2.getText(), '#c4c4c4')
+      multiline2.setText(multiline2.getText())
     }
     multiline2.onInputDown = () => {
-      multiline2.setText(multiline2.getText(), '#000000')
+      multiline2.setText(multiline2.getText())
     }
   }
 

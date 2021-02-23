@@ -5,8 +5,6 @@
  */
 
 import { Texture, Sprite, SpriteMaterial } from 'three'
-import { Vector, Body } from 'matter-js'
-
 import { addObject } from './_misc'
 
 export class SimpleSprite extends Sprite {
@@ -16,21 +14,15 @@ export class SimpleSprite extends Sprite {
   private _isInteractive = false
   private _depth = 0
 
+  body: Matter.Body
+  public setBodyPosition: (x: number, y: number) => void // will be added by physics
+
   _bodyOffset = { x: 0, y: 0 }
 
   public width: number
   public height: number
 
   protected _internalScale = { x: 1, y: 1 }
-
-  body: Matter.Body
-
-  public setBodyPosition(x: number, y: number) {
-    Body.setPosition(this.body, {
-      x: x - this._bodyOffset.x,
-      y: y - this._bodyOffset.y
-    })
-  }
 
   public onInputOver = () => {}
   protected _onInputOver() {}

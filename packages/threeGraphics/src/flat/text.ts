@@ -4,11 +4,9 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-// https://github.com/gamestdio/three-text2d/blob/master/src/CanvasText.ts
-
 import { LinearFilter, Texture } from 'three'
-import { SimpleSprite, canvas } from './index'
-import { createNewTexture } from './_misc'
+import { SimpleSprite } from './simpleSprite'
+import { createNewTexture, canvas, calcHeight, calcWidth, clearObjects, roundRect } from './_misc'
 
 export interface TextConfig {
   align?: 'center' | 'left' | 'right'
@@ -28,50 +26,92 @@ export interface TextConfig {
   strokeStyle?: string | CanvasGradient | CanvasPattern
 }
 
-// https://stackoverflow.com/a/7838871
-const roundRect = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) => {
-  if (w < 2 * r) r = w / 2
-  if (h < 2 * r) r = h / 2
+export class TextTexture extends Texture {
+  private _text: string
+  private _config: TextConfig
+  private _image: any
 
-  ctx.beginPath()
-  ctx.moveTo(x + r, y)
-  ctx.arcTo(x + w, y, x + w, y + h, r)
-  ctx.arcTo(x + w, y + h, x, y + h, r)
-  ctx.arcTo(x, y + h, x, y, r)
-  ctx.arcTo(x, y, x + w, y, r)
-  ctx.closePath()
-}
+  width: number
+  height: number
 
-const fontHeightCache: Map<string, number> = new Map()
-
-const calcHeight = (text: string, fontSize: number, fontFamily: string, lineHeight: number = 1) => {
-  const key = fontSize + fontFamily
-  let height = fontHeightCache.get(key)
-
-  if (!height) {
-    // https://stackoverflow.com/a/10500938
-    const span = document.createElement('p')
-
-    span.style.fontFamily = fontFamily
-    span.style.fontSize = fontSize + 'px'
-    span.style.whiteSpace = 'nowrap'
-    span.style.lineHeight = lineHeight.toString()
-    span.textContent = text
-
-    document.body.appendChild(span)
-    height = Math.ceil(span.offsetHeight)
-    document.body.removeChild(span)
-
-    // add to cache
-    fontHeightCache.set(key, height)
+  getText() {
+    return this._text
   }
 
-  return height
+  getConfig() {
+    return this._config
+  }
+
+  clone(): TextTexture {
+    // @ts-ignore
+    return new this.constructor(this._text, this._config).copy(this)
+  }
+
+  constructor(text: string, config: TextConfig = {}) {
+    const { imageData, width, height } = createTextImage(text, config)
+    super(imageData)
+
+    this.width = width
+    this.height = height
+
+    this._text = text
+    this._config = config
+    this._image = imageData
+
+    this.minFilter = LinearFilter
+    this.generateMipmaps = false
+
+    this.needsUpdate = true
+  }
 }
 
-const calcWidth = (ctx: CanvasRenderingContext2D, lines: string[]) => {
-  // return the longest line
-  return Math.max(...lines.map(line => Math.ceil(ctx.measureText(line).width)))
+export class TextSprite extends SimpleSprite {
+  private _text: string
+  private _config: TextConfig
+
+  constructor(texture: TextTexture) {
+    super(texture, false)
+    this._text = texture.getText()
+    this._config = texture.getConfig()
+  }
+  getText() {
+    return this._text
+  }
+
+  getConfig() {
+    return this._config
+  }
+
+  setConfig(config: TextConfig) {
+    this._config = config
+
+    this.texture.dispose()
+
+    this.setTexture(createNewTexture(createTextImage(this._text, config).imageData))
+  }
+
+  setText(text: string) {
+    this._text = text
+
+    this.texture.dispose()
+
+    this.setTexture(createNewTexture(createTextImage(text, this._config).imageData))
+
+    this._update()
+  }
+
+  _update() {
+    // update size
+    this.height = this.texture.image.height
+    this.width = this.texture.image.width
+
+    // update
+    this.texture.needsUpdate = true
+    this.material.needsUpdate = true
+
+    const { x, y } = this._internalScale
+    this.setScale(x, y)
+  }
 }
 
 const createTextImage = (text: string, config: TextConfig) => {
@@ -207,71 +247,4 @@ const createTextImage = (text: string, config: TextConfig) => {
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height) as any
 
   return { imageData, width, height }
-}
-
-export class TextTexture extends Texture {
-  private _text: string
-  private _image: any
-
-  width: number
-  height: number
-
-  getText() {
-    return this._text
-  }
-
-  clone(): TextTexture {
-    // @ts-ignore
-    return new this.constructor(this._text).copy(this)
-  }
-
-  constructor(text: string, config: TextConfig = {}) {
-    const { imageData, width, height } = createTextImage(text, config)
-    super(imageData)
-
-    this.width = width
-    this.height = height
-
-    this._image = imageData
-    this._text = text
-
-    this.minFilter = LinearFilter
-    this.generateMipmaps = false
-
-    this.needsUpdate = true
-  }
-}
-
-export class TextSprite extends SimpleSprite {
-  private _text: string
-
-  constructor(texture: TextTexture) {
-    super(texture, false)
-    this._text = texture.getText()
-  }
-
-  setText(text: string, config: TextConfig = {}) {
-    this._text = text
-
-    // dispose
-    this.texture.dispose()
-
-    // create
-    this.setTexture(createNewTexture(createTextImage(text, config).imageData))
-
-    // update size
-    this.height = this.texture.image.height
-    this.width = this.texture.image.width
-
-    // update
-    this.texture.needsUpdate = true
-    this.material.needsUpdate = true
-
-    const { x, y } = this._internalScale
-    this.setScale(x, y)
-  }
-
-  getText() {
-    return this._text
-  }
 }

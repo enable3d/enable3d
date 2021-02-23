@@ -7,52 +7,7 @@
 import { Engine, World, Runner, Bodies, Body, Vertices, Render, Events, Vector } from 'matter-js'
 import { Vector2 } from 'three'
 import { SimpleSprite } from '../simpleSprite'
-
-const debugSettings = {
-  colors: {
-    dynamic: '#ff0000', // red
-    static: '#90ee90', // lightgreen
-    sensor: '#ffff00', // yellow
-    sleeping: '#464646' // gray
-  },
-  lineWidth: 2,
-  fill: false,
-  opacity: 0.25
-}
-
-const getDebugColors = (options: { isStatic?: boolean; isSensor?: boolean; isSleeping?: boolean } = {}) => {
-  const { colors } = debugSettings
-
-  if (options.isStatic) return colors.static
-  if (options.isSensor) return colors.sensor
-  if (options.isSleeping) return colors.sleeping
-  return colors.dynamic
-}
-
-const adjustDebugColor = (body: Matter.Body, depth = 0, _fill?: string, _stroke?: string) => {
-  // get color
-  const color = getDebugColors(body)
-
-  const opacity = debugSettings.opacity
-  const lineWidth = debugSettings.lineWidth
-  const shouldFill = debugSettings.fill
-
-  let fill = _fill ?? color + Math.round(255 * opacity).toString(16)
-  if (!shouldFill) fill = _fill ?? 'transparent'
-  if (body.isSleeping && !body.isStatic && !body.isSensor) fill = _fill ?? color //+ Math.round(255 * opacity).toString(16)
-
-  const stroke = _stroke ?? color
-
-  body.render.fillStyle = fill
-  body.render.strokeStyle = stroke
-  body.render.lineWidth = lineWidth
-
-  if (depth >= 5) return
-
-  body.parts.forEach(part => {
-    adjustDebugColor(part, depth + 1, fill, stroke)
-  })
-}
+import { adjustDebugColor } from './_misc'
 
 type Circle = { x: number; y: number; radius: number }
 type Polygon = { x: number; y: number; sides: number; radius: number }
@@ -80,7 +35,7 @@ interface JSONHashPhysicsShapes {
   }
 }
 
-export class MatterPhysics {
+export class Physics {
   width: number
   height: number
 
@@ -221,7 +176,15 @@ export class MatterPhysics {
 
   private _addBodyToSprite(sprite: SimpleSprite) {
     this.add.body(sprite.body)
+
     this.calcBodyOffset(sprite)
+
+    sprite.setBodyPosition = (x: number, y: number) => {
+      Body.setPosition(sprite.body, {
+        x: x - sprite._bodyOffset.x,
+        y: y - sprite._bodyOffset.y
+      })
+    }
   }
 
   private _addBody(
