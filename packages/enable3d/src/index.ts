@@ -13,7 +13,7 @@ export { ExtendedObject3D } from '@enable3d/common/dist/extendedObject3D'
 export { ExtendedGroup } from '@enable3d/common/dist/extendedGroup'
 
 // experimantal flat components
-export * as FLAT from '@enable3d/three-graphics/dist/flat/index'
+export * as FLAT from '@enable3d/three-graphics/jsm/flat'
 
 // three.js
 export * as THREE from 'three'
