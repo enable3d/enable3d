@@ -18,7 +18,6 @@ export class SimpleSprite extends Sprite {
 
   _bodyOffset = { x: 0, y: 0 }
 
-  public texture: Texture
   public width: number
   public height: number
 
@@ -79,14 +78,7 @@ export class SimpleSprite extends Sprite {
       })
     )
 
-    this.texture = this.material.map as Texture
-
-    const { width, height } = this.texture.image
-
-    this.width = width
-    this.height = height
-
-    this.texture.needsUpdate = true
+    this._setTexture()
 
     this.setScale(this._internalScale.x, this._internalScale.y)
     this.setDepth(this._calcZ())
@@ -94,6 +86,33 @@ export class SimpleSprite extends Sprite {
 
   private _calcZ() {
     return this._depth / 100 - this.id * 1e-8
+  }
+
+  getTexture() {
+    return this.texture
+  }
+
+  setTexture(texture: Texture) {
+    this._setTexture(texture)
+  }
+
+  get texture() {
+    return this.material.map as Texture
+  }
+
+  private _setTexture(texture?: Texture) {
+    if (!this.material.map) {
+      console.warn('Something went wrong!')
+      return
+    }
+
+    if (texture) this.material.map = texture
+
+    const { width, height } = this.material.map.image
+    this.width = width
+    this.height = height
+
+    this.material.map.needsUpdate = true
   }
 
   setPosition(x: number, y: number) {

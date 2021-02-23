@@ -87,7 +87,7 @@ const createTextImage = (text: string, config: TextConfig) => {
     fontSize = 96,
     fontWeight = 'bold',
     lineHeight = 1,
-    lineWidth = 8,
+    lineWidth = 4,
     padding = 12,
     strokeStyle = 'Red'
   } = config
@@ -257,7 +257,7 @@ export class TextSprite extends SimpleSprite {
     this.texture.dispose()
 
     // create
-    this.texture = this.material.map = createNewTexture(createTextImage(text, config).imageData)
+    this.setTexture(createNewTexture(createTextImage(text, config).imageData))
 
     // update size
     this.height = this.texture.image.height
