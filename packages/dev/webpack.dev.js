@@ -10,7 +10,7 @@ module.exports = {
     pathinfo: false
   },
   devServer: {
-    host: '0.0.0.0'
+    // host: '0.0.0.0'
   },
   resolve: {
     // Add `.ts` and `.tsx` as a resolvable extension.

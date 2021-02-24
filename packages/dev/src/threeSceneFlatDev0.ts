@@ -1,7 +1,5 @@
 import { Project, Scene3D, PhysicsLoader, FLAT } from 'enable3d'
-
-import { Camera, LinearFilter, LinearMipMapLinearFilter, NearestFilter, Scene } from 'three'
-import { SimpleSprite } from '../../enable3d/node_modules/@enable3d/three-graphics/jsm/flat'
+import { Camera, FlatShading, Scene } from 'three'
 
 class MainScene extends Scene3D {
   ui: {
@@ -37,6 +35,11 @@ class MainScene extends Scene3D {
       scene: new Scene()
     }
 
+    console.log(this.renderer.domElement)
+    FLAT.init({ canvas: this.renderer.domElement })
+
+    console.log('get', FLAT.getParent())
+
     const setConfig = (...sprites: FLAT.SimpleSprite[]) => {
       sprites.forEach((sprite, index) => {
         const dpi = index + 1
@@ -45,7 +48,7 @@ class MainScene extends Scene3D {
 
         const text = new FLAT.TextSprite(new FLAT.TextTexture(`DPI@${dpi}`, { fontSize: 24 * dpi, fillStyle: 'black' }))
         text.setPosition(x, y + 60)
-        text.texture.minFilter = NearestFilter
+        // text.texture.minFilter = NearestFilter
         text.setPixelRatio(dpi)
         this.ui.scene.add(text)
 

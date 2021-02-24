@@ -51,7 +51,6 @@ export class SimpleSprite extends Sprite {
   }
 
   setPixelRatio(pixelRatio: number) {
-    console.log(pixelRatio)
     this._pixelRatio = pixelRatio
     this.setScale(this._internalScale.x, this._internalScale.y)
   }
@@ -81,7 +80,6 @@ export class SimpleSprite extends Sprite {
 
     this.setScale(this._internalScale.x, this._internalScale.y)
     this.setDepth(this._calcZ())
-    console.log(this._pixelRatio)
   }
 
   private _calcZ() {

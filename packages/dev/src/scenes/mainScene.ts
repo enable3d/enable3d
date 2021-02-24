@@ -1,6 +1,5 @@
 import { Scene3D, ExtendedObject3D, THREE } from '@enable3d/phaser-extension'
 import { ClosestRaycaster, AllHitsRaycaster } from '@enable3d/ammo-physics'
-import { TextureLoader } from '../../../common/node_modules/@enable3d/three-wrapper/dist'
 
 export default class MainScene extends Scene3D {
   constructor() {
