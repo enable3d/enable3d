@@ -50,7 +50,7 @@ class MainScene extends Scene3D {
         this.ui.scene.add(text)
 
         sprite.setPixelRatio(dpi)
-        sprite.setPosition(width / 2, height / 2 + (index - 1) * 150)
+        sprite.setPosition(x, y)
       })
     }
 
