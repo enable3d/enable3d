@@ -49,7 +49,11 @@ export class SpriteSheet extends ActionSprite {
   }
 
   protected scaleFrame() {
-    this.scale.set(this._width * this._internalScale.x, this._height * this._internalScale.y, 1)
+    this.scale.set(
+      (this._width * this._internalScale.x) / this._pixelRatio,
+      (this._height * this._internalScale.y) / this._pixelRatio,
+      1
+    )
   }
 
   // returns the row of the current tile.

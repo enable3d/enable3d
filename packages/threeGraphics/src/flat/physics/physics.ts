@@ -79,13 +79,35 @@ export class Physics {
 
     let body
 
-    if (bodies.length > 1)
-      body = Body.create({
-        parts: bodies
-      })
-    else body = bodies[0]
+    // manually update circle radius for debugging (bug in matter-js ??)
+    // copied from Body.js
+    const quickCircleFix = (body: Body, scaleX: number, scaleY: number) => {
+      // handle circles
+      if (body.circleRadius) {
+        if (scaleX === scaleY) {
+          body.circleRadius *= scaleX
+        } else {
+          // body is no longer a circle
+          body.circleRadius = undefined
+        }
+      }
+    }
+
+    const dpi = Math.round(window.devicePixelRatio * 10) / 10
+    const scaleX = 1 / dpi
+    const scaleY = 1 / dpi
+
+    if (bodies.length > 1) {
+      bodies.forEach(b => quickCircleFix(b, scaleX, scaleY))
+      body = Body.create({ parts: bodies })
+    } else {
+      body = bodies[0]
+    }
+
+    quickCircleFix(body, scaleX, scaleY)
 
     Body.setPosition(body, { x, y })
+    Body.scale(body, scaleX, scaleY)
 
     return body
   }
@@ -147,7 +169,19 @@ export class Physics {
   }
 
   private circle(x: number, y: number, radius: number, options: Matter.IBodyDefinition = {}) {
-    return Bodies.circle(x, y, radius, { ...options })
+    const body = Bodies.circle(x, y, radius, { ...options })
+
+    console.log('mass', body.mass)
+
+    const dpi = Math.round(window.devicePixelRatio * 10) / 10
+    const scaleX = 1 / dpi
+    const scaleY = 1 / dpi
+
+    Body.scale(body, scaleX, scaleY)
+
+    console.log('mass', body.mass)
+
+    return body
   }
 
   private existing(sprite: SimpleSprite) {
@@ -240,6 +274,7 @@ export class Physics {
 
     this.engine = Engine.create({ enableSleeping: true })
     this.world = this.engine.world
+    this.world.gravity.scale /= Math.round(window.devicePixelRatio * 10) / 10
     this.runner = Runner.create()
 
     // for debugging

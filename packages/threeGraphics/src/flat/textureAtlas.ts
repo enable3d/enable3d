@@ -71,8 +71,8 @@ export class TextureAtlas extends ActionSprite {
       frame: { w, h }
     } = this.getFrame(this.currentFrame as string)
 
-    let scaleX = w * this._internalScale.x
-    let scaleY = h * this._internalScale.y
+    let scaleX = (w * this._internalScale.x) / this._pixelRatio
+    let scaleY = (h * this._internalScale.y) / this._pixelRatio
     this.scale.set(scaleX, scaleY, 1)
   }
 

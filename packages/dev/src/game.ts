@@ -14,6 +14,6 @@ import startHeadless from './headless'
 // startHeadless() // @enable3d/ammo-physics (headless)
 
 // flat_EXPERIMENTAL
-startProjectFlatDev0()
-// startProjectFlatDev1()
+// startProjectFlatDev0()
+startProjectFlatDev1()
 // startProjectFlatDev2()
