@@ -8,6 +8,7 @@ import { LinearFilter, Texture } from 'three'
 import { SimpleSprite } from './simpleSprite'
 import { createNewTexture, canvas, calcHeight, calcWidth, clearObjects, roundRect } from './_misc'
 
+// TODO(yandeu) max. element width and max. text width
 export interface TextStyles {
   align?: 'center' | 'left' | 'right'
   background?: string | CanvasGradient | CanvasPattern
