@@ -35,7 +35,7 @@ export class ThreeGraphics {
     this.scene = new THREE.Scene()
 
     // this.renderer.physicallyCorrectLights = true
-    this.renderer = renderer || new THREE.WebGLRenderer({ antialias })
+    this.renderer = renderer || new THREE.WebGLRenderer({ antialias, alpha: true })
 
     // see https://threejs.org/docs/#examples/en/loaders/GLTFLoader
     // this.renderer.outputEncoding = sRGBEncoding
