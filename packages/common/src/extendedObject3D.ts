@@ -1,11 +1,11 @@
 /**
  * @author       Yannick Deubel (https://github.com/yandeu)
- * @copyright    Copyright (c) 2020 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
+ * @copyright    Copyright (c) 2021 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
 import { AnimationClip, AnimationMixer, Mesh, Line, Points, Object3D, Vector3, LoopOnce } from 'three'
-import PhysicsBody from './physicsBody'
+import type PhysicsBody from './physicsBody'
 import { AnimationAction } from 'three'
 
 export interface ExtendedObject3D extends Line, Mesh, Points {
@@ -15,9 +15,6 @@ export interface ExtendedObject3D extends Line, Mesh, Points {
   type: any
 }
 
-/**
- * Extends the Object3D class from THREE.js and implements properties from Line, Mesh and Points.
- */
 export class ExtendedObject3D extends Object3D {
   private vector3 = new Vector3()
   public readonly isGroup = false
@@ -32,8 +29,6 @@ export class ExtendedObject3D extends Object3D {
   public breakable = false
   public fractureImpulse = 1
 
-  private anims: any = {} // deprecated
-
   private _currentAnimation: string = ''
   private _animationActions: Map<string, AnimationAction> = new Map()
   private _animationMixer: AnimationMixer
@@ -41,12 +36,6 @@ export class ExtendedObject3D extends Object3D {
   constructor() {
     super()
     this.name = `object-${this.id}`
-  }
-
-  /** setAction(name) is deprecated. Use animation.play(name) instead! */
-  public setAction(name: string) {
-    console.warn('[enable3d] setAction(name) is deprecated. Use animation.play(name) instead!')
-    this.animationPlay(name)
   }
 
   /** Returns all values relative to the world. */
@@ -69,16 +58,6 @@ export class ExtendedObject3D extends Object3D {
     return Math.acos(this.vector3.y)
   }
 
-  public get animation() {
-    return {
-      current: this._currentAnimation,
-      add: (key: string, animation: AnimationClip) => this.animationAdd(key, animation),
-      play: (name: string, transitionDuration = 500, loop: boolean = true) =>
-        this.animationPlay(name, transitionDuration, loop),
-      mixer: this.animationMixer
-    }
-  }
-
   public set animationMixer(animationMixer: AnimationMixer) {
     this._animationMixer = animationMixer
   }
@@ -88,8 +67,41 @@ export class ExtendedObject3D extends Object3D {
     return this._animationMixer
   }
 
-  private animationAdd(key: string, animation: AnimationClip) {
-    this._animationActions.set(key, this.animationMixer.clipAction(animation))
+  /** Control your animations. */
+  public get anims() {
+    return {
+      /** Get the name of the current animation. */
+      current: this._currentAnimation,
+      /** Add animation name and the AnimationClip. */
+      add: (name: string, animation: AnimationClip) => this.animationAdd(name, animation),
+      /** Get AnimationAction by animation name. */
+      get: (name: string) => this.animationGet(name),
+      /**
+       * Play an animation.
+       * @param name Animation name.
+       * @param transitionDuration Transition duration in ms.
+       * @param loop Should the animation loop?
+       */
+      play: (name: string, transitionDuration = 500, loop: boolean = true) =>
+        this.animationPlay(name, transitionDuration, loop),
+      /** Get the AnimationMixer */
+      mixer: this.animationMixer
+    }
+  }
+
+  /** Control your animations. (Alias for anims) */
+  public get animation() {
+    return this.anims
+  }
+
+  private animationAdd(name: string, animation: AnimationClip) {
+    this._animationActions.set(name, this.animationMixer.clipAction(animation))
+  }
+
+  private animationGet(name: string) {
+    const action = this._animationActions.get(name) as AnimationAction
+    if (!action) console.warn(`[enable3d] Animation(${name}) not found!`)
+    return action
   }
 
   private animationPlay(name: string, transitionDuration = 500, loop: boolean = true) {
@@ -109,6 +121,11 @@ export class ExtendedObject3D extends Object3D {
     }
 
     this._currentAnimation = name
+  }
+
+  /** @deprecated Use animation.play(name) instead! */
+  public setAction(name: string) {
+    console.warn(`[enable3d] setAction(${name}) is deprecated. Use animation.play(${name}) instead!`)
   }
 }
 

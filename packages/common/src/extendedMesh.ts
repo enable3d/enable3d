@@ -1,13 +1,11 @@
 /**
  * @author       Yannick Deubel (https://github.com/yandeu)
- * @copyright    Copyright (c) 2020 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
+ * @copyright    Copyright (c) 2021 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
 import { Mesh, Vector3, BufferGeometry, Material } from 'three'
-import PhysicsBody from './physicsBody'
-
-export interface ExtendedMesh extends Mesh {}
+import type PhysicsBody from './physicsBody'
 
 export class ExtendedMesh extends Mesh {
   private vector3 = new Vector3()
