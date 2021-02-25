@@ -37,6 +37,8 @@ class MainScene extends Scene3D {
       if (fruit === 'background') continue
 
       const f = new FLAT.TextureAtlas(this.atlas, fruit)
+      // f.setPixelRatio(2)
+      f.setScale(0.75)
       this.ui.scene.add(f)
 
       let x = width / 2 + (Math.random() - 0.5) * Math.min(600, width)

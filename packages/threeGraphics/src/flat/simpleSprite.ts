@@ -113,6 +113,14 @@ export class SimpleSprite extends Sprite {
     this.material.map.needsUpdate = true
   }
 
+  getBodyOffset() {
+    // remember: pixelRatio is only for the sprite, not the body
+    return {
+      x: this._bodyOffset.x * this.getScale().x /* / this.getPixelRatio()*/,
+      y: this._bodyOffset.y * this.getScale().y /* / this.getPixelRatio()*/
+    }
+  }
+
   setPosition(x: number, y: number) {
     this.position.set(x, y, this._calcZ())
   }
@@ -128,6 +136,14 @@ export class SimpleSprite extends Sprite {
 
   getRotation() {
     return this.material.rotation
+  }
+
+  getPixelRatio() {
+    return this._pixelRatio
+  }
+
+  getScale() {
+    return { x: this._internalScale.x, y: this._internalScale.y }
   }
 
   setScale(x: number, y?: number) {

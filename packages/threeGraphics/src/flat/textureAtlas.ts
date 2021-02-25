@@ -66,7 +66,18 @@ export class TextureAtlas extends ActionSprite {
     if (frame) this.setFrame(frame)
   }
 
+  setScale(x: number, y?: number) {
+    this._internalScale.x = x
+
+    if (y) this._internalScale.y = y
+    else this._internalScale.y = x
+
+    this.scaleFrame()
+  }
+
   protected scaleFrame() {
+    if (!this.currentFrame) return
+
     const {
       frame: { w, h }
     } = this.getFrame(this.currentFrame as string)

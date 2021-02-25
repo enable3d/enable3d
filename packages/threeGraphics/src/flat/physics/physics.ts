@@ -9,6 +9,30 @@ import { Vector2 } from 'three'
 import { SimpleSprite } from '../simpleSprite'
 import { adjustDebugColor } from './_misc'
 
+// manually update circle radius for debugging (bug in matter-js ??)
+// copied from Body.js
+const scaleCircle_Fix = (body: Body, scaleX: number, scaleY: number) => {
+  // handle circles
+  if (body.circleRadius) {
+    if (scaleX === scaleY) {
+      body.circleRadius *= scaleX
+    } else {
+      // body is no longer a circle
+      body.circleRadius = undefined
+    }
+  }
+}
+
+const scaleBody_Fix = (body: Body, scaleX: number, scaleY: number) => {
+  if (!body.circleRadius) {
+    body.parts.forEach(part => {
+      scaleCircle_Fix(part, scaleX, scaleY)
+    })
+  }
+
+  Body.scale(body, scaleX, scaleY)
+}
+
 type Circle = { x: number; y: number; radius: number }
 type Polygon = { x: number; y: number; sides: number; radius: number }
 
@@ -179,10 +203,16 @@ export class Physics {
 
     this.calcBodyOffset(sprite)
 
+    // /remember: pixelRatio is only for the sprite, not the body
+    const scaleX = sprite.getScale().x // / sprite.getPixelRatio()
+    const scaleY = sprite.getScale().y // / sprite.getPixelRatio()
+
+    scaleBody_Fix(sprite.body, scaleX, scaleY)
+
     sprite.setBodyPosition = (x: number, y: number) => {
       Body.setPosition(sprite.body, {
-        x: x - sprite._bodyOffset.x,
-        y: y - sprite._bodyOffset.y
+        x: x - sprite.getBodyOffset().x,
+        y: y - sprite.getBodyOffset().y
       })
     }
   }
@@ -222,7 +252,7 @@ export class Physics {
       const { x, y } = position
 
       // https://github.com/liabru/matter-js/issues/211#issuecomment-184804576
-      const offset = new Vector2(object._bodyOffset.x, object._bodyOffset.y)
+      const offset = new Vector2(object.getBodyOffset().x, object.getBodyOffset().y)
       offset.rotateAround(new Vector2(), angle)
 
       object.setPosition(x + offset.x, this.height - y - offset.y)

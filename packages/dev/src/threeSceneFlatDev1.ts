@@ -65,7 +65,8 @@ class MainScene extends Scene3D {
     // just to test the cache
     this.cache.add('myAtlas', await this.load.textureAtlas('ninja.png', 'ninja.json'))
 
-    this.warpSpeed()
+    const { orbitControls } = await this.warpSpeed()
+    FLAT.initEvents({ canvas: this.renderer.domElement, orbitControls })
 
     this.renderer.autoClear = false // To allow render overlay on top of the 3d camera
     const width = window.innerWidth

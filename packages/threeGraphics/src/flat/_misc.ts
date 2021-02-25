@@ -115,7 +115,7 @@ const addEventListeners = () => {
   // get the canvas element for the input events
   const canvas = getParent()
   if (!canvas) {
-    console.warn('Please call "FLAT.init()" first.')
+    console.warn('Please call "FLAT.initEvents()" first.')
     return
   }
 
