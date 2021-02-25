@@ -1,6 +1,5 @@
 import { Project, Scene3D, PhysicsLoader, FLAT } from 'enable3d'
-
-import { Camera, LinearFilter, LinearMipMapLinearFilter, NearestFilter, Scene } from 'three'
+import { Camera, Scene } from 'three'
 
 class MainScene extends Scene3D {
   ui: {
@@ -11,8 +10,25 @@ class MainScene extends Scene3D {
   matter = new FLAT.physics()
   ball: FLAT.SimpleSprite
 
+  preload() {
+    /**
+     * Cartoon buttons by OPPONA (https://www.vecteezy.com/members/znnadesign-gmail-com)
+     * www.vecteezy.com/vector-art/540965-cartoon-buttons-set-game-vector-illustration
+     * Cartoon Vectors by Vecteezy (https://www.vecteezy.com/licensing-agreement)
+     */
+    this.load.preload('one', 'assets/start-button/start-button@1.png')
+    this.load.preload('two', 'assets/start-button/start-button@2.png')
+    this.load.preload('three', 'assets/start-button/start-button@3.png')
+  }
+
   async create() {
-    this.warpSpeed()
+    document.body.style.backgroundImage = 'linear-gradient(#4782fe, #79b7fe)'
+
+    const maxPixelRatio = 3
+    this.setPixelRatio(Math.min(maxPixelRatio, window.devicePixelRatio))
+
+    // const { orbitControls } = await this.warpSpeed()
+    // FLAT.initEvents({ canvas: this.renderer.domElement, orbitControls: orbitControls })
 
     this.renderer.autoClear = false // To allow render overlay on top of the 3d camera
     const width = window.innerWidth
@@ -22,6 +38,33 @@ class MainScene extends Scene3D {
       camera: this.cameras.orthographicCamera({ left: 0, right: width, bottom: 0, top: height }),
       scene: new Scene()
     }
+
+    FLAT.initEvents({ canvas: this.renderer.domElement })
+
+    const setConfig = (...sprites: FLAT.SimpleSprite[]) => {
+      sprites.forEach((sprite, index) => {
+        const dpi = index + 1
+        const x = width / 2
+        const y = height / 2 + (index - 1) * -150
+
+        const text = new FLAT.TextSprite(new FLAT.TextTexture(`DPI@${dpi}`, { fontSize: 24 * dpi, fillStyle: 'black' }))
+        text.setPosition(x, y + 60)
+        // text.texture.minFilter = NearestFilter
+        text.setPixelRatio(dpi)
+        this.ui.scene.add(text)
+
+        sprite.setPixelRatio(dpi)
+        sprite.setPosition(x, y)
+      })
+    }
+
+    const one = new FLAT.SimpleSprite(await this.load.texture('one'))
+    const two = new FLAT.SimpleSprite(await this.load.texture('two'))
+    const three = new FLAT.SimpleSprite(await this.load.texture('three'))
+
+    setConfig(one, two, three)
+
+    this.ui.scene.add(one, two, three)
   }
 
   preRender() {
@@ -39,7 +82,7 @@ class MainScene extends Scene3D {
 }
 
 const startProject = () => {
-  PhysicsLoader('/lib', () => new Project({ scenes: [MainScene] }))
+  PhysicsLoader('/lib', () => new Project({ scenes: [MainScene], alpha: true }))
 }
 
 export default startProject
