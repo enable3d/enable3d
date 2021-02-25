@@ -67,7 +67,8 @@ export class ExtendedObject3D extends Object3D {
     return this._animationMixer
   }
 
-  public get animation() {
+  /** Control your animations. */
+  public get anims() {
     return {
       /** Get the name of the current animation. */
       current: this._currentAnimation,
@@ -86,6 +87,11 @@ export class ExtendedObject3D extends Object3D {
       /** Get the AnimationMixer */
       mixer: this.animationMixer
     }
+  }
+
+  /** Control your animations. (Alias for anims) */
+  public get animation() {
+    return this.anims
   }
 
   private animationAdd(name: string, animation: AnimationClip) {
