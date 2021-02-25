@@ -23,6 +23,7 @@ export class SimpleSprite extends Sprite {
   public height: number
 
   protected _internalScale = { x: 1, y: 1 }
+  protected _pixelRatio = 1
 
   public onInputOver = () => {}
   protected _onInputOver() {}
@@ -47,6 +48,11 @@ export class SimpleSprite extends Sprite {
       this._onInputDown()
       this.onInputDown()
     }
+  }
+
+  setPixelRatio(pixelRatio: number) {
+    this._pixelRatio = pixelRatio
+    this.setScale(this._internalScale.x, this._internalScale.y)
   }
 
   setInteractive({ pixelPerfect = false }: { pixelPerfect?: boolean } = {}): void {
@@ -132,6 +138,6 @@ export class SimpleSprite extends Sprite {
 
     const xx = x
     const yy = y ? y : x
-    this.scale.set(xx * this.width, yy * this.height, 1)
+    this.scale.set((xx * this.width) / this._pixelRatio, (yy * this.height) / this._pixelRatio, 1)
   }
 }
