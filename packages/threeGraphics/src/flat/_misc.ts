@@ -5,6 +5,7 @@
  */
 
 import { Camera, LinearFilter, Raycaster, Texture, Vector2 } from 'three'
+import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { SimpleSprite } from './simpleSprite'
 
 // https://stackoverflow.com/a/7838871
@@ -71,6 +72,19 @@ export const createNewTexture = (image: any) => {
 // create the canvas for the texture
 export const canvas = document.createElement('canvas')
 
+let parent: HTMLCanvasElement
+let orbitCtl: OrbitControls
+
+export const setParent = (canvas: HTMLCanvasElement) => {
+  parent = canvas
+}
+
+export const getParent = () => parent
+
+export const setOrbitControls = (orbitControls?: OrbitControls) => {
+  if (orbitControls) orbitCtl = orbitControls
+}
+
 const objects: any[] = []
 const raycaster = new Raycaster()
 const mouse = new Vector2()
@@ -80,36 +94,49 @@ const client = new Vector2()
 let mouse_click = false
 let mouse_release = false
 
-const init = () => {
-  // TODO(yandeu) This needs improvement!
+let hasTouchEvents = false
+let hasMouseEvents = false
 
-  // get the cavnas element for the input events
-  const canvas = document.querySelector('canvas')
-  if (!canvas) return
+const removeTouchEvents = () => {
+  canvas.removeEventListener('mousedown', onMouseClick, false)
+  canvas.removeEventListener('mouseup', onMouseRelease, false)
+  canvas.removeEventListener('mousemove', onMouseMove, false)
+  hasTouchEvents = false
+}
+
+const removeMouseEvents = () => {
+  canvas.removeEventListener('touchstart', onMouseClick, false)
+  canvas.removeEventListener('touchend', onMouseRelease, false)
+  canvas.removeEventListener('touchmove', onMouseMove, false)
+  hasMouseEvents = false
+}
+
+const addEventListeners = () => {
+  // get the canvas element for the input events
+  const canvas = getParent()
+  if (!canvas) {
+    console.warn('Please call "FLAT.init()" first.')
+    return
+  }
+
+  removeTouchEvents()
+  removeMouseEvents()
 
   if ('ontouchstart' in window) {
-    canvas.removeEventListener('touchstart', onMouseClick, false)
     canvas.addEventListener('touchstart', onMouseClick, false)
-
-    canvas.removeEventListener('touchend', onMouseRelease, false)
     canvas.addEventListener('touchend', onMouseRelease, false)
-
-    canvas.removeEventListener('touchmove', onMouseMove, false)
     canvas.addEventListener('touchmove', onMouseMove, false)
-  } else {
-    canvas.removeEventListener('pointerdown', onMouseClick, false)
-    canvas.addEventListener('pointerdown', onMouseClick, false)
-
-    canvas.removeEventListener('pointerup', onMouseRelease, false)
-    canvas.addEventListener('pointerup', onMouseRelease, false)
-
-    canvas.removeEventListener('mousemove', onMouseMove, false)
-    canvas.addEventListener('mousemove', onMouseMove, false)
+    hasTouchEvents = true
   }
+
+  canvas.addEventListener('mousedown', onMouseClick, false)
+  canvas.addEventListener('mouseup', onMouseRelease, false)
+  canvas.addEventListener('mousemove', onMouseMove, false)
+  hasMouseEvents = true
 }
 
 export const addObject = (object: any) => {
-  if (objects.length === 0) init()
+  if (objects.length === 0) addEventListeners()
   objects.push(object)
 }
 
@@ -119,7 +146,11 @@ export const clearObjects = () => {
   }
 }
 
-const onMouseClick = (event: any) => {
+const onMouseClick = (event: MouseEvent | TouchEvent) => {
+  // we don't want mouse and touch events, so we remove one
+  if (event.type === 'touchstart' && hasMouseEvents) removeMouseEvents()
+  if (event.type === 'mousedown' && hasTouchEvents) removeTouchEvents()
+
   mouse_click = true
 
   // adjust mouse position
@@ -156,6 +187,7 @@ const onMouseMove = (event: any) => {
   mouse.y = -(y / window.innerHeight) * 2 + 1
 }
 
+// TODO(yandeu) Don't call this in a update loop! Call it on an input event!!! Or not? I don't know :/
 export const render = async (camera: Camera) => {
   const hasMouseMoved = mouse.x !== mouse_last.x || mouse.y !== mouse_last.y
   if (!hasMouseMoved && !mouse_click && !mouse_release) return
@@ -174,6 +206,12 @@ export const render = async (camera: Camera) => {
 
   // calculate objects intersecting the picking ray
   const intersects = raycaster.intersectObjects(_objects)
+
+  // if (intersects.length === 0) document.body.style.cursor = 'default'
+  // else document.body.style.cursor = 'pointer'
+
+  if (orbitCtl && orbitCtl.enabled && intersects.length >= 0) orbitCtl.enabled = false
+  if (orbitCtl && !orbitCtl.enabled && intersects.length === 0) orbitCtl.enabled = true
 
   for (let i = 0; i < intersects.length; i++) {
     const object = intersects[i].object as SimpleSprite
@@ -231,4 +269,6 @@ export const render = async (camera: Camera) => {
   _objects.forEach(o => {
     o.event = 'out'
   })
+
+  return intersects
 }
