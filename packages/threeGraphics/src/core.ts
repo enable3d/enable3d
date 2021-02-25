@@ -22,6 +22,7 @@ export class ThreeGraphics {
 
   constructor(protected threeGraphicsConfig: Types.ThreeGraphicsConfig = {}) {
     const {
+      alpha = false,
       anisotropy = 1,
       camera = Cameras.Perspective({ z: 25, y: 5 }),
       antialias = false,
@@ -35,7 +36,7 @@ export class ThreeGraphics {
     this.scene = new THREE.Scene()
 
     // this.renderer.physicallyCorrectLights = true
-    this.renderer = renderer || new THREE.WebGLRenderer({ antialias })
+    this.renderer = renderer || new THREE.WebGLRenderer({ antialias, alpha })
 
     // see https://threejs.org/docs/#examples/en/loaders/GLTFLoader
     // this.renderer.outputEncoding = sRGBEncoding

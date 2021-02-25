@@ -30,6 +30,7 @@ export { ExtendedObject3D }
 export { ExtendedMesh }
 
 export interface ThreeGraphicsConfig {
+  alpha?: boolean
   anisotropy?: number
   /** Add your own THREE.js camera */
   camera?: PerspectiveCamera | OrthographicCamera
