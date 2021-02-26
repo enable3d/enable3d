@@ -165,7 +165,7 @@ class PhysicsBody {
   }
 
   /** Get the quaternion. (for headless mode only) */
-  public get quaternion() {
+  public get quaternion(): { x: number; y: number; z: number; w: number } {
     const t = this.physics.worldTransform
     const q = t.getRotation()
     return { x: q.x(), y: q.y(), z: q.z(), w: q.w() }
@@ -178,7 +178,7 @@ class PhysicsBody {
   }
 
   /** Get position. (for headless mode only) */
-  public get position() {
+  public get position(): { x: number; y: number; z: number } {
     const t = this.physics.worldTransform
     return { x: t.getOrigin().x(), y: t.getOrigin().y(), z: t.getOrigin().z() }
   }
