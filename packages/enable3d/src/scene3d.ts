@@ -47,7 +47,7 @@ export class Scene3D implements Partial<ThreeGraphics> {
 
   public __config: any = {}
   private _isRunning: boolean = false
-  private _deconstructorFunctions: Function[] = []
+  private _deconstructor: any[] = []
 
   constructor(private sceneConfig: { key?: string; enableXR?: boolean } = {}) {
     const { key = Math.random().toString(), enableXR = false } = sceneConfig
@@ -57,8 +57,10 @@ export class Scene3D implements Partial<ThreeGraphics> {
 
   public get deconstructor() {
     return {
-      add: (fnc: Function) => {
-        this._deconstructorFunctions.push(fnc)
+      add: (...object: any[]) => {
+        object.forEach(o => {
+          this._deconstructor.push(o)
+        })
       }
     }
   }
@@ -110,7 +112,7 @@ export class Scene3D implements Partial<ThreeGraphics> {
     // @ts-ignore
     obj = null
   }
-  public async warpSpeed(...features: Plugins.WarpedStartFeatures[]) {
+  public async warpSpeed(...features: Plugins.WarpedStartFeatures[]): Promise<Plugins.WarpSpeedOptions> {
     return await this.ws.warpSpeed(...features)
   }
   public get animationMixers() {
@@ -156,8 +158,8 @@ export class Scene3D implements Partial<ThreeGraphics> {
   }
 
   public async restart(data?: any) {
-    this.stop()
-    this.start(this.__config.sceneKey, data)
+    await this.stop()
+    await this.start(this.__config.sceneKey, data)
   }
 
   public async stop() {
@@ -167,10 +169,13 @@ export class Scene3D implements Partial<ThreeGraphics> {
     // reset clock
     this.clock.start()
 
-    for (let i = 0; i < this._deconstructorFunctions.length; i++) {
-      await this._deconstructorFunctions[i]()
+    for (let object of this._deconstructor) {
+      await object.dispose?.()
+      await object.destroy?.()
+      if (typeof object === 'function') await object?.()
+      object = null
     }
-    this._deconstructorFunctions = []
+    this._deconstructor = []
 
     // destroy all rigid bodies
     for (let i = this.physics.rigidBodies.length - 1; i >= 0; i--) {

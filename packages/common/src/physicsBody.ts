@@ -6,7 +6,7 @@
 
 import { ExtendedObject3D, XYZ } from './types'
 
-import { EventEmitter } from 'eventemitter3'
+import { Events } from '@yandeu/events'
 import { Euler, Quaternion } from 'three'
 import { CollisionEvent } from './types'
 
@@ -35,7 +35,7 @@ class PhysicsBody {
   private tmpBtVector3_1 = new Ammo.btVector3()
   private tmpBtQuaternion = new Ammo.btQuaternion(0, 0, 0, 1)
 
-  private eventEmitter = new EventEmitter()
+  private eventEmitter = new Events()
 
   constructor(private physics: any, public ammo: Ammo.btRigidBody) {
     // @ts-ignore
@@ -62,7 +62,7 @@ class PhysicsBody {
   }
 
   private setupEventEmitter() {
-    if (typeof this.eventEmitter === 'undefined') this.eventEmitter = new EventEmitter()
+    if (typeof this.eventEmitter === 'undefined') this.eventEmitter = new Events()
   }
 
   public get needUpdate() {

@@ -70,6 +70,11 @@ export class Physics {
 
   _objects: Map<string, SimpleSprite> = new Map()
 
+  destroy() {
+    World.clear(this.world, false)
+    Engine.clear(this.engine)
+  }
+
   parsePhysics(file: string) {
     const json = JSON.parse(file) as JSONHashPhysicsShapes
     delete json['generator_info']
@@ -195,6 +200,7 @@ export class Physics {
     const offsetY = topLeft.y + height / 2
     const offset = { x: offsetX, y: offsetY }
 
+    // @ts-expect-error
     sprite._bodyOffset = offset
   }
 

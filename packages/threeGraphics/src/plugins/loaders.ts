@@ -130,12 +130,7 @@ export default class Loaders {
     })
   }
 
-  public texture(url: string): Promise<Texture>
-  public texture(key: string, url: string): Promise<Texture>
-  public texture(paramOne: string, paramTwo?: string): Promise<Texture> {
-    let url = paramTwo ?? paramOne
-    let key = paramTwo ? paramOne : undefined
-
+  public texture(url: string): Promise<Texture> {
     const isBase64 = /^data:image\/[\S]+;base64,/gm.test(url)
 
     // we do not want to cache base64 images
@@ -146,7 +141,6 @@ export default class Loaders {
 
     return new Promise(resolve => {
       this.textureLoader.load(url, (texture: Texture) => {
-        if (key) this.cache.add(key, texture)
         texture.anisotropy = this.textureAnisotropy
         texture.needsUpdate = true
 

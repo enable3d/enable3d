@@ -50,7 +50,7 @@ export class DrawSprite extends SimpleSprite {
   private _drawCanvas: DrawCanvas
 
   clone(): DrawSprite {
-    return new DrawSprite(this.width, this.height, this._drawCanvas).clone()
+    return new DrawSprite(this.textureWidth, this.textureHeight, this._drawCanvas).clone()
   }
 
   constructor(width: number, height: number, drawCanvas: DrawCanvas) {

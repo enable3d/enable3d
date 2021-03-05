@@ -102,8 +102,8 @@ export class TextSprite extends SimpleSprite {
 
   _update() {
     // update size
-    this.height = this.texture.image.height
-    this.width = this.texture.image.width
+    this.textureHeight = this.texture.image.height
+    this.textureWidth = this.texture.image.width
 
     // update
     this.texture.needsUpdate = true

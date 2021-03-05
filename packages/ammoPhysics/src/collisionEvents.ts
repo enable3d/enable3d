@@ -4,11 +4,11 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { EventEmitter } from 'eventemitter3'
+import { Events } from '@yandeu/events'
 import { ExtendedObject3D, CollisionEvent } from '@enable3d/common/dist/types'
 import { Types } from './physics'
 
-export class CollisionEvents extends EventEmitter {
+export class CollisionEvents extends Events {
   public worldTransform: Ammo.btTransform
   public physicsWorld: Ammo.btDiscreteDynamicsWorld
 

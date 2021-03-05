@@ -6,6 +6,7 @@
 
 import { Camera, LinearFilter, Raycaster, Texture, Vector2 } from 'three'
 import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { Tap } from '@yandeu/tap'
 import { SimpleSprite } from './simpleSprite'
 
 // https://stackoverflow.com/a/7838871
@@ -74,6 +75,26 @@ export const canvas = document.createElement('canvas')
 
 let parent: HTMLCanvasElement
 let orbitCtl: OrbitControls
+let tap: Tap
+let down = false
+
+const objects: any[] = []
+const raycaster = new Raycaster()
+const mouse = new Vector2()
+const pos = new Vector2()
+const size = new Vector2()
+const messages: string[] = []
+
+const warn = (msg: string) => {
+  if (messages.includes(msg)) return
+  console.warn(msg)
+  messages.push(msg)
+}
+
+export const setSize = (width: number, height: number) => {
+  size.x = width
+  size.y = height
+}
 
 export const setParent = (canvas: HTMLCanvasElement) => {
   parent = canvas
@@ -85,54 +106,20 @@ export const setOrbitControls = (orbitControls?: OrbitControls) => {
   if (orbitControls) orbitCtl = orbitControls
 }
 
-const objects: any[] = []
-const raycaster = new Raycaster()
-const mouse = new Vector2()
-const mouse_last = new Vector2()
-const client = new Vector2()
-
-let mouse_click = false
-let mouse_release = false
-
-let hasTouchEvents = false
-let hasMouseEvents = false
-
-const removeTouchEvents = () => {
-  canvas.removeEventListener('mousedown', onMouseClick, false)
-  canvas.removeEventListener('mouseup', onMouseRelease, false)
-  canvas.removeEventListener('mousemove', onMouseMove, false)
-  hasTouchEvents = false
-}
-
-const removeMouseEvents = () => {
-  canvas.removeEventListener('touchstart', onMouseClick, false)
-  canvas.removeEventListener('touchend', onMouseRelease, false)
-  canvas.removeEventListener('touchmove', onMouseMove, false)
-  hasMouseEvents = false
-}
-
 const addEventListeners = () => {
   // get the canvas element for the input events
   const canvas = getParent()
   if (!canvas) {
-    console.warn('Please call "FLAT.initEvents()" first.')
+    warn('Please call "FLAT.initEvents()" first.')
     return
   }
 
-  removeTouchEvents()
-  removeMouseEvents()
+  tap = new Tap(canvas)
+}
 
-  if ('ontouchstart' in window) {
-    canvas.addEventListener('touchstart', onMouseClick, false)
-    canvas.addEventListener('touchend', onMouseRelease, false)
-    canvas.addEventListener('touchmove', onMouseMove, false)
-    hasTouchEvents = true
-  }
-
-  canvas.addEventListener('mousedown', onMouseClick, false)
-  canvas.addEventListener('mouseup', onMouseRelease, false)
-  canvas.addEventListener('mousemove', onMouseMove, false)
-  hasMouseEvents = true
+export const destroy = () => {
+  clearObjects()
+  if (tap) tap.destroy()
 }
 
 export const addObject = (object: any) => {
@@ -146,69 +133,47 @@ export const clearObjects = () => {
   }
 }
 
-const onMouseClick = (event: MouseEvent | TouchEvent) => {
-  // we don't want mouse and touch events, so we remove one
-  if (event.type === 'touchstart' && hasMouseEvents) removeMouseEvents()
-  if (event.type === 'mousedown' && hasTouchEvents) removeTouchEvents()
+// TODO(yandeu) Don't call this in a update loop! Call it on an input event!!! Or not? I don't know :/
+export const updateEvents = async (camera: Camera) => {
+  // console.log(tap.currentPosition)
 
-  mouse_click = true
+  if (!tap) return
 
-  // adjust mouse position
-  onMouseMove(event)
-}
+  const {
+    currentPosition: { x, y },
+    isDown
+  } = tap
 
-const onMouseRelease = (event: any) => {
-  mouse_release = true
+  const hasMouseMoved = mouse.x !== x || mouse.y !== y
+  const hasClicked = down !== isDown
+  if (!hasMouseMoved && !hasClicked) return
 
-  // adjust mouse position
-  onMouseMove(event)
-}
+  down = isDown
 
-const onMouseMove = (event: any) => {
-  let x
-  let y
+  mouse.x = x
+  mouse.y = y
 
-  if (event.touches && event.touches[0]) {
-    x = event.touches[0].pageX
-    y = event.touches[0].pageY
-  } else if (event.clientX) {
-    x = event.clientX
-    y = event.clientY
-  } else {
+  if (size.x === 0 || typeof size.x === 'undefined') {
+    warn('[FLAT] Please call FLAT.setSize() first!')
     return
   }
 
-  client.x = x
-  client.y = y
-
   // calculate mouse position in normalized device coordinates
   // (-1 to +1) for both components
-  mouse.x = (x / window.innerWidth) * 2 - 1
-  mouse.y = -(y / window.innerHeight) * 2 + 1
-}
-
-// TODO(yandeu) Don't call this in a update loop! Call it on an input event!!! Or not? I don't know :/
-export const render = async (camera: Camera) => {
-  const hasMouseMoved = mouse.x !== mouse_last.x || mouse.y !== mouse_last.y
-  if (!hasMouseMoved && !mouse_click && !mouse_release) return
-
-  mouse_last.copy(mouse)
-
-  if (mouse_release) {
-    mouse_release = false
-    mouse_click = false
-  }
+  pos.x = (x / size.x) * 2 - 1
+  pos.y = -(y / size.y) * 2 + 1
 
   // update the picking ray with the camera and mouse position
-  raycaster.setFromCamera(mouse, camera)
+  raycaster.setFromCamera(pos, camera)
 
   let _objects = [...objects]
 
   // calculate objects intersecting the picking ray
   const intersects = raycaster.intersectObjects(_objects)
+  // console.log('i', intersects)
 
-  // if (intersects.length === 0) document.body.style.cursor = 'default'
-  // else document.body.style.cursor = 'pointer'
+  if (intersects.length === 0) document.body.style.cursor = 'default'
+  else document.body.style.cursor = 'pointer'
 
   if (orbitCtl && orbitCtl.enabled && intersects.length >= 0) orbitCtl.enabled = false
   if (orbitCtl && !orbitCtl.enabled && intersects.length === 0) orbitCtl.enabled = true
@@ -255,7 +220,7 @@ export const render = async (camera: Camera) => {
     if (object.pixelPerfect && isTransparent) continue
 
     // set event
-    object.event = mouse_click ? 'down' : 'over'
+    object.event = tap.isDown ? 'down' : 'over'
 
     // Removing Items in Arrays
     const removeIndex = _objects.findIndex(o => o.uuid === object.uuid)

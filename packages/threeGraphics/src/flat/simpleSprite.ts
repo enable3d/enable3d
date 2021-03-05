@@ -14,13 +14,13 @@ export class SimpleSprite extends Sprite {
   private _isInteractive = false
   private _depth = 0
 
-  body: Matter.Body
+  public body: Matter.Body
   public setBodyPosition: (x: number, y: number) => void // will be added by physics
 
-  _bodyOffset = { x: 0, y: 0 }
+  protected _bodyOffset = { x: 0, y: 0 }
 
-  public width: number
-  public height: number
+  public textureWidth: number
+  public textureHeight: number
 
   protected _internalScale = { x: 1, y: 1 }
   protected _pixelRatio = 1
@@ -107,8 +107,8 @@ export class SimpleSprite extends Sprite {
     if (texture) this.material.map = texture
 
     const { width, height } = this.material.map.image
-    this.width = width
-    this.height = height
+    this.textureWidth = width
+    this.textureHeight = height
 
     this.material.map.needsUpdate = true
   }
@@ -154,6 +154,6 @@ export class SimpleSprite extends Sprite {
 
     const xx = x
     const yy = y ? y : x
-    this.scale.set((xx * this.width) / this._pixelRatio, (yy * this.height) / this._pixelRatio, 1)
+    this.scale.set((xx * this.textureWidth) / this._pixelRatio, (yy * this.textureHeight) / this._pixelRatio, 1)
   }
 }

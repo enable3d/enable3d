@@ -18,7 +18,7 @@ export { ExtendedGroup }
 
 import Shapes from './shapes'
 import Constraints from './constraints'
-import { EventEmitter } from 'eventemitter3'
+import { Events } from '@yandeu/events'
 import { Geometry } from './externals'
 import { Vector3, Quaternion, Scene, Euler, Matrix4, BufferGeometry, REVISION } from 'three'
 import {
@@ -47,7 +47,7 @@ export { Types }
 // Export THREE.Clock
 export { Clock } from './lib/Clock'
 
-class AmmoPhysics extends EventEmitter {
+class AmmoPhysics extends Events {
   public worldTransform: Ammo.btTransform
   public factory: Factories
   public isHeadless: boolean

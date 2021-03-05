@@ -25,16 +25,20 @@ export class SpriteSheet extends ActionSprite {
   constructor(texture: Texture, frameOptions: SpriteSheetFrameOptions) {
     super(texture)
 
-    const { width = this.width, height = this.height } = frameOptions
+    const { width = this.textureWidth, height = this.textureHeight } = frameOptions
 
-    this._tilesHoriz = this.width / width
-    this._tilesVert = this.height / height
+    this._tilesHoriz = this.textureWidth / width
+    this._tilesVert = this.textureHeight / height
 
     if (this._tilesHoriz !== Math.round(this._tilesHoriz)) console.warn('The horizontal row does not seem to fit!')
     if (this._tilesVert !== Math.round(this._tilesVert)) console.warn('The vertical row does not seem to fit!')
 
     this._width = width
     this._height = height
+
+    // stays always the same
+    this._frame.width = width
+    this._frame.height = height
 
     // this.texture.center.set(0.5, 0.5)
     // this.material.rotation = Math.PI // turn 180 deg
@@ -89,11 +93,11 @@ export class SpriteSheet extends ActionSprite {
 
     this.texture.repeat.set(x, y)
 
-    this.setFrame(this.currentFrame as number)
+    this.setFrame(this._frame.index as number)
   }
 
   setFrame(index: number) {
-    this.currentFrame = index
+    this._frame.index = index
 
     const x = this.getColumn(index) / this._tilesHoriz
     const y = (this._tilesVert - this.getRow(index) - 1) / this._tilesVert

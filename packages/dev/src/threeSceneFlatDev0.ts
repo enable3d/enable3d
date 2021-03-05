@@ -1,6 +1,6 @@
 import { Project, Scene3D, PhysicsLoader, FLAT } from 'enable3d'
 
-import { Camera, LinearFilter, LinearMipMapLinearFilter, NearestFilter, Scene } from 'three'
+import { Camera, Scene } from 'three'
 
 class MainScene extends Scene3D {
   ui: {
@@ -12,7 +12,9 @@ class MainScene extends Scene3D {
   ball: FLAT.SimpleSprite
 
   async create() {
-    this.warpSpeed()
+    const { orbitControls } = await this.warpSpeed()
+
+    FLAT.initEvents({ orbitControls, canvas: this.renderer.domElement })
 
     this.renderer.autoClear = false // To allow render overlay on top of the 3d camera
     const width = window.innerWidth
@@ -33,7 +35,7 @@ class MainScene extends Scene3D {
       this.renderer.clearDepth()
       this.renderer.render(this.ui.scene, this.ui.camera)
 
-      FLAT.render(this.ui.camera)
+      FLAT.updateEvents(this.ui.camera)
     }
   }
 }

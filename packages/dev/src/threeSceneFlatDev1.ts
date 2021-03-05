@@ -16,6 +16,8 @@ class MainScene extends Scene3D {
   matter = new FLAT.physics()
   ball: FLAT.SimpleSprite
 
+  async init() {}
+
   async preload() {
     // load atlas
     this.load.preload('ninja.png', '/assets/atlas/ninja-texture-atlas.png')
@@ -24,8 +26,7 @@ class MainScene extends Scene3D {
     this.load.preload('hero', '/assets/adventurer-Sheet.png')
     this.load.preload('grass', '/assets/grass.jpg')
 
-    // load texture and add to cache (Experimental)
-    await this.load.texture('button_one', '/assets/button_sprite_sheet.png')
+    await this.load.preload('button_one', '/assets/button_sprite_sheet.png')
   }
 
   addMatter() {
@@ -62,11 +63,18 @@ class MainScene extends Scene3D {
   }
 
   async create() {
-    // just to test the cache
     this.cache.add('myAtlas', await this.load.textureAtlas('ninja.png', 'ninja.json'))
 
     const { orbitControls } = await this.warpSpeed()
     FLAT.initEvents({ canvas: this.renderer.domElement, orbitControls })
+    const size = this.renderer.getSize(new Vector2())
+    FLAT.setSize(size.x, size.y)
+
+    this.deconstructor.add(FLAT /* same effect as FLAT.destroy */, this.matter, orbitControls)
+
+    setTimeout(() => {
+      this.restart()
+    }, 5000)
 
     this.renderer.autoClear = false // To allow render overlay on top of the 3d camera
     const width = window.innerWidth
@@ -109,7 +117,7 @@ class MainScene extends Scene3D {
     })
     rect.setInteractive()
     rect.onInputDown = () => {
-      console.log('You clicked the rectancle')
+      console.log('You clicked the rectangle')
     }
     rect.setPosition(60, height - 60)
 
@@ -176,7 +184,7 @@ class MainScene extends Scene3D {
 
     // multiline 2 text
     const multiline2 = new FLAT.TextSprite(new FLAT.TextTexture('this is\na very\nlong\ntext', { fontSize: 32 }))
-    multiline2.setPosition(multiline2.width / 2 + 10, 220)
+    multiline2.setPosition(multiline2.textureWidth / 2 + 10, 220)
     multiline2.setDepth(1)
     multiline2.setInteractive({ pixelPerfect: true })
     this.ui.scene.add(multiline2)
@@ -194,12 +202,12 @@ class MainScene extends Scene3D {
     }
   }
 
-  addButtons() {
+  async addButtons() {
     // https://codepen.io/yandeu/pen/OdYdbp
     const width = window.innerWidth
     const height = window.innerHeight
 
-    const texture = this.cache.get('button_one') as Texture
+    const texture = await this.load.texture('button_one')
     texture.name = 'btn1'
 
     const btn1 = new FLAT.Button(texture, { width: 193, height: 71 }, 2, 1, 0)
@@ -248,7 +256,7 @@ class MainScene extends Scene3D {
     n1.setScale(0.003)
     n1.flipX(true)
     this.scene.add(n1)
-    console.log('Current Frame: ', n1.anims.getFrame())
+    console.log('Current Frame: ', n1.frame.name)
   }
 
   async addHero2() {
@@ -267,7 +275,7 @@ class MainScene extends Scene3D {
     })
 
     const heroPlane = hero
-    const geometry = new THREE.PlaneBufferGeometry(heroPlane.width / 100, heroPlane.height / 100)
+    const geometry = new THREE.PlaneBufferGeometry(heroPlane.textureWidth / 100, heroPlane.textureHeight / 100)
     const material = new THREE.MeshLambertMaterial({
       map: heroPlane.texture,
       transparent: false,
@@ -320,7 +328,7 @@ class MainScene extends Scene3D {
       this.renderer.clearDepth()
       this.renderer.render(this.ui.scene, this.ui.camera)
 
-      FLAT.render(this.ui.camera)
+      FLAT.updateEvents(this.ui.camera)
     }
   }
 

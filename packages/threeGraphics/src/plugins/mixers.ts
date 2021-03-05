@@ -1,5 +1,12 @@
 import { AnimationMixer, Object3D } from 'three'
 
+export interface GetMixers {
+  create: (root: Object3D) => AnimationMixer
+  add: (animationMixer: AnimationMixer) => number
+  get: () => AnimationMixer[]
+  update: (delta: number) => void
+}
+
 class Mixers {
   private _mixers: AnimationMixer[] = []
 
@@ -12,7 +19,7 @@ class Mixers {
     return mixer
   }
 
-  get mixers() {
+  get mixers(): GetMixers {
     return {
       create: (root: Object3D) => this.animationMixer(root),
       add: (animationMixer: AnimationMixer) => this._mixers.push(animationMixer),

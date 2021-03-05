@@ -76,11 +76,11 @@ export class TextureAtlas extends ActionSprite {
   }
 
   protected scaleFrame() {
-    if (!this.currentFrame) return
+    if (!this._frame?.name) return
 
     const {
       frame: { w, h }
-    } = this.getFrame(this.currentFrame as string)
+    } = this.getFrame(this._frame.name as string)
 
     let scaleX = (w * this._internalScale.x) / this._pixelRatio
     let scaleY = (h * this._internalScale.y) / this._pixelRatio
@@ -112,7 +112,7 @@ export class TextureAtlas extends ActionSprite {
   }
 
   private update(frameName?: string) {
-    if (!frameName) frameName = this.currentFrame as string
+    if (!frameName) frameName = this._frame.name as string
     if (!frameName) return
 
     const f = this.getFrame(frameName)
@@ -121,26 +121,26 @@ export class TextureAtlas extends ActionSprite {
     const { frame, rotated, trimmed, spriteSourceSize, sourceSize } = f
 
     // set current frame
-    this.currentFrame = frameName
+    this._frame.name = frameName
 
     // reset rotation
     this.texture.rotation = 0
 
     // set values
-    let x = frame.x / this.width
-    let y = 1 - (frame.y + frame.h) / this.height
+    let x = frame.x / this.textureWidth
+    let y = 1 - (frame.y + frame.h) / this.textureHeight
     let w = frame.w
     let h = frame.h
 
-    this.currentFrameWidth = w
-    this.currentFrameHeight = h
+    this._frame.width = w
+    this._frame.height = h
 
     // if the frame is rotated
     if (rotated) {
       // rotate texture
       this.texture.rotation = Math.PI / 2
       // adjust y
-      y = 1 - frame.y / this.height
+      y = 1 - frame.y / this.textureHeight
       // swap w and h
       ;[w, h] = [h, w]
       // check flipX
@@ -167,15 +167,15 @@ export class TextureAtlas extends ActionSprite {
     let offsetX = x
     let offsetY = y
 
-    let sizeX = w / this.width
-    let sizeY = h / this.height
+    let sizeX = w / this.textureWidth
+    let sizeY = h / this.textureHeight
 
     // if the frame is flipped
     if (this._flipX) {
       sizeX *= -1
 
-      if (!rotated) offsetX += frame.w / this.width
-      else offsetY -= frame.w / this.height
+      if (!rotated) offsetX += frame.w / this.textureWidth
+      else offsetY -= frame.w / this.textureHeight
     }
 
     this.offsetTexture(offsetX, offsetY)

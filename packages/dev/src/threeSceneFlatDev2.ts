@@ -1,6 +1,9 @@
 import { Project, Scene3D, PhysicsLoader, ExtendedMesh, FLAT, THREE } from 'enable3d'
 import * as Matter from 'matter-js'
 
+// import { Tap } from '@enable3d/three-graphics/jsm/tap'
+import { Keyboard } from '@enable3d/three-graphics/jsm/keyboard'
+
 import { Camera, Scene } from 'three'
 
 class MainScene extends Scene3D {
@@ -37,7 +40,7 @@ class MainScene extends Scene3D {
       if (fruit === 'background') continue
 
       const f = new FLAT.TextureAtlas(this.atlas, fruit)
-      // f.setPixelRatio(2)
+      f.setPixelRatio(1)
       f.setScale(0.75)
       this.ui.scene.add(f)
 
@@ -45,8 +48,8 @@ class MainScene extends Scene3D {
       let y = 50 + Math.random() * 250
 
       if (fruit === 'ground') {
-        x = width / 2
-        y = height - f.currentFrameHeight / 2
+        x = f.frame.width / 2
+        y = height - f.frame.height / 2
       }
 
       f.body = this.matter.addBodyFromFixtures(x, y, bodies[fruit])
@@ -61,6 +64,65 @@ class MainScene extends Scene3D {
 
   async create() {
     this.warpSpeed()
+
+    // check https://keycode.info/ (event.code)
+    const keyboard = new Keyboard()
+
+    // keyboard.watch.down(keyCode => {
+    //   console.log('down', keyCode)
+    // })
+
+    // keyboard.watch.up(keyCode => {
+    //   console.log('up', keyCode)
+    // })
+
+    keyboard.once.down('KeyE KeyR', keyCode => {
+      console.log(`${keyCode} is down.`)
+    })
+
+    keyboard.on.down('KeyQ', keyCode => {
+      console.log(`${keyCode} is down.`)
+    })
+
+    keyboard.on.down('KeyL KeyK Space', keyCode => {
+      console.log(`${keyCode} is down.`)
+    })
+
+    keyboard.on.up('KeyL', () => {
+      console.log('KeyL is up.')
+    })
+
+    setTimeout(() => {
+      keyboard.destroy()
+    }, 5000)
+
+    // keyboard.once.up('KeyL', () => {
+    //   console.log('LL UP ONCE')
+    // })
+
+    // setInterval(() => {
+    //   console.log(keyboard.key('KeyW').isDown)
+    // }, 1000)
+
+    // const tap = new Tap(this.renderer.domElement)
+
+    // tap.on.down(() => {
+    //   console.log('w')
+    // })
+    // tap.on.up(() => {
+    //   console.log('up')
+    // })
+    // tap.on.move(({ position }) => {})
+
+    // tap.pointerLock.request().then(event => {
+    //   console.log(event)
+
+    //   setTimeout(() => {
+    //     tap.pointerLock.exit().then(event => {
+    //       console.log(event)
+    //     })
+    //   }, 2500)
+    // })
 
     this.renderer.autoClear = false // To allow render overlay on top of the 3d camera
     const width = window.innerWidth
@@ -83,7 +145,7 @@ class MainScene extends Scene3D {
       this.renderer.clearDepth()
       this.renderer.render(this.ui.scene, this.ui.camera)
 
-      FLAT.render(this.ui.camera)
+      FLAT.updateEvents(this.ui.camera)
     }
   }
 }

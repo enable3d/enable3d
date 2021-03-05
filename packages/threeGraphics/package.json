@@ -28,7 +28,9 @@
   "dependencies": {
     "@enable3d/ammo-physics": "^0.22.0-dev.1",
     "@enable3d/common": "^0.22.0-dev.1",
-    "@enable3d/three-wrapper": "^0.22.0-dev.1"
+    "@enable3d/three-wrapper": "^0.22.0-dev.1",
+    "@yandeu/events": "0.0.5",
+    "@yandeu/tap": "0.0.3"
   },
   "peerDependencies": {
     "@types/matter-js": "^0.14.10",

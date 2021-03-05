@@ -18,6 +18,19 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { Lights, Loaders, Factories } from '.'
 import { AmmoPhysics, ExtendedObject3D } from '@enable3d/ammo-physics'
 
+export interface WarpSpeedOptions {
+  camera?: PerspectiveCamera | OrthographicCamera | undefined
+  lights?:
+    | {
+        ambientLight: AmbientLight
+        directionalLight: DirectionalLight
+        hemisphereLight: HemisphereLight
+      }
+    | undefined
+  ground?: ExtendedObject3D | undefined
+  orbitControls?: OrbitControls | undefined
+}
+
 export type WarpedStartFeatures =
   | 'light'
   | 'camera'
@@ -50,7 +63,7 @@ export default class WarpSpeed {
    * It takes took long to setup the third dimension your self? Get started with warp speed by using this function.
    * @param features Pass the features you want to setup.
    */
-  async warpSpeed(...features: WarpedStartFeatures[]) {
+  async warpSpeed(...features: WarpedStartFeatures[]): Promise<WarpSpeedOptions> {
     let Features: {
       camera?: PerspectiveCamera | OrthographicCamera
       lights?: {

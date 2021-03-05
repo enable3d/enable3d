@@ -6,10 +6,17 @@
 
 import { SimpleSprite } from './simpleSprite'
 import { Texture } from 'three'
-import { EventEmitter } from 'eventemitter3'
+import { Events } from '@yandeu/events'
+
+interface Frame {
+  name: string
+  index: number
+  width: number
+  height: number
+}
 
 interface Anims {
-  key: string
+  name: string
   rate: number
   repeat: number
   timeline: number[]
@@ -20,11 +27,35 @@ export abstract class ActionSprite extends SimpleSprite {
   private _anims: Anims[] = []
   protected _flipX = false
 
-  public currentFrame: number | string
-  public currentIndex: number = 0
-  public currentAnimation: string = ''
-  public currentFrameWidth: number = 0
-  public currentFrameHeight: number = 0
+  protected _frame: Frame = {
+    name: '',
+    index: -1,
+    width: -1,
+    height: -1
+  }
+
+  public get frame(): Frame {
+    return {
+      name: this._frame.name,
+      index: this._frame.index,
+      width: (this._frame.width * this._internalScale.x * 1) / this._pixelRatio,
+      height: (this._frame.height * this._internalScale.y * 1) / this._pixelRatio
+    }
+  }
+
+  private _currentIndex: number = 0
+  private _currentAnimationName: string = ''
+
+  get anims() {
+    return {
+      add: this._add.bind(this),
+      get: this.getAnimationByName.bind(this),
+      play: this._play.bind(this),
+      stop: this._stop.bind(this),
+      getName: () => this._currentAnimationName,
+      name: this._currentAnimationName
+    }
+  }
 
   public interval: number
 
@@ -54,18 +85,18 @@ export abstract class ActionSprite extends SimpleSprite {
 
   public abstract flipX(flip: boolean): void
 
-  getAnimationByKey(key: string) {
-    return this._anims.filter(a => a.key === key)[0]
+  getAnimationByName(name: string) {
+    return this._anims.filter(a => a.name === name)[0]
   }
 
   private _add(
-    key: string,
+    name: string,
     frameOptions: { start?: number; end?: number; rate?: number; repeat?: number; timeline?: number[] }
   ) {
     const { start, end, rate = 30, repeat = -1, timeline = [] } = frameOptions
 
-    if (this.getAnimationByKey(key)) {
-      console.warn(`The animation "${key}" does already exist!`)
+    if (this.getAnimationByName(name)) {
+      console.warn(`The animation "${name}" does already exist!`)
       return
     }
 
@@ -80,35 +111,35 @@ export abstract class ActionSprite extends SimpleSprite {
       }
     }
 
-    this._anims.push({ key, timeline, rate, repeat })
+    this._anims.push({ name, timeline, rate, repeat })
   }
 
   private _stop() {
     if (this.interval) clearInterval(this.interval)
   }
 
-  private _play(key: string) {
+  private _play(name: string) {
     this._stop()
 
-    this.currentAnimation = key
+    this._currentAnimationName = name
 
-    const animation = this.getAnimationByKey(key)
-    if (!animation) console.warn(`Animation "${key}" does not exist!`)
+    const animation = this.getAnimationByName(name)
+    if (!animation) console.warn(`Animation "${name}" does not exist!`)
 
     const { timeline, rate, repeat } = animation
 
-    this.currentIndex = -1
+    this._currentIndex = -1
     let loops = 0
 
     const playNextFrame = () => {
-      this.currentIndex++
+      this._currentIndex++
 
-      if (this.currentIndex >= timeline.length) {
-        this.currentIndex = 0
+      if (this._currentIndex >= timeline.length) {
+        this._currentIndex = 0
         loops++
       }
 
-      this.currentFrame = timeline[this.currentIndex]
+      this._currentIndex = timeline[this._currentIndex]
 
       const shouldStop = !(repeat === -1 || loops < repeat)
 
@@ -118,7 +149,7 @@ export abstract class ActionSprite extends SimpleSprite {
         return
       }
 
-      this.setFrame(this.currentFrame)
+      this.setFrame(this._currentIndex)
     }
 
     playNextFrame()
@@ -133,23 +164,13 @@ export abstract class ActionSprite extends SimpleSprite {
   protected get _events() {
     return {
       emit: (event: string) => {
-        if (!this._eventEmitter) this._eventEmitter = new EventEmitter()
+        if (!this._eventEmitter) this._eventEmitter = new Events()
         this._eventEmitter.emit(event)
       },
       once: (event: string, callback: Function) => {
-        if (!this._eventEmitter) this._eventEmitter = new EventEmitter()
+        if (!this._eventEmitter) this._eventEmitter = new Events()
         this._eventEmitter.once(event, callback)
       }
-    }
-  }
-
-  get anims() {
-    return {
-      add: this._add.bind(this),
-      play: this._play.bind(this),
-      stop: this._stop.bind(this),
-      setFrame: this.setFrame.bind(this),
-      getFrame: () => this.currentFrame
     }
   }
 }

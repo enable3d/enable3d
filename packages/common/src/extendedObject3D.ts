@@ -73,9 +73,9 @@ export class ExtendedObject3D extends Object3D {
       /** Get the name of the current animation. */
       current: this._currentAnimation,
       /** Add animation name and the AnimationClip. */
-      add: (name: string, animation: AnimationClip) => this.animationAdd(name, animation),
+      add: (name: string, animation: AnimationClip) => this._animsAdd(name, animation),
       /** Get AnimationAction by animation name. */
-      get: (name: string) => this.animationGet(name),
+      get: (name: string) => this._animsGet(name),
       /**
        * Play an animation.
        * @param name Animation name.
@@ -83,28 +83,29 @@ export class ExtendedObject3D extends Object3D {
        * @param loop Should the animation loop?
        */
       play: (name: string, transitionDuration = 500, loop: boolean = true) =>
-        this.animationPlay(name, transitionDuration, loop),
+        this._animsPlay(name, transitionDuration, loop),
       /** Get the AnimationMixer */
       mixer: this.animationMixer
     }
   }
 
-  /** Control your animations. (Alias for anims) */
+  /** @deprecated Please use anims instead! */
   public get animation() {
+    console.warn('[enable3d] Please use "anims" instead of "animation"')
     return this.anims
   }
 
-  private animationAdd(name: string, animation: AnimationClip) {
+  private _animsAdd(name: string, animation: AnimationClip) {
     this._animationActions.set(name, this.animationMixer.clipAction(animation))
   }
 
-  private animationGet(name: string) {
+  private _animsGet(name: string) {
     const action = this._animationActions.get(name) as AnimationAction
     if (!action) console.warn(`[enable3d] Animation(${name}) not found!`)
     return action
   }
 
-  private animationPlay(name: string, transitionDuration = 500, loop: boolean = true) {
+  private _animsPlay(name: string, transitionDuration = 500, loop: boolean = true) {
     const next = this._animationActions.get(name)
     const current = this._animationActions.get(this._currentAnimation)
 
