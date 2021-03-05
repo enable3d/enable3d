@@ -82,8 +82,8 @@ export class TextureAtlas extends ActionSprite {
       frame: { w, h }
     } = this.getFrame(this._frame.name as string)
 
-    let scaleX = (w * this._internalScale.x) / this._pixelRatio
-    let scaleY = (h * this._internalScale.y) / this._pixelRatio
+    const scaleX = (w * this._internalScale.x) / this._pixelRatio
+    const scaleY = (h * this._internalScale.y) / this._pixelRatio
     this.scale.set(scaleX, scaleY, 1)
   }
 
@@ -127,7 +127,7 @@ export class TextureAtlas extends ActionSprite {
     this.texture.rotation = 0
 
     // set values
-    let x = frame.x / this.textureWidth
+    const x = frame.x / this.textureWidth
     let y = 1 - (frame.y + frame.h) / this.textureHeight
     let w = frame.w
     let h = frame.h
@@ -168,7 +168,7 @@ export class TextureAtlas extends ActionSprite {
     let offsetY = y
 
     let sizeX = w / this.textureWidth
-    let sizeY = h / this.textureHeight
+    const sizeY = h / this.textureHeight
 
     // if the frame is flipped
     if (this._flipX) {

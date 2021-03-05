@@ -126,11 +126,7 @@ export default class Constraints {
       // offset
       transformB.setOrigin(new Ammo.btVector3(offset.x, offset.y, offset.z))
 
-      const transformA = bodyA
-        .getCenterOfMassTransform()
-        .inverse()
-        .op_mul(bodyB.getWorldTransform())
-        .op_mul(transformB)
+      const transformA = bodyA.getCenterOfMassTransform().inverse().op_mul(bodyB.getWorldTransform()).op_mul(transformB)
 
       return { transformA: transformA, transformB: transformB }
     } else {
@@ -140,10 +136,7 @@ export default class Constraints {
       transformB.setIdentity()
       transformB.setOrigin(center)
 
-      const transformA = bodyA
-        .getCenterOfMassTransform()
-        .inverse()
-        .op_mul(bodyB.getWorldTransform())
+      const transformA = bodyA.getCenterOfMassTransform().inverse().op_mul(bodyB.getWorldTransform())
 
       transformA.op_mul(transformB)
 

@@ -256,9 +256,9 @@ export class JoyStick extends Events {
 
   private getMousePosition(evt: MouseEvent | TouchEvent) {
     // @ts-ignore
-    let clientX = evt.targetTouches ? evt.targetTouches[0].pageX : evt.clientX
+    const clientX = evt.targetTouches ? evt.targetTouches[0].pageX : evt.clientX
     // @ts-ignore
-    let clientY = evt.targetTouches ? evt.targetTouches[0].pageY : evt.clientY
+    const clientY = evt.targetTouches ? evt.targetTouches[0].pageY : evt.clientY
     return { x: clientX, y: clientY }
   }
 }

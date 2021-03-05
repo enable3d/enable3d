@@ -1,7 +1,7 @@
 // copied from https://github.com/mrdoob/three.js/blob/670b1e9e85356d98efa4c702e93c85dd52f01e1e/src/core/BufferGeometry.js
 
 import { Geometry } from 'three/examples/jsm/deprecated/Geometry'
-import { BufferGeometry, BufferAttribute, Float32BufferAttribute } from 'three'
+import { BufferAttribute, BufferGeometry, Float32BufferAttribute } from 'three'
 import { DirectGeometry } from './_directGeometry'
 
 export const fromGeometry = (buffer: BufferGeometry, geometry: Geometry) => {

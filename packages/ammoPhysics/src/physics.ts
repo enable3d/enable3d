@@ -20,13 +20,13 @@ import Shapes from './shapes'
 import Constraints from './constraints'
 import { Events } from '@yandeu/events'
 import { Geometry } from './externals'
-import { Vector3, Quaternion, Scene, Euler, Matrix4, BufferGeometry, REVISION } from 'three'
+import { BufferGeometry, Euler, Matrix4, Quaternion, REVISION, Scene, Vector3 } from 'three'
 import {
-  iterateGeometries,
-  createHullShape,
   createHACDShapes,
+  createHullShape,
+  createTriMeshShape,
   createVHACDShapes,
-  createTriMeshShape
+  iterateGeometries
 } from './three-to-ammo'
 import { createTorusShape } from './torusShape'
 import Factories from '@enable3d/common/dist/factories'
@@ -40,7 +40,7 @@ import DefaultMaterial from '@enable3d/common/dist/defaultMaterial'
 export { PhysicsLoader }
 
 import * as Types from '@enable3d/common/dist/types'
-import { ClosestRaycaster, AllHitsRaycaster } from './raycaster/raycaster'
+import { AllHitsRaycaster, ClosestRaycaster } from './raycaster/raycaster'
 export { ClosestRaycaster, AllHitsRaycaster }
 export { Types }
 
@@ -325,10 +325,10 @@ class AmmoPhysics extends Events {
           // do nothing ...
         } else if (!objThree.body.ammo.isStaticObject()) {
           // get position and rotation
-          let p = this.worldTransform.getOrigin()
-          let q = this.worldTransform.getRotation()
+          const p = this.worldTransform.getOrigin()
+          const q = this.worldTransform.getRotation()
           // body offset
-          let o = objThree.body.offset
+          const o = objThree.body.offset
           // set position and rotation
           if (objThree.body.ignoreScale) {
             this.tmpVector3a.set(objThree.scale.x, objThree.scale.y, objThree.scale.z)
@@ -366,16 +366,16 @@ class AmmoPhysics extends Events {
 
     // check collisions
     for (let i = 0; i < numManifolds; i++) {
-      let contactManifold = dispatcher.getManifoldByIndexInternal(i)
-      let numContacts = contactManifold.getNumContacts()
+      const contactManifold = dispatcher.getManifoldByIndexInternal(i)
+      const numContacts = contactManifold.getNumContacts()
 
       // @ts-ignore
       const rb0 = Ammo.castObject(contactManifold.getBody0(), Ammo.btRigidBody)
       // @ts-ignore
       const rb1 = Ammo.castObject(contactManifold.getBody1(), Ammo.btRigidBody)
 
-      let threeObject0 = rb0.threeObject as ExtendedObject3D
-      let threeObject1 = rb1.threeObject as ExtendedObject3D
+      const threeObject0 = rb0.threeObject as ExtendedObject3D
+      const threeObject1 = rb1.threeObject as ExtendedObject3D
 
       if (!threeObject0 || !threeObject1) {
         continue

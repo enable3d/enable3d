@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-import { AmmoPhysics, PhysicsLoader, ExtendedObject3D, ExtendedMesh } from '@enable3d/ammo-physics'
+import { AmmoPhysics, ExtendedMesh, ExtendedObject3D, PhysicsLoader } from '@enable3d/ammo-physics'
 
 const MainScene = () => {
   // scene

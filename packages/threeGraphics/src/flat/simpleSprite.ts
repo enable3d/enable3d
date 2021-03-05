@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Texture, Sprite, SpriteMaterial } from 'three'
+import { Sprite, SpriteMaterial, Texture } from 'three'
 import { addObject } from './_misc'
 
 export class SimpleSprite extends Sprite {

@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Engine, World, Runner, Bodies, Body, Vertices, Render, Events, Vector } from 'matter-js'
+import { Bodies, Body, Engine, Events, Render, Runner, Vector, Vertices, World } from 'matter-js'
 import { Vector2 } from 'three'
 import { SimpleSprite } from '../simpleSprite'
 import { adjustDebugColor } from './_misc'

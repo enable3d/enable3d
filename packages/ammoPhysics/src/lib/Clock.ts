@@ -53,7 +53,7 @@ class Clock {
     }
 
     if (this.running) {
-      let newTime = (typeof performance === 'undefined' ? Date : performance).now()
+      const newTime = (typeof performance === 'undefined' ? Date : performance).now()
 
       diff = (newTime - this.oldTime) / 1000
       this.oldTime = newTime

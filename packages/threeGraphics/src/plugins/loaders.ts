@@ -4,12 +4,12 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Cache, Group, TextureLoader, Texture, FileLoader, ImageLoader, ObjectLoader } from 'three'
+import { Cache, FileLoader, Group, ImageLoader, ObjectLoader, Texture, TextureLoader } from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
-import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { SVGLoader, SVGResult } from 'three/examples/jsm/loaders/SVGLoader'
 
-import type { Atlas, JSONHash, JSONArrayFrames } from '../flat/textureAtlas'
+import type { Atlas, JSONArrayFrames, JSONHash } from '../flat/textureAtlas'
 
 export default class Loaders {
   private _fileLoader: FileLoader

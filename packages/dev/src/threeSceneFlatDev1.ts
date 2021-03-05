@@ -1,6 +1,6 @@
-import { Project, Scene3D, PhysicsLoader, ExtendedMesh, FLAT, THREE } from 'enable3d'
+import { ExtendedMesh, FLAT, PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
 
-import { NearestFilter, Camera, Scene } from 'three'
+import { Camera, NearestFilter, Scene } from 'three'
 import { Texture, Vector2 } from 'three'
 import { PlaneGeometry } from 'three'
 import { MeshLambertMaterial } from 'three'

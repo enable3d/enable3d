@@ -5,7 +5,7 @@
  */
 
 import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import { setParent, setOrbitControls } from './_misc'
+import { setOrbitControls, setParent } from './_misc'
 export { updateEvents, getParent, destroy, setSize } from './_misc'
 
 export const initEvents = ({ canvas, orbitControls }: { canvas: HTMLCanvasElement; orbitControls?: OrbitControls }) => {

@@ -30,7 +30,7 @@ const Robot = (scene: MainScene) => {
     // robot.body.setAngularFactor(0, 1, 0)
 
     // sensor
-    let sensor = scene.third.physics.add.box(
+    const sensor = scene.third.physics.add.box(
       {
         ...pos,
         x: pos.x - 8,

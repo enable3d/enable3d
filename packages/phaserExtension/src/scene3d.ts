@@ -39,7 +39,7 @@ export class Scene3D extends Phaser.Scene {
 
   public clearThirdDimension() {
     // @ts-ignore
-    for (let key in this.third) delete this.third[key]
+    for (const key in this.third) delete this.third[key]
     // @ts-ignore
     delete this.third
   }

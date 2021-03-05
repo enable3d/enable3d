@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { AnimationClip, AnimationMixer, Mesh, Line, Points, Object3D, Vector3, LoopOnce } from 'three'
+import { AnimationClip, AnimationMixer, Line, LoopOnce, Mesh, Object3D, Points, Vector3 } from 'three'
 import type PhysicsBody from './physicsBody'
 import { AnimationAction } from 'three'
 

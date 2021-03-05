@@ -7,14 +7,14 @@
 // TODO(yandeu) Make heightmap work with Buffer Geometries.
 
 import {
-  Scene,
-  PlaneBufferGeometry,
-  MeshPhongMaterial,
-  DoubleSide,
+  BufferGeometry,
   Color,
-  Texture,
+  DoubleSide,
+  MeshPhongMaterial,
   MeshPhongMaterialParameters,
-  BufferGeometry
+  PlaneBufferGeometry,
+  Scene,
+  Texture
 } from 'three'
 import { ExtendedMesh } from '@enable3d/common/dist/extendedMesh'
 import { HeightMapConfig } from '@enable3d/common/dist/types'

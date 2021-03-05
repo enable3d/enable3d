@@ -62,11 +62,11 @@ export default class WebXR {
     const { targetRayMode } = data
 
     if (targetRayMode === 'tracked-pointer') {
-      let geometry = new THREE.BufferGeometry()
+      const geometry = new THREE.BufferGeometry()
       geometry.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, -1], 3))
       geometry.setAttribute('color', new THREE.Float32BufferAttribute([1, 0, 0, 1, 1, 1], 3))
 
-      let material = new THREE.LineBasicMaterial({
+      const material = new THREE.LineBasicMaterial({
         vertexColors: true
       })
 
@@ -74,8 +74,8 @@ export default class WebXR {
     }
 
     if (targetRayMode === 'gaze') {
-      let geometry = new THREE.RingBufferGeometry(0.02, 0.04, 32).translate(0, 0, -1)
-      let material = new THREE.MeshBasicMaterial({ color: 'red', opacity: 0.5, transparent: true })
+      const geometry = new THREE.RingBufferGeometry(0.02, 0.04, 32).translate(0, 0, -1)
+      const material = new THREE.MeshBasicMaterial({ color: 'red', opacity: 0.5, transparent: true })
       return new THREE.Mesh(geometry, material)
     }
 

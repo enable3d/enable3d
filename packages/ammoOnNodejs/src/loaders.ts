@@ -17,7 +17,7 @@ declare global {
 /**
  * Imports
  */
-import { readFile, existsSync } from 'fs'
+import { existsSync, readFile } from 'fs'
 
 /**
  * FXBLoader imports
@@ -51,7 +51,7 @@ export class FBXLoader extends Loader {
           if (err) throw err
           const trimmed = this.trimBuffer(buffer)
           try {
-            let fbx = this.loader.parse(trimmed, '')
+            const fbx = this.loader.parse(trimmed, '')
             if (fbx) return resolve(fbx)
           } catch (error) {
             return reject(error.message)

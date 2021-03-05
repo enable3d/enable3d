@@ -6,7 +6,7 @@
 
 import { LinearFilter, Texture } from 'three'
 import { SimpleSprite } from './simpleSprite'
-import { createNewTexture, canvas, calcHeight, calcWidth, clearObjects, roundRect } from './_misc'
+import { calcHeight, calcWidth, canvas, clearObjects, createNewTexture, roundRect } from './_misc'
 
 export interface TextStyles {
   align?: 'center' | 'left' | 'right'
@@ -157,11 +157,11 @@ const createTextImage = (text: string, styles: TextStyles) => {
 
   ctx.font = font
 
-  let line_height = calcHeight(text, fontSize, fontFamily, lineHeight)
-  let line_width = fillStyle ? lineWidth * 2 : lineWidth
+  const line_height = calcHeight(text, fontSize, fontFamily, lineHeight)
+  const line_width = fillStyle ? lineWidth * 2 : lineWidth
 
-  let height = line_height * lines.length + paddingY * 2 + borderWidth * 2
-  let width = calcWidth(ctx, lines) + line_width + paddingX * 2 + borderWidth * 2
+  const height = line_height * lines.length + paddingY * 2 + borderWidth * 2
+  const width = calcWidth(ctx, lines) + line_width + paddingX * 2 + borderWidth * 2
 
   // adjust to PowerOfTwo (WebGL1 only)
   // width = Math.max(2, MathUtils.ceilPowerOfTwo(width))

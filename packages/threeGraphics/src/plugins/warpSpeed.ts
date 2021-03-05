@@ -1,21 +1,21 @@
 import {
-  Scene,
-  PerspectiveCamera,
-  OrthographicCamera,
-  WebGLRenderer,
   AmbientLight,
+  BackSide,
+  Color,
   DirectionalLight,
   HemisphereLight,
   Mesh,
-  BackSide,
+  OrthographicCamera,
+  PerspectiveCamera,
+  RepeatWrapping,
+  Scene,
   ShaderMaterial,
   SphereBufferGeometry,
-  Color,
-  RepeatWrapping
+  WebGLRenderer
 } from 'three'
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import { Lights, Loaders, Factories } from '.'
+import { Factories, Lights, Loaders } from '.'
 import { AmmoPhysics, ExtendedObject3D } from '@enable3d/ammo-physics'
 
 export interface WarpSpeedOptions {
@@ -93,9 +93,9 @@ export default class WarpSpeed {
       })
     }
 
-    // TODO: add fog
-    if (features.includes('fog')) {
-    }
+    // TODO(yandeu): add fog
+    // if (features.includes('fog')) {
+    // }
 
     if (features.includes('sky')) {
       // https://github.com/mrdoob/three.js/blob/master/examples/webgl_lights_hemisphere.html

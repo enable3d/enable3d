@@ -5,22 +5,22 @@
  */
 
 import type {
-  MeshStandardMaterialParameters,
-  MeshBasicMaterialParameters,
-  MeshPhongMaterialParameters,
   LineBasicMaterialParameters,
-  PointsMaterialParameters,
-  MeshNormalMaterialParameters,
-  PerspectiveCamera,
-  OrthographicCamera,
-  Shape,
-  MeshLambertMaterialParameters,
-  Texture,
-  MeshToonMaterialParameters,
-  MeshPhysicalMaterialParameters,
   Material,
-  WebGLRenderer,
-  Quaternion
+  MeshBasicMaterialParameters,
+  MeshLambertMaterialParameters,
+  MeshNormalMaterialParameters,
+  MeshPhongMaterialParameters,
+  MeshPhysicalMaterialParameters,
+  MeshStandardMaterialParameters,
+  MeshToonMaterialParameters,
+  OrthographicCamera,
+  PerspectiveCamera,
+  PointsMaterialParameters,
+  Quaternion,
+  Shape,
+  Texture,
+  WebGLRenderer
 } from 'three'
 
 import type { ExtendedObject3D } from './extendedObject3D'

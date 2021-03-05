@@ -39,7 +39,7 @@ import logger from '@enable3d/common/dist/logger'
 
 const newConvexGeometry = (points: Vector3[]) => {
   // @ts-ignore
-  let _newConvexGeometry = window.THREE && window.THREE.ConvexGeometry ? window.THREE.ConvexGeometry : ConvexGeometry
+  const _newConvexGeometry = window.THREE && window.THREE.ConvexGeometry ? window.THREE.ConvexGeometry : ConvexGeometry
   return new _newConvexGeometry(points)
 }
 

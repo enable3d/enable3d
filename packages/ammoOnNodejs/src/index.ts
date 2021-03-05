@@ -7,7 +7,7 @@
 // export { Ammo } from './ammo'
 export { Physics } from './physics'
 
-import { GLTFLoader, FBXLoader } from './loaders'
+import { FBXLoader, GLTFLoader } from './loaders'
 export const Loaders = { GLTFLoader, FBXLoader }
 
 export { ServerClock } from '@enable3d/common/dist/serverClock'

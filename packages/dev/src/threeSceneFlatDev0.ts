@@ -1,4 +1,4 @@
-import { Project, Scene3D, PhysicsLoader, FLAT } from 'enable3d'
+import { FLAT, PhysicsLoader, Project, Scene3D } from 'enable3d'
 
 import { Camera, Scene } from 'three'
 

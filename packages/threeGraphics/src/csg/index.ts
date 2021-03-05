@@ -22,7 +22,7 @@
 
 import { Geometry } from 'three/examples/jsm/deprecated/Geometry'
 import { Face3 } from '@enable3d/three-wrapper/dist/deprecated/face3'
-import { Vector3, Matrix3, Mesh, Matrix4, Scene, REVISION } from 'three'
+import { Matrix3, Matrix4, Mesh, REVISION, Scene, Vector3 } from 'three'
 import Transform from '../plugins/transform'
 
 /**
@@ -436,7 +436,7 @@ class Plane {
     // Put the polygon in the correct list, splitting it when necessary.
     switch (polygonType) {
       case COPLANAR:
-        ;(this.normal.dot(polygon.plane.normal) > 0 ? coplanarFront : coplanarBack).push(polygon)
+        (this.normal.dot(polygon.plane.normal) > 0 ? coplanarFront : coplanarBack).push(polygon)
         break
       case FRONT:
         front.push(polygon)

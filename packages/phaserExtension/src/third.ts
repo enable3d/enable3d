@@ -5,7 +5,7 @@
  */
 
 import { ThreeGraphics } from '@enable3d/three-graphics/jsm'
-import { ThreeGraphicsConfig, ExtendedObject3D, ExtendedMesh } from '@enable3d/common/dist/types'
+import { ExtendedMesh, ExtendedObject3D, ThreeGraphicsConfig } from '@enable3d/common/dist/types'
 import { Scene3D } from './scene3d'
 
 import * as Plugins from '@enable3d/three-graphics/jsm/plugins'

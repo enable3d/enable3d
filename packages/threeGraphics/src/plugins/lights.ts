@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Scene, Color, Mesh, Object3D, SphereBufferGeometry, MeshBasicMaterial } from 'three'
+import { Color, Mesh, MeshBasicMaterial, Object3D, Scene, SphereBufferGeometry } from 'three'
 import { AmbientLight, DirectionalLight, HemisphereLight, PointLight, RectAreaLight, SpotLight } from 'three'
 import { DirectionalLightHelper, SpotLightHelper } from 'three'
 

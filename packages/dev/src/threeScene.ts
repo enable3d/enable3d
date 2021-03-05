@@ -1,6 +1,6 @@
-import { Project, Scene3D, PhysicsLoader, ExtendedObject3D, THREE } from 'enable3d'
+import { ExtendedObject3D, PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
 import { REVISION } from 'three'
-import { SpotLight, SpotLightHelper, PointLight, DirectionalLight } from '../../threeWrapper/dist'
+import { DirectionalLight, PointLight, SpotLight, SpotLightHelper } from '../../threeWrapper/dist'
 
 const isTouchDevice = 'ontouchstart' in window
 
@@ -20,7 +20,7 @@ class MainScene extends Scene3D {
       this.scene.add(boxMan)
 
       let i = 0
-      let anims = ['run', 'sprint', 'jump_running', 'idle', 'driving', 'falling']
+      const anims = ['run', 'sprint', 'jump_running', 'idle', 'driving', 'falling']
 
       // ad the box man's animation mixer to the animationMixers array (for auto updates)
       this.animationMixers.add(boxMan.animation.mixer)
@@ -38,7 +38,7 @@ class MainScene extends Scene3D {
       const nextAnimation = (time: number) => {
         setTimeout(() => {
           i++
-          let next = anims[i % 5]
+          const next = anims[i % 5]
           boxMan.animation.play(next, 200, next === 'jump_running' ? false : true)
           console.log('current animation', boxMan.animation.current)
           nextAnimation(next === 'jump_running' ? 650 : 2500)

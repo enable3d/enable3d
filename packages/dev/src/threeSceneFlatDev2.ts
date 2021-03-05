@@ -1,4 +1,4 @@
-import { Project, Scene3D, PhysicsLoader, ExtendedMesh, FLAT, THREE } from 'enable3d'
+import { ExtendedMesh, FLAT, PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
 import * as Matter from 'matter-js'
 
 // import { Tap } from '@enable3d/three-graphics/jsm/tap'

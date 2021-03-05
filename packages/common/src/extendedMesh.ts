@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Mesh, Vector3, BufferGeometry, Material } from 'three'
+import { BufferGeometry, Material, Mesh, Vector3 } from 'three'
 import type PhysicsBody from './physicsBody'
 
 export class ExtendedMesh extends Mesh {

@@ -34,7 +34,7 @@ export const calcHeight = (text: string, fontSize: number, fontFamily: string, l
     const span = document.createElement('p')
 
     span.style.fontFamily = fontFamily
-    span.style.fontSize = fontSize + 'px'
+    span.style.fontSize = `${fontSize}px`
     span.style.whiteSpace = 'nowrap'
     span.style.lineHeight = lineHeight.toString()
     span.textContent = text
@@ -185,7 +185,7 @@ export const updateEvents = async (camera: Camera) => {
 
     if (object.pixelPerfect) {
       // https://github.com/mrdoob/three.js/issues/758
-      function getImageData(image: ImageBitmap) {
+      const getImageData = (image: ImageBitmap) => {
         // const canvas = document.createElement('canvas')
         canvas.width = image.width
         canvas.height = image.height
@@ -196,7 +196,7 @@ export const updateEvents = async (camera: Camera) => {
         return context.getImageData(0, 0, image.width, image.height)
       }
 
-      function getPixel(imagedata: ImageData, x: number, y: number) {
+      const getPixel = (imagedata: ImageData, x: number, y: number) => {
         const position = (x + imagedata.width * y) * 4
         const data = imagedata.data
         return { r: data[position], g: data[position + 1], b: data[position + 2], a: data[position + 3] }

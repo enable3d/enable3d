@@ -1,6 +1,6 @@
 // misc
-import { addWater, AddWaterConfig } from './water'
-import { Scene, WebGLRenderer, Material, Texture, RepeatWrapping } from 'three'
+import { AddWaterConfig, addWater } from './water'
+import { Material, RepeatWrapping, Scene, Texture, WebGLRenderer } from 'three'
 import { Factories } from '.'
 
 export default class Misc {

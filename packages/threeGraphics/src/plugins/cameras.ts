@@ -4,8 +4,8 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { PerspectiveCameraConfig, OrthographicCameraConfig } from '@enable3d/common/dist/types'
-import { PerspectiveCamera, OrthographicCamera } from 'three'
+import { OrthographicCameraConfig, PerspectiveCameraConfig } from '@enable3d/common/dist/types'
+import { OrthographicCamera, PerspectiveCamera } from 'three'
 
 export default class Cameras {
   public perspectiveCamera(config: PerspectiveCameraConfig = {}): PerspectiveCamera {

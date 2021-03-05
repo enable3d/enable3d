@@ -1,12 +1,12 @@
 // import { THREE } from '@enable3d/phaser-extension'
-import { AmmoPhysics, PhysicsLoader, Clock } from '@enable3d/phaser-extension/node_modules/@enable3d/ammo-physics'
+import { AmmoPhysics, Clock, PhysicsLoader } from '@enable3d/phaser-extension/node_modules/@enable3d/ammo-physics'
 
 const MainScene = () => {
   const physics = new AmmoPhysics('headless')
 
-  let box = physics.add.box({ y: 10 })
+  const box = physics.add.box({ y: 10 })
 
-  let ground = physics.add.ground({ width: 20, height: 20 })
+  const ground = physics.add.ground({ width: 20, height: 20 })
 
   ground.body.on.collision((otherObject: any, event: string) => {
     console.log(otherObject.name, event)

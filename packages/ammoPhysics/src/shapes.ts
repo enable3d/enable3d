@@ -5,17 +5,17 @@
  */
 
 import {
-  SphereConfig,
-  MaterialConfig,
+  AddExistingConfig,
   BoxConfig,
-  GroundConfig,
+  ConeConfig,
   CylinderConfig,
   ExtendedObject3D,
   ExtrudeConfig,
-  TorusConfig,
-  AddExistingConfig,
+  GroundConfig,
+  MaterialConfig,
   PlaneConfig,
-  ConeConfig
+  SphereConfig,
+  TorusConfig
 } from '@enable3d/common/dist/types'
 import Factories from '@enable3d/common/dist/factories'
 

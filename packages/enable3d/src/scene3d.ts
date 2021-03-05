@@ -7,7 +7,7 @@
 import { ThreeGraphics } from '@enable3d/three-graphics/jsm'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { Clock, WebGLRenderer } from 'three'
-import { ExtendedObject3D, ExtendedMesh } from '@enable3d/common/dist/types'
+import { ExtendedMesh, ExtendedObject3D } from '@enable3d/common/dist/types'
 import { AmmoPhysics } from '@enable3d/ammo-physics'
 import { CSG } from '@enable3d/three-graphics/jsm/csg'
 

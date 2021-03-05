@@ -1,16 +1,16 @@
 import { Geometry } from 'three/examples/jsm/deprecated/Geometry'
 import {
   BufferGeometry,
-  Vector3,
+  Mesh,
+  MeshBasicMaterial,
+  OrthographicCamera,
+  PerspectiveCamera,
+  PlaneBufferGeometry,
+  Raycaster,
   Shape,
   Vector2,
-  WebGLRenderer,
-  PerspectiveCamera,
-  OrthographicCamera,
-  Raycaster,
-  PlaneBufferGeometry,
-  MeshBasicMaterial,
-  Mesh
+  Vector3,
+  WebGLRenderer
 } from 'three'
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader'
 import { fromGeometry } from '../csg/_fromGeometry'

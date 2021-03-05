@@ -3,8 +3,12 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "build": "npm run tsc",
     "tsc": "lerna run tsc && npm run start:ammoOnNodejs",
+    "format": "prettier --write packages/**/*.ts",
+    "format:check": "prettier --check packages/**/*.ts",
+    "lint": "eslint  packages/**/*.ts",
+    "lint:fix": "eslint --fix  packages/**/*.ts",
+    "build": "npm run tsc",
     "update-and-fix": "lerna run update && lerna run fix",
     "clean:dist": "rimraf packages/threeWrapper/dist packages/common/dist packages/ammoPhysics/dist packages/ammoOnNodejs/dist packages/enable3d/dist packages/threeGraphics/jsm packages/phaserExtension/dist",
     "clean:bundles": "rimraf bundles",
@@ -60,6 +64,8 @@
   },
   "devDependencies": {
     "@types/node": "^14.14.28",
+    "@yandeu/eslint-config": "^0.0.1",
+    "@yandeu/prettier-config": "^0.0.1",
     "copy-webpack-plugin": "^7.0.0",
     "cross-env": "^7.0.2",
     "html-webpack-plugin": "^5.1.0",

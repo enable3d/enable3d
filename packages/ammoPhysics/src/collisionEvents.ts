@@ -5,7 +5,7 @@
  */
 
 import { Events } from '@yandeu/events'
-import { ExtendedObject3D, CollisionEvent } from '@enable3d/common/dist/types'
+import { CollisionEvent, ExtendedObject3D } from '@enable3d/common/dist/types'
 import { Types } from './physics'
 
 export class CollisionEvents extends Events {

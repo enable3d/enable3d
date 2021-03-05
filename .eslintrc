@@ -1,0 +1,13 @@
+{
+  "extends": ["@yandeu/eslint-config"],
+  "rules": {
+    "no-undef": "off",
+    "sort-imports": "off",
+    // no-dupe-class-members ts fix
+    "no-dupe-class-members": "off",
+    "@typescript-eslint/no-dupe-class-members": ["error"],
+    // no-redeclare ts fix
+    "no-redeclare": "off",
+    "@typescript-eslint/no-redeclare": ["error"]
+  }
+}
