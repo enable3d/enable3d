@@ -1,3 +1,6 @@
+/* eslint-disable no-case-declarations */
+/* eslint-disable constructor-super */
+/* eslint-disable no-this-before-super */
 /**
  * @author       Evan Wallace (http://madebyevan.com/))
  * @copyright    Copyright (c) 2011 Evan Wallace
@@ -436,7 +439,8 @@ class Plane {
     // Put the polygon in the correct list, splitting it when necessary.
     switch (polygonType) {
       case COPLANAR:
-        ;(this.normal.dot(polygon.plane.normal) > 0 ? coplanarFront : coplanarBack).push(polygon)
+        if (this.normal.dot(polygon.plane.normal) > 0) coplanarFront.push(polygon)
+        else coplanarBack.push(polygon)
         break
       case FRONT:
         front.push(polygon)

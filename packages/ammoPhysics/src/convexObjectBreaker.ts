@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-redeclare */
+
 /**
  * Copied from three.js examples and added a fix
  */

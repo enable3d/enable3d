@@ -161,6 +161,7 @@ class DebugDrawer {
   }
 
   reportErrorWarning(warningString: string) {
+    // eslint-disable-next-line no-prototype-builtins
     if (Ammo.hasOwnProperty('Pointer_stringify')) {
       // @ts-ignore
       console.warn(Ammo.Pointer_stringify(warningString))
