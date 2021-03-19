@@ -807,12 +807,12 @@ class AmmoPhysics extends Events {
   public mergeCollisionShapesToCompoundShape(collisionShapes: Ammo.btCollisionShape[]): Ammo.btCompoundShape {
     const compoundShape = new Ammo.btCompoundShape()
     collisionShapes.forEach(shape => {
-      // @ts-ignore
-      const { offset } = shape // offset is a custom parameter
+      const {
+        // @ts-ignore
+        _tmp: { pos, quat, scale, margin } // _tmp is a custom parameter
+      } = shape
 
-      const transform = new Ammo.btTransform()
-      transform.setIdentity()
-      if (offset) transform.getOrigin().setValue(offset.x || 0, offset.y || 0, offset.z || 0)
+      const transform = this.applyPosQuatScaleMargin(shape, pos, quat, scale, margin)
       compoundShape.addChildShape(transform, shape)
     })
     return compoundShape
@@ -856,7 +856,7 @@ class AmmoPhysics extends Events {
       // if we want a custom compound shape, we simply do
       const collisionShapes = compound.map((s: any) => this.createCollisionShape(s.shape, s))
       const compoundShape = this.mergeCollisionShapesToCompoundShape(collisionShapes)
-      const localTransform = this.finishCollisionShape(compoundShape, pos, quat, scale, margin)
+      const localTransform = this.applyPosQuatScaleMargin(compoundShape, pos, quat, scale, margin)
       const rigidBody = this.collisionShapeToRigidBody(compoundShape, localTransform, mass, isKinematicObject)
       this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, offset)
       object.body.breakable = breakable
@@ -880,8 +880,15 @@ class AmmoPhysics extends Events {
         if (child.isMesh) {
           const p = this.prepareThreeObjectForCollisionShape(child)
           const cs = this.createCollisionShape(p.shape, p.params, p.object)
-          // @ts-ignore
-          cs.offset = child.position.clone() // this is relative position to its parent
+
+          // @ts-ignore // the relative pos, quat and scale to its parent
+          cs._tmp = {
+            pos: child.position.clone(),
+            quat: child.quaternion.clone(),
+            scale: child.scale.clone(),
+            margin: margin
+          }
+
           collisionShapes.push(cs)
         }
       })
@@ -901,7 +908,7 @@ class AmmoPhysics extends Events {
     // object.position.copy(pos)
     // object.quaternion.copy(quat)
 
-    const localTransform = this.finishCollisionShape(collisionShape, pos, quat, scale, margin)
+    const localTransform = this.applyPosQuatScaleMargin(collisionShape, pos, quat, scale, margin)
     const rigidBody = this.collisionShapeToRigidBody(collisionShape, localTransform, mass, isKinematicObject)
 
     this.addRigidBodyToWorld(object, rigidBody, collisionFlags, collisionGroup, collisionMask, offset)
@@ -936,12 +943,12 @@ class AmmoPhysics extends Events {
     object.body.setCollisionFlags(collisionFlags)
   }
 
-  public finishCollisionShape(
+  public applyPosQuatScaleMargin(
     collisionShape: Ammo.btCollisionShape,
-    pos: Vector3,
-    quat: Quaternion,
-    scale: Vector3,
-    margin: number
+    pos: Vector3 = new Vector3(),
+    quat: Quaternion = new Quaternion(),
+    scale: Vector3 = new Vector3(),
+    margin: number = 0.01
   ) {
     collisionShape.setMargin(margin)
 
