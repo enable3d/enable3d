@@ -807,13 +807,18 @@ class AmmoPhysics extends Events {
   public mergeCollisionShapesToCompoundShape(collisionShapes: Ammo.btCollisionShape[]): Ammo.btCompoundShape {
     const compoundShape = new Ammo.btCompoundShape()
     collisionShapes.forEach(shape => {
-      const {
-        // @ts-ignore
-        _tmp: { pos, quat, scale, margin } // _tmp is a custom parameter
-      } = shape
+      // @ts-ignore // _tmp is a custom parameter
+      const _tmp = shape._tmp
 
-      const transform = this.applyPosQuatScaleMargin(shape, pos, quat, scale, margin)
-      compoundShape.addChildShape(transform, shape)
+      if (_tmp) {
+        const { pos, quat, scale, margin } = _tmp
+        const transform = this.applyPosQuatScaleMargin(shape, pos, quat, scale, margin)
+        compoundShape.addChildShape(transform, shape)
+      } else {
+        const transform = new Ammo.btTransform()
+        transform.setIdentity()
+        compoundShape.addChildShape(transform, shape)
+      }
     })
     return compoundShape
   }
