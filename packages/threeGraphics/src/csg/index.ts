@@ -436,7 +436,7 @@ class Plane {
     // Put the polygon in the correct list, splitting it when necessary.
     switch (polygonType) {
       case COPLANAR:
-        (this.normal.dot(polygon.plane.normal) > 0 ? coplanarFront : coplanarBack).push(polygon)
+        ;(this.normal.dot(polygon.plane.normal) > 0 ? coplanarFront : coplanarBack).push(polygon)
         break
       case FRONT:
         front.push(polygon)
