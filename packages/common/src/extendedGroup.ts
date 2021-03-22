@@ -8,6 +8,7 @@ import { Group } from 'three'
 import type PhysicsBody from './physicsBody'
 
 export class ExtendedGroup extends Group {
+  public readonly isExtendedGroup = true
   public readonly isMesh = false
 
   public shape: string

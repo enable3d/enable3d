@@ -16,8 +16,10 @@ export interface ExtendedObject3D extends Line, Mesh, Points {
 }
 
 export class ExtendedObject3D extends Object3D {
-  private vector3 = new Vector3()
+  public readonly isExtendedObject3D = true
   public readonly isGroup = false
+
+  private vector3 = new Vector3()
 
   public shape: string
   public name: string

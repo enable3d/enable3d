@@ -8,8 +8,10 @@ import { BufferGeometry, Material, Mesh, Vector3 } from 'three'
 import type PhysicsBody from './physicsBody'
 
 export class ExtendedMesh extends Mesh {
-  private vector3 = new Vector3()
+  public readonly isExtendedMesh = true
   public readonly isGroup = false
+
+  private vector3 = new Vector3()
 
   public shape: string
   public name: string
