@@ -22,15 +22,15 @@ jobs:
       CI: true
 
     steps:
-      - name: Install required packages for puppeteer
+      - name: Install required Packages for Puppeteer
         run: |
           sudo apt-get update
           sudo apt-get install -y libgbm-dev
 
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           npm install --legacy-peer-deps
 
@@ -38,16 +38,16 @@ jobs:
         run: |
           npm run build
 
-      - name: Make bundles
-        run: |
-          npm run clean:bundles
-          npm run bundle
-
       - name: Run Prettier
         run: npm run format
 
       - name: Run ESLint
         run: npm run lint
 
-      - name: Run tests
+      - name: Make Bundles
+        run: |
+          npm run clean:bundles
+          npm run bundle
+
+      - name: Run Tests
         run: npm test
