@@ -16,7 +16,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  
+    runs-on: ubuntu-latest
 
     env:
       CI: true
@@ -43,6 +43,11 @@ jobs:
           npm run clean:bundles
           npm run bundle
 
+      - name: Run Prettier
+        run: npm run format
+
+      - name: Run ESLint
+        run: npm run lint
+
       - name: Run tests
-        run: |
-          npm test
+        run: npm test
