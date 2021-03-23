@@ -79,11 +79,11 @@ export class ExtendedObject3D extends Object3D {
       /** Get AnimationAction by animation name. */
       get: (name: string) => this._animsGet(name),
       /**
-      * Play an animation.
-      * @param name Animation name.
-      * @param transitionDuration Transition duration in ms.
-      * @param loop Should the animation loop?
-      */
+       * Play an animation.
+       * @param name Animation name.
+       * @param transitionDuration Transition duration in ms.
+       * @param loop Should the animation loop?
+       */
       play: (name: string, transitionDuration = 500, loop: boolean = true) =>
         this._animsPlay(name, transitionDuration, loop),
       /** Get the AnimationMixer */
@@ -131,30 +131,16 @@ export class ExtendedObject3D extends Object3D {
     console.warn(`[enable3d] setAction(${name}) is deprecated. Use animation.play(${name}) instead!`)
   }
 
-  public traverse(callback:( object: ExtendedObject3D ) => any): void {
-    callback(this)
-    const children = this.children
-    for ( let i = 0, l = children.length; i < l; i ++ ) {
-      children[ i ].traverse( callback )
-    }
+  public traverse(callback: (object: ExtendedObject3D) => any): void {
+    super.traverse(callback as any)
   }
 
-  public traverseVisible(callback:( object: ExtendedObject3D ) => any): void {
-    if ( this.visible === false ) return;
-    callback( this )
-    const children = this.children
-
-    for ( let i = 0, l = children.length; i < l; i ++ ) {
-      children[ i ].traverseVisible( callback )
-    }
+  public traverseVisible(callback: (object: ExtendedObject3D) => any): void {
+    super.traverseVisible(callback as any)
   }
-  
-  public traverseAncestors(callback:( object: ExtendedObject3D ) => any): void {
-    const parent = this.parent
-    if ( parent !== null ) {
-      callback( parent )
-      parent.traverseAncestors( callback )
-    }
+
+  public traverseAncestors(callback: (object: ExtendedObject3D) => any): void {
+    super.traverseAncestors(callback as any)
   }
 }
 
