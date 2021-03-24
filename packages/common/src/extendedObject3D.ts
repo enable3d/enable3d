@@ -30,6 +30,8 @@ export class ExtendedObject3D extends Object3D {
   public fragmentDepth = 0
   public breakable = false
   public fractureImpulse = 1
+  public children: ExtendedObject3D[]
+  public parent: ExtendedObject3D | null
 
   private _currentAnimation: string = ''
   private _animationActions: Map<string, AnimationAction> = new Map()
@@ -129,6 +131,18 @@ export class ExtendedObject3D extends Object3D {
   /** @deprecated Use animation.play(name) instead! */
   public setAction(name: string) {
     console.warn(`[enable3d] setAction(${name}) is deprecated. Use animation.play(${name}) instead!`)
+  }
+
+  public traverse(callback: (object: ExtendedObject3D) => any): void {
+    super.traverse(callback as any)
+  }
+
+  public traverseVisible(callback: (object: ExtendedObject3D) => any): void {
+    super.traverseVisible(callback as any)
+  }
+
+  public traverseAncestors(callback: (object: ExtendedObject3D) => any): void {
+    super.traverseAncestors(callback as any)
   }
 }
 
