@@ -15,6 +15,7 @@ export class DrawTexture extends Texture {
   height: number
   drawCanvas: DrawCanvas
 
+  // @ts-ignore
   clone(): DrawTexture {
     // return new this.constructor(this.width, this.height, this.drawCanvas).copy(this)
     return new DrawTexture(this.width, this.height, this.drawCanvas).copy(this)
@@ -49,6 +50,7 @@ export class DrawTexture extends Texture {
 export class DrawSprite extends SimpleSprite {
   private _drawCanvas: DrawCanvas
 
+  // @ts-ignore
   clone(): DrawSprite {
     return new DrawSprite(this.textureWidth, this.textureHeight, this._drawCanvas).clone()
   }

@@ -9,6 +9,7 @@ import * as Types from '@enable3d/common/dist/types'
 import Cameras from './plugins/cameras'
 import { AmmoPhysics } from '@enable3d/ammo-physics/dist/index'
 import { sRGBEncoding } from 'three'
+import { logger } from '@enable3d/common/dist/logger'
 
 export class ThreeGraphics {
   public cache: typeof THREE.Cache
@@ -51,7 +52,7 @@ export class ThreeGraphics {
 
     if (usePhysics) {
       if (typeof Ammo !== 'undefined') this.physics = new AmmoPhysics(this.scene, threeGraphicsConfig)
-      else console.log('[enable3d]: Are you sure you included ammo.js?')
+      else logger('Are you sure you included ammo.js?')
     }
   }
 

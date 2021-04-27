@@ -9,6 +9,7 @@ import * as Phaser from 'phaser'
 import { ThreeGraphicsConfig } from '@enable3d/common/dist/types'
 import { WarpedStartFeatures } from '@enable3d/three-graphics/jsm/plugins'
 import { Color } from 'three'
+import { logger } from '@enable3d/common/dist/logger'
 
 export class Scene3D extends Phaser.Scene {
   constructor(config: string | Phaser.Types.Scenes.SettingsConfig) {
@@ -32,9 +33,7 @@ export class Scene3D extends Phaser.Scene {
 
   /** Place this in the init() function */
   public requestThirdDimension() {
-    console.warn(
-      '[enable3d] You do not need requestThirdDimension() anymore. Place accessThirdDimension() inside init() instead!'
-    )
+    logger('You do not need requestThirdDimension() anymore. Place accessThirdDimension() inside init() instead!')
   }
 
   public clearThirdDimension() {

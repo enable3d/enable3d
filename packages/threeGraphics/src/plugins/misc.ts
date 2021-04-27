@@ -2,6 +2,7 @@
 import { AddWaterConfig, addWater } from './water'
 import { Material, RepeatWrapping, Scene, Texture, WebGLRenderer } from 'three'
 import { Factories } from '.'
+import { logger } from '@enable3d/common/dist/logger'
 
 export default class Misc {
   constructor(private scene: Scene, private renderer: WebGLRenderer, private factories: Factories) {}
@@ -12,7 +13,7 @@ export default class Misc {
 
   public textureCube(textures: Texture[]) {
     if (textures.length !== 6) {
-      console.log('[enable3d] You need to pass 6 urls to textureCube()')
+      logger('You need to pass 6 urls to textureCube()')
     }
 
     const textureCube = new TextureCube()

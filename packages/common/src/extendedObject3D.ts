@@ -7,6 +7,7 @@
 import { AnimationClip, AnimationMixer, Line, LoopOnce, Mesh, Object3D, Points, Vector3 } from 'three'
 import type PhysicsBody from './physicsBody'
 import { AnimationAction } from 'three'
+import { logger } from './logger'
 
 export interface ExtendedObject3D extends Line, Mesh, Points {
   isLine: any
@@ -95,7 +96,7 @@ export class ExtendedObject3D extends Object3D {
 
   /** @deprecated Please use anims instead! */
   public get animation() {
-    console.warn('[enable3d] Please use "anims" instead of "animation"')
+    logger('Please use "anims" instead of "animation"')
     return this.anims
   }
 
@@ -105,7 +106,7 @@ export class ExtendedObject3D extends Object3D {
 
   private _animsGet(name: string) {
     const action = this._animationActions.get(name) as AnimationAction
-    if (!action) console.warn(`[enable3d] Animation(${name}) not found!`)
+    if (!action) logger(`Animation(${name}) not found!`)
     return action
   }
 
@@ -130,7 +131,7 @@ export class ExtendedObject3D extends Object3D {
 
   /** @deprecated Use animation.play(name) instead! */
   public setAction(name: string) {
-    console.warn(`[enable3d] setAction(${name}) is deprecated. Use animation.play(${name}) instead!`)
+    logger(`setAction(${name}) is deprecated. Use animation.play(${name}) instead!`)
   }
 
   public traverse(callback: (object: ExtendedObject3D) => any): void {

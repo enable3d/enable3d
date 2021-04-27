@@ -52,7 +52,7 @@ import {
 } from 'three'
 import { ExtendedObject3D } from './extendedObject3D'
 import { ExtendedMesh } from './extendedMesh'
-import logger from './logger'
+import { logger } from './logger'
 import DefaultMaterial from './defaultMaterial'
 
 export default class Factories {

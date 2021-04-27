@@ -42,6 +42,7 @@ export class TextTexture extends Texture {
     return this._styles
   }
 
+  // @ts-ignore
   clone(): TextTexture {
     // @ts-ignore
     return new this.constructor(this._text, this._styles).copy(this)

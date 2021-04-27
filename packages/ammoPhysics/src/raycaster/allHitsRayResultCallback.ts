@@ -6,6 +6,7 @@
 
 import { AmmoPhysics } from '../physics'
 import { ExtendedObject3D } from '@enable3d/common/dist/types'
+import { logger } from '@enable3d/common/dist/logger'
 
 export default class AllHitsRayResultCallback {
   protected _btRayCallback: Ammo.AllHitsRayResultCallback
@@ -26,7 +27,7 @@ export default class AllHitsRayResultCallback {
 
   // TODO: Remove this in future versions!
   getHitPointWorld() {
-    console.warn('[enable3d] Use getHitPointsWorld() instead of getHitPointWorld() for the AllHitsRayCaster!')
+    logger('Use getHitPointsWorld() instead of getHitPointWorld() for the AllHitsRayCaster!')
     return this.getHitPointsWorld()
   }
 

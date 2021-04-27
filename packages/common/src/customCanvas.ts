@@ -8,6 +8,7 @@
 // copied from https://github.com/mrdoob/three.js/blob/dev/src/renderers/WebGLRenderer.js
 
 import { WEBGL } from 'three/examples/jsm/WebGL'
+import { logger } from './logger'
 
 interface CustomCanvasConfig {
   antialias?: boolean
@@ -30,7 +31,7 @@ export const Canvas = (
 
   const parent = p ? document.getElementById(p) : document.body
   if (parent) parent.appendChild(myCustomCanvas)
-  else console.error(`[enable3d] parent "${p}" not found!`)
+  else logger(`Parent "${p}" not found!`)
 
   const parameters: any = { antialias }
 

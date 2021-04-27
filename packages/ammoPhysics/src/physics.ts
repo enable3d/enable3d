@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import logger from '@enable3d/common/dist/logger'
+import { logger } from '@enable3d/common/dist/logger'
 import PhysicsBody from '@enable3d/common/dist/physicsBody'
 
 import { ExtendedObject3D } from '@enable3d/common/dist/extendedObject3D'
@@ -826,7 +826,7 @@ class AmmoPhysics extends Events {
   protected addExisting(object: ExtendedObject3D, config: Types.AddExistingConfig = {}): any {
     const { hasBody } = object
     if (hasBody) {
-      console.warn(`[Enable3d]: Object "${object.name}" already has a physical body!`)
+      logger(`Object "${object.name}" already has a physical body!`)
       return
     }
 
