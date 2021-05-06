@@ -3,13 +3,13 @@
 Windows:
 
 ```console
-.\prune.ps1; npm i --legacy-peer-deps; npm run build
+.\prune.ps1; npm i; npm run build
 ```
 
 Linux:
 
 ```console
-npm run prune && npm i --legacy-peer-deps && npm run build
+npm run prune && npm i && npm run build
 ```
 
 ## Start

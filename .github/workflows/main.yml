@@ -32,7 +32,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm install --legacy-peer-deps
+          npm install
 
       - name: Compiling TypeScript
         run: |
