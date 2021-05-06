@@ -3,11 +3,11 @@
  *
  * @author       swift502 <blaha.j502@gmail.com> (http://jblaha.art/)
  * @copyright    Copyright (c) 2018 swift502; Project Url: https://github.com/swift502/Sketchbook
- * @license      {@link https://github.com/swift502/Sketchbook/blob/master/LICENSE|GPL-3.0}
+ * @license      {@link https://github.com/swift502/Sketchbook/blob/master/LICENSE GPL-3.0}
  *
  * @author       Yannick Deubel (https://github.com/yandeu)
- * @copyright    Copyright (c) 2020 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
- * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
+ * @copyright    Copyright (c) 2021 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
+ * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE GNU GPLv3}
  */
 
 import { Object3D, OrthographicCamera, PerspectiveCamera, MathUtils as THREE_Math, Vector2, Vector3 } from 'three'
@@ -31,6 +31,10 @@ export interface ThirdPersonControlsConfig {
 }
 
 class ThirdPersonControls {
+  /**
+   * Sensitivity of the movement
+   * @default new THREE.Vector2(0.25, 0.25)
+   */
   public sensitivity: Vector2
   public radius: number
   public targetRadius: number
@@ -52,7 +56,7 @@ class ThirdPersonControls {
   ) {
     const {
       offset = new Vector3(0, 0, 0),
-      sensitivity = new Vector2(1, 1),
+      sensitivity = new Vector2(0.25, 0.25),
       radius = 8,
       targetRadius = 10,
       interpolationFactor = 0.05,
