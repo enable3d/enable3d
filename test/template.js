@@ -17,7 +17,7 @@ describe.each([EXAMPLES_PLACEHOLDER])('Example: (%s)', example => {
     // await jestPuppeteer.resetPage()
   })
 
-  it('should inject new script', async done => {
+  it('should inject new script', async () => {
     page.on('error', err => {
       err++
       console.log('error: ', err)
@@ -82,8 +82,10 @@ describe.each([EXAMPLES_PLACEHOLDER])('Example: (%s)', example => {
       // wait for the game to be started
       await page.waitForTimeout(10000)
       // await page.screenshot({ path: path.resolve(__dirname, `../screenshots/${example}.png`) })
-      done()
-    } else done(new Error('Could not inject script'))
+      return
+    } else {
+      return new Error('Could not inject script')
+    }
   })
 
   it('the page should not have any errors"', async () => {

@@ -1,8 +1,9 @@
-**/node_modules/**
+node_modules
+package-lock.json
+test/**/*.tmp.test.js
+**/.tmp/**
 **/dist/**
 **/jsm/**
-**/.tmp/**
+**/node_modules/**
 **/screenshots/**
-test/**/*.tmp.test.js
-package-lock.json
 **/*/package-lock.json
