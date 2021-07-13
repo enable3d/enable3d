@@ -12,7 +12,7 @@ Written in TypeScript, uses three.js and ammo.js, brings physics to your three.j
   <a href="https://www.npmjs.com/search?q=enable3d"><img src="https://img.shields.io/npm/v/@enable3d/phaser-extension?style=flat-square" alt="NPM version"></a>
   <a href="https://github.com/enable3d/enable3d/actions?query=workflow%3ACI"><img src="https://img.shields.io/github/workflow/status/yandeu/enable3d/CI/master?label=build&logo=github&style=flat-square"></a>
   <a href="https://github.com/enable3d/enable3d/actions?query=workflow%3ACodeQL"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/enable3d/enable3d/CodeQL?label=CodeQL&logo=github&style=flat-square"></a>
-  <a href="https://github.com/mrdoob/three.js/"><img src="https://img.shields.io/badge/three-r128-blue.svg?style=flat-square" alt="Three"></a>
+  <a href="https://github.com/mrdoob/three.js/"><img src="https://img.shields.io/badge/three-r129-blue.svg?style=flat-square" alt="Three"></a>
   <a href="https://github.com/enable3d/enable3d/commits/master"><img src="https://img.shields.io/github/last-commit/yandeu/enable3d.svg?style=flat-square" alt="GitHub last commit"></a>
   <a href="https://github.com/prettier/prettier" alt="code style: prettier"><img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square"></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/built%20with-TypeScript-blue?style=flat-square"></a>
@@ -30,23 +30,33 @@ Visit the [enable3d website](https://enable3d.io) for documentation and examples
 
 ## Changelog
 
-### Upgrade to v0.22.0
+### Upgrade to v0.23.0 (soon)
 
-Please upgrade npm to v7. `npm i -g npm@latest`.
+Some useful packages are now available on npm:
+
+| Package                                                      | Description                                                               |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| [`audio`](https://www.npmjs.com/package/@yandeu/audio)       | 🎵 Audio library for the Web Audio API.                                   |
+| [`keyboard`](https://www.npmjs.com/package/@yandeu/keyboard) | ⌨️ Handling of keyboard events.                                           |
+| [`tap`](https://www.npmjs.com/package/@yandeu/tap)           | 🖱️ Handling of user interactions such as mouse, touch and pointer events. |
 
 Enable3d now depends on the dependencies below.  
 They are all listed as [peerDependencies](https://docs.npmjs.com/cli/v7/configuring-npm/package-json#peerdependencies).
 
 ```json
 {
-  "@types/matter-js": "^0.14.12",
-  "@types/three": "~0.128.0",
+  "@types/matter-js": "^0.17.3",
+  "@types/three": "~0.129.2",
   "matter-js": "^0.17.1",
-  "phaser": "^3.54.0",
+  "phaser": "^3.55.2",
   "poly-decomp": "^0.3.0",
-  "three": "~0.128.0"
+  "three": "~0.129.0"
 }
 ```
+
+### Upgrade to v0.22.0
+
+Please upgrade npm to v7. `npm i -g npm@latest`.
 
 ### Upgrade to v0.21.0
 
