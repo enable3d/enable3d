@@ -66,6 +66,7 @@
   "devDependencies": {
     "@types/node": "^16.3.1",
     "@yandeu/eslint-config": "^0.0.2",
+    "@yandeu/keyboard": "^0.0.2",
     "@yandeu/prettier-config": "^0.0.2",
     "copy-webpack-plugin": "^9",
     "cross-env": "^7.0.3",

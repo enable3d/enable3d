@@ -1,8 +1,8 @@
 import { ExtendedMesh, FLAT, PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
 import * as Matter from 'matter-js'
 
-// import { Tap } from '@enable3d/three-graphics/jsm/tap'
-import { Keyboard } from '@enable3d/three-graphics/jsm/keyboard'
+// import { Tap } from '@yandeu/tap'
+import { Keyboard } from '@yandeu/keyboard'
 
 import { Camera, Scene } from 'three'
 
@@ -23,8 +23,8 @@ class MainScene extends Scene3D {
     this.atlas = await this.load.textureAtlas('/assets/fruit/fruit-sprites.png', '/assets/fruit/fruit-sprites.json')
     this.shapes = (await this.load.file('/assets/fruit/fruit-shapes.json')) as string
 
-    // load texture and add to cache (Experimental)
-    await this.load.texture('button_one', '/assets/button_sprite_sheet.png')
+    // load texture
+    await this.load.texture('/assets/button_sprite_sheet.png')
   }
 
   async addMatter() {
@@ -92,9 +92,9 @@ class MainScene extends Scene3D {
       console.log('KeyL is up.')
     })
 
-    setTimeout(() => {
-      keyboard.destroy()
-    }, 5000)
+    // setTimeout(() => {
+    //   keyboard.destroy()
+    // }, 5000)
 
     // keyboard.once.up('KeyL', () => {
     //   console.log('LL UP ONCE')
