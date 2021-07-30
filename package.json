@@ -57,11 +57,11 @@
   "homepage": "https://github.com/enable3d/enable3d#readme",
   "dependencies": {
     "@types/matter-js": "^0.17.3",
-    "@types/three": "~0.129.2",
+    "@types/three": "~0.130",
     "matter-js": "^0.17.1",
     "phaser": "^3.55.2",
     "poly-decomp": "^0.3.0",
-    "three": "~0.129.0"
+    "three": "~0.130"
   },
   "devDependencies": {
     "@types/node": "^16.3.1",

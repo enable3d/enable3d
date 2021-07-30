@@ -37,9 +37,9 @@
     "@yandeu/events": "0.0.5"
   },
   "peerDependencies": {
-    "@types/three": "~0.129.2",
+    "@types/three": "~0.130",
     "phaser": "^3.55.2",
-    "three": "~0.129.0"
+    "three": "~0.130"
   },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"
