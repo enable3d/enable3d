@@ -33,9 +33,9 @@
     "@yandeu/tap": "0.0.3"
   },
   "peerDependencies": {
-    "@types/matter-js": "^0.17.3",
+    "@types/matter-js": "0.17.3",
     "@types/three": "~0.130",
-    "matter-js": "^0.17.1",
+    "matter-js": "0.17.1",
     "poly-decomp": "^0.3.0",
     "three": "~0.130"
   },
