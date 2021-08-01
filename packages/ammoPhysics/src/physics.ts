@@ -140,9 +140,8 @@ class AmmoPhysics extends Events {
     if (typeof b?.ammo === 'undefined') return
 
     // @ts-ignore
-    const name = b.ammo.name
-    // @ts-ignore
     let obj: ExtendedObject3D | null = b.ammo.threeObject as ExtendedObject3D
+    const name = obj.name
 
     if (name && obj) {
       if (obj?.body?.ammo) {
@@ -250,13 +249,14 @@ class AmmoPhysics extends Events {
     object.material = parent.material
     object.shape = 'hull'
     object.fragmentDepth = parent.fragmentDepth + 1
+    object.name = `${parent.name}__DEBRIS_${object.id}`
 
     // Add the object to the scene
     this.scene.add(object)
 
     // Add physics to the object
     // @ts-ignore
-    this.addExisting(object)
+    this.addExisting(object, { autoCenter: true })
 
     object.body.fractureImpulse = parent.body.fractureImpulse
     object.body.breakable = false
@@ -400,6 +400,9 @@ class AmmoPhysics extends Events {
 
       const checkCollisions = checkCollisions0 || checkCollisions1
       const checkBreakable = breakable0 || breakable1
+
+      if (typeof threeObject0.fragmentDepth === 'undefined') threeObject0.fragmentDepth = 0
+      if (typeof threeObject1.fragmentDepth === 'undefined') threeObject1.fragmentDepth = 0
 
       if (!checkCollisions && !checkBreakable) continue
 
@@ -934,6 +937,7 @@ class AmmoPhysics extends Events {
     this.physicsWorld.addRigidBody(rigidBody, collisionGroup, collisionMask)
 
     const ptr = Object.values(rigidBody)[0]
+    if (!object.name) object.name = `object-${object.id}`
     // @ts-ignore
     rigidBody.name = object.name
     object.body = new PhysicsBody(this, rigidBody)
