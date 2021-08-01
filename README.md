@@ -30,7 +30,7 @@ Visit the [enable3d website](https://enable3d.io) for documentation and examples
 
 ## Changelog
 
-### Upgrade to v0.23.0 (soon)
+### Upgrade to v0.23.0
 
 Some useful packages are now available on npm:
 

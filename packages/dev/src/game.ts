@@ -9,11 +9,11 @@ import startHeadless from './headless'
 // uncomment the one you want to debug
 
 // startPhaserGame() // @enable3d/phaser-extension
-// startProject() // @enable3d/three-graphics
+startProject() // @enable3d/three-graphics
 // startPhysics() // @enable3d/ammo-physics
 // startHeadless() // @enable3d/ammo-physics (headless)
 
 // flat_EXPERIMENTAL
-startProjectFlatDev0()
+// startProjectFlatDev0()
 // startProjectFlatDev1()
 // startProjectFlatDev2()
