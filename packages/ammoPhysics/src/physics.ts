@@ -286,10 +286,6 @@ class AmmoPhysics extends Events {
     // must always satisfy the equation timeStep < maxSubSteps * fixedTimeStep
     this.physicsWorld.stepSimulation(deltaTime, this.config.maxSubSteps || 4, this.config.fixedTimeStep || 1 / 60)
 
-    // return
-    //
-    // return
-
     // @ts-ignore
     this.scene.updateMatrixWorld()
 
@@ -308,31 +304,18 @@ class AmmoPhysics extends Events {
 
       skeleton.update()
 
-      // geometry.attributes.position.needsUpdate = true
-
-      // console.log(Object.keys(geometry.attributes))
-
-      // skinIndex", "skinWeight"
-      // const volumePositions = geometry.attributes['skinIndex'].array
       const volumePositions = geometry.attributes.position.array
       const volumeNormals = geometry.attributes.normal.array
-
-      //  const  _skinIndex = new Vector4()
-      //  _skinIndex.fromBufferAttribute( geometry.attributes["skinIndex"], index );
-      // const _skinWeight.fromBufferAttribute( geometry.attributes.skinWeight, index );
-
-      // _basePosition.fromBufferAttribute( geometry.attributes.position, index ).applyMatrix4( this.bindMatrix );
 
       // @ts-ignore
       const association: any[] = geometry.ammoIndexAssociation
       const numVerts = association.length
 
-      // REVERSE
-
       let nodes = softBody.get_m_nodes()
 
-      const mesh = objThree as unknown as SkinnedMesh
-      // mesh.updateMatrixWorld()
+      objThree.updateMatrixWorld()
+      // @ts-ignore
+      objThree.bindMode = 'attached'
 
       for (let j = 0; j < numVerts; j++) {
         const node = nodes.at(j)
@@ -343,7 +326,6 @@ class AmmoPhysics extends Events {
 
         for (let k = 0, kl = assocVertex.length; k < kl; k++) {
           let indexVertex = assocVertex[k]
-          // console.log(indexVertex)
           const x = volumePositions[indexVertex]
           const nx = volumeNormals[indexVertex]
           indexVertex++
@@ -353,12 +335,11 @@ class AmmoPhysics extends Events {
           const z = volumePositions[indexVertex]
           const nz = volumeNormals[indexVertex]
 
-          // const pos = new Vector3(x, y, z).applyMatrix4(objThree.matrixWorld)
-          // const normal = new Vector3(nx, ny, nz).applyMatrix4(objThree.matrixWorld)
+          const pos = new Vector3(x, y, z).applyMatrix4(objThree.matrixWorld)
+          const normal = new Vector3(nx, ny, nz).applyMatrix4(objThree.matrixWorld)
 
-          const bla = j
-          let pos = mesh.boneTransform(bla, new Vector3(x, y, z)).applyMatrix4(objThree.matrixWorld)
-          let normal = mesh.boneTransform(bla, new Vector3(nx, ny, nz)).applyMatrix4(objThree.matrixWorld)
+          // let pos = mesh.boneTransform(j, new Vector3(x, y, z)).applyMatrix4(objThree.matrixWorld)
+          // let normal = mesh.boneTransform(j, new Vector3(nx, ny, nz)).applyMatrix4(objThree.matrixWorld)
 
           nodePos.setX(pos.x)
           nodeNormal.setX(normal.x)

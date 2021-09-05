@@ -86,7 +86,7 @@ class MainScene extends Scene3D {
     this.hand.Object3D.traverse((child: any) => {
       if (child.isMesh) {
         bufferGeometry = child.geometry
-        console.log('child')
+
         child.castShadow = child.receiveShadow = false
         child.material.metalness = 0
         child.material.roughness = 1
@@ -98,10 +98,11 @@ class MainScene extends Scene3D {
 
     // this.addSoftBody(this.hand.Object3D, bufferGeometry)
     this.addSoftBody(this.hand.skinned_mesh)
-    console.log(this.hand.skeleton)
+
+    console.log(this.hand.skeleton.bones)
 
     const interval = setInterval(() => {
-      this.hand.Object3D.position.x += 0.1
+      this.hand.Object3D.position.x -= 0.1
       this.hand.palm.rotation.y += Math.PI / 2 / 128
       // this.hand.forearm.rotation.y += Math.PI / 2 / 128
     }, 100)
