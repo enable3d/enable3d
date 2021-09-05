@@ -12,7 +12,7 @@ import { CollisionEvent } from './types'
 
 class PhysicsBody {
   public ignoreScale = false
-  public isSoftBody = false
+  // public isSoftBody = false
   public offset = { x: 0, y: 0, z: 0 }
   public name: string
   public errors: string[] = []
@@ -37,7 +37,7 @@ class PhysicsBody {
 
   private eventEmitter = new Events()
 
-  constructor(private physics: any, public ammo: Ammo.btRigidBody) {
+  constructor(private physics: any, public ammo: any, public isSoftBody = false) {
     // @ts-ignore
     this.name = ammo.name
   }

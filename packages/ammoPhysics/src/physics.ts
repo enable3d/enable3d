@@ -20,7 +20,7 @@ import Shapes from './shapes'
 import Constraints from './constraints'
 import { Events } from '@yandeu/events'
 import { Geometry } from './externals'
-import { BufferGeometry, Euler, Matrix4, Quaternion, REVISION, Scene, Vector3 } from 'three'
+import { BufferGeometry, Euler, Matrix4, Mesh, Quaternion, REVISION, Scene, SkinnedMesh, Vector3, Vector4 } from 'three'
 import {
   createHACDShapes,
   createHullShape,
@@ -284,6 +284,199 @@ class AmmoPhysics extends Events {
 
     // must always satisfy the equation timeStep < maxSubSteps * fixedTimeStep
     this.physicsWorld.stepSimulation(deltaTime, this.config.maxSubSteps || 4, this.config.fixedTimeStep || 1 / 60)
+
+    // return
+    //
+    // return
+
+    // @ts-ignore
+    this.scene.updateMatrixWorld()
+
+    // https://stackoverflow.com/a/51080905
+
+    // update soft volumes (follow three.js object)
+    for (let i = 0, il = this.rigidBodies.length; i < il; i++) {
+      const objThree = this.rigidBodies[i]
+
+      if (!objThree.body.isSoftBody) continue
+
+      const softBody = objThree.body.ammo as Ammo.btSoftBody
+      const { geometry, skeleton } = objThree as unknown as SkinnedMesh
+
+      // objThree.geometry.attributes.position.needsUpdate = true
+
+      // objThree.updateMatrixWorld()
+      // objThree.updateMatrix()
+
+      // objThree.traverse((child: any) => {
+      //   if (child.isMesh) {
+      //     geometry = child.geometry
+      //   }
+      // })
+
+      skeleton.update()
+
+      // geometry.attributes.position.needsUpdate = true
+
+      // console.log(Object.keys(geometry.attributes))
+
+      // skinIndex", "skinWeight"
+      // const volumePositions = geometry.attributes['skinIndex'].array
+      const volumePositions = geometry.attributes.position.array
+      const volumeNormals = geometry.attributes.normal.array
+
+      //  const  _skinIndex = new Vector4()
+      //  _skinIndex.fromBufferAttribute( geometry.attributes["skinIndex"], index );
+      // const _skinWeight.fromBufferAttribute( geometry.attributes.skinWeight, index );
+
+      // _basePosition.fromBufferAttribute( geometry.attributes.position, index ).applyMatrix4( this.bindMatrix );
+
+      // @ts-ignore
+      const association: any[] = geometry.ammoIndexAssociation
+      const numVerts = association.length
+
+      // REVERSE
+
+      let nodes = softBody.get_m_nodes()
+
+      // These are so we can avoid doing allocations
+      // in the inner loop.
+      const position = new Vector3()
+      const transformed = new Vector3()
+      const temp1 = new Vector3()
+      const tempBoneMatrix = new Matrix4()
+      const tempSkinnedVertex = new Vector3()
+      const tempSkinned = new Vector3()
+
+      const mesh = objThree as unknown as SkinnedMesh
+      mesh.updateMatrixWorld()
+      const bindMatrix = mesh.bindMatrix
+      const bindMatrixInverse = mesh.bindMatrixInverse
+
+      // for (let vndx = 0; vndx < mesh.geometry.vertices.length; ++vndx) {
+      //   position.copy(mesh.geometry.vertices[vndx]);
+      //   transformed.copy(position);
+
+      //   for (let i = 0; i < mesh.geometry.morphTargets.length; ++i) {
+      //     temp1.copy(mesh.geometry.morphTargets[i].vertices[vndx]);
+      //     transformed.add(temp1.sub(position).multiplyScalar(mesh.morphTargetInfluences[i]));
+      //   }
+
+      //   tempSkinnedVertex.copy(transformed).applyMatrix4(bindMatrix);
+      //   tempSkinned.set(0, 0, 0);
+
+      //   const skinIndices = geometry.skinIndices[vndx];
+      //   const skinWeights = geometry.skinWeights[vndx];
+
+      //   for (let i = 0; i < 4; ++i) {
+      //     const boneNdx = skinIndices.getComponent(i);
+      //     const weight = skinWeights.getComponent(i);
+      //     tempBoneMatrix.fromArray(skeleton.boneMatrices, boneNdx * 16);
+      //     temp1.copy(tempSkinnedVertex);
+      //     tempSkinned.add(temp1.applyMatrix4(tempBoneMatrix).multiplyScalar(weight));
+      //   }
+
+      //   transformed.copy(tempSkinned).applyMatrix4(bindMatrixInverse);
+      //   transformed.applyMatrix4(mesh.matrixWorld);
+
+      // console.log(volumePositions[0])
+      // console.log(volumePositions[1])
+      // console.log(volumePositions[2])
+
+      for (let j = 0; j < numVerts; j++) {
+        const node = nodes.at(j)
+        const nodePos = node.get_m_x()
+        const nodeNormal = node.get_m_n()
+
+        // const x = nodePos.x()
+        // const y = nodePos.y()
+        // const z = nodePos.z()
+        // const nx = nodeNormal.x()
+        // const ny = nodeNormal.y()
+        // const nz = nodeNormal.z()
+
+        const assocVertex = association[j]
+        // console.log(assocVertex)
+
+        // console.log(assocVertex.length)
+
+        for (let k = 0, kl = assocVertex.length; k < kl; k++) {
+          let indexVertex = assocVertex[k]
+          // console.log(indexVertex)
+          const x = volumePositions[indexVertex]
+          const nx = volumeNormals[indexVertex]
+          indexVertex++
+          const y = volumePositions[indexVertex]
+          const ny = volumeNormals[indexVertex]
+          indexVertex++
+          const z = volumePositions[indexVertex]
+          const nz = volumeNormals[indexVertex]
+
+          // const pos = new Vector3(x, y, z).applyMatrix4(objThree.matrixWorld)
+          // const normal = new Vector3(nx, ny, nz).applyMatrix4(objThree.matrixWorld)
+
+          const bla = j
+          let pos = mesh.boneTransform(bla, new Vector3(x, y, z)).applyMatrix4(objThree.matrixWorld)
+          let normal = mesh.boneTransform(bla, new Vector3(nx, ny, nz)).applyMatrix4(objThree.matrixWorld)
+
+          nodePos.setX(pos.x)
+          nodeNormal.setX(normal.x)
+
+          nodePos.setY(pos.y)
+          nodeNormal.setY(normal.y)
+
+          nodePos.setZ(pos.z)
+          nodeNormal.setZ(normal.z)
+        }
+        nodes.at(j).set_m_x(nodePos)
+        // nodes.at(j).set_m_n(nodeNormal)
+      }
+
+      // const ms = softBody.getWorldTransform()
+      // this.worldTransform.setOrigin(this.tmpBtVector3)
+      // this.worldTransform.setRotation(this.tmpBtQuaternion)
+      // // set transform
+      // ms.setWorldTransform(this.worldTransform)
+
+      // const t= new Ammo.btTransform()
+
+      softBody.set_m_nodes(nodes)
+
+      /// ORIGINSL
+
+      nodes = softBody.get_m_nodes()
+      for (let j = 0; j < numVerts; j++) {
+        continue
+        const node = nodes.at(j)
+        const nodePos = node.get_m_x()
+        const x = nodePos.x()
+        const y = nodePos.y()
+        const z = nodePos.z()
+        const nodeNormal = node.get_m_n()
+        const nx = nodeNormal.x()
+        const ny = nodeNormal.y()
+        const nz = nodeNormal.z()
+
+        const assocVertex = association[j]
+
+        for (let k = 0, kl = assocVertex.length; k < kl; k++) {
+          let indexVertex = assocVertex[k]
+          volumePositions[indexVertex] = x
+          volumeNormals[indexVertex] = nx
+          indexVertex++
+          volumePositions[indexVertex] = y
+          volumeNormals[indexVertex] = ny
+          indexVertex++
+          volumePositions[indexVertex] = z
+          volumeNormals[indexVertex] = nz
+        }
+      }
+
+      geometry.attributes.position.needsUpdate = true
+      geometry.attributes.normal.needsUpdate = true
+    }
+
+    return
 
     // update rigid bodies
     for (let i = 0; i < this.rigidBodies.length; i++) {
@@ -923,6 +1116,34 @@ class AmmoPhysics extends Events {
     object.body.breakable = breakable
     object.body.fractureImpulse = fractureImpulse
     object.body.ignoreScale = ignoreScale
+  }
+
+  public addSoftBodyToWorld(
+    object: ExtendedObject3D,
+    softBody: Ammo.btSoftBody,
+
+    collisionFlags = 0,
+    collisionGroup = 1,
+    collisionMask = -1,
+    offset?: { x?: number; y?: number; z?: number }
+  ) {
+    this.rigidBodies.push(object)
+    this.physicsWorld.addSoftBody(softBody, collisionGroup, collisionMask)
+
+    const ptr = Object.values(softBody)[0]
+    if (!object.name) object.name = `object-${object.id}`
+    // @ts-ignore
+    softBody.name = object.name
+    object.body = new PhysicsBody(this, softBody, true)
+    object.hasBody = true
+    // @ts-ignore
+    object.ptr = ptr
+    // @ts-ignore
+    softBody.threeObject = object
+
+    if (offset) object.body.offset = { x: 0, y: 0, z: 0, ...offset }
+
+    object.body.setCollisionFlags(collisionFlags)
   }
 
   public addRigidBodyToWorld(
