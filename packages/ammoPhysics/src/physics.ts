@@ -41,6 +41,7 @@ export { PhysicsLoader }
 
 import * as Types from '@enable3d/common/dist/types'
 import { AllHitsRaycaster, ClosestRaycaster } from './raycaster/raycaster'
+import { processGeometry } from './tmp'
 export { ClosestRaycaster, AllHitsRaycaster }
 export { Types }
 
@@ -303,16 +304,7 @@ class AmmoPhysics extends Events {
       const softBody = objThree.body.ammo as Ammo.btSoftBody
       const { geometry, skeleton } = objThree as unknown as SkinnedMesh
 
-      // objThree.geometry.attributes.position.needsUpdate = true
-
-      // objThree.updateMatrixWorld()
-      // objThree.updateMatrix()
-
-      // objThree.traverse((child: any) => {
-      //   if (child.isMesh) {
-      //     geometry = child.geometry
-      //   }
-      // })
+      processGeometry(geometry)
 
       skeleton.update()
 
@@ -339,66 +331,15 @@ class AmmoPhysics extends Events {
 
       let nodes = softBody.get_m_nodes()
 
-      // These are so we can avoid doing allocations
-      // in the inner loop.
-      const position = new Vector3()
-      const transformed = new Vector3()
-      const temp1 = new Vector3()
-      const tempBoneMatrix = new Matrix4()
-      const tempSkinnedVertex = new Vector3()
-      const tempSkinned = new Vector3()
-
       const mesh = objThree as unknown as SkinnedMesh
-      mesh.updateMatrixWorld()
-      const bindMatrix = mesh.bindMatrix
-      const bindMatrixInverse = mesh.bindMatrixInverse
-
-      // for (let vndx = 0; vndx < mesh.geometry.vertices.length; ++vndx) {
-      //   position.copy(mesh.geometry.vertices[vndx]);
-      //   transformed.copy(position);
-
-      //   for (let i = 0; i < mesh.geometry.morphTargets.length; ++i) {
-      //     temp1.copy(mesh.geometry.morphTargets[i].vertices[vndx]);
-      //     transformed.add(temp1.sub(position).multiplyScalar(mesh.morphTargetInfluences[i]));
-      //   }
-
-      //   tempSkinnedVertex.copy(transformed).applyMatrix4(bindMatrix);
-      //   tempSkinned.set(0, 0, 0);
-
-      //   const skinIndices = geometry.skinIndices[vndx];
-      //   const skinWeights = geometry.skinWeights[vndx];
-
-      //   for (let i = 0; i < 4; ++i) {
-      //     const boneNdx = skinIndices.getComponent(i);
-      //     const weight = skinWeights.getComponent(i);
-      //     tempBoneMatrix.fromArray(skeleton.boneMatrices, boneNdx * 16);
-      //     temp1.copy(tempSkinnedVertex);
-      //     tempSkinned.add(temp1.applyMatrix4(tempBoneMatrix).multiplyScalar(weight));
-      //   }
-
-      //   transformed.copy(tempSkinned).applyMatrix4(bindMatrixInverse);
-      //   transformed.applyMatrix4(mesh.matrixWorld);
-
-      // console.log(volumePositions[0])
-      // console.log(volumePositions[1])
-      // console.log(volumePositions[2])
+      // mesh.updateMatrixWorld()
 
       for (let j = 0; j < numVerts; j++) {
         const node = nodes.at(j)
         const nodePos = node.get_m_x()
         const nodeNormal = node.get_m_n()
 
-        // const x = nodePos.x()
-        // const y = nodePos.y()
-        // const z = nodePos.z()
-        // const nx = nodeNormal.x()
-        // const ny = nodeNormal.y()
-        // const nz = nodeNormal.z()
-
         const assocVertex = association[j]
-        // console.log(assocVertex)
-
-        // console.log(assocVertex.length)
 
         for (let k = 0, kl = assocVertex.length; k < kl; k++) {
           let indexVertex = assocVertex[k]
