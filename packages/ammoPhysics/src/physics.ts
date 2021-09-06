@@ -889,7 +889,7 @@ class AmmoPhysics extends Events {
   public mergeCollisionShapesToCompoundShape(collisionShapes: Ammo.btCollisionShape[]): Ammo.btCompoundShape {
     const compoundShape = new Ammo.btCompoundShape()
     collisionShapes.forEach(shape => {
-      // @ts-ignore // _childOffset is a custom parameter
+      // @ts-ignore // some custom parameter
       const { _childOffset, _compoundOffset } = shape
 
       if (_childOffset) {
@@ -899,7 +899,6 @@ class AmmoPhysics extends Events {
       } else if (_compoundOffset) {
         const transform = new Ammo.btTransform()
         transform.setIdentity()
-        const { x, y, z } = transform.getOrigin()
         transform.setOrigin(new Ammo.btVector3(_compoundOffset.x, _compoundOffset.y, _compoundOffset.z))
         compoundShape.addChildShape(transform, shape)
       } else {
