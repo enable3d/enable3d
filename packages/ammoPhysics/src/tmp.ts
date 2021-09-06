@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 import { BufferGeometry } from 'three'
 import * as PKG from 'three/examples/jsm/utils/BufferGeometryUtils'
 const { BufferGeometryUtils } = PKG
@@ -17,8 +18,10 @@ export const isEqual = (x1: number, y1: number, z1: number, x2: number, y2: numb
 export const processGeometry = (bufGeometry: THREE.BufferGeometry) => {
   // Ony consider the position values when merging the vertices
 
+  // console.log('bufGeometry', 'processGeometry')
+
   const posOnlyBufGeometry = new BufferGeometry()
-  posOnlyBufGeometry.setAttribute('position', bufGeometry.getAttribute('position'))
+  posOnlyBufGeometry.setAttribute('position', bufGeometry.attributes['position'])
   posOnlyBufGeometry.setIndex(bufGeometry.getIndex())
 
   // Merge the vertices so the triangle soup is converted to indexed triangles
@@ -45,8 +48,8 @@ const mapIndices = (bufGeometry: TypeBufferGeometry, indexedBufferGeom: TypeBuff
   bufGeometry.ammoIndices = indices
   bufGeometry.ammoIndexAssociation = []
 
-  //   console.log('numIdxVertices', numIdxVertices)
-  //   console.log('numVertices', numVertices)
+  console.log('numIdxVertices', numIdxVertices)
+  console.log('numVertices', numVertices)
 
   for (let i = 0; i < numIdxVertices; i++) {
     const association: any = []

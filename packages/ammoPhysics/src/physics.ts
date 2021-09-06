@@ -42,6 +42,8 @@ export { PhysicsLoader }
 import * as Types from '@enable3d/common/dist/types'
 import { AllHitsRaycaster, ClosestRaycaster } from './raycaster/raycaster'
 import { processGeometry } from './tmp'
+import { Vector } from 'matter-js'
+import { stringify } from 'querystring'
 export { ClosestRaycaster, AllHitsRaycaster }
 export { Types }
 
@@ -293,29 +295,200 @@ class AmmoPhysics extends Events {
 
     // update soft volumes (follow three.js object)
     for (let i = 0, il = this.rigidBodies.length; i < il; i++) {
-      const objThree = this.rigidBodies[i]
+      let objThree: any = this.rigidBodies[i]
 
       if (!objThree.body.isSoftBody) continue
 
+      // console.log('do')
+
       const softBody = objThree.body.ammo as Ammo.btSoftBody
-      const { geometry, skeleton } = objThree as unknown as SkinnedMesh
+      // const { geometry, skeleton } = objThree as unknown as SkinnedMesh
 
-      processGeometry(geometry)
+      objThree.updateMatrix()
+      objThree.updateMatrixWorld()
 
-      skeleton.update()
+      let _child!: THREE.Mesh
+      objThree.traverse((child: any) => {
+        if (child.isMesh) {
+          _child = child
+        }
+      })
 
+      // console.log((objThree as SkinnedMesh).skeleton)
+
+      _child.updateMatrix()
+      _child.updateMatrixWorld()
+
+      const geometry = objThree.geometry as any
+      const association = geometry.ammoIndexAssociation
+
+      // processGeometry(geometry)
+      const { ammoVertices, ammoIndices, ammoIndexAssociation } = geometry
+
+      // DESCRITPOISN
+      // console.log(ammoVertices.length / 3) // this are the vertecies o fthe ammo body (x,yz)
+      // they do match one of the ...
+      // geometry.attributes.position.array
+
+      geometry
+      const vertices = geometry.attributes.position.array
+
+      const nodes = softBody.get_m_nodes()
+
+      // console.log(vertices[i])
+
+      for (let i = 0; i < ammoVertices.length / 3; i++) {
+        let x, y, z
+
+        const bla = ammoIndexAssociation[i]
+        if (bla < 3) continue
+
+        x = vertices[bla[0]]
+        y = vertices[bla[0] + 1]
+        z = vertices[bla[0] + 2]
+
+        // let v3 = new Vector3(x, y, z).applyMatrix4(objThree.matrixWorld)
+        // console.log(v3)
+
+        const node = nodes.at(i)
+        const nodePos = node.get_m_x()
+        let v3 = (objThree as SkinnedMesh).boneTransform(bla[0] / 3, new Vector3()).applyMatrix4(objThree.matrixWorld)
+        //  let v3 = new Vector3().applyMatrix4(objThree.matrixWorld)
+        nodePos.setX(v3.x)
+        nodePos.setY(v3.y)
+        nodePos.setZ(v3.z)
+
+        // nodePos.setX(-1)
+        // nodePos.setY(7.72)
+        // nodePos.setZ(0.33)
+
+        // nodePos.setX(vertices[489])
+        // nodePos.setY(vertices[492])
+        // nodePos.setZ(vertices[495])
+
+        // nodePos.setX(vertices[330])
+        // nodePos.setY(vertices[333])
+        // nodePos.setZ(vertices[336])
+      }
+
+      // console.log(ammoVertices)
+
+      // ammoIndices.forEach((n: number, i: number) => {
+      //   const node = nodes.at(n)
+      //   const nodePos = node.get_m_x()
+      //   // let v3 = (objThree as SkinnedMesh).boneTransform(i, new Vector3()).applyMatrix4(objThree.matrixWorld)
+      //   let v3 = new Vector3().applyMatrix4(objThree.matrixWorld)
+      //   nodePos.setX(v3.x)
+      //   nodePos.setY(v3.y)
+      //   nodePos.setZ(v3.z)
+      // })
+
+      // const node = nodes.at(t)
+      // const nodePos = node.get_m_x()
+      // nodePos.setX(v3.x)
+      // nodePos.setY(v3.y)
+      // nodePos.setZ(v3.z)
+
+      // throw new Error()
+
+      return
+
+      // idxVertices.length   // 2328   776*3
+      // ammoVertices.length  // 678    226*3
+      // numVerts             // 226
+
+      // geometry.ammoVertices,               678     226*3
+      // geometry.ammoIndices,                1344
+
+      // console.log(ammoVertices.length, ammoIndices.length)
+
+      // const volume = softBodies[i]
+      // const geometry = volume.geometry
+      // const softBody = volume.userData.physicsBody
       const volumePositions = geometry.attributes.position.array
       const volumeNormals = geometry.attributes.normal.array
+      // const association = geometry.ammoIndexAssociation
 
-      // @ts-ignore
-      const association: any[] = geometry.ammoIndexAssociation
       const numVerts = association.length
+      // const nodes = softBody.get_m_nodes()
 
-      let nodes = softBody.get_m_nodes()
+      for (let j = 0; j < association.length; j++) {
+        console.log(j)
+        let node = nodes.at(j)
+        let nodePos = node.get_m_x()
+        // const x = nodePos.x()
+        // const y = nodePos.y()
+        // const z = nodePos.z()
+        // const nodeNormal = node.get_m_n()
+        // const nx = nodeNormal.x()
+        // const ny = nodeNormal.y()
+        // const nz = nodeNormal.z()
 
-      objThree.updateMatrixWorld()
+        const assocVertex = association[j]
+
+        // console.log(assocVertex.map((a: any) => Math.floor(a / 3 / 3)))
+        // throw Error()
+
+        for (let k = 0, kl = assocVertex.length; k < kl; k++) {
+          const c = assocVertex[k] / 3 / 3
+          let indexVertex = Math.floor(c)
+          console.log('s', indexVertex)
+
+          node = nodes.at(indexVertex)
+          nodePos = node.get_m_x()
+
+          // indexVertex = assocVertex[k]
+
+          // if (j === 128) {
+          objThree.updateMatrix()
+          objThree.updateMatrixWorld()
+          // console.log(v3.applyMatrix4(objThree.matrixWorld))
+
+          let v3 = (objThree as SkinnedMesh).boneTransform(j, new Vector3()).applyMatrix4(objThree.matrixWorld)
+          // let v3 = new Vector3(5, 5, 0)
+
+          // nodePos.setX(v3.x)
+          // nodePos.setY(v3.y)
+          // nodePos.setZ(v3.z)
+
+          // if (indexVertex === 2) {
+          nodePos.setX(v3.x)
+          nodePos.setY(v3.y)
+          nodePos.setZ(v3.z)
+          // }
+
+          // if (indexVertex === 218) {
+          //   nodePos.setX(v3.x)
+          //   nodePos.setY(v3.y)
+          //   nodePos.setZ(v3.z)
+          // }
+
+          // volumePositions[indexVertex] = x
+          // volumeNormals[indexVertex] = nx
+          // indexVertex++
+          // volumePositions[indexVertex] = y
+          // volumeNormals[indexVertex] = ny
+          // indexVertex++
+          // volumePositions[indexVertex] = z
+          // volumeNormals[indexVertex] = nz
+        }
+      }
+
+      // throw new Error()
+      // geometry.attributes.position.needsUpdate = true
+      // geometry.attributes.normal.needsUpdate = true
+
+      // const v3 = new Vector3(ammoVertices[index], ammoVertices[index + 1], ammoVertices[index + 2])
       // @ts-ignore
-      objThree.bindMode = 'attached'
+      // const v3 = (objThree as SkinnedMesh)
+      //   .boneTransform(j, new Vector3().copy(objThree.position))
+      //   .applyMatrix4(objThree.matrixWorld)
+      // const v3 = new Vector3(x, y, z).applyMatrix4(objThree.matrixWorld)
+
+      // geometry.attributes.position.needsUpdate = true
+      // geometry.attributes.normal.needsUpdate = true
+
+      return
 
       for (let j = 0; j < numVerts; j++) {
         const node = nodes.at(j)
@@ -334,10 +507,10 @@ class AmmoPhysics extends Events {
           indexVertex++
           const z = volumePositions[indexVertex]
           const nz = volumeNormals[indexVertex]
-
+          //
           // const pos = new Vector3(x, y, z).applyMatrix4(objThree.matrixWorld)
           // const normal = new Vector3(nx, ny, nz).applyMatrix4(objThree.matrixWorld)
-
+          //
           let pos = (objThree as any).boneTransform(j, new Vector3(x, y, z)).applyMatrix4(objThree.matrixWorld)
           let normal = (objThree as any).boneTransform(j, new Vector3(nx, ny, nz)).applyMatrix4(objThree.matrixWorld)
 
@@ -364,6 +537,8 @@ class AmmoPhysics extends Events {
 
       softBody.set_m_nodes(nodes)
     }
+
+    return
 
     // update rigid bodies
     for (let i = 0; i < this.rigidBodies.length; i++) {

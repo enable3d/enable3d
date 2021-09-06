@@ -7,10 +7,22 @@ import { Vector } from 'matter'
 const IS_SOFT = false
 
 class MainScene extends Scene3D {
-  hand: any
+  pilar: {
+    object3D: Object3D
+    mesh: SkinnedMesh
+    bone: THREE.Skeleton
+  }
 
-  addSoftBody(object: any, mass: number = 50, pressure: number = 50, margin = 0.05) {
-    const geometry = object.geometry as TypeBufferGeometry
+  addSoftBody(object: Object3D, mass: number = 10, pressure: number = 1000, margin = 0.05) {
+    let _child!: THREE.Mesh
+    object.traverse((child: any) => {
+      if (child.isMesh) {
+        _child = child
+      }
+    })
+
+    const geometry = _child.geometry as TypeBufferGeometry
+    console.log('geo', geometry)
     processGeometry(geometry)
 
     const softBodyHelpers = new Ammo.btSoftBodyHelpers()
@@ -19,7 +31,7 @@ class MainScene extends Scene3D {
       geometry.ammoVertices,
       geometry.ammoIndices,
       geometry.ammoIndices.length / 3,
-      true
+      false // true
     )
 
     const sbConfig = volumeSoftBody.get_m_cfg()
@@ -32,21 +44,23 @@ class MainScene extends Scene3D {
     // Friction
     sbConfig.set_kDF(0.1)
     // Damping
-    sbConfig.set_kDP(0.01)
+    sbConfig.set_kDP(0.1)
     // Pressure
     sbConfig.set_kPR(pressure)
     // Stiffness
-    volumeSoftBody.get_m_materials().at(0).set_m_kLST(0.9)
-    volumeSoftBody.get_m_materials().at(0).set_m_kAST(0.9)
+    volumeSoftBody.get_m_materials().at(0).set_m_kLST(0.09)
+    volumeSoftBody.get_m_materials().at(0).set_m_kAST(0.09)
 
     volumeSoftBody.setTotalMass(mass, false)
     // @ts-ignore
     Ammo.castObject(volumeSoftBody, Ammo.btCollisionObject).getCollisionShape().setMargin(margin)
 
-    this.physics.physicsWorld.addSoftBody(volumeSoftBody, 1, -1)
+    console.log('bla')
 
-    this.physics.addSoftBodyToWorld(object, volumeSoftBody)
-    // Disable deactivation
+    // this.physics.physicsWorld.addSoftBody(volumeSoftBody, 1, -1)
+
+    this.physics.addSoftBodyToWorld(object as any, volumeSoftBody)
+    // // Disable deactivation
     volumeSoftBody.setActivationState(4)
   }
 
@@ -55,39 +69,25 @@ class MainScene extends Scene3D {
 
     this.warpSpeed('-ground')
 
-    this.physics.add.ground({ y: 0, width: 40, height: 40 })
+    this.physics.add.ground({ y: -10, width: 40, height: 40 })
     this.camera.position.set(20, 20, 40)
     this.camera.lookAt(0, 0, 0)
 
-    const gltf = await this.load.gltf('/assets/hand.glb')
-    const Object3D = gltf.scene.children[0]
-    // Object3D.position.y = 12
+    const gltf = await this.load.gltf('/assets/pilar.glb')
 
-    const hand: any = {
-      Object3D: Object3D,
-      skinned_mesh: Object3D.children[1],
-      // @ts-expect-error
-      skeleton: Object3D.children[1].skeleton,
-      position: Object3D.position,
-      rotation: Object3D.rotation,
-      quaternion: Object3D.quaternion
+    const pilar = gltf.scene.children[0]
+
+    this.pilar = {
+      object3D: pilar,
+      mesh: pilar.children[1] as SkinnedMesh,
+      bone: (pilar.children[1] as SkinnedMesh).skeleton
     }
 
-    const bones = hand.skeleton.bones
-    hand.forearm = bones[0]
-    hand.wrist = bones[1]
-    hand.palm = bones[2]
-    hand.thumb = bones.slice(3, 7)
-    hand.index = bones.slice(7, 11)
-    hand.middle = bones.slice(11, 15)
-    hand.ring = bones.slice(15, 19)
-    hand.pinky = bones.slice(19, 23)
+    console.log(this.pilar)
 
-    this.hand = hand
-
+    // Object3D.position.y = 12
     let _child: any
-
-    this.hand.Object3D.traverse((child: any) => {
+    this.pilar.object3D.traverse((child: any) => {
       if (child.isMesh) {
         _child = child
         child.castShadow = child.receiveShadow = false
@@ -95,16 +95,20 @@ class MainScene extends Scene3D {
         child.material.roughness = 1
         child.material.opacity = 0.5
         child.material.transparent = true
-        // (child.material as Material)
       }
     })
 
-    this.hand.position.y += 5
-    this.hand.position.x += 15
-    this.hand.rotation.z = Math.PI / 2
-    this.hand.rotation.x = -Math.PI / 2
-    this.scene.add(_child)
-    this.scene.add(new THREE.SkeletonHelper(this.hand.Object3D))
+    let bufferGeometry: any
+
+    this.pilar.object3D.position.y += 5
+    // this.pilar.position.x += 15
+    // this.pilar.rotation.z = Math.PI / 2
+    // this.pilar.rotation.x = -Math.PI / 2
+    this.scene.add(this.pilar.object3D)
+    this.scene.add(new THREE.SkeletonHelper(this.pilar.object3D))
+
+    // this.addSoftBody(this.hand.Object3D, bufferGeometry)
+    this.addSoftBody(this.pilar.mesh)
 
     // if (!IS_SOFT) {
     //   hand.skeleton.bones.forEach((b: any) => {
@@ -131,7 +135,9 @@ class MainScene extends Scene3D {
     //   console.log(this.hand.skeleton.bones)
     // }
 
-    this.physics.add.box({ x: 0, y: 5, width: 5, height: 5, depth: 5 })
+    setTimeout(() => {
+      // this.physics.add.box({ x: 0, y: 15, width: 5, height: 5, depth: 5, mass: 100 })
+    }, 1000)
 
     // this.physics.add.existing(this.hand.Object3D as any, { shape: 'convex', collisionFlags: 2 })
   }
@@ -139,7 +145,12 @@ class MainScene extends Scene3D {
   update(time: number) {
     // this.hand.Object3D.position.x -= 0.05
     // this.hand.palm.rotation.y += Math.PI / 2 / 200
+    // return
+    if (time < 2) this.pilar.bone.bones[1].rotation.z += Math.PI / 2 / 256
 
+    if (time > 2 && time < 4) this.pilar.bone.bones[2].rotation.y += Math.PI / 2 / 256
+
+    return
     if (time > 3 && time < 7) {
       this.hand.index.forEach((b: any) => (b.rotation.z += Math.PI / 2 / 256))
       this.hand.pinky.forEach((b: any) => (b.rotation.z += Math.PI / 2 / 256))
