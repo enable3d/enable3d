@@ -13,7 +13,7 @@ class MainScene extends Scene3D {
     bone: THREE.Skeleton
   }
 
-  addSoftBody(object: Object3D, mass: number = 10, pressure: number = 1000, margin = 0.05) {
+  addSoftBody(object: Object3D, mass: number = 100, pressure: number = 1000, margin = 0.05) {
     let _child!: THREE.Mesh
     object.traverse((child: any) => {
       if (child.isMesh) {
@@ -69,13 +69,18 @@ class MainScene extends Scene3D {
 
     this.warpSpeed('-ground')
 
-    this.physics.add.ground({ y: -10, width: 40, height: 40 })
-    this.camera.position.set(20, 20, 40)
+    const ground = this.physics.add.ground({ y: -10, width: 40, height: 40 })
+    ground.body.setRestitution(1)
+    this.camera.position.set(15, 15, 30)
     this.camera.lookAt(0, 0, 0)
 
     const gltf = await this.load.gltf('/assets/pilar.glb')
 
     const pilar = gltf.scene.children[0]
+
+    pilar.rotateZ(Math.PI)
+    pilar.position.setY(-6)
+    pilar.position.setX(3)
 
     this.pilar = {
       object3D: pilar,
@@ -136,8 +141,10 @@ class MainScene extends Scene3D {
     // }
 
     setTimeout(() => {
-      // this.physics.add.box({ x: 0, y: 15, width: 5, height: 5, depth: 5, mass: 100 })
-    }, 1000)
+      // this.physics.add.box({ x: 0, y: 15, mass: 1, breakable: true })
+      const ball = this.physics.add.sphere({ x: 0, y: 15, radius: 1.5, mass: 1 })
+      ball.body.setBounciness(0.5)
+    }, 0)
 
     // this.physics.add.existing(this.hand.Object3D as any, { shape: 'convex', collisionFlags: 2 })
   }
@@ -146,9 +153,19 @@ class MainScene extends Scene3D {
     // this.hand.Object3D.position.x -= 0.05
     // this.hand.palm.rotation.y += Math.PI / 2 / 200
     // return
-    if (time < 2) this.pilar.bone.bones[1].rotation.z += Math.PI / 2 / 256
+    if (time < 2) {
+      this.pilar.bone.bones[0].rotation.z += Math.PI / 2 / 256
+      this.pilar.bone.bones[1].rotation.z += Math.PI / 2 / 256
+      this.pilar.bone.bones[2].rotation.z += Math.PI / 2 / 256
+    }
 
-    if (time > 2 && time < 4) this.pilar.bone.bones[2].rotation.y += Math.PI / 2 / 256
+    // if (time > 2 && time < 4) this.pilar.bone.bones[2].rotation.y += Math.PI / 2 / 256
+
+    if (time > 5 && time < 5.15) {
+      this.pilar.bone.bones[0].rotation.z -= Math.PI / 2 / 16
+      this.pilar.bone.bones[1].rotation.z -= Math.PI / 2 / 16
+      this.pilar.bone.bones[2].rotation.z -= Math.PI / 2 / 32
+    }
 
     return
     if (time > 3 && time < 7) {
