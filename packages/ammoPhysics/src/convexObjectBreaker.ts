@@ -411,7 +411,7 @@ ConvexObjectBreaker.prototype = {
         )
 
         numObjects++
-      } catch (error) {
+      } catch (error: any) {
         logger('Error in ConvexObjectBreaker.ts', true)
         logger(error, true)
       }
@@ -433,7 +433,7 @@ ConvexObjectBreaker.prototype = {
         )
 
         numObjects++
-      } catch (error) {
+      } catch (error: any) {
         logger('Error in ConvexObjectBreaker.ts', true)
         logger(error, true)
       }
