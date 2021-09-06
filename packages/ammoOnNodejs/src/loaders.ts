@@ -53,11 +53,11 @@ export class FBXLoader extends Loader {
           try {
             const fbx = this.loader.parse(trimmed, '')
             if (fbx) return resolve(fbx)
-          } catch (error) {
+          } catch (error: any) {
             return reject(error.message)
           }
         })
-      } catch (error) {
+      } catch (error: any) {
         console.log('error', error.message)
         return reject(error.message)
       }
@@ -88,7 +88,7 @@ export class GLTFLoader extends Loader {
             }
           )
         })
-      } catch (error) {
+      } catch (error: any) {
         return reject(error.message)
       }
     })

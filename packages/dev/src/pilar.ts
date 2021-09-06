@@ -1,6 +1,6 @@
 import { PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
 
-import { TypeBufferGeometry, processGeometry } from '@enable3d/ammo-physics/dist/tmp'
+import { TypeBufferGeometry, processGeometry } from './tmp'
 import { Object3D, SkinnedMesh } from 'three'
 
 class MainScene extends Scene3D {
@@ -66,7 +66,7 @@ class MainScene extends Scene3D {
 
     const ground = this.physics.add.ground({ y: -10, width: 40, height: 40 })
     ground.body.setRestitution(1)
-    this.camera.position.set(15, 15, 30)
+    this.camera.position.set(5, 5, 10)
     this.camera.lookAt(0, 0, 0)
 
     const gltf = await this.load.gltf('/assets/pilar.glb')
@@ -103,17 +103,29 @@ class MainScene extends Scene3D {
     setTimeout(() => {
       const ball = this.physics.add.sphere({ x: 0, y: 15, radius: 1.5, mass: 1 })
       ball.body.setBounciness(0.5)
-    }, 0)
+    }, 3000)
   }
 
   update(time: number) {
     if (time < 2) {
+      this.pilar.bone.bones[1].rotation.y -= Math.PI / 2 / 120
+      this.pilar.bone.bones[2].rotation.y -= Math.PI / 2 / 120
+      this.pilar.bone.bones[2].rotation.z -= Math.PI / 2 / 250
+    }
+
+    if (time > 2 && time < 4) {
+      this.pilar.bone.bones[1].rotation.y += Math.PI / 2 / 120
+      this.pilar.bone.bones[2].rotation.y += Math.PI / 2 / 120
+      this.pilar.bone.bones[2].rotation.z += Math.PI / 2 / 250
+    }
+
+    if (time > 4 && time < 6) {
       this.pilar.bone.bones[0].rotation.z += Math.PI / 2 / 256
       this.pilar.bone.bones[1].rotation.z += Math.PI / 2 / 256
       this.pilar.bone.bones[2].rotation.z += Math.PI / 2 / 256
     }
 
-    if (time > 5 && time < 5.15) {
+    if (time > 7 && time < 7.2) {
       this.pilar.bone.bones[0].rotation.z -= Math.PI / 2 / 16
       this.pilar.bone.bones[1].rotation.z -= Math.PI / 2 / 16
       this.pilar.bone.bones[2].rotation.z -= Math.PI / 2 / 32
