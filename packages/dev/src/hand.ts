@@ -4,8 +4,6 @@ import { TypeBufferGeometry, processGeometry } from '@enable3d/ammo-physics/dist
 import { Material, Object3D, Quaternion, SkinnedMesh, Vector3 } from 'three'
 import { Vector } from 'matter'
 
-const IS_SOFT = false
-
 class MainScene extends Scene3D {
   hand: any
 
@@ -106,23 +104,21 @@ class MainScene extends Scene3D {
     this.scene.add(_child)
     this.scene.add(new THREE.SkeletonHelper(this.hand.Object3D))
 
-    if (!IS_SOFT) {
-      hand.skeleton.bones.forEach((b: any) => {
-        if (!/3$/.test(b.name)) {
-          this.physics.add.existing(b, {
-            collisionFlags: 2,
-            shape: 'capsule',
-            height: 0.9,
-            radius: 0.4,
-            axis: 'x',
-            offset: { y: 0 }
-            // orientation: new Quaternion(1, 1, 1, 1)
-          })
-          // we update the body manually
-          b.body.skipUpdate = true
-        }
-      })
-    }
+    hand.skeleton.bones.forEach((b: any) => {
+      if (!/3$/.test(b.name)) {
+        this.physics.add.existing(b, {
+          collisionFlags: 2,
+          shape: 'capsule',
+          height: 0.9,
+          radius: 0.4,
+          axis: 'x',
+          offset: { y: 0 }
+          // orientation: new Quaternion(1, 1, 1, 1)
+        })
+        // we update the body manually
+        b.body.skipUpdate = true
+      }
+    })
 
     // if (IS_SOFT) {
     //   // this.addSoftBody(this.hand.Object3D, bufferGeometry)
@@ -161,38 +157,36 @@ class MainScene extends Scene3D {
       // @ts-ignore
       if (!b.body) return
 
-      if (!IS_SOFT) {
-        b.updateMatrix()
-        b.updateMatrixWorld()
+      b.updateMatrix()
+      b.updateMatrixWorld()
 
-        const v = new THREE.Vector3(1, 0, 1)
-        v.applyEuler(b.rotation)
+      const v = new THREE.Vector3(1, 0, 1)
+      v.applyEuler(b.rotation)
 
-        const e = new THREE.Euler()
-          .setFromRotationMatrix(b.matrixWorld)
-          .toVector3()
-          .add(this.hand.skinned_mesh.rotation.toVector3())
+      const e = new THREE.Euler()
+        .setFromRotationMatrix(b.matrixWorld)
+        .toVector3()
+        .add(this.hand.skinned_mesh.rotation.toVector3())
 
-        const pos = new THREE.Vector3().setFromMatrixPosition(b.matrixWorld).add(this.hand.skinned_mesh.position)
-        const rot = e // new THREE.Vector3().add(b.rotation.toVector3())
+      const pos = new THREE.Vector3().setFromMatrixPosition(b.matrixWorld).add(this.hand.skinned_mesh.position)
+      const rot = e // new THREE.Vector3().add(b.rotation.toVector3())
 
-        // @ts-ignore
-        const { offset: o } = b.body
+      // @ts-ignore
+      const { offset: o } = b.body
 
-        // const pos = new Vector3(b.x, b.y, b.z).applyMatrix4(objThree.matrixWorld)
-        // const normal = new Vector3(nx, ny, nz).applyMatrix4(objThree.matrixWorld)
-        // b.position.copy(pos)
-        // @ts-ignore
-        b.body.transform()
-        // @ts-ignore
-        b.body.setPosition(pos.x + o.x, pos.y + o.y, pos.z + o.z)
-        // @ts-ignore
-        b.body.setRotation(rot.x, rot.y, rot.z)
-        // @ts-ignore
-        b.body.refresh()
-        // @ts-ignore
-        b.body.needUpdate = true
-      }
+      // const pos = new Vector3(b.x, b.y, b.z).applyMatrix4(objThree.matrixWorld)
+      // const normal = new Vector3(nx, ny, nz).applyMatrix4(objThree.matrixWorld)
+      // b.position.copy(pos)
+      // @ts-ignore
+      b.body.transform()
+      // @ts-ignore
+      b.body.setPosition(pos.x + o.x, pos.y + o.y, pos.z + o.z)
+      // @ts-ignore
+      b.body.setRotation(rot.x, rot.y, rot.z)
+      // @ts-ignore
+      b.body.refresh()
+      // @ts-ignore
+      b.body.needUpdate = true
     })
   }
 }

@@ -1,10 +1,7 @@
-import { ExtendedObject3D, PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
+import { PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
 
 import { TypeBufferGeometry, processGeometry } from '@enable3d/ammo-physics/dist/tmp'
-import { Material, Object3D, Quaternion, SkinnedMesh, Vector3 } from 'three'
-import { Vector } from 'matter'
-
-const IS_SOFT = false
+import { Object3D, SkinnedMesh } from 'three'
 
 class MainScene extends Scene3D {
   pilar: {
@@ -22,7 +19,7 @@ class MainScene extends Scene3D {
     })
 
     const geometry = _child.geometry as TypeBufferGeometry
-    console.log('geo', geometry)
+
     processGeometry(geometry)
 
     const softBodyHelpers = new Ammo.btSoftBodyHelpers()
@@ -31,7 +28,7 @@ class MainScene extends Scene3D {
       geometry.ammoVertices,
       geometry.ammoIndices,
       geometry.ammoIndices.length / 3,
-      false // true
+      true // true
     )
 
     const sbConfig = volumeSoftBody.get_m_cfg()
@@ -54,8 +51,6 @@ class MainScene extends Scene3D {
     volumeSoftBody.setTotalMass(mass, false)
     // @ts-ignore
     Ammo.castObject(volumeSoftBody, Ammo.btCollisionObject).getCollisionShape().setMargin(margin)
-
-    console.log('bla')
 
     // this.physics.physicsWorld.addSoftBody(volumeSoftBody, 1, -1)
 
@@ -88,13 +83,8 @@ class MainScene extends Scene3D {
       bone: (pilar.children[1] as SkinnedMesh).skeleton
     }
 
-    console.log(this.pilar)
-
-    // Object3D.position.y = 12
-    let _child: any
     this.pilar.object3D.traverse((child: any) => {
       if (child.isMesh) {
-        _child = child
         child.castShadow = child.receiveShadow = false
         child.material.metalness = 0
         child.material.roughness = 1
@@ -103,125 +93,31 @@ class MainScene extends Scene3D {
       }
     })
 
-    let bufferGeometry: any
-
     this.pilar.object3D.position.y += 5
-    // this.pilar.position.x += 15
-    // this.pilar.rotation.z = Math.PI / 2
-    // this.pilar.rotation.x = -Math.PI / 2
+
     this.scene.add(this.pilar.object3D)
     this.scene.add(new THREE.SkeletonHelper(this.pilar.object3D))
 
-    // this.addSoftBody(this.hand.Object3D, bufferGeometry)
     this.addSoftBody(this.pilar.mesh)
 
-    // if (!IS_SOFT) {
-    //   hand.skeleton.bones.forEach((b: any) => {
-    //     if (!/3$/.test(b.name)) {
-    //       this.physics.add.existing(b, {
-    //         collisionFlags: 2,
-    //         shape: 'capsule',
-    //         height: 0.9,
-    //         radius: 0.4,
-    //         axis: 'x',
-    //         offset: { y: 0 }
-    //         // orientation: new Quaternion(1, 1, 1, 1)
-    //       })
-    //       // we update the body manually
-    //       b.body.skipUpdate = true
-    //     }
-    //   })
-    // }
-
-    // if (IS_SOFT) {
-    //   // this.addSoftBody(this.hand.Object3D, bufferGeometry)
-    //   this.addSoftBody(this.hand.skinned_mesh)
-
-    //   console.log(this.hand.skeleton.bones)
-    // }
-
     setTimeout(() => {
-      // this.physics.add.box({ x: 0, y: 15, mass: 1, breakable: true })
       const ball = this.physics.add.sphere({ x: 0, y: 15, radius: 1.5, mass: 1 })
       ball.body.setBounciness(0.5)
     }, 0)
-
-    // this.physics.add.existing(this.hand.Object3D as any, { shape: 'convex', collisionFlags: 2 })
   }
 
   update(time: number) {
-    // this.hand.Object3D.position.x -= 0.05
-    // this.hand.palm.rotation.y += Math.PI / 2 / 200
-    // return
     if (time < 2) {
       this.pilar.bone.bones[0].rotation.z += Math.PI / 2 / 256
       this.pilar.bone.bones[1].rotation.z += Math.PI / 2 / 256
       this.pilar.bone.bones[2].rotation.z += Math.PI / 2 / 256
     }
 
-    // if (time > 2 && time < 4) this.pilar.bone.bones[2].rotation.y += Math.PI / 2 / 256
-
     if (time > 5 && time < 5.15) {
       this.pilar.bone.bones[0].rotation.z -= Math.PI / 2 / 16
       this.pilar.bone.bones[1].rotation.z -= Math.PI / 2 / 16
       this.pilar.bone.bones[2].rotation.z -= Math.PI / 2 / 32
     }
-
-    return
-    if (time > 3 && time < 7) {
-      this.hand.index.forEach((b: any) => (b.rotation.z += Math.PI / 2 / 256))
-      this.hand.pinky.forEach((b: any) => (b.rotation.z += Math.PI / 2 / 256))
-      this.hand.ring.forEach((b: any) => (b.rotation.z += Math.PI / 2 / 256))
-      this.hand.middle.forEach((b: any) => (b.rotation.z += Math.PI / 2 / 256))
-    }
-
-    if (time > 7 && time < 13) {
-      this.hand.position.x -= 0.02
-      this.hand.rotation.z += 0.0005
-    }
-
-    if (time > 15 && time < 15.07) {
-      this.hand.index.forEach((b: any) => (b.rotation.z -= Math.PI / 2 / 4))
-    }
-
-    // this.hand.forearm.rotation.y += Math.PI / 2 / 128
-    this.hand.skeleton.bones.forEach((b: SkinnedMesh, i: number) => {
-      // @ts-ignore
-      if (!b.body) return
-
-      if (!IS_SOFT) {
-        b.updateMatrix()
-        b.updateMatrixWorld()
-
-        const v = new THREE.Vector3(1, 0, 1)
-        v.applyEuler(b.rotation)
-
-        const e = new THREE.Euler()
-          .setFromRotationMatrix(b.matrixWorld)
-          .toVector3()
-          .add(this.hand.skinned_mesh.rotation.toVector3())
-
-        const pos = new THREE.Vector3().setFromMatrixPosition(b.matrixWorld).add(this.hand.skinned_mesh.position)
-        const rot = e // new THREE.Vector3().add(b.rotation.toVector3())
-
-        // @ts-ignore
-        const { offset: o } = b.body
-
-        // const pos = new Vector3(b.x, b.y, b.z).applyMatrix4(objThree.matrixWorld)
-        // const normal = new Vector3(nx, ny, nz).applyMatrix4(objThree.matrixWorld)
-        // b.position.copy(pos)
-        // @ts-ignore
-        b.body.transform()
-        // @ts-ignore
-        b.body.setPosition(pos.x + o.x, pos.y + o.y, pos.z + o.z)
-        // @ts-ignore
-        b.body.setRotation(rot.x, rot.y, rot.z)
-        // @ts-ignore
-        b.body.refresh()
-        // @ts-ignore
-        // b.body.needUpdate = true
-      }
-    })
   }
 }
 
