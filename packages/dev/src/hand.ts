@@ -106,23 +106,23 @@ class MainScene extends Scene3D {
     this.scene.add(_child)
     this.scene.add(new THREE.SkeletonHelper(this.hand.Object3D))
 
-    // if (!IS_SOFT) {
-    //   hand.skeleton.bones.forEach((b: any) => {
-    //     if (!/3$/.test(b.name)) {
-    //       this.physics.add.existing(b, {
-    //         collisionFlags: 2,
-    //         shape: 'capsule',
-    //         height: 0.9,
-    //         radius: 0.4,
-    //         axis: 'x',
-    //         offset: { y: 0 }
-    //         // orientation: new Quaternion(1, 1, 1, 1)
-    //       })
-    //       // we update the body manually
-    //       b.body.skipUpdate = true
-    //     }
-    //   })
-    // }
+    if (!IS_SOFT) {
+      hand.skeleton.bones.forEach((b: any) => {
+        if (!/3$/.test(b.name)) {
+          this.physics.add.existing(b, {
+            collisionFlags: 2,
+            shape: 'capsule',
+            height: 0.9,
+            radius: 0.4,
+            axis: 'x',
+            offset: { y: 0 }
+            // orientation: new Quaternion(1, 1, 1, 1)
+          })
+          // we update the body manually
+          b.body.skipUpdate = true
+        }
+      })
+    }
 
     // if (IS_SOFT) {
     //   // this.addSoftBody(this.hand.Object3D, bufferGeometry)
@@ -191,7 +191,7 @@ class MainScene extends Scene3D {
         // @ts-ignore
         b.body.refresh()
         // @ts-ignore
-        // b.body.needUpdate = true
+        b.body.needUpdate = true
       }
     })
   }

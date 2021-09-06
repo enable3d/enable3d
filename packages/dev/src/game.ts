@@ -1,5 +1,8 @@
 import startPhaserGame from './phaserGame'
+
 import startProject from './pilar'
+// import startProject from './hand'
+
 import startProjectFlatDev0 from './threeSceneFlatDev0'
 import startProjectFlatDev1 from './threeSceneFlatDev1'
 import startProjectFlatDev2 from './threeSceneFlatDev2'
