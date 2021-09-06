@@ -335,11 +335,11 @@ class AmmoPhysics extends Events {
           const z = volumePositions[indexVertex]
           const nz = volumeNormals[indexVertex]
 
-          const pos = new Vector3(x, y, z).applyMatrix4(objThree.matrixWorld)
-          const normal = new Vector3(nx, ny, nz).applyMatrix4(objThree.matrixWorld)
+          // const pos = new Vector3(x, y, z).applyMatrix4(objThree.matrixWorld)
+          // const normal = new Vector3(nx, ny, nz).applyMatrix4(objThree.matrixWorld)
 
-          // let pos = mesh.boneTransform(j, new Vector3(x, y, z)).applyMatrix4(objThree.matrixWorld)
-          // let normal = mesh.boneTransform(j, new Vector3(nx, ny, nz)).applyMatrix4(objThree.matrixWorld)
+          let pos = (objThree as any).boneTransform(j, new Vector3(x, y, z)).applyMatrix4(objThree.matrixWorld)
+          let normal = (objThree as any).boneTransform(j, new Vector3(nx, ny, nz)).applyMatrix4(objThree.matrixWorld)
 
           nodePos.setX(pos.x)
           nodeNormal.setX(normal.x)
@@ -363,46 +363,14 @@ class AmmoPhysics extends Events {
       // const t= new Ammo.btTransform()
 
       softBody.set_m_nodes(nodes)
-
-      /// ORIGINSL
-
-      nodes = softBody.get_m_nodes()
-      for (let j = 0; j < numVerts; j++) {
-        continue
-        const node = nodes.at(j)
-        const nodePos = node.get_m_x()
-        const x = nodePos.x()
-        const y = nodePos.y()
-        const z = nodePos.z()
-        const nodeNormal = node.get_m_n()
-        const nx = nodeNormal.x()
-        const ny = nodeNormal.y()
-        const nz = nodeNormal.z()
-
-        const assocVertex = association[j]
-
-        for (let k = 0, kl = assocVertex.length; k < kl; k++) {
-          let indexVertex = assocVertex[k]
-          volumePositions[indexVertex] = x
-          volumeNormals[indexVertex] = nx
-          indexVertex++
-          volumePositions[indexVertex] = y
-          volumeNormals[indexVertex] = ny
-          indexVertex++
-          volumePositions[indexVertex] = z
-          volumeNormals[indexVertex] = nz
-        }
-      }
-
-      geometry.attributes.position.needsUpdate = true
-      geometry.attributes.normal.needsUpdate = true
     }
-
-    return
 
     // update rigid bodies
     for (let i = 0; i < this.rigidBodies.length; i++) {
       const objThree = this.rigidBodies[i]
+
+      if (objThree.body.isSoftBody) continue
+
       const objPhys = objThree.body.ammo
       const ms = objPhys.getMotionState()
 
