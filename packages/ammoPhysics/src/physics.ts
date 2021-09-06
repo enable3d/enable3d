@@ -873,9 +873,10 @@ class AmmoPhysics extends Events {
 
     // if there is a x, y or z, take is as temporary offset parameter
     const { x, y, z } = params
+
     if (x || y || z) {
       // @ts-ignore
-      collisionShape.offset = { x: x || 0, y: y || 0, z: z || 0 }
+      collisionShape._compoundOffset = { x: x || 0, y: y || 0, z: z || 0 }
     }
 
     // in some cases, like hacd, it will be an array of shapes
@@ -888,12 +889,18 @@ class AmmoPhysics extends Events {
   public mergeCollisionShapesToCompoundShape(collisionShapes: Ammo.btCollisionShape[]): Ammo.btCompoundShape {
     const compoundShape = new Ammo.btCompoundShape()
     collisionShapes.forEach(shape => {
-      // @ts-ignore // _tmp is a custom parameter
-      const _tmp = shape._tmp
+      // @ts-ignore // _childOffset is a custom parameter
+      const { _childOffset, _compoundOffset } = shape
 
-      if (_tmp) {
-        const { pos, quat, scale, margin } = _tmp
+      if (_childOffset) {
+        const { pos, quat, scale, margin } = _childOffset
         const transform = this.applyPosQuatScaleMargin(shape, pos, quat, scale, margin)
+        compoundShape.addChildShape(transform, shape)
+      } else if (_compoundOffset) {
+        const transform = new Ammo.btTransform()
+        transform.setIdentity()
+        const { x, y, z } = transform.getOrigin()
+        transform.setOrigin(new Ammo.btVector3(_compoundOffset.x, _compoundOffset.y, _compoundOffset.z))
         compoundShape.addChildShape(transform, shape)
       } else {
         const transform = new Ammo.btTransform()
@@ -968,7 +975,7 @@ class AmmoPhysics extends Events {
           const cs = this.createCollisionShape(p.shape, p.params, p.object)
 
           // @ts-ignore // the relative pos, quat and scale to its parent
-          cs._tmp = {
+          cs._childOffset = {
             pos: child.position.clone(),
             quat: child.quaternion.clone(),
             scale: child.scale.clone(),
