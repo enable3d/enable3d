@@ -1,6 +1,8 @@
 import startPhaserGame from './phaserGame'
 
-import startProject from './pilar'
+// under development
+import startProject from './balls'
+// import startProject from './pilar'
 // import startProject from './compound'
 // import startProject from './lift'
 // import startProject from './hand'

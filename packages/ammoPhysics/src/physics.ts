@@ -293,70 +293,114 @@ class AmmoPhysics extends Events {
 
     // https://stackoverflow.com/a/51080905
 
+    const CONTROLLABLE = false
+
     // update soft volumes (follow three.js object)
     for (let i = 0, il = this.rigidBodies.length; i < il; i++) {
       let objThree: any = this.rigidBodies[i]
 
       if (!objThree.body.isSoftBody) continue
 
-      // console.log('do')
+      if (!CONTROLLABLE) {
+        const volume = objThree as ExtendedObject3D
+        const geometry = volume.geometry
+        const softBody = volume.body.ammo
+        const volumePositions = geometry.attributes.position.array as number[]
+        const volumeNormals = geometry.attributes.normal.array as number[]
+        // @ts-ignore
+        const association = geometry.ammoIndexAssociation
+        const numVerts = association.length
+        const nodes = softBody.get_m_nodes()
+        for (let j = 0; j < numVerts; j++) {
+          const node = nodes.at(j)
+          const nodePos = node.get_m_x()
+          const x = nodePos.x()
+          const y = nodePos.y()
+          const z = nodePos.z()
+          const nodeNormal = node.get_m_n()
+          const nx = nodeNormal.x()
+          const ny = nodeNormal.y()
+          const nz = nodeNormal.z()
 
-      const softBody = objThree.body.ammo as Ammo.btSoftBody
-      // const { geometry, skeleton } = objThree as unknown as SkinnedMesh
+          const assocVertex = association[j]
 
-      objThree.updateMatrix()
-      objThree.updateMatrixWorld()
-
-      let _child!: THREE.Mesh
-      objThree.traverse((child: any) => {
-        if (child.isMesh) {
-          _child = child
+          for (let k = 0, kl = assocVertex.length; k < kl; k++) {
+            let indexVertex = assocVertex[k]
+            volumePositions[indexVertex] = x
+            volumeNormals[indexVertex] = nx
+            indexVertex++
+            volumePositions[indexVertex] = y
+            volumeNormals[indexVertex] = ny
+            indexVertex++
+            volumePositions[indexVertex] = z
+            volumeNormals[indexVertex] = nz
+          }
         }
-      })
 
-      // console.log((objThree as SkinnedMesh).skeleton)
+        geometry.attributes.position.needsUpdate = true
+        geometry.attributes.normal.needsUpdate = true
+      }
 
-      _child.updateMatrix()
-      _child.updateMatrixWorld()
+      if (CONTROLLABLE) {
+        // console.log('do')
 
-      const geometry = objThree.geometry as any
-      const association = geometry.ammoIndexAssociation
+        const softBody = objThree.body.ammo as Ammo.btSoftBody
+        // const { geometry, skeleton } = objThree as unknown as SkinnedMesh
 
-      // processGeometry(geometry)
-      const { ammoVertices, ammoIndices, ammoIndexAssociation } = geometry
+        objThree.updateMatrix()
+        objThree.updateMatrixWorld()
 
-      // DESCRITPOISN
-      // console.log(ammoVertices.length / 3) // this are the vertecies o fthe ammo body (x,yz)
-      // they do match one of the ...
-      // geometry.attributes.position.array
+        let _child!: THREE.Mesh
+        objThree.traverse((child: any) => {
+          if (child.isMesh) {
+            _child = child
+          }
+        })
 
-      geometry
-      const vertices = geometry.attributes.position.array
+        // console.log((objThree as SkinnedMesh).skeleton)
 
-      const nodes = softBody.get_m_nodes()
+        _child.updateMatrix()
+        _child.updateMatrixWorld()
 
-      // console.log(vertices[i])
+        const geometry = objThree.geometry as any
+        const association = geometry.ammoIndexAssociation
 
-      for (let i = 0; i < ammoVertices.length / 3; i++) {
-        let x, y, z
+        // processGeometry(geometry)
+        const { ammoVertices, ammoIndices, ammoIndexAssociation } = geometry
 
-        const bla = ammoIndexAssociation[i]
-        if (bla < 3) continue
+        // DESCRITPOISN
+        // console.log(ammoVertices.length / 3) // this are the vertecies o fthe ammo body (x,yz)
+        // they do match one of the ...
+        // geometry.attributes.position.array
 
-        x = vertices[bla[0]]
-        y = vertices[bla[0] + 1]
-        z = vertices[bla[0] + 2]
+        // geometry
+        const vertices = geometry.attributes.position.array
 
-        // let v3 = new Vector3(x, y, z).applyMatrix4(objThree.matrixWorld)
-        // console.log(v3)
+        const nodes = softBody.get_m_nodes()
 
-        const node = nodes.at(i)
-        const nodePos = node.get_m_x()
-        let v3 = (objThree as SkinnedMesh).boneTransform(bla[0] / 3, new Vector3()).applyMatrix4(objThree.matrixWorld)
-        //  let v3 = new Vector3().applyMatrix4(objThree.matrixWorld)
-        nodePos.setX(v3.x)
-        nodePos.setY(v3.y)
-        nodePos.setZ(v3.z)
+        // console.log(vertices[i])
+
+        for (let i = 0; i < ammoVertices.length / 3; i++) {
+          let x, y, z
+
+          const bla = ammoIndexAssociation[i]
+          if (bla < 3) continue
+
+          x = vertices[bla[0]]
+          y = vertices[bla[0] + 1]
+          z = vertices[bla[0] + 2]
+
+          // let v3 = new Vector3(x, y, z).applyMatrix4(objThree.matrixWorld)
+          // console.log(v3)
+
+          const node = nodes.at(i)
+          const nodePos = node.get_m_x()
+          let v3 = (objThree as SkinnedMesh).boneTransform(bla[0] / 3, new Vector3()).applyMatrix4(objThree.matrixWorld)
+          //  let v3 = new Vector3().applyMatrix4(objThree.matrixWorld)
+          nodePos.setX(v3.x)
+          nodePos.setY(v3.y)
+          nodePos.setZ(v3.z)
+        }
       }
     }
 
@@ -1012,8 +1056,7 @@ class AmmoPhysics extends Events {
   public addSoftBodyToWorld(
     object: ExtendedObject3D,
     softBody: Ammo.btSoftBody,
-
-    collisionFlags = 0,
+    // collisionFlags = 0,
     collisionGroup = 1,
     collisionMask = -1,
     offset?: { x?: number; y?: number; z?: number }
@@ -1034,7 +1077,7 @@ class AmmoPhysics extends Events {
 
     if (offset) object.body.offset = { x: 0, y: 0, z: 0, ...offset }
 
-    object.body.setCollisionFlags(collisionFlags)
+    // object.body.setCollisionFlags(collisionFlags)
   }
 
   public addRigidBodyToWorld(
