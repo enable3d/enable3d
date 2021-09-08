@@ -300,6 +300,7 @@ class AmmoPhysics extends Events {
       let objThree: any = this.rigidBodies[i]
 
       if (!objThree.body.isSoftBody) continue
+      if (objThree.body.skipUpdate) continue
 
       if (!CONTROLLABLE) {
         const volume = objThree as ExtendedObject3D
@@ -342,43 +343,12 @@ class AmmoPhysics extends Events {
       }
 
       if (CONTROLLABLE) {
-        // console.log('do')
-
         const softBody = objThree.body.ammo as Ammo.btSoftBody
-        // const { geometry, skeleton } = objThree as unknown as SkinnedMesh
-
-        objThree.updateMatrix()
-        objThree.updateMatrixWorld()
-
-        let _child!: THREE.Mesh
-        objThree.traverse((child: any) => {
-          if (child.isMesh) {
-            _child = child
-          }
-        })
-
-        // console.log((objThree as SkinnedMesh).skeleton)
-
-        _child.updateMatrix()
-        _child.updateMatrixWorld()
 
         const geometry = objThree.geometry as any
-        const association = geometry.ammoIndexAssociation
-
-        // processGeometry(geometry)
         const { ammoVertices, ammoIndices, ammoIndexAssociation } = geometry
-
-        // DESCRITPOISN
-        // console.log(ammoVertices.length / 3) // this are the vertecies o fthe ammo body (x,yz)
-        // they do match one of the ...
-        // geometry.attributes.position.array
-
-        // geometry
         const vertices = geometry.attributes.position.array
-
         const nodes = softBody.get_m_nodes()
-
-        // console.log(vertices[i])
 
         for (let i = 0; i < ammoVertices.length / 3; i++) {
           let x, y, z
@@ -390,9 +360,6 @@ class AmmoPhysics extends Events {
           y = vertices[bla[0] + 1]
           z = vertices[bla[0] + 2]
 
-          // let v3 = new Vector3(x, y, z).applyMatrix4(objThree.matrixWorld)
-          // console.log(v3)
-
           const node = nodes.at(i)
           const nodePos = node.get_m_x()
           let v3 = (objThree as SkinnedMesh).boneTransform(bla[0] / 3, new Vector3()).applyMatrix4(objThree.matrixWorld)
@@ -402,6 +369,44 @@ class AmmoPhysics extends Events {
           nodePos.setZ(v3.z)
         }
       }
+
+      // if (CONTROLLABLE) {
+      //   const softBody = objThree.body.ammo as Ammo.btSoftBody
+
+      //   objThree.updateMatrix()
+      //   objThree.updateMatrixWorld()
+
+      //   let _child!: THREE.Mesh
+      //   objThree.traverse((child: any) => {
+      //     if (child.isMesh) {
+      //       _child = child
+      //     }
+      //   })
+
+      //   const geometry = _child.geometry as any
+      //   const { ammoVertices, ammoIndices, ammoIndexAssociation } = geometry
+      //   const vertices = geometry.attributes.position.array
+      //   const nodes = softBody.get_m_nodes()
+
+      //   for (let i = 0; i < ammoVertices.length / 3; i++) {
+      //     let x, y, z
+
+      //     const bla = ammoIndexAssociation[i]
+      //     if (bla < 3) continue
+
+      //     x = vertices[bla[0]]
+      //     y = vertices[bla[0] + 1]
+      //     z = vertices[bla[0] + 2]
+
+      //     const node = nodes.at(i)
+      //     const nodePos = node.get_m_x()
+      //     let v3 = (_child as SkinnedMesh).boneTransform(bla[0] / 3, new Vector3()).applyMatrix4(objThree.matrixWorld)
+      //     //  let v3 = new Vector3().applyMatrix4(objThree.matrixWorld)
+      //     nodePos.setX(v3.x)
+      //     nodePos.setY(v3.y)
+      //     nodePos.setZ(v3.z)
+      //   }
+      // }
     }
 
     // update rigid bodies

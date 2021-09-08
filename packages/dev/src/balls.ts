@@ -46,7 +46,7 @@ class MainScene extends Scene3D {
     sbConfig.set_piterations(20)
 
     // Soft-soft and soft-rigid collisions
-    // sbConfig.set_collisions(0x11)
+    sbConfig.set_collisions(0x11)
 
     // console.log(sbConfig.get_timescale())
     // sbConfig.set_timescale(2.5)
@@ -56,7 +56,7 @@ class MainScene extends Scene3D {
     // Damping
     // sbConfig.set_kDP(0.0001)
     // Pressure
-    sbConfig.set_kPR(pressure)
+    sbConfig.set_kPR(pressure * mass)
     // Stiffness
     volumeSoftBody.get_m_materials().at(0).set_m_kLST(0.09)
     volumeSoftBody.get_m_materials().at(0).set_m_kAST(0.09)
@@ -86,20 +86,21 @@ class MainScene extends Scene3D {
     // this.camera.position.set(5, 5, 10)
     this.camera.lookAt(0, 0, 0)
 
-    const addBall = (x: number, y: number, mass: number, pressure: number) => {
-      const b = this.add.sphere({ x, y }) as any
+    const addBall = (x: number, y: number, mass: number, pressure: number, segments: [number, number]) => {
+      const b = this.add.sphere({ x, y, widthSegments: segments[0], heightSegments: segments[1] }) as any
       // b.translate(0, 5, 0)
       // this.add.existing(b)
       this.addSoftBody(b, mass, pressure)
     }
 
     this.physics.add.sphere({ x: 3, y: 3 })
-    addBall(-3, 3, 1, 20)
-    addBall(0, 3, 1, 20)
+    addBall(-3, 3, 2, 50, [12, 8])
+    addBall(0, 3, 1, 50, [16, 16])
 
     setTimeout(() => {
-      this.physics.add.sphere({ x: -3, y: 6 })
-      this.physics.add.sphere({ x: 0, y: 6 })
+      const radius = 0.5
+      this.physics.add.sphere({ x: -3, y: 6, radius })
+      this.physics.add.sphere({ x: 0, y: 6, radius })
     }, 1500)
   }
 }

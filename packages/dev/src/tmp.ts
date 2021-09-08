@@ -48,9 +48,6 @@ const mapIndices = (bufGeometry: TypeBufferGeometry, indexedBufferGeom: TypeBuff
   bufGeometry.ammoIndices = indices
   bufGeometry.ammoIndexAssociation = []
 
-  console.log('numIdxVertices', numIdxVertices)
-  console.log('numVertices', numVertices)
-
   for (let i = 0; i < numIdxVertices; i++) {
     const association: any = []
     bufGeometry.ammoIndexAssociation.push(association)
@@ -73,6 +70,4 @@ const mapIndices = (bufGeometry: TypeBufferGeometry, indexedBufferGeom: TypeBuff
       }
     }
   }
-
-  // console.log('bufGeometry.ammoIndexAssociation', bufGeometry.ammoIndexAssociation)
 }
