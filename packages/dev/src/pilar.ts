@@ -55,7 +55,7 @@ class MainScene extends Scene3D {
     // this.pilar.object3D.body.ammo.setGravity(new Ammo.btVector3().setValue(0, 0, 0))
 
     const addBall = (x: number) => {
-      const ball = this.physics.add.sphere({ x, y: 7, radius: 0.8, mass: 1 })
+      const ball = this.physics.add.sphere({ x, y: 7, radius: 0.7, mass: 1 })
       ball.body.setBounciness(0.5)
     }
 
@@ -64,6 +64,7 @@ class MainScene extends Scene3D {
       addBall(2)
       addBall(4)
       addBall(6)
+      addBall(7)
     }, 2000)
   }
 
@@ -76,11 +77,6 @@ class MainScene extends Scene3D {
     })
 
     console.log(object)
-
-    // @ts-ignore
-    const edges = new THREE.EdgesGeometry(object.children[1].geometry)
-    const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xffffff }))
-    this.add.existing(line)
 
     const { geometry } = object.children[1] as any
 

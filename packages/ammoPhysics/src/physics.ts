@@ -41,7 +41,7 @@ export { PhysicsLoader }
 
 import * as Types from '@enable3d/common/dist/types'
 import { AllHitsRaycaster, ClosestRaycaster } from './raycaster/raycaster'
-import { processGeometry } from './tmp'
+// import { processGeometry } from './tmp'
 import { Vector } from 'matter-js'
 import { stringify } from 'querystring'
 export { ClosestRaycaster, AllHitsRaycaster }
@@ -347,7 +347,7 @@ class AmmoPhysics extends Events {
 
         const mesh = objThree.children[1]
 
-        processGeometry(mesh.geometry)
+        // processGeometry(mesh.geometry)
         // const volume = objThree as ExtendedObject3D
         const geometry = mesh.geometry
 
