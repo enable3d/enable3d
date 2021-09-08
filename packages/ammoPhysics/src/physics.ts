@@ -293,7 +293,7 @@ class AmmoPhysics extends Events {
 
     // https://stackoverflow.com/a/51080905
 
-    const CONTROLLABLE = false
+    const CONTROLLABLE = true
 
     // update soft volumes (follow three.js object)
     for (let i = 0, il = this.rigidBodies.length; i < il; i++) {
@@ -303,9 +303,9 @@ class AmmoPhysics extends Events {
       if (objThree.body.skipUpdate) continue
 
       if (!CONTROLLABLE) {
-        const volume = objThree as ExtendedObject3D
-        const geometry = volume.geometry
-        const softBody = volume.body.ammo
+        // const volume = objThree as ExtendedObject3D
+        const geometry = objThree.geometry ? objThree.geometry : objThree.children[1].geometry
+        const softBody = objThree.body.ammo
         const volumePositions = geometry.attributes.position.array as number[]
         const volumeNormals = geometry.attributes.normal.array as number[]
         // @ts-ignore
@@ -345,7 +345,17 @@ class AmmoPhysics extends Events {
       if (CONTROLLABLE) {
         const softBody = objThree.body.ammo as Ammo.btSoftBody
 
-        const geometry = objThree.geometry as any
+        const mesh = objThree.children[1]
+
+        processGeometry(mesh.geometry)
+        // const volume = objThree as ExtendedObject3D
+        const geometry = mesh.geometry
+
+        // const softBody = objThree.body.ammo
+        // const volumePositions = geometry.attributes.position.array as number[]
+        // const volumeNormals = geometry.attributes.normal.array as number[]
+
+        // const geometry = objThree.geometry as any
         const { ammoVertices, ammoIndices, ammoIndexAssociation } = geometry
         const vertices = geometry.attributes.position.array
         const nodes = softBody.get_m_nodes()
@@ -362,7 +372,7 @@ class AmmoPhysics extends Events {
 
           const node = nodes.at(i)
           const nodePos = node.get_m_x()
-          let v3 = (objThree as SkinnedMesh).boneTransform(bla[0] / 3, new Vector3()).applyMatrix4(objThree.matrixWorld)
+          let v3 = (mesh as SkinnedMesh).boneTransform(bla[0] / 3, new Vector3()).applyMatrix4(mesh.matrixWorld)
           //  let v3 = new Vector3().applyMatrix4(objThree.matrixWorld)
           nodePos.setX(v3.x)
           nodePos.setY(v3.y)
