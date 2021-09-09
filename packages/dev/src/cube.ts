@@ -1,7 +1,7 @@
-import { PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
+import { ExtendedObject3D, PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
 
 import { TypeBufferGeometry, processGeometry } from './tmp'
-import { BufferGeometry, Matrix4, Object3D, SkinnedMesh } from 'three'
+import { BufferGeometry, Matrix4, MeshPhongMaterial, Object3D, SkinnedMesh } from 'three'
 
 import * as PKG from 'three/examples/jsm/utils/BufferGeometryUtils'
 const { BufferGeometryUtils } = PKG
@@ -10,6 +10,10 @@ const { BufferGeometryUtils } = PKG
 
 class MainScene extends Scene3D {
   cube!: Object3D
+
+  async preload() {
+    await this.load.preload('cube', '/assets/cube.glb')
+  }
 
   addSoftBody(object: Object3D, mass: number = 10, pressure: number = 100, margin = 0.05) {
     let _child!: THREE.Mesh
@@ -35,8 +39,8 @@ class MainScene extends Scene3D {
     )
 
     const sbConfig = volumeSoftBody.get_m_cfg()
-    sbConfig.set_viterations(50)
-    sbConfig.set_piterations(50)
+    sbConfig.set_viterations(30)
+    sbConfig.set_piterations(30)
 
     // Soft-soft and soft-rigid collisions
     sbConfig.set_collisions(0x11)
@@ -73,7 +77,7 @@ class MainScene extends Scene3D {
   }
 
   async create() {
-    this.physics.debug?.enable()
+    // this.physics.debug?.enable()
     // this.physics.debug?.mode(2)
 
     this.warpSpeed('-ground')
@@ -83,22 +87,31 @@ class MainScene extends Scene3D {
     this.camera.position.set(5, 5, 10)
     this.camera.lookAt(0, 0, 0)
 
-    const gltf = await this.load.gltf('/assets/cube.glb')
+    const addCube = async (x: number, mass: number, pressure: number) => {
+      const gltf = await this.load.gltf('cube')
+      this.cube = gltf.scene.children[0]
 
-    this.cube = gltf.scene.children[0]
+      const c = this.cube.clone(true)
 
-    this.cube.traverse((child: any) => {
-      if (child.isMesh) {
-        child.castShadow = child.receiveShadow = false
-        child.material.metalness = 0
-        child.material.roughness = 1
-        child.material.opacity = 0.5
-        child.material.transparent = true
-      }
-    })
+      const texture = await this.load.texture('/assets/colors.png')
 
-    const addCube = (x: number, mass: number, pressure: number) => {
-      const c = this.cube.clone()
+      c.traverse((child: any) => {
+        if (child.isMesh) {
+          child.castShadow = child.receiveShadow = false
+
+          child.material.metalness = 0
+          child.material.roughness = 1
+          child.material.opacity = 0.8
+          // child.material.transparent = true
+
+          // child.material = new MeshPhongMaterial({ color: 'red' })
+          // child.material.needsUpdate = true
+
+          child.material.map = texture
+          child.material.needsUpdate = true
+        }
+      })
+
       c.position.y += 0.5
       c.position.x = x
 
@@ -107,12 +120,12 @@ class MainScene extends Scene3D {
     }
 
     addCube(-3, 10, 100)
-    addCube(0, 50, 1000)
+    addCube(0, 50, 800)
     addCube(3, 100, 2000)
 
     setTimeout(() => {
       new Array(15).fill(null).forEach((a, i) => {
-        const ball = this.physics.add.sphere({ x: i - 7, y: 15, radius: 0.4, mass: 4 })
+        const ball = this.physics.add.sphere({ x: i - 7, y: 10, radius: 0.5, mass: 4 })
         ball.body.setBounciness(0.5)
       })
     }, 1000)

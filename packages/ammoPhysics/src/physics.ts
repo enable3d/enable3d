@@ -293,7 +293,7 @@ class AmmoPhysics extends Events {
 
     // https://stackoverflow.com/a/51080905
 
-    const CONTROLLABLE = true
+    const CONTROLLABLE = false
 
     // update soft volumes (follow three.js object)
     for (let i = 0, il = this.rigidBodies.length; i < il; i++) {
@@ -345,7 +345,7 @@ class AmmoPhysics extends Events {
       if (CONTROLLABLE) {
         const softBody = objThree.body.ammo as Ammo.btSoftBody
 
-        const mesh = objThree.children[1]
+        const mesh = objThree.isMesh ? objThree : objThree.children[1]
 
         // processGeometry(mesh.geometry)
         // const volume = objThree as ExtendedObject3D
