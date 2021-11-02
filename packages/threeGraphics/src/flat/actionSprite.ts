@@ -138,9 +138,7 @@ export abstract class ActionSprite extends SimpleSprite {
         this._currentIndex = 0
         loops++
       }
-
-      this._currentIndex = timeline[this._currentIndex]
-
+      
       const shouldStop = !(repeat === -1 || loops < repeat)
 
       if (shouldStop) {
@@ -149,7 +147,7 @@ export abstract class ActionSprite extends SimpleSprite {
         return
       }
 
-      this.setFrame(this._currentIndex)
+      this.setFrame(timeline[this._currentIndex])
     }
 
     playNextFrame()
