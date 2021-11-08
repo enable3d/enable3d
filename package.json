@@ -1,5 +1,5 @@
 {
-  "name": "enable3d",
+  "name": "enable3d-project",
   "private": true,
   "version": "1.0.0",
   "scripts": {
@@ -40,8 +40,9 @@
     "postinstall": "lerna bootstrap --no-ci",
     "lerna-version": "lerna version --no-commit-hooks --no-git-tag-version && npm run build && npm run bundle",
     "test": "npm-run-all test:*",
+    "test:headless": "jest test/headless/*.test.js --maxConcurrency=2",
     "test:pre": "npm run test:clean && node test/preTest.js",
-    "test:jest": "jest --maxConcurrency=2",
+    "test:jest": "jest test/*.test.js --maxConcurrency=2",
     "test:clean": "node test/cleanTest.js"
   },
   "repository": {
