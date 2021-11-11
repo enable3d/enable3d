@@ -55,8 +55,19 @@ export class Scene3D implements Partial<ThreeGraphics> {
     this.__config.enableXR = enableXR
   }
 
+  /** Pass all objects you want to destroy on scene restart or stop. */
   public get deconstructor() {
     return {
+      /**
+       * Pass an your objects.
+       * @example
+       * // this is what the deconstructor does on
+       * // scene restart or stop to all objects added:
+       * await object.dispose?.()
+       * await object.destroy?.()
+       * if (typeof object === 'function') await object?.()
+       * object = null
+       */
       add: (...object: any[]) => {
         object.forEach(o => {
           this._deconstructor.push(o)
