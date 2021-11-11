@@ -4,13 +4,8 @@ import * as Matter from 'matter-js'
 // import { Tap } from '@yandeu/tap'
 import { Keyboard } from '@yandeu/keyboard'
 
-import { Camera, Scene } from 'three'
-
 class MainScene extends Scene3D {
-  ui: {
-    camera: Camera
-    scene: Scene
-  }
+  ui: FLAT.FlatArea
 
   matter = new FLAT.physics()
   ball: FLAT.SimpleSprite
@@ -124,29 +119,17 @@ class MainScene extends Scene3D {
     //   }, 2500)
     // })
 
-    this.renderer.autoClear = false // To allow render overlay on top of the 3d camera
-    const width = window.innerWidth
-    const height = window.innerHeight
-    this.ui = {
-      // {x: 0, y: 0} is bottomLeft
-      camera: this.cameras.orthographicCamera({ left: 0, right: width, bottom: 0, top: height }),
-      scene: new Scene()
-    }
+    this.ui = FLAT.init(this.renderer)
 
     this.addMatter()
   }
 
   preRender() {
-    this.renderer.clear()
+    FLAT.preRender(this.renderer)
   }
 
   postRender() {
-    if (this.ui && this.ui.scene && this.ui.camera) {
-      this.renderer.clearDepth()
-      this.renderer.render(this.ui.scene, this.ui.camera)
-
-      FLAT.updateEvents(this.ui.camera)
-    }
+    FLAT.postRender(this.renderer, this.ui)
   }
 }
 

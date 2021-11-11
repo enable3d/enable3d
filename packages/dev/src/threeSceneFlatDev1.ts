@@ -1,18 +1,11 @@
 import { ExtendedMesh, FLAT, PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
-
 import { Camera, NearestFilter, Scene } from 'three'
-import { Texture, Vector2 } from 'three'
-import { PlaneGeometry } from 'three'
-import { MeshLambertMaterial } from 'three'
-import { Mesh } from 'three'
-import { DoubleSide } from 'three'
+import { Mesh, PlaneGeometry, MeshLambertMaterial, DoubleSide } from 'three'
 
 class MainScene extends Scene3D {
-  ui: {
-    camera: Camera
-    scene: Scene
-  }
+  ui: FLAT.FlatArea
 
+  // get an instance of matter.js if you need 2d physics.
   matter = new FLAT.physics()
   ball: FLAT.SimpleSprite
 
@@ -66,24 +59,17 @@ class MainScene extends Scene3D {
     this.cache.add('myAtlas', await this.load.textureAtlas('ninja.png', 'ninja.json'))
 
     const { orbitControls } = await this.warpSpeed()
+
+    this.ui = FLAT.init(this.renderer)
+
+    // Use this if you need events on the 2D elements.
+    // If you are using orbitControls, pass it to initEvents().
+    // This makes sure orbitControls is not messing with the mouse move.
     FLAT.initEvents({ canvas: this.renderer.domElement, orbitControls })
-    const size = this.renderer.getSize(new Vector2())
-    FLAT.setSize(size.x, size.y)
 
+    // call Flat.destroy() on scene restart or stop
+    // or simply add FLAT to the deconstructor
     this.deconstructor.add(FLAT /* same effect as FLAT.destroy */, this.matter, orbitControls)
-
-    setTimeout(() => {
-      this.restart()
-    }, 5000)
-
-    this.renderer.autoClear = false // To allow render overlay on top of the 3d camera
-    const width = window.innerWidth
-    const height = window.innerHeight
-    this.ui = {
-      // {x: 0, y: 0} is bottomLeft
-      camera: this.cameras.orthographicCamera({ left: 0, right: width, bottom: 0, top: height }),
-      scene: new Scene()
-    }
 
     this.addMatter()
 
@@ -320,16 +306,11 @@ class MainScene extends Scene3D {
   }
 
   preRender() {
-    this.renderer.clear()
+    FLAT.preRender(this.renderer)
   }
 
   postRender() {
-    if (this.ui && this.ui.scene && this.ui.camera) {
-      this.renderer.clearDepth()
-      this.renderer.render(this.ui.scene, this.ui.camera)
-
-      FLAT.updateEvents(this.ui.camera)
-    }
+    FLAT.postRender(this.renderer, this.ui)
   }
 
   update() {

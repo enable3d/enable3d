@@ -1,11 +1,31 @@
-import { ExtendedObject3D, PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
+import { ExtendedObject3D, FLAT, PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
 import { REVISION } from 'three'
-import { DirectionalLight, PointLight, SpotLight, SpotLightHelper } from '../../threeWrapper/dist'
+import { FlatArea } from '../../threeGraphics/jsm/flat'
 
 const isTouchDevice = 'ontouchstart' in window
 
 class MainScene extends Scene3D {
+  ui: FlatArea
+
+  preRender() {
+    FLAT.preRender(this.renderer)
+  }
+
+  postRender() {
+    FLAT.postRender(this.renderer, this.ui)
+  }
+
   async create() {
+    this.ui = FLAT.init(this.renderer)
+
+    const size = new THREE.Vector2()
+    this.renderer.getSize(size)
+
+    const texture = new FLAT.TextTexture('hello')
+    const text = new FLAT.TextSprite(texture)
+    text.setPosition(size.x / 2, size.y - text.textureHeight)
+    this.ui.scene.add(text)
+
     console.log('REVISION', THREE.REVISION)
     console.log('REVISION', REVISION)
 

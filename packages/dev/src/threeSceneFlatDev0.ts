@@ -1,15 +1,9 @@
 import { FLAT, PhysicsLoader, Project, Scene3D } from 'enable3d'
-
-import { Camera, Scene } from 'three'
+import { Camera, Scene, OrthographicCamera } from 'three'
 
 class MainScene extends Scene3D {
-  ui: {
-    camera: Camera
-    scene: Scene
-  }
-
+  ui: FLAT.FlatArea
   matter = new FLAT.physics()
-  ball: FLAT.SimpleSprite
 
   async create() {
     const { orbitControls } = await this.warpSpeed()
