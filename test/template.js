@@ -73,6 +73,7 @@ describe.each([EXAMPLES_PLACEHOLDER])('Example: (%s)', example => {
       if (!isBundle) request.continue()
     })
 
+    await page.setViewport({ width: 640, height: 360 })
     await page.goto(`https://enable3d.io/examples/${example}.html`, {
       // timeout: 60000
       waitUntil: ['load']
