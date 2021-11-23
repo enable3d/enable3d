@@ -58,7 +58,7 @@
   },
   "homepage": "https://github.com/enable3d/enable3d#readme",
   "dependencies": {
-    "@types/matter-js": "0.17.3",
+    "@types/matter-js": "0.17.6",
     "@types/three": "~0.133.1",
     "matter-js": "0.17.1",
     "phaser": "^3.55.2",

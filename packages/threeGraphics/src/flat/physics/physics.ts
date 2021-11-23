@@ -274,7 +274,10 @@ export class Physics {
 
     const DEBUG = debug
 
-    this.engine = Engine.create({ enableSleeping: true })
+    this.engine = Engine.create({
+      enableSleeping: true,
+      gravity: { x: 0, y: 1, scale: 0.001 }
+    })
     this.world = this.engine.world
     this.runner = Runner.create()
 
