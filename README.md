@@ -28,17 +28,7 @@ Written in TypeScript, uses three.js and ammo.js, brings physics to your three.j
 
 Visit the [enable3d website](https://enable3d.io) for documentation and examples.
 
-## Changelog
-
-### Upgrade to v0.23.0
-
-Some useful packages are now available on npm:
-
-| Package                                                      | Description                                                               |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------- |
-| [`audio`](https://www.npmjs.com/package/@yandeu/audio)       | 🎵 Audio library for the Web Audio API.                                   |
-| [`keyboard`](https://www.npmjs.com/package/@yandeu/keyboard) | ⌨️ Handling of keyboard events.                                           |
-| [`tap`](https://www.npmjs.com/package/@yandeu/tap)           | 🖱️ Handling of user interactions such as mouse, touch and pointer events. |
+## Dependencies
 
 Enable3d now depends on the dependencies below.  
 They are all listed as [peerDependencies](https://docs.npmjs.com/cli/v7/configuring-npm/package-json#peerdependencies).
@@ -54,42 +44,15 @@ They are all listed as [peerDependencies](https://docs.npmjs.com/cli/v7/configur
 }
 ```
 
-### Upgrade to v0.22.0
+## Useful Packages
 
-Please upgrade npm to v7. `npm i -g npm@latest`.
+Some useful packages are now available on npm:
 
-### Upgrade to v0.21.0
-
-_Nothing special to mention._
-
-### Upgrade to v0.20.0
-
-### ES2015
-
-enable3d now targets es2015+. If you use TypeScript or Babel, set your target to es2015 (es6) or higher.
-
-### Dual Canvas Mode in Phaser
-
-Since three.js r118, it is hard (impossible) to share the WebGL context with Phaser. Enable3d will therefore create a second canvas for 3d elements. It does this automatically. You do not have to make any changes manually.
-
-### Phaser Config
-
-If you are using the Phaser 3D Extension, you have to add `{ transparent: true }` to the Phaser game config and remove `backgroundColor` (if present).
-
-```js
-const config = {
-  type: Phaser.WEBGL,
-  transparent: true,
-  scale: {
-    mode: Phaser.Scale.FIT,
-    autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: 1280,
-    height: 720
-  },
-  scene: [MainScene],
-  ...Canvas()
-}
-```
+| Package                                                      | Description                                                               |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| [`audio`](https://www.npmjs.com/package/@yandeu/audio)       | 🎵 Audio library for the Web Audio API.                                   |
+| [`keyboard`](https://www.npmjs.com/package/@yandeu/keyboard) | ⌨️ Handling of keyboard events.                                           |
+| [`tap`](https://www.npmjs.com/package/@yandeu/tap)           | 🖱️ Handling of user interactions such as mouse, touch and pointer events. |
 
 ## Packages
 
