@@ -1,9 +1,10 @@
-node_modules
-package-lock.json
-test/**/*.tmp.test.js
 **/.tmp/**
 **/dist/**
 **/jsm/**
 **/node_modules/**
+**/package-lock.json
 **/screenshots/**
-**/*/package-lock.json
+/node_modules
+/package-lock.json
+/test/**/*.tmp.test.js
+/typescript
