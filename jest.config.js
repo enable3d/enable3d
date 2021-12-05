@@ -1,4 +1,6 @@
 module.exports = {
-  maxConcurrency: 2,
-  preset: 'jest-puppeteer'
+  maxConcurrency: 1,
+  maxWorkers: 1,
+  preset: 'jest-puppeteer',
+  testTimeout: 15_000
 }

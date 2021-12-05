@@ -2,8 +2,6 @@ const path = require('path')
 
 var _ammo = require(path.resolve(__dirname, '../../packages/ammoOnNodejs/ammo/ammo.js'))
 
-jest.setTimeout(60000)
-
 global.console = {
   log: console.log,
   error: console.error,
