@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-jest.setTimeout(180000)
+jest.setTimeout(30_000)
 
 describe.each([EXAMPLES_PLACEHOLDER])('Example: (%s)', example => {
   let err
@@ -56,6 +56,10 @@ describe.each([EXAMPLES_PLACEHOLDER])('Example: (%s)', example => {
     }
 
     page.on('request', async request => {
+      // don't load the example scripts
+      if (request.url().includes('examples.js'))
+        return request.respond({ body: '"use strict";console.log("examples.js has been omitted!");' })
+
       let isBundle = false
 
       bundles.forEach(b => {
@@ -73,7 +77,7 @@ describe.each([EXAMPLES_PLACEHOLDER])('Example: (%s)', example => {
       if (!isBundle) request.continue()
     })
 
-    await page.setViewport({ width: 640, height: 360 })
+    await page.setViewport({ width: 480, height: 270 })
     await page.goto(`https://enable3d.io/examples/${example}.html`, {
       // timeout: 60000
       waitUntil: ['load']
@@ -81,7 +85,7 @@ describe.each([EXAMPLES_PLACEHOLDER])('Example: (%s)', example => {
 
     if (injected) {
       // wait for the game to be started
-      await page.waitForTimeout(10000)
+      await page.waitForTimeout(8000)
       // await page.screenshot({ path: path.resolve(__dirname, `../screenshots/${example}.png`) })
       return
     } else {
