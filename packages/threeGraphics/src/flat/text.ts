@@ -42,10 +42,13 @@ export class TextTexture extends Texture {
     return this._styles
   }
 
-  // @ts-ignore
-  clone(): TextTexture {
-    // @ts-ignore
-    return new this.constructor(this._text, this._styles).copy(this)
+  clone(): this {
+    return new TextTexture(this._text, this._styles).copy(this) as this
+  }
+
+  copy(source: this) {
+    super.copy(source)
+    return this
   }
 
   constructor(text: string, styles: TextStyles = {}) {

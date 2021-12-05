@@ -15,10 +15,13 @@ export class DrawTexture extends Texture {
   height: number
   drawCanvas: DrawCanvas
 
-  // @ts-ignore
-  clone(): DrawTexture {
-    // return new this.constructor(this.width, this.height, this.drawCanvas).copy(this)
-    return new DrawTexture(this.width, this.height, this.drawCanvas).copy(this)
+  clone(): this {
+    return new DrawTexture(this.width, this.height, this.drawCanvas).copy(this) as this
+  }
+
+  copy(source: this) {
+    super.copy(source)
+    return this
   }
 
   constructor(width: number, height: number, drawCanvas: DrawCanvas) {
@@ -50,9 +53,13 @@ export class DrawTexture extends Texture {
 export class DrawSprite extends SimpleSprite {
   private _drawCanvas: DrawCanvas
 
-  // @ts-ignore
-  clone(): DrawSprite {
-    return new DrawSprite(this.textureWidth, this.textureHeight, this._drawCanvas).clone()
+  clone(): this {
+    return new DrawSprite(this.textureWidth, this.textureHeight, this._drawCanvas).copy(this) as this
+  }
+
+  copy(source: this): this {
+    super.copy(source)
+    return this
   }
 
   constructor(width: number, height: number, drawCanvas: DrawCanvas) {
