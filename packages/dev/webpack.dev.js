@@ -3,6 +3,7 @@ const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   mode: 'development',
+  stats: 'errors-warnings',
   devtool: 'inline-source-map',
   entry: './src/game.ts',
   output: {

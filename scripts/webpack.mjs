@@ -7,6 +7,10 @@ const scripts = [
   'cd packages/ammoOnNodejs && npm run bundle'
 ]
 
+// remove /bundles directory
+await spawn('npm run clean:bundles')
+
+// create webpack bundles
 for (const script of scripts) {
   console.log('Webpack:', script)
   console.log('\n')

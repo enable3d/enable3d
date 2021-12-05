@@ -1,4 +1,5 @@
 const path = require('path')
+const optimization = require('./optimization.cjs')
 
 /**
  * Makes the minified bundle
@@ -6,7 +7,8 @@ const path = require('path')
 module.exports = env => {
   return {
     mode: 'production',
-    devtool: 'source-map',
+    stats: 'errors-warnings',
+    // devtool: 'source-map',
     entry: path.resolve(__dirname, '../packages/enable3d/src/bundle.ts'),
     output: {
       filename: `enable3d.framework.${env.packageVersion}.min.js`,
@@ -36,6 +38,7 @@ module.exports = env => {
           }
         }
       ]
-    }
+    },
+    ...optimization
   }
 }
