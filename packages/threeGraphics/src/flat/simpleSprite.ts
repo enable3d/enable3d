@@ -14,13 +14,13 @@ export class SimpleSprite extends Sprite {
   private _isInteractive = false
   private _depth = 0
 
-  public body: Matter.Body
-  public setBodyPosition: (x: number, y: number) => void // will be added by physics
+  public body!: Matter.Body
+  public setBodyPosition!: (x: number, y: number) => void // will be added by physics
 
   protected _bodyOffset = { x: 0, y: 0 }
 
-  public textureWidth: number
-  public textureHeight: number
+  public textureWidth!: number
+  public textureHeight!: number
 
   protected _internalScale = { x: 1, y: 1 }
   protected _pixelRatio = 1

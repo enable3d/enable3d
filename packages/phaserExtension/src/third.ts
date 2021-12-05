@@ -19,7 +19,7 @@ import { CSG } from '@enable3d/three-graphics/jsm/csg'
 class Third extends ThreeGraphics {
   public scene3D: Scene3D
   public isXrEnabled: boolean
-  public composer: EffectComposer
+  public composer!: EffectComposer
   // public camera: THREE.PerspectiveCamera | THREE.OrthographicCamera,
 
   // plugins
@@ -27,7 +27,7 @@ class Third extends ThreeGraphics {
   public lights: Plugins.Lights
   public transform: Plugins.Transform
   public heightMap: Plugins.HeightMap
-  public webXR: Plugins.WebXR
+  public webXR!: Plugins.WebXR
   public misc: Plugins.Misc
   public cameras: Plugins.Cameras
 

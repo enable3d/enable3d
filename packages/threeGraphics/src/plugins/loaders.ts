@@ -12,13 +12,13 @@ import { SVGLoader, SVGResult } from 'three/examples/jsm/loaders/SVGLoader'
 import type { Atlas, JSONArrayFrames, JSONHash } from '../flat/textureAtlas'
 
 export default class Loaders {
-  private _fileLoader: FileLoader
-  private _imgLoader: ImageLoader
-  private _svgLoader: SVGLoader
-  private _textureLoader: TextureLoader
-  private _objectLoader: ObjectLoader
-  private _gltfLoader: GLTFLoader
-  private _fbxLoader: FBXLoader
+  private _fileLoader!: FileLoader
+  private _imgLoader!: ImageLoader
+  private _svgLoader!: SVGLoader
+  private _textureLoader!: TextureLoader
+  private _objectLoader!: ObjectLoader
+  private _gltfLoader!: GLTFLoader
+  private _fbxLoader!: FBXLoader
 
   constructor(private cache: typeof Cache, private textureAnisotropy: number) {}
 

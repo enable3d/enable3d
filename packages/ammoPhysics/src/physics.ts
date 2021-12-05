@@ -21,13 +21,13 @@ import Constraints from './constraints'
 import { Events } from '@yandeu/events'
 import { Geometry } from './externals'
 import { BufferGeometry, Euler, Matrix4, Quaternion, REVISION, Scene, Vector3 } from 'three'
-import {
+const {
   createHACDShapes,
   createHullShape,
   createTriMeshShape,
   createVHACDShapes,
   iterateGeometries
-} from './three-to-ammo'
+} = require('./three-to-ammo')
 import { createTorusShape } from './torusShape'
 import Factories from '@enable3d/common/dist/factories'
 import { CollisionEvents } from './collisionEvents'
@@ -48,8 +48,8 @@ export { Types }
 export { Clock } from './lib/Clock'
 
 class AmmoPhysics extends Events {
-  public worldTransform: Ammo.btTransform
-  public factory: Factories
+  public worldTransform!: Ammo.btTransform
+  public factory!: Factories
   public isHeadless: boolean
 
   public rigidBodies: ExtendedObject3D[] = []
@@ -65,22 +65,22 @@ class AmmoPhysics extends Events {
   protected tmpBtVector3: Ammo.btVector3
   protected tmpBtQuaternion: Ammo.btQuaternion
 
-  public physicsWorld: Ammo.btSoftRigidDynamicsWorld
-  protected debugDrawer: DebugDrawer
+  public physicsWorld!: Ammo.btSoftRigidDynamicsWorld
+  protected debugDrawer!: DebugDrawer
   private convexBreaker: any
-  protected addRigidBody: (threeObject: ExtendedObject3D, physicsShape: any, mass: any, pos: any, quat: any) => void
-  private objectsToRemove: any[]
-  private numObjectsToRemove: number
+  protected addRigidBody!: (threeObject: ExtendedObject3D, physicsShape: any, mass: any, pos: any, quat: any) => void
+  private objectsToRemove!: any[]
+  private numObjectsToRemove!: number
 
   protected emptyV3: Vector3
   protected impactPoint: Vector3
   protected impactNormal: Vector3
 
-  protected defaultMaterial: DefaultMaterial
+  protected defaultMaterial!: DefaultMaterial
 
-  private shapes: Shapes
-  private constraints: Constraints
-  public collisionEvents: CollisionEvents
+  private shapes!: Shapes
+  private constraints!: Constraints
+  public collisionEvents!: CollisionEvents
 
   private readonly complexShapes = ['plane', 'hull', 'hacd', 'vhacd', 'convexMesh', 'concaveMesh']
 

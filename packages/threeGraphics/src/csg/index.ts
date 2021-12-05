@@ -351,7 +351,7 @@ interface IVector {
 class Vertex {
   pos: Vector
   normal: Vector
-  uv: Vector
+  uv!: Vector
 
   constructor(pos: IVector, normal: IVector, uv?: IVector) {
     this.pos = new Vector(pos.x, pos.y, pos.z)

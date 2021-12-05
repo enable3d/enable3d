@@ -18,8 +18,8 @@ export class ThreeGraphics {
   public camera: THREE.PerspectiveCamera | THREE.OrthographicCamera
   protected textureAnisotropy: number
 
-  public cameras: Cameras
-  public physics: AmmoPhysics
+  public cameras!: Cameras
+  public physics!: AmmoPhysics
 
   constructor(protected threeGraphicsConfig: Types.ThreeGraphicsConfig = {}) {
     const {

@@ -22,21 +22,21 @@ export class ExtendedObject3D extends Object3D {
 
   private vector3 = new Vector3()
 
-  public shape: string
+  public shape!: string
   public name: string
-  public body: PhysicsBody
+  public body!: PhysicsBody
   public hasBody: boolean = false
 
   // convex object breaking
   public fragmentDepth = 0
   public breakable = false
   public fractureImpulse = 1
-  public children: ExtendedObject3D[]
-  public parent: ExtendedObject3D | null
+  public children!: ExtendedObject3D[]
+  public parent!: ExtendedObject3D | null
 
   private _currentAnimation: string = ''
   private _animationActions: Map<string, AnimationAction> = new Map()
-  private _animationMixer: AnimationMixer
+  private _animationMixer!: AnimationMixer
 
   constructor() {
     super()

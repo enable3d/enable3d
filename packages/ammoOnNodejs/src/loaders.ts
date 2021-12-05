@@ -29,6 +29,7 @@ import { FBXLoader as _FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
  * We import a custom modification of the GLTFLoader from 'three'.js
  * The original file is here 'three/examples/js/loaders/GLTFLoader'
  */
+// @ts-ignore
 import { GLTFLoader as _GLTFLoader } from './lib/GLTFLoader'
 
 class Loader {

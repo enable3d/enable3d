@@ -57,7 +57,7 @@ export abstract class ActionSprite extends SimpleSprite {
     }
   }
 
-  public interval: number
+  public interval!: number
 
   constructor(texture: Texture) {
     super(texture)
@@ -138,7 +138,7 @@ export abstract class ActionSprite extends SimpleSprite {
         this._currentIndex = 0
         loops++
       }
-      
+
       const shouldStop = !(repeat === -1 || loops < repeat)
 
       if (shouldStop) {

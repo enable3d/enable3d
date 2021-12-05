@@ -18,9 +18,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      CI: true
-
     steps:
       - name: Install required Packages for Puppeteer
         run: |

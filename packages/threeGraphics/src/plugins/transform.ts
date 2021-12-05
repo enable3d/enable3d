@@ -22,9 +22,9 @@ import { fromGeometry } from '../csg/_fromGeometry'
  */
 
 export default class Transform {
-  tmpPlane: Mesh
-  tmpRaycaster: Raycaster
-  tmpVector3: Vector3
+  tmpPlane!: Mesh
+  tmpRaycaster!: Raycaster
+  tmpVector3!: Vector3
 
   constructor(private camera: PerspectiveCamera | OrthographicCamera, private renderer: WebGLRenderer) {}
 

@@ -13,9 +13,9 @@ export class ExtendedMesh extends Mesh {
 
   private vector3 = new Vector3()
 
-  public shape: string
+  public shape!: string
   public name: string
-  public body: PhysicsBody
+  public body!: PhysicsBody
   public hasBody: boolean = false
 
   // convex object breaking

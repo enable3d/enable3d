@@ -66,7 +66,7 @@ export class Physics {
   engine: Engine
   world: Matter.World
   runner: Runner
-  render: Render
+  render!: Render
 
   _objects: Map<string, SimpleSprite> = new Map()
 

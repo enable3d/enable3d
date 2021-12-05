@@ -23,7 +23,7 @@ const MainScene = () => {
   })
 
   const FBXLoader = new Loaders.FBXLoader()
-  FBXLoader.load(path.resolve(__dirname, 'assets/Idle.fbx')).then(fbx => {
+  FBXLoader.load(path.resolve(__dirname, '../public/assets/Idle.fbx')).then(fbx => {
     const robot = new ExtendedObject3D()
     robot.name = 'robot'
 
@@ -41,7 +41,7 @@ const MainScene = () => {
   })
 
   const GLTFLoader = new Loaders.GLTFLoader()
-  GLTFLoader.load(path.resolve(__dirname, 'assets/hero.glb')).then(gltf => {
+  GLTFLoader.load(path.resolve(__dirname, '../public/assets/hero.glb')).then(gltf => {
     const child = gltf.scene.children[0]
 
     const hero = new ExtendedObject3D()

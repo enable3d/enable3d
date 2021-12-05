@@ -11,9 +11,9 @@ export class ExtendedGroup extends Group {
   public readonly isExtendedGroup = true
   public readonly isMesh = false
 
-  public shape: string
+  public shape!: string
   public name: string
-  public body: PhysicsBody
+  public body!: PhysicsBody
   public hasBody: boolean = false
 
   // convex object breaking

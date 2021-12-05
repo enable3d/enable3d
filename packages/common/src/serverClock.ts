@@ -27,13 +27,13 @@ export class ServerClock {
   /** store the delta value */
   private _delta = 0
   /** store the time from the start */
-  private startTime: number
+  private startTime!: number
   /** store is the clock is running or not */
   private _isRunning = false
 
   private _highAccuracy = true
 
-  private _onTickCallback: (delta: number) => void
+  private _onTickCallback!: (delta: number) => void
 
   constructor(fps: number = 60, autoStart: boolean = true) {
     if (autoStart) this.start(fps)

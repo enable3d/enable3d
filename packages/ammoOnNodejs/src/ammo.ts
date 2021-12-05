@@ -4,6 +4,5 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-// @ts-ignore
 // import * as Ammo from 'ammoOnNodejs/ammo/ammo.js'
 // export { Ammo }

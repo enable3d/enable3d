@@ -23,21 +23,25 @@ module.exports = {
         test: /\.tsx?$/,
         loader: 'ts-loader',
         options: {
-          transpileOnly: true,
-          experimentalWatchApi: true
+          transpileOnly: true
         }
       }
     ]
   },
-  optimization: {
+  /*optimization: {
     removeAvailableModules: false,
     removeEmptyChunks: false,
     splitChunks: {
       chunks: 'all'
     }
-  },
+  },*/
   plugins: [
-    new HtmlWebpackPlugin({ template: './src/index.html' }),
-    new CopyPlugin({ patterns: [{ from: 'src/assets', to: 'assets' }] })
+    new HtmlWebpackPlugin({ template: './src/index.html' })
+    // new CopyPlugin({
+    //   patterns: [
+    //     { from: 'src/assets', to: 'assets' },
+    //     { from: 'lib', to: 'lib' }
+    //   ]
+    // })
   ]
 }

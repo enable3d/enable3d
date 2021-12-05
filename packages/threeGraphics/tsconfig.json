@@ -1,9 +1,8 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./jsm",
-    "rootDir": "./src"
-    // "module": "ES2015"
+    "outDir": "jsm",
+    "rootDir": "src"
   },
-  "include": ["./src/**/*", "./types/**/*"]
+  "include": ["src/**/*"]
 }

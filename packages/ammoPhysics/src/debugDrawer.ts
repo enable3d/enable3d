@@ -43,7 +43,7 @@ class DebugDrawer {
   mesh: LineSegments
   enabled: boolean
   debugDrawer: Ammo.DebugDrawer
-  warnedOnce: boolean
+  warnedOnce!: boolean
   constructor(public scene: Scene, public world: Ammo.btCollisionWorld, public options: any = {}) {
     this.debugDrawMode = options.debugDrawMode || AmmoDebugConstants.DrawWireframe
     const drawOnTop = this.debugDrawMode & AmmoDebugConstants.DrawOnTop || false

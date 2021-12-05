@@ -10,10 +10,10 @@ import AllHitsRayResultCallback from './allHitsRayResultCallback'
 import { AmmoPhysics } from '../physics'
 
 class Raycaster {
-  public readonly type: string
-  protected _btRayFrom: Ammo.btVector3
-  protected _btRayTo: Ammo.btVector3
-  protected _btRayCallback: Ammo.RayResultCallback
+  public readonly type!: string
+  protected _btRayFrom!: Ammo.btVector3
+  protected _btRayTo!: Ammo.btVector3
+  protected _btRayCallback!: Ammo.RayResultCallback
 
   constructor(protected physics: AmmoPhysics) {}
 
@@ -54,7 +54,7 @@ class ClosestRaycaster implements Raycaster, ClosestRayResultCallback {
   public readonly type = 'closest'
   protected _btRayFrom = new Ammo.btVector3(0, 0, 0)
   protected _btRayTo = new Ammo.btVector3(0, 0, 0)
-  protected _btRayCallback: Ammo.ClosestRayResultCallback
+  protected _btRayCallback!: Ammo.ClosestRayResultCallback
 
   constructor(protected physics: AmmoPhysics) {}
 }
@@ -63,7 +63,7 @@ class AllHitsRaycaster implements Raycaster, AllHitsRayResultCallback {
   public readonly type = 'allHits'
   protected _btRayFrom = new Ammo.btVector3(0, 0, 0)
   protected _btRayTo = new Ammo.btVector3(0, 0, 0)
-  protected _btRayCallback: Ammo.AllHitsRayResultCallback
+  protected _btRayCallback!: Ammo.AllHitsRayResultCallback
 
   constructor(protected physics: AmmoPhysics) {}
 }

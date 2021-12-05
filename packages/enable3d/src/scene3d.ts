@@ -18,32 +18,32 @@ import * as Plugins from '@enable3d/three-graphics/jsm/plugins'
 export class Scene3D implements Partial<ThreeGraphics> {
   // core modules from three-graphics
   public scenes: Map<string, Scene3D> = new Map()
-  public scene: ThreeGraphics['scene']
-  public camera: ThreeGraphics['camera']
-  public cache: ThreeGraphics['cache']
-  public physics: AmmoPhysics
-  public renderer: WebGLRenderer
-  public composer: EffectComposer
-  public parent: HTMLElement
-  public canvas: HTMLCanvasElement
-  public clock: Clock
+  public scene!: ThreeGraphics['scene']
+  public camera!: ThreeGraphics['camera']
+  public cache!: ThreeGraphics['cache']
+  public physics!: AmmoPhysics
+  public renderer!: WebGLRenderer
+  public composer!: EffectComposer
+  public parent!: HTMLElement
+  public canvas!: HTMLCanvasElement
+  public clock!: Clock
 
   // public plugins
-  public load: Plugins.Loaders
-  public lights: Plugins.Lights
-  public transform: Plugins.Transform
-  public heightMap: Plugins.HeightMap
-  public webXR: Plugins.WebXR
-  public misc: Plugins.Misc
-  public cameras: Plugins.Cameras
+  public load!: Plugins.Loaders
+  public lights!: Plugins.Lights
+  public transform!: Plugins.Transform
+  public heightMap!: Plugins.HeightMap
+  public webXR!: Plugins.WebXR
+  public misc!: Plugins.Misc
+  public cameras!: Plugins.Cameras
 
   // other
-  public csg: typeof CSG
+  public csg!: typeof CSG
 
   // private plugins
-  private factories: Plugins.Factories
-  private ws: Plugins.WarpSpeed
-  private mixers: Plugins.Mixers
+  private factories!: Plugins.Factories
+  private ws!: Plugins.WarpSpeed
+  private mixers!: Plugins.Mixers
 
   public __config: any = {}
   private _isRunning: boolean = false

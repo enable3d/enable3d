@@ -9,7 +9,7 @@ import { ExtendedObject3D } from '@enable3d/common/dist/types'
 import { logger } from '@enable3d/common/dist/logger'
 
 export default class AllHitsRayResultCallback {
-  protected _btRayCallback: Ammo.AllHitsRayResultCallback
+  protected _btRayCallback!: Ammo.AllHitsRayResultCallback
 
   constructor(protected physics: AmmoPhysics) {}
 

@@ -17,7 +17,7 @@ export class Scene3D extends Phaser.Scene {
   }
 
   /** Access the Third Dimension */
-  public third: Third
+  public third!: Third
 
   /**
    * It takes took long to setup the third dimension your self? Get started with warp speed by using this function.
