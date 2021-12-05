@@ -1,4 +1,5 @@
-.tmp
-node_modules
-src
-package-lock.json
+/*
+
+!/README.md
+!/jsm
+!/package.json

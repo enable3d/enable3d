@@ -1,4 +1,6 @@
-.tmp
-node_modules
-src
-package-lock.json
+/*
+
+!/README.md
+!/ammo
+!/dist
+!/package.json
