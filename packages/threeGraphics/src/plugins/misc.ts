@@ -47,7 +47,7 @@ export class TextureCube {
   }
 
   private getTexture(i: number) {
-    // @ts-ignore
+    // @ts-expect-error: Seems to me like a three.js type error.
     return this.materials[i].map as Texture
   }
 }

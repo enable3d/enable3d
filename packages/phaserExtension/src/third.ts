@@ -65,7 +65,7 @@ class Third extends ThreeGraphics {
 
       config.renderer.domElement.id = 'enable3d-three-canvas'
 
-      // @ts-ignore
+      // @ts-expect-errors: aspect is only available on PerspectiveCamera.
       this.camera?.aspect = scene3D.sys.game.scale.baseSize.width / scene3D.sys.game.scale.baseSize.height
       this.camera?.updateProjectionMatrix()
 
@@ -129,7 +129,7 @@ class Third extends ThreeGraphics {
     }
 
     const view = scene3D.add.extern()
-    // @ts-ignore
+    // @ts-expect-error: Seems to be an issue with Phaser's types.
     view.render = (_renderer: WebGLRenderer) => {
       if (!this.renderer.xr.isPresenting) {
         // scene3D.updateLoopXR(scene3D.sys.game.loop.time, scene3D.sys.game.loop.delta)
@@ -188,7 +188,7 @@ class Third extends ThreeGraphics {
   public destroy(obj: ExtendedObject3D | ExtendedMesh) {
     this.physics?.destroy(obj.body)
     this.scene.remove(obj)
-    // @ts-ignore
+    // @ts-expect-error: ExtendedObject3D and ExtendedMesh can't be null.
     obj = null
   }
   public async warpSpeed(...features: Plugins.WarpedStartFeatures[]) {

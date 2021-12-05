@@ -76,7 +76,6 @@ export class Scene3D implements Partial<ThreeGraphics> {
     }
   }
 
-  // @ts-ignore
   public initializeScene(plugins: any) {
     const { renderer, parent, canvas, scene, scenes, camera, cache, physics, sceneConfig } = plugins
     this.scene = scene
@@ -120,7 +119,7 @@ export class Scene3D implements Partial<ThreeGraphics> {
   public destroy(obj: ExtendedObject3D | ExtendedMesh) {
     this.physics?.destroy(obj.body)
     this.scene.remove(obj)
-    // @ts-ignore
+    // @ts-expect-error: ExtendedObject3D and ExtendedMesh can't be null.
     obj = null
   }
   public async warpSpeed(...features: Plugins.WarpedStartFeatures[]): Promise<Plugins.WarpSpeedOptions> {
@@ -202,8 +201,9 @@ export class Scene3D implements Partial<ThreeGraphics> {
 
   public setSize(width: number, height: number) {
     this.renderer.setSize(width, height)
-    // @ts-ignore
-    if (typeof this.camera.aspect !== 'undefined') this.camera.aspect = width / height
+
+    if (typeof (this.camera as THREE.PerspectiveCamera).aspect !== 'undefined')
+      (this.camera as THREE.PerspectiveCamera).aspect = width / height
     this.camera.updateProjectionMatrix()
   }
 
@@ -223,7 +223,6 @@ export class Scene3D implements Partial<ThreeGraphics> {
   //   }
   // }
 
-  // @ts-ignore
   public init(data: any = {}) {}
   public preload() {}
   public create() {}

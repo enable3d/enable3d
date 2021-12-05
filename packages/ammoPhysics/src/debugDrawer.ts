@@ -108,9 +108,7 @@ class DebugDrawer {
     }
 
     if (this.index != 0) {
-      // @ts-ignore
       this.geometry.attributes.position.needsUpdate = true
-      // @ts-ignore
       this.geometry.attributes.color.needsUpdate = true
     }
 
@@ -120,8 +118,7 @@ class DebugDrawer {
   }
 
   drawLine(from: any, to: any, color: any) {
-    // @ts-ignore
-    const heap = Ammo.HEAPF32
+    const heap = (Ammo as any).HEAPF32
     const r = heap[(color + 0) / 4]
     const g = heap[(color + 4) / 4]
     const b = heap[(color + 8) / 4]
@@ -141,8 +138,7 @@ class DebugDrawer {
 
   //TODO: figure out how to make lifeTime work
   drawContactPoint(pointOnB: any, normalOnB: any, distance: any, _lifeTime: any, color: any) {
-    // @ts-ignore
-    const heap = Ammo.HEAPF32
+    const heap = (Ammo as any).HEAPF32
     const r = heap[(color + 0) / 4]
     const g = heap[(color + 4) / 4]
     const b = heap[(color + 8) / 4]
@@ -163,8 +159,7 @@ class DebugDrawer {
   reportErrorWarning(warningString: string) {
     // eslint-disable-next-line no-prototype-builtins
     if (Ammo.hasOwnProperty('Pointer_stringify')) {
-      // @ts-ignore
-      console.warn(Ammo.Pointer_stringify(warningString))
+      console.warn((Ammo as any).Pointer_stringify(warningString))
     } else if (!this.warnedOnce) {
       this.warnedOnce = true
       console.warn("Cannot print warningString, please rebuild Ammo.js using 'debug' flag")

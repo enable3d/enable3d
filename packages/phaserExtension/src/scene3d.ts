@@ -37,9 +37,9 @@ export class Scene3D extends Phaser.Scene {
   }
 
   public clearThirdDimension() {
-    // @ts-ignore
+    // @ts-expect-error: this.third is not optional.
     for (const key in this.third) delete this.third[key]
-    // @ts-ignore
+    // @ts-expect-error: this.third is not optional.
     delete this.third
   }
 

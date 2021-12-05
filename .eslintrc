@@ -8,6 +8,7 @@
     "@typescript-eslint/no-dupe-class-members": ["error"],
     // no-redeclare ts fix
     "no-redeclare": "off",
-    "@typescript-eslint/no-redeclare": ["error"]
+    "@typescript-eslint/no-redeclare": ["error"],
+    "@typescript-eslint/prefer-ts-expect-error": ["error"]
   }
 }

@@ -11,6 +11,9 @@ import { Euler, Quaternion } from 'three'
 import { CollisionEvent } from './types'
 
 class PhysicsBody {
+  public ptr: any | undefined
+  public body: any | undefined
+
   public ignoreScale = false
   public isSoftBody = false
   public offset = { x: 0, y: 0, z: 0 }
@@ -38,7 +41,7 @@ class PhysicsBody {
   private eventEmitter = new Events()
 
   constructor(private physics: any, public ammo: Ammo.btRigidBody) {
-    // @ts-ignore
+    // @ts-expect-error: Ammo.btRigidBody does not have a property name.
     this.name = ammo.name
   }
 

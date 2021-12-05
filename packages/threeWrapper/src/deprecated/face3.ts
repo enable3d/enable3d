@@ -28,7 +28,7 @@ class Face3 {
   }
 
   clone() {
-    // @ts-ignore
+    // @ts-expect-error
     return new this.constructor().copy(this)
   }
 

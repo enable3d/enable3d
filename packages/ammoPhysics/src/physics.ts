@@ -134,12 +134,11 @@ class AmmoPhysics extends Events {
 
   /** Destroys a physics body. */
   public destroy(body: PhysicsBody | ExtendedObject3D | ExtendedMesh) {
-    // @ts-ignore
     const b: PhysicsBody = Object.keys(body).includes('body') ? body.body : body
 
     if (typeof b?.ammo === 'undefined') return
 
-    // @ts-ignore
+    // @ts-expect-error: threeObject does not exist on btRigidBody.
     let obj: ExtendedObject3D | null = b.ammo.threeObject as ExtendedObject3D
     const name = obj.name
 
@@ -154,12 +153,12 @@ class AmmoPhysics extends Events {
         obj.body.destructor()
 
         // reset properties
-        // @ts-ignore
+        // @ts-expect-error: body (PhysicsBody) can't be undefined.
         obj.body = undefined
         obj.hasBody = false
 
         // remove from this.objectAmmo
-        // @ts-ignore
+        // @ts-expect-error: threeObject does not exist on btRigidBody.
         delete b.ammo.threeObject
         // remove from this.rigidBodies
         for (let i = 0; i < this.rigidBodies.length; i++) {
@@ -184,7 +183,7 @@ class AmmoPhysics extends Events {
 
     if (this.scene !== 'headless') {
       // Initialize convexBreaker
-      // @ts-ignore
+      // @ts-expect-error: ConvexObjectBreaker is not a real class.
       this.convexBreaker = new ConvexObjectBreaker()
 
       this.objectsToRemove = []
@@ -255,7 +254,6 @@ class AmmoPhysics extends Events {
     this.scene.add(object)
 
     // Add physics to the object
-    // @ts-ignore
     this.addExisting(object, { autoCenter: true })
 
     object.body.fractureImpulse = parent.body.fractureImpulse
@@ -296,7 +294,7 @@ class AmmoPhysics extends Events {
 
         // check if object did an update since last call
         if (objThree.body.didUpdate) {
-          // @ts-ignore
+          // @ts-expect-error: We access some private method here.
           if (objThree.body._emitUpdateEvents) objThree.body.eventEmitter.emit('update')
           objThree.body.didUpdate = false
         }
@@ -341,7 +339,6 @@ class AmmoPhysics extends Events {
           this.tmpMatrix4.compose(this.tmpVector3, this.tmpQuaternion, this.tmpVector3a)
           if (objThree.parent) {
             // compatibility fix for three.js >= r123 (Dezember 2020)
-            // @ts-ignore
             if (parseInt(REVISION) >= 123) this.tmpMatrix4a.copy(objThree.parent.matrixWorld).invert()
             else this.tmpMatrix4a.getInverse(objThree.parent.matrixWorld)
           } else {
@@ -369,9 +366,9 @@ class AmmoPhysics extends Events {
       const contactManifold = dispatcher.getManifoldByIndexInternal(i)
       const numContacts = contactManifold.getNumContacts()
 
-      // @ts-ignore
+      // @ts-expect-error: castObject is not yet defined in the Ammo.js types.
       const rb0 = Ammo.castObject(contactManifold.getBody0(), Ammo.btRigidBody)
-      // @ts-ignore
+      // @ts-expect-error: castObject is not yet defined in the Ammo.js types.
       const rb1 = Ammo.castObject(contactManifold.getBody1(), Ammo.btRigidBody)
 
       const threeObject0 = rb0.threeObject as ExtendedObject3D
@@ -635,8 +632,8 @@ class AmmoPhysics extends Events {
     else if (/sphere/i.test(type)) shape = 'sphere'
     else if (/torus/i.test(type)) shape = 'torus'
 
-    // @ts-ignore
-    let params = { ...defaultParams, ...object?.geometry?.parameters }
+    // @ts-expect-error: Looks like a three.js type error.
+    let params: Partial<typeof defaultParams> = { ...defaultParams, ...object?.geometry?.parameters }
 
     if (config.shape) {
       params = { ...defaultParams, ...config }
@@ -646,10 +643,8 @@ class AmmoPhysics extends Events {
     }
 
     // Add all default params if undefined
-    Object.keys(params).forEach(key => {
-      // @ts-ignore
+    ;(Object.keys(params) as (keyof typeof defaultParams)[]).forEach(key => {
       if (typeof params[key] === 'undefined' && defaultParams[key]) {
-        // @ts-ignore
         params[key] = defaultParams[key]
       }
     })
@@ -681,10 +676,10 @@ class AmmoPhysics extends Events {
     const btHalfExtents = new Ammo.btVector3()
 
     // transform geometry to bufferGeometry (because three-to-ammo works only with bufferGeometry)
-    // @ts-ignore
+    // @ts-expect-error: Looks like a three.js type error.
     const geometry = object?.geometry as Geometry
     if (object && geometry?.isGeometry) {
-      // @ts-ignore
+      // @ts-expect-error: fromGeometry() is deprecated and removed from the three.js types.
       object.geometry = new BufferGeometry().fromGeometry(geometry)
     }
 
@@ -796,7 +791,6 @@ class AmmoPhysics extends Events {
     // if there is a x, y or z, take is as temporary offset parameter
     const { x, y, z } = params
     if (x || y || z) {
-      // @ts-ignore
       collisionShape._compoundOffset = { x: x || 0, y: y || 0, z: z || 0 }
     }
 
@@ -810,7 +804,7 @@ class AmmoPhysics extends Events {
   public mergeCollisionShapesToCompoundShape(collisionShapes: Ammo.btCollisionShape[]): Ammo.btCompoundShape {
     const compoundShape = new Ammo.btCompoundShape()
     collisionShapes.forEach(shape => {
-      // @ts-ignore // some custom parameter
+      // @ts-expect-error: I use some custom properties here.
       const { _childOffset, _compoundOffset } = shape
 
       if (_childOffset) {
@@ -894,7 +888,8 @@ class AmmoPhysics extends Events {
           const p = this.prepareThreeObjectForCollisionShape(child)
           const cs = this.createCollisionShape(p.shape, p.params, p.object)
 
-          // @ts-ignore // the relative pos, quat and scale to its parent
+          // the relative pos, quat and scale to its parent
+          // @ts-expect-error: _childOffset is a custom property.
           cs._childOffset = {
             pos: child.position.clone(),
             quat: child.quaternion.clone(),
@@ -943,13 +938,12 @@ class AmmoPhysics extends Events {
 
     const ptr = Object.values(rigidBody)[0]
     if (!object.name) object.name = `object-${object.id}`
-    // @ts-ignore
+    // @ts-expect-error: Ammo.btRigidBody has no name property.
     rigidBody.name = object.name
     object.body = new PhysicsBody(this, rigidBody)
     object.hasBody = true
-    // @ts-ignore
     object.ptr = ptr
-    // @ts-ignore
+    // @ts-expect-error: threeObject is an custom property.
     rigidBody.threeObject = object
 
     if (offset) object.body.offset = { x: 0, y: 0, z: 0, ...offset }

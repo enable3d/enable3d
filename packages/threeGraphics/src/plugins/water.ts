@@ -1,5 +1,4 @@
 import { Mesh, MeshStandardMaterial, PlaneBufferGeometry, Scene, Texture, Vector2, WebGLRenderer } from 'three'
-// @ts-ignore
 import { Water } from 'three/examples/jsm/objects/Water2'
 import { Color } from '@enable3d/common/src/types'
 

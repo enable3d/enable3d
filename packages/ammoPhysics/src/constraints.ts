@@ -109,7 +109,7 @@ export default class Constraints {
     offset: { x: number; y: number; z: number } = { x: 0, y: 0, z: 0 },
     center: boolean = false
   ) {
-    // @ts-ignore
+    // @ts-expect-error: Should be refactored to avoid the ts error.
     offset = { x: 0, y: 0, z: 0, ...offset }
 
     const centerVector = (v1: Ammo.btVector3, v2: Ammo.btVector3) => {

@@ -29,9 +29,8 @@ export default class ClosestRayResultCallback {
   }
 
   getCollisionObject(): ExtendedObject3D {
-    // @ts-ignore
+    // @ts-expect-error: castObject is not yet defined in the Ammo.js types.
     const rb = Ammo.castObject(this._btRayCallback.get_m_collisionObject(), Ammo.btRigidBody)
-    // @ts-ignore
     return rb.threeObject
   }
 }

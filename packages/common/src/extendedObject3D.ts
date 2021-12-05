@@ -17,6 +17,8 @@ export interface ExtendedObject3D extends Line, Mesh, Points {
 }
 
 export class ExtendedObject3D extends Object3D {
+  public ptr: any | undefined
+
   public readonly isExtendedObject3D = true
   public readonly isGroup = false
 

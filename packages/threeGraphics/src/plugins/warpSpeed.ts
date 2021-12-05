@@ -85,9 +85,8 @@ export default class WarpSpeed {
 
     // remove the negative features
     if (hasNegativeFeatures) {
-      const featuresToRemove = negativeFeatures.map(feature => feature.substr(1))
+      const featuresToRemove = negativeFeatures.map(feature => feature.substr(1)) as WarpedStartFeatures[]
       featuresToRemove.forEach(feature => {
-        // @ts-ignore
         const index = features.indexOf(feature)
         features.splice(index, 1)
       })

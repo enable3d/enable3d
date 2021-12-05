@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-ts-expect-error */
 /* eslint-disable no-case-declarations */
 /* eslint-disable constructor-super */
 /* eslint-disable no-this-before-super */

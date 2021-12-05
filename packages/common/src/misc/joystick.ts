@@ -242,7 +242,7 @@ export class JoyStick extends Events {
     const { domElement, origin, id } = element
     if ('ontouchstart' in window) {
       document.ontouchmove = null
-      // @ts-ignore
+      // @ts-expect-error: Not sure why we use touches. Document has no property called touchend.
       document.touchend = null
     } else {
       document.onmousemove = null
@@ -255,10 +255,11 @@ export class JoyStick extends Events {
   }
 
   private getMousePosition(evt: MouseEvent | TouchEvent) {
-    // @ts-ignore
+    // @ts-expect-error: Of course MouseEvent and TouchEvent don't have the same properties.
     const clientX = evt.targetTouches ? evt.targetTouches[0].pageX : evt.clientX
-    // @ts-ignore
+    // @ts-expect-error: Of course MouseEvent and TouchEvent don't have the same properties.
     const clientY = evt.targetTouches ? evt.targetTouches[0].pageY : evt.clientY
+
     return { x: clientX, y: clientY }
   }
 }
