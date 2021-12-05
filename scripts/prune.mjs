@@ -1,9 +1,9 @@
 import { spawn } from './spawn.mjs'
 
 const prune = {
-  'node-modules': "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
-  dist: "find . -name 'dist' -type d -prune -exec rm -rf '{}' +",
-  lock: 'rm -rf package-lock.json'
+  'node-modules': 'npx -y rimraf node_modules && npx -y rimraf packages/**/node_modules',
+  dist: 'npx -y rimraf packages/**/dist',
+  lock: 'npx -y rimraf package-lock.json'
 }
 
 for (const [key, script] of Object.entries(prune)) {
