@@ -1,77 +1,115 @@
 import { ExtendedObject3D, FLAT, PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
 import { REVISION } from 'three'
 import { FlatArea } from '../../threeGraphics/jsm/flat'
-
-const isTouchDevice = 'ontouchstart' in window
+import { Tap } from '@yandeu/tap'
+import { timeStamp } from 'console'
 
 class MainScene extends Scene3D {
-  ui: FlatArea
+  maze: ExtendedObject3D[] = []
 
-  preRender() {
-    FLAT.preRender(this.renderer)
-  }
-
-  postRender() {
-    FLAT.postRender(this.renderer, this.ui)
+  async preload() {
+    // https://sketchfab.com/3d-models/1-maze-fcdbe9bbbce74cdd9991b5a1a041001e
+    this.load.preload('maze', '/assets/maze/scene.gltf')
   }
 
   async create() {
-    this.ui = FLAT.init(this.renderer)
+    await this.warpSpeed('-ground', '-orbitControls')
 
-    const size = new THREE.Vector2()
-    this.renderer.getSize(size)
+    this.camera.position.set(0, 4, 5)
+    this.camera.lookAt(0, 0, 0)
 
-    const texture = new FLAT.TextTexture('hello')
-    const text = new FLAT.TextSprite(texture)
-    text.setPosition(size.x / 2, size.y - text.textureHeight)
-    this.ui.scene.add(text)
+    // this.physics.debug?.enable()
 
-    console.log('REVISION', THREE.REVISION)
-    console.log('REVISION', REVISION)
+    const immovable = ['Wall']
+    const handles = ['Handle', 'Handle_1']
+    const maze = ['Cube001']
+    const mazeGround = ['Main001']
 
-    this.warpSpeed()
-    this.camera.position.set(2, 2, 4)
+    const maxLevel = 5
+    const searchMesh = (obj: THREE.Object3D, level = 0) => {
+      if (level > maxLevel) return
 
-    this.load.gltf('/assets/box_man.glb').then(gltf => {
-      const child = gltf.scene.children[0]
-
-      const boxMan = new ExtendedObject3D()
-      boxMan.add(child)
-      this.scene.add(boxMan)
-
-      let i = 0
-      const anims = ['run', 'sprint', 'jump_running', 'idle', 'driving', 'falling']
-
-      // ad the box man's animation mixer to the animationMixers array (for auto updates)
-      this.animationMixers.add(boxMan.animation.mixer)
-
-      gltf.animations.forEach(animation => {
-        if (animation.name) {
-          // add a new animation to the box man
-          boxMan.animation.add(animation.name, animation)
-        }
-      })
-
-      // play the run animation
-      boxMan.animation.play('idle')
-
-      const nextAnimation = (time: number) => {
-        setTimeout(() => {
-          i++
-          const next = anims[i % 5]
-          boxMan.animation.play(next, 200, next === 'jump_running' ? false : true)
-          console.log('current animation', boxMan.animation.current)
-          nextAnimation(next === 'jump_running' ? 650 : 2500)
-        }, time)
+      if (obj.type === 'Object3D') {
+        obj.traverse(child => {
+          searchMesh(child, (level += 1))
+        })
       }
 
-      nextAnimation(2500)
+      if (obj.type === 'Mesh') {
+        const mesh = obj as ExtendedObject3D
+        const parent = obj.parent as any
+
+        if (maze.includes(parent.name)) {
+          if (!mesh.hasBody) {
+            // // console.log(mesh)
+            // mesh.position.x -= offset.x
+            // mesh.position.y += offset.z
+
+            this.physics.add.existing(mesh, {
+              collisionFlags: 2,
+              collisionGroup: 2,
+              collisionMask: parseInt('0001'),
+              shape: 'concave',
+              autoCenter: true // reset center of gravity
+            })
+            const offset = { x: 1.5, z: -1.75 }
+            mesh.position.x -= offset.x
+            mesh.position.y += offset.z
+            mesh.body.needUpdate = true
+            this.maze.push(mesh)
+          }
+        }
+
+        if (mazeGround.includes(parent.name)) {
+          if (!mesh.hasBody) {
+            // console.log(mesh)
+            // mesh.position.x -= offset.x
+            // mesh.position.y += offset.z
+            this.physics.add.existing(mesh, {
+              collisionFlags: 2,
+              collisionGroup: 2,
+              collisionMask: parseInt('0001'),
+              shape: 'concave'
+            })
+            this.maze.push(mesh)
+          }
+        }
+      }
+    }
+
+    const gltf = await this.load.gltf('maze')
+
+    gltf.scenes[0].traverse(child => {
+      searchMesh(child)
+    })
+
+    this.add.existing(gltf.scenes[0])
+
+    // ball
+    this.physics.add.sphere({ y: 1, radius: 0.1 })
+
+    // tap
+    const tap = new Tap(this.renderer.domElement)
+
+    tap.on.move(({ position, event, dragging }) => {
+      if (!dragging) return
+      const { movementX, movementY } = event as PointerEvent
+
+      if (this.maze.length < 2) return
+
+      this.maze.forEach(m => {
+        m.rotation.x += movementY / 1000
+        m.rotation.y += movementX / 1000
+        m.body.needUpdate = true
+      })
     })
   }
+
+  update(_time: number, _delta: number): void {}
 }
 
 const startProject = () => {
-  PhysicsLoader('/lib', () => new Project({ scenes: [MainScene] }))
+  PhysicsLoader('/lib', () => new Project({ scenes: [MainScene], maxSubSteps: 4, fixedTimeStep: 1 / 120 }))
 }
 
 export default startProject

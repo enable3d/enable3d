@@ -1,0 +1,11 @@
+Model Information:
+* title:	1 - Maze
+* source:	https://sketchfab.com/3d-models/1-maze-fcdbe9bbbce74cdd9991b5a1a041001e
+* author:	KermodeBear (https://sketchfab.com/KermodeBear)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "1 - Maze" (https://sketchfab.com/3d-models/1-maze-fcdbe9bbbce74cdd9991b5a1a041001e) by KermodeBear (https://sketchfab.com/KermodeBear) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
