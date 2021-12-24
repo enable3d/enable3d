@@ -422,7 +422,7 @@ class AmmoPhysics extends Events {
 
           // handle collision events
           if (checkCollisions0 || checkCollisions1) {
-            const names = [threeObject0.name, threeObject1.name].sort()
+            const names = [threeObject0.uuid, threeObject1.uuid].sort()
             const combinedName = `${names[0]}__${names[1]}`
 
             if (this.earlierDetectedCollisions.find(el => el.combinedName === combinedName)) event = 'collision'
@@ -526,8 +526,8 @@ class AmmoPhysics extends Events {
       const { combinedName } = el
       if (!detectedCollisions.find(el => el.combinedName === combinedName)) {
         const split = combinedName.split('__')
-        const obj0 = this.rigidBodies.find(obj => obj.name === split[0])
-        const obj1 = this.rigidBodies.find(obj => obj.name === split[1])
+        const obj0 = this.rigidBodies.find(obj => obj.uuid === split[0])
+        const obj1 = this.rigidBodies.find(obj => obj.uuid === split[1])
         const event = 'end'
         if (obj0 && obj1) this.collisionEvents.emit('collision', { bodies: [obj0, obj1], event })
       }
