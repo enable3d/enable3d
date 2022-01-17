@@ -85,7 +85,7 @@ describe.each([EXAMPLES_PLACEHOLDER])('Example: (%s)', example => {
 
     if (injected) {
       // wait for the game to be started
-      await page.waitForTimeout(8000)
+      await page.waitForTimeout(5000)
       // await page.screenshot({ path: path.resolve(__dirname, `../screenshots/${example}.png`) })
       return
     } else {
