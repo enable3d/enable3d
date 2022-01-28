@@ -12,8 +12,8 @@
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
   "peerDependencies": {
-    "@types/three": "~0.136.0",
-    "three": "~0.136.0"
+    "@types/three": "~0.137.0",
+    "three": "~0.137.4"
   },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"

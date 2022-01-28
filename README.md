@@ -36,11 +36,11 @@ They are all listed as [peerDependencies](https://docs.npmjs.com/cli/v7/configur
 ```json
 {
   "@types/matter-js": "0.17.6",
-  "@types/three": "~0.136.0",
+  "@types/three": "~0.137.0",
   "matter-js": "0.17.1",
   "phaser": "^3.55.2",
   "poly-decomp": "^0.3.0",
-  "three": "~0.136.0"
+  "three": "~0.137.4"
 }
 ```
 
