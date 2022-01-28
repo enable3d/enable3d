@@ -4,6 +4,7 @@
   "description": "Runs ammo.js on your node.js server",
   "main": "dist/index.js",
   "scripts": {
+    "build": "npm run bundle",
     "bundle": "webpack --config webpack.config.js",
     "update": "npm update",
     "fix": "npm audit fix"
