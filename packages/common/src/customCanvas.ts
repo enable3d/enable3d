@@ -7,13 +7,22 @@
 // copied from https://phaser.io/examples/v3/view/game-config/custom-webgl-canvas
 // copied from https://github.com/mrdoob/three.js/blob/dev/src/renderers/WebGLRenderer.js
 
-import { WEBGL } from 'three/examples/jsm/WebGL'
 import { logger } from './logger'
 
 interface CustomCanvasConfig {
   antialias?: boolean
   parent?: string
   canvasId?: string
+}
+
+/** Test if WebGL2 is available. */
+const isWebGL2Available = () => {
+  try {
+    const canvas = document.createElement('canvas')
+    return !!(window.WebGL2RenderingContext && canvas.getContext('webgl2'))
+  } catch (e) {
+    return false
+  }
 }
 
 /**
@@ -75,7 +84,7 @@ export const Canvas = (
     ...contextAttributes
   }
 
-  const webgl = WEBGL.isWebGL2Available() ? 'webgl2' : 'webgl'
+  const webgl = isWebGL2Available() ? 'webgl2' : 'webgl'
 
   // create context
   const myCustomContext: any = myCustomCanvas.getContext(webgl, contextCreationConfig)
