@@ -16,8 +16,7 @@ for (const pkg of packages) {
   console.log('\n')
 
   try {
-    const cmd = pkg !== 'ammoOnNodejs' ? 'tsc' : 'npm run build'
-    await spawn(`cd packages/${pkg} && ${cmd}`)
+    await spawn(`cd packages/${pkg} &&  npm run build`)
   } catch (err) {
     process.exit(err)
   }

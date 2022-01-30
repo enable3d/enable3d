@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "tsc": "tsc",
+    "build": "tsc",
     "update": "npm update",
     "fix": "npm audit fix"
   },

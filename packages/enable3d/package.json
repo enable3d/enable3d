@@ -4,7 +4,7 @@
   "description": "3D Framework for Web, Mobile and PC",
   "main": "dist/index.js",
   "scripts": {
-    "tsc": "tsc",
+    "build": "tsc",
     "update": "npm update",
     "fix": "npm audit fix",
     "bundle": "cross-env-shell webpack --config ../../webpack/webpack.enable3d.js --env path=../bundles --env packageVersion=${npm_package_version}"
