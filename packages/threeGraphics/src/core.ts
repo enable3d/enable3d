@@ -4,18 +4,18 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import * as THREE from 'three'
-import * as Types from '@enable3d/common/dist/types'
+import { Cache, Scene, WebGLRenderer, PerspectiveCamera, OrthographicCamera, PCFSoftShadowMap } from 'three'
+import type * as Types from '@enable3d/common/dist/types'
 import Cameras from './plugins/cameras'
 import { AmmoPhysics } from '@enable3d/ammo-physics/dist/index'
 import { sRGBEncoding } from 'three'
 import { logger } from '@enable3d/common/dist/logger'
 
 export class ThreeGraphics {
-  public cache: typeof THREE.Cache
-  public scene: THREE.Scene
-  public renderer: THREE.WebGLRenderer
-  public camera: THREE.PerspectiveCamera | THREE.OrthographicCamera
+  public cache: typeof Cache
+  public scene: Scene
+  public renderer: WebGLRenderer
+  public camera: PerspectiveCamera | OrthographicCamera
   protected textureAnisotropy: number
 
   public cameras!: Cameras
@@ -34,20 +34,20 @@ export class ThreeGraphics {
     this.textureAnisotropy = anisotropy
     this.camera = camera
 
-    this.scene = new THREE.Scene()
+    this.scene = new Scene()
 
     // this.renderer.physicallyCorrectLights = true
-    this.renderer = renderer || new THREE.WebGLRenderer({ antialias, alpha })
+    this.renderer = renderer || new WebGLRenderer({ antialias, alpha })
 
     // see https://threejs.org/docs/#examples/en/loaders/GLTFLoader
     // this.renderer.outputEncoding = sRGBEncoding
 
     // shadow
     this.renderer.shadowMap.enabled = true
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
+    this.renderer.shadowMap.type = PCFSoftShadowMap
 
     // enable cache
-    this.cache = THREE.Cache
+    this.cache = Cache
     this.cache.enabled = true
 
     if (usePhysics) {
@@ -58,37 +58,37 @@ export class ThreeGraphics {
 
   // get new() {
   //   return {
-  //     lerp: (x: number, y: number, t: number) => THREE.MathUtils.lerp(x, y, t),
-  //     /** A simple THREE.js Object3D. */
-  //     object3D: () => new THREE.Object3D(),
-  //     /** An extended THREE.js Object3D with useful properties and methods. */
+  //     lerp: (x: number, y: number, t: number) => MathUtils.lerp(x, y, t),
+  //     /** A simple js Object3D. */
+  //     object3D: () => new Object3D(),
+  //     /** An extended js Object3D with useful properties and methods. */
   //     extendedObject3D: () => new ExtendedObject3D(),
   //     /** Create a Path Shape */
-  //     shape: () => new THREE.Shape(),
-  //     shapePath: () => new THREE.ShapePath(),
-  //     path: () => new THREE.Path(),
+  //     shape: () => new Shape(),
+  //     shapePath: () => new ShapePath(),
+  //     path: () => new Path(),
   //     svgLoader: () => new SVGLoader(),
-  //     raycaster: () => new THREE.Raycaster(),
-  //     group: () => new THREE.Group(),
-  //     color: (color?: string | number | THREE.Color | undefined) => new THREE.Color(color),
-  //     box3: () => new THREE.Box3(),
-  //     box3Helper: (box3: THREE.Box3) => new THREE.Box3Helper(box3),
-  //     boxHelper: (mesh: THREE.Mesh) => new THREE.BoxHelper(mesh),
-  //     // animationMixer: (root: THREE.Object3D) => this.animationMixer(root),
-  //     vector2: (x?: number, y?: number) => new THREE.Vector2(x, y),
-  //     vector3: (x?: number, y?: number, z?: number) => new THREE.Vector3(x, y, z),
-  //     euler: (x: number, y: number, z: number) => new THREE.Euler(x, y, z, 'XYZ'),
-  //     quaternion: (x?: number, y?: number, z?: number, w?: number) => new THREE.Quaternion(x, y, z, w),
+  //     raycaster: () => new Raycaster(),
+  //     group: () => new Group(),
+  //     color: (color?: string | number | Color | undefined) => new Color(color),
+  //     box3: () => new Box3(),
+  //     box3Helper: (box3: Box3) => new Box3Helper(box3),
+  //     boxHelper: (mesh: Mesh) => new BoxHelper(mesh),
+  //     // animationMixer: (root: Object3D) => this.animationMixer(root),
+  //     vector2: (x?: number, y?: number) => new Vector2(x, y),
+  //     vector3: (x?: number, y?: number, z?: number) => new Vector3(x, y, z),
+  //     euler: (x: number, y: number, z: number) => new Euler(x, y, z, 'XYZ'),
+  //     quaternion: (x?: number, y?: number, z?: number, w?: number) => new Quaternion(x, y, z, w),
   //     defaultMaterial: () => this.getDefaultMaterial()
   //   }
   // }
 
-  // protected getDefaultMaterial(): THREE.Material {
+  // protected getDefaultMaterial(): Material {
   //   return this.defaultMaterial.get()
   // }
 
   // public radToDeg(number: number) {
-  //   return THREE.MathUtils.radToDeg(number)
+  //   return MathUtils.radToDeg(number)
   // }
 
   // /**
