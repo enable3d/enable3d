@@ -9,7 +9,7 @@
     "bundle": "node scripts/webpack.mjs",
     "format": "prettier --write packages/**/*.ts",
     "headless": "nodemon packages/dev/src/headless-node.js",
-    "lint": "eslint  packages/**/*.ts",
+    "lint": "eslint packages/**/*.ts",
     "publish": "npm run clean:dist && npm run tsc && npm-run-all publish:*",
     "test": "npm-run-all test:*",
     "tsc": "npm run build",
