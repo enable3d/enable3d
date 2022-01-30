@@ -1,20 +1,29 @@
-import * as THREE from 'three'
+import {
+  Scene,
+  Color,
+  PerspectiveCamera,
+  WebGLRenderer,
+  HemisphereLight,
+  AmbientLight,
+  DirectionalLight,
+  Clock
+} from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 import { AmmoPhysics, ExtendedMesh, ExtendedObject3D, PhysicsLoader } from '@enable3d/ammo-physics'
 
 const MainScene = () => {
   // scene
-  const scene = new THREE.Scene()
-  scene.background = new THREE.Color(0xf0f0f0)
+  const scene = new Scene()
+  scene.background = new Color(0xf0f0f0)
 
   // camera
-  const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000)
+  const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000)
   camera.position.set(10, 10, 20)
   camera.lookAt(0, 0, 0)
 
   // renderer
-  const renderer = new THREE.WebGLRenderer()
+  const renderer = new WebGLRenderer()
   renderer.setSize(window.innerWidth, window.innerHeight)
   document.body.appendChild(renderer.domElement)
 
@@ -26,9 +35,9 @@ const MainScene = () => {
   const controls = new OrbitControls(camera, renderer.domElement)
 
   // light
-  scene.add(new THREE.HemisphereLight(0xffffbb, 0x080820, 1))
-  scene.add(new THREE.AmbientLight(0x666666))
-  const light = new THREE.DirectionalLight(0xdfebff, 1)
+  scene.add(new HemisphereLight(0xffffbb, 0x080820, 1))
+  scene.add(new AmbientLight(0x666666))
+  const light = new DirectionalLight(0xdfebff, 1)
   light.position.set(50, 200, 100)
   light.position.multiplyScalar(1.3)
 
@@ -46,7 +55,7 @@ const MainScene = () => {
   physics.add.box({ y: 10 }, { lambert: { color: 'red' } })
 
   // clock
-  const clock = new THREE.Clock()
+  const clock = new Clock()
 
   // loop
   const animate = () => {
