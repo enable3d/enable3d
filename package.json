@@ -36,7 +36,8 @@
     "test:headless": "jest test/headless/*.test.js",
     "test:pre": "npm run test:clean && node test/preTest.js",
     "test:jest": "jest test/*.test.js",
-    "test:clean": "node test/cleanTest.js"
+    "test:clean": "node test/cleanTest.js",
+    "esbuild:test": "npx -y esbuild test/esbuild-test.js --bundle --outfile=bundle.js"
   },
   "repository": {
     "type": "git",

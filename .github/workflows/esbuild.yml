@@ -1,0 +1,32 @@
+name: ESBuild-test
+
+on:
+  push:
+    paths-ignore:
+      - '.vscode/**'
+      - 'bundles/**'
+      - 'readme/**'
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '.vscode/**'
+      - 'bundles/**'
+      - 'readme/**'
+      - '**.md'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Compiling TypeScript
+        run: npm run build
+
+      - name: Test ESBuild
+        run: npm run esbuild:test
