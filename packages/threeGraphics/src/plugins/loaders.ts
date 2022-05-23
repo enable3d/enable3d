@@ -5,9 +5,9 @@
  */
 
 import { Cache, FileLoader, Group, ImageLoader, ObjectLoader, Texture, TextureLoader } from 'three'
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
-import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { SVGLoader, SVGResult } from 'three/examples/jsm/loaders/SVGLoader'
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
+import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { SVGLoader, SVGResult } from 'three/examples/jsm/loaders/SVGLoader.js'
 
 import type { Atlas, JSONArrayFrames, JSONHash } from '../flat/textureAtlas'
 

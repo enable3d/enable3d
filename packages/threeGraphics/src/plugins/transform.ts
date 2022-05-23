@@ -1,4 +1,4 @@
-import { Geometry } from 'three/examples/jsm/deprecated/Geometry'
+import { Geometry } from 'three/examples/jsm/deprecated/Geometry.js'
 import {
   BufferGeometry,
   Mesh,
@@ -12,7 +12,7 @@ import {
   Vector3,
   WebGLRenderer
 } from 'three'
-import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader'
+import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js'
 import { fromGeometry } from '../csg/_fromGeometry'
 
 /**

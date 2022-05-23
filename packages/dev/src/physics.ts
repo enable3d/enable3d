@@ -8,7 +8,7 @@ import {
   DirectionalLight,
   Clock
 } from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 import { AmmoPhysics, ExtendedMesh, ExtendedObject3D, PhysicsLoader } from '@enable3d/ammo-physics'
 

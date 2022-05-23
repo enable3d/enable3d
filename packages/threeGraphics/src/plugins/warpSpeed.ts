@@ -14,7 +14,7 @@ import {
   WebGLRenderer
 } from 'three'
 
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { Factories, Lights, Loaders } from '.'
 import { AmmoPhysics, ExtendedObject3D } from '@enable3d/ammo-physics'
 

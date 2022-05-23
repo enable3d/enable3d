@@ -22,7 +22,7 @@ import { existsSync, readFile } from 'fs'
 /**
  * FXBLoader imports
  */
-import { FBXLoader as _FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
+import { FBXLoader as _FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 
 /**
  * GLTFLoader imports

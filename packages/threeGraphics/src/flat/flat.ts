@@ -5,7 +5,7 @@
  */
 
 import type { WebGLRenderer } from 'three'
-import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 import { Scene, OrthographicCamera, Vector2 } from 'three'
 import Cameras from '../plugins/cameras'
