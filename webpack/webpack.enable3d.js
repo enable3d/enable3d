@@ -1,5 +1,8 @@
 const path = require('path')
 const optimization = require('./optimization.cjs')
+const { resolve } = require('path')
+
+console.log(resolve('../../node_modules/three'))
 
 /**
  * Makes the minified bundle
@@ -17,7 +20,13 @@ module.exports = env => {
       libraryTarget: 'umd'
     },
     resolve: {
-      extensions: ['.ts', '.js']
+      // https://discourse.threejs.org/t/threejs-custom-lib-usage-generate-warning-multiple-instances-of-three-js-being-imported/35292
+      // https://github.com/Sean-Bradley/Three.js-TypeScript-Boilerplate/blob/8e415321e554f8505af20f0312e5f3697a26b688/src/client/webpack.common.js#L15-L17
+      alias: {
+        three: resolve('../../node_modules/three')
+      },
+      // Add `.ts` and `.tsx` as a resolvable extension.
+      extensions: ['.ts', '.tsx', '.js']
     },
     externals: {
       // three: 'THREE',
