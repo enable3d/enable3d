@@ -12,7 +12,7 @@ Written in TypeScript, uses three.js and ammo.js, brings physics to your three.j
   <a href="https://www.npmjs.com/search?q=enable3d"><img src="https://img.shields.io/npm/v/@enable3d/phaser-extension?style=flat-square" alt="NPM version"></a>
   <a href="https://github.com/enable3d/enable3d/actions?query=workflow%3ACI"><img src="https://img.shields.io/github/workflow/status/yandeu/enable3d/CI/master?label=build&logo=github&style=flat-square"></a>
   <a href="https://github.com/enable3d/enable3d/actions?query=workflow%3ACodeQL"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/enable3d/enable3d/CodeQL?label=CodeQL&logo=github&style=flat-square"></a>
-  <a href="https://github.com/mrdoob/three.js/"><img src="https://img.shields.io/badge/three-r137-blue.svg?style=flat-square" alt="Three"></a>
+  <a href="https://github.com/mrdoob/three.js/"><img src="https://img.shields.io/badge/three-r141-blue.svg?style=flat-square" alt="Three"></a>
   <a href="https://github.com/enable3d/enable3d/commits/master"><img src="https://img.shields.io/github/last-commit/yandeu/enable3d.svg?style=flat-square" alt="GitHub last commit"></a>
   <a href="https://github.com/prettier/prettier" alt="code style: prettier"><img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square"></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/built%20with-TypeScript-blue?style=flat-square"></a>
@@ -36,11 +36,11 @@ They are all listed as [peerDependencies](https://docs.npmjs.com/cli/v7/configur
 ```json
 {
   "@types/matter-js": "0.17.6",
-  "@types/three": "~0.137.0",
+  "@types/three": "0.141.0",
   "matter-js": "0.17.1",
   "phaser": "^3.55.2",
   "poly-decomp": "^0.3.0",
-  "three": "~0.137.4"
+  "three": "0.141.0"
 }
 ```
 
