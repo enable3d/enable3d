@@ -106,7 +106,7 @@ class Third extends ThreeGraphics {
 
     // load xr plugin
     if (enableXR) {
-      this.webXR = new Plugins.WebXR(this.renderer, this.scene, this.camera)
+      this.webXR = new Plugins.WebXR(this.renderer, this.scene)
     }
 
     // xr renderer

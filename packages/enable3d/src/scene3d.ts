@@ -105,7 +105,7 @@ export class Scene3D implements Partial<ThreeGraphics> {
 
     // add vr camera
     if (this.__config.enableXR) {
-      this.webXR = new Plugins.WebXR(this.renderer, this.scene, this.camera)
+      this.webXR = new Plugins.WebXR(this.renderer, this.scene)
     }
 
     if (autoStart) this.start(this.__config.sceneKey)

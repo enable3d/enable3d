@@ -24,8 +24,8 @@
 // which is a typescript rewrite of https://github.com/manthrax/THREE-CSGMesh
 // which as originally written by Copyright (c) 2011 Evan Wallace (http://madebyevan.com/), under the MIT license.
 
-import { Geometry } from 'three/examples/jsm/deprecated/Geometry.js'
-import { Face3 } from '@enable3d/three-wrapper/dist/deprecated/face3'
+import { Geometry } from '@enable3d/three-wrapper/dist/deprecated/geometry.js'
+import { Face3 } from '@enable3d/three-wrapper/dist/deprecated/face3.js'
 import { Matrix3, Matrix4, Mesh, REVISION, Scene, Vector3 } from 'three'
 import Transform from '../plugins/transform'
 
@@ -132,7 +132,7 @@ class CSG {
     const geom = new Geometry()
     const ps = csg.polygons
     const vs = geom.vertices
-    const fvuv = geom.faceVertexUvs[0]
+    const fvuv: any[] = geom.faceVertexUvs[0]
     for (const p of ps) {
       const pvs = p.vertices
       const v0 = vs.length

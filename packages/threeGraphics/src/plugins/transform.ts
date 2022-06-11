@@ -1,4 +1,4 @@
-import { Geometry } from 'three/examples/jsm/deprecated/Geometry.js'
+import { Geometry } from '@enable3d/three-wrapper/dist/deprecated/geometry.js'
 import {
   BufferGeometry,
   Mesh,

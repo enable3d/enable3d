@@ -4,18 +4,22 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
+import { ExtendedObject3D } from '@enable3d/ammo-physics'
 import {
   BufferGeometry,
+  Camera,
   Float32BufferAttribute,
   Group,
   Line,
   LineBasicMaterial,
   Mesh,
   MeshBasicMaterial,
+  MeshLambertMaterial,
   OrthographicCamera,
   PerspectiveCamera,
   RingBufferGeometry,
   Scene,
+  SphereBufferGeometry,
   Vector3,
   WebGLRenderer
 } from 'three'
@@ -28,19 +32,19 @@ export default class WebXR {
   cameraGroup: Group
   controllerModelFactory = new XRControllerModelFactory()
 
-  constructor(
-    private _renderer: WebGLRenderer,
-    private _scene: Scene,
-    private _camera: PerspectiveCamera | OrthographicCamera
-  ) {
+  constructor(private _renderer: WebGLRenderer, private _scene: Scene) {
     // https://medium.com/samsung-internet-dev/vr-locomotion-740dafa85914
 
-    // const geo = new SphereGeometry(0.5)
+    // const geo = new SphereBufferGeometry(0.5)
     // const mat = new MeshLambertMaterial({ color: 0xff0000 })
-    // this.dot = new Mesh(geo, mat)
-    // this.dot.position.set(0, 1, 0)
+    // const dot = new Mesh(geo, mat)
+    // dot.position.set(0, 1, 0)
+
+    const dot = new ExtendedObject3D()
+    dot.name = 'dot'
+
     this.cameraGroup = new Group()
-    this.cameraGroup.add(_camera)
+    this.cameraGroup.add(dot)
     _scene.add(this.cameraGroup)
 
     _renderer.xr.enabled = true
@@ -49,6 +53,8 @@ export default class WebXR {
     const vrButton = VRButton.createButton(_renderer)
     vrButton.style.cssText += 'background: rgba(0, 0, 0, 0.8); '
     document.body.appendChild(vrButton)
+
+    this._renderer.xr.getCamera().add(this.cameraGroup)
   }
 
   public get isPresenting() {
@@ -103,10 +109,10 @@ export default class WebXR {
   private get WebXRCamera() {
     return {
       group: this.cameraGroup,
-      position: this.cameraGroup?.position,
-      rotation: this.isPresenting ? this._renderer.xr.getCamera(this._camera).rotation : undefined,
+      position: this._renderer.xr.getCamera()?.position,
+      rotation: this.isPresenting ? this._renderer.xr.getCamera().rotation : undefined,
       getWorldDirection: (target: Vector3) =>
-        this.isPresenting ? this._renderer.xr.getCamera(this._camera).getWorldDirection(target) : undefined
+        this.isPresenting ? this._renderer.xr.getCamera().getWorldDirection(target) : undefined
     }
   }
 }

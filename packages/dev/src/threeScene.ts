@@ -5,7 +5,7 @@ import { FlatArea } from '../../threeGraphics/jsm/flat'
 const isTouchDevice = 'ontouchstart' in window
 
 class MainScene extends Scene3D {
-  ui: FlatArea
+  ui!: FlatArea
 
   preRender() {
     FLAT.preRender(this.renderer)
