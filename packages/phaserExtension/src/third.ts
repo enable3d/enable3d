@@ -66,7 +66,8 @@ class Third extends ThreeGraphics {
       config.renderer.domElement.id = 'enable3d-three-canvas'
 
       // @ts-expect-errors: aspect is only available on PerspectiveCamera.
-      this.camera?.aspect = scene3D.sys.game.scale.baseSize.width / scene3D.sys.game.scale.baseSize.height
+      // prettier-ignore
+      if (this.camera?.aspect) this.camera.aspect = scene3D.sys.game.scale.baseSize.width / scene3D.sys.game.scale.baseSize.height
       this.camera?.updateProjectionMatrix()
 
       config.renderer.setSize(scene3D.sys.game.scale.baseSize.width, scene3D.sys.game.scale.baseSize.height)
