@@ -30,8 +30,7 @@ Visit the [enable3d website](https://enable3d.io) for documentation and examples
 
 ## Dependencies
 
-Enable3d now depends on the dependencies below.  
-They are all listed as [peerDependencies](https://docs.npmjs.com/cli/v7/configuring-npm/package-json#peerdependencies).
+Enable3d now depends on the dependencies below.
 
 ```json
 {
@@ -40,7 +39,8 @@ They are all listed as [peerDependencies](https://docs.npmjs.com/cli/v7/configur
   "matter-js": "0.17.1",
   "phaser": "^3.55.2",
   "poly-decomp": "^0.3.0",
-  "three": "0.141.0"
+  "three": "0.141.0",
+  "three-csg-ts": "^3.1.10"
 }
 ```
 

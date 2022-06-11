@@ -30,7 +30,8 @@
     "@enable3d/common": "^0.25.1",
     "@enable3d/three-wrapper": "^0.25.1",
     "@yandeu/events": "0.0.5",
-    "@yandeu/tap": "0.0.3"
+    "@yandeu/tap": "0.0.3",
+    "three-csg-ts": "^3.1.10"
   },
   "peerDependencies": {
     "@types/matter-js": "0.17.6",
