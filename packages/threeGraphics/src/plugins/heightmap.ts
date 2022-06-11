@@ -1,26 +1,12 @@
 /**
  * @author       Yannick Deubel (https://github.com/yandeu)
- * @copyright    Copyright (c) 2020 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
+ * @copyright    Copyright (c) 2022 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-// TODO(yandeu) Make heightmap work with Buffer Geometries.
-
-import {
-  BufferGeometry,
-  Color,
-  DoubleSide,
-  MeshPhongMaterial,
-  MeshPhongMaterialParameters,
-  PlaneBufferGeometry,
-  Scene,
-  Texture
-} from 'three'
+import { DoubleSide, MeshPhongMaterial, MeshPhongMaterialParameters, PlaneBufferGeometry, Scene, Texture } from 'three'
 import { ExtendedMesh } from '@enable3d/common/dist/extendedMesh'
 import { HeightMapConfig } from '@enable3d/common/dist/types'
-import { Geometry } from '@enable3d/three-wrapper/dist/deprecated/geometry.js'
-import { Face3 } from '@enable3d/three-wrapper/dist/deprecated/face3'
-import { fromGeometry } from '../csg/_fromGeometry'
 
 export default class HeightMap {
   constructor(private scene: Scene) {}
@@ -49,8 +35,7 @@ export default class HeightMap {
     ctx.drawImage(texture.image, 0, 0)
     const pixel = ctx.getImageData(0, 0, width, height)
 
-    // geometry (convert buffer geometry to deprecated geometry)
-    const plane: any = new Geometry().fromBufferGeometry(new PlaneBufferGeometry(10, 10, width - 1, height - 1))
+    const geometry = new PlaneBufferGeometry(10, 10, width - 1, height - 1)
 
     // material
     let materialConfig: MeshPhongMaterialParameters = { color: 0xcccccc, side: DoubleSide }
@@ -58,38 +43,36 @@ export default class HeightMap {
     const material = new MeshPhongMaterial(materialConfig)
 
     // mesh
-    const mesh: any = new ExtendedMesh(plane, material)
+    const mesh = new ExtendedMesh(geometry, material)
     mesh.receiveShadow = mesh.castShadow = true
     mesh.shape = 'concave'
 
     // adjust all z values
-    const geo = mesh.geometry as Geometry
-    for (let i = 0; i < geo.vertices.length; i++) {
-      geo.vertices[i].z = pixel.data[i * 4] / 120
+    const vertices = geometry.attributes.position.array
+    for (let i = 0; i < vertices.length; i++) {
+      const height = pixel.data[i * 4] / 120
+      // @ts-expect-error
+      vertices[i * 3 + 2] = height
     }
 
     // helper function to get the highest point
-    const getHighPoint = (geometry: Geometry, face: Face3) => {
-      var v1 = geometry.vertices[face.a].z
-      var v2 = geometry.vertices[face.b].z
-      var v3 = geometry.vertices[face.c].z
+    // const getHighPoint = (geometry: Geometry, face: Face3) => {
+    //   var v1 = geometry.vertices[face.a].z
+    //   var v2 = geometry.vertices[face.b].z
+    //   var v3 = geometry.vertices[face.c].z
 
-      return Math.max(v1, v2, v3)
-    }
+    //   return Math.max(v1, v2, v3)
+    // }
 
     // apply color scale if available
-    if (colorScale) geo.faces.forEach(face => (face.color = new Color(colorScale(getHighPoint(geo, face)).hex())))
+    // if (colorScale) geo.faces.forEach(face => (face.color = new Color(colorScale(getHighPoint(geo, face)).hex())))
 
     mesh.rotateX(-Math.PI / 2)
     mesh.updateMatrix()
 
-    plane.computeFaceNormals()
-    plane.computeVertexNormals()
+    geometry.computeVertexNormals()
 
     mesh.name = 'heightmap'
-
-    // back to buffer geometry
-    mesh.geometry = fromGeometry(new BufferGeometry(), mesh.geometry)
 
     return mesh as ExtendedMesh
   }
