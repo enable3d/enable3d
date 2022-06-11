@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 /**
  * @author       Yannick Deubel (https://github.com/yandeu)
  * @copyright    Copyright (c) 2020 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
@@ -12,8 +13,8 @@
  */
 
 import { Vector3, Matrix4, Quaternion, Box3, REVISION } from 'three'
-;('use strict')
-/* global Ammo */
+
+declare const Ammo: any
 
 export const TYPE = {
   BOX: 'box',
@@ -38,7 +39,13 @@ export const HEIGHTFIELD_DATA_TYPE = {
   float: 'float'
 }
 
-export const createCollisionShapes = function (vertices, matrices, indexes, matrixWorld, options = {}) {
+export const createCollisionShapes = function (
+  vertices: any,
+  matrices: any,
+  indexes: any,
+  matrixWorld: any,
+  options: any = {}
+) {
   switch (options.type) {
     case TYPE.BOX:
       return [createBoxShape(vertices, matrices, matrixWorld, options)]
@@ -68,7 +75,7 @@ export const createCollisionShapes = function (vertices, matrices, indexes, matr
 
 //TODO: support gimpact (dynamic trimesh) and heightmap
 
-export const createBoxShape = function (vertices, matrices, matrixWorld, options = {}) {
+export const createBoxShape = function (vertices: any, matrices: any, matrixWorld: any, options: any = {}) {
   options.type = TYPE.BOX
   _setOptions(options)
 
@@ -88,7 +95,7 @@ export const createBoxShape = function (vertices, matrices, matrixWorld, options
   return collisionShape
 }
 
-export const createCylinderShape = function (vertices, matrices, matrixWorld, options = {}) {
+export const createCylinderShape = function (vertices: any, matrices: any, matrixWorld: any, options: any = {}) {
   options.type = TYPE.CYLINDER
   _setOptions(options)
 
@@ -118,7 +125,7 @@ export const createCylinderShape = function (vertices, matrices, matrixWorld, op
   return collisionShape
 }
 
-export const createCapsuleShape = function (vertices, matrices, matrixWorld, options = {}) {
+export const createCapsuleShape = function (vertices: any, matrices: any, matrixWorld: any, options: any = {}) {
   options.type = TYPE.CAPSULE
   _setOptions(options)
 
@@ -147,7 +154,7 @@ export const createCapsuleShape = function (vertices, matrices, matrixWorld, opt
   return collisionShape
 }
 
-export const createConeShape = function (vertices, matrices, matrixWorld, options = {}) {
+export const createConeShape = function (vertices: any, matrices: any, matrixWorld: any, options: any = {}) {
   options.type = TYPE.CONE
   _setOptions(options)
 
@@ -176,7 +183,7 @@ export const createConeShape = function (vertices, matrices, matrixWorld, option
   return collisionShape
 }
 
-export const createSphereShape = function (vertices, matrices, matrixWorld, options = {}) {
+export const createSphereShape = function (vertices: any, matrices: any, matrixWorld: any, options: any = {}) {
   options.type = TYPE.SPHERE
   _setOptions(options)
 
@@ -197,7 +204,7 @@ export const createHullShape = (function () {
   const vertex = new Vector3()
   const center = new Vector3()
   const matrix = new Matrix4()
-  return function (vertices, matrices, matrixWorld, options = {}) {
+  return function (vertices: any, matrices: any, matrixWorld: any, options: any = {}) {
     options.type = TYPE.HULL
     _setOptions(options)
 
@@ -266,7 +273,7 @@ export const createHACDShapes = (function () {
   const vector = new Vector3()
   const center = new Vector3()
   const matrix = new Matrix4()
-  return function (vertices, matrices, indexes, matrixWorld, options = {}) {
+  return function (vertices: any, matrices: any, indexes: any, matrixWorld: any, options: any = {}) {
     options.type = TYPE.HACD
     _setOptions(options)
 
@@ -380,7 +387,7 @@ export const createVHACDShapes = (function () {
   const vector = new Vector3()
   const center = new Vector3()
   const matrix = new Matrix4()
-  return function (vertices, matrices, indexes, matrixWorld, options = {}) {
+  return function (vertices: any, matrices: any, indexes: any, matrixWorld: any, options: any = {}) {
     options.type = TYPE.VHACD
     _setOptions(options)
 
@@ -504,7 +511,7 @@ export const createTriMeshShape = (function () {
   const vb = new Vector3()
   const vc = new Vector3()
   const matrix = new Matrix4()
-  return function (vertices, matrices, indexes, matrixWorld, options = {}) {
+  return function (vertices: any, matrices: any, indexes: any, matrixWorld: any, options: any = {}) {
     options.type = TYPE.MESH
     _setOptions(options)
 
@@ -572,7 +579,7 @@ export const createTriMeshShape = (function () {
   }
 })()
 
-export const createHeightfieldTerrainShape = function (options = {}) {
+export const createHeightfieldTerrainShape = function (options: any = {}) {
   _setOptions(options)
 
   if (options.fit === FIT.ALL) {
@@ -636,68 +643,68 @@ export const createHeightfieldTerrainShape = function (options = {}) {
   return collisionShape
 }
 
-function _setOptions(options) {
+function _setOptions(options: any) {
   // MOD (yandeu): All of this will be done in physics.ts
   // we only keep type and margin
   options.type = options.type || TYPE.HULL
   options.margin = options.hasOwnProperty('margin') ? options.margin : 0.01
   return
 
-  options.fit = options.hasOwnProperty('fit') ? options.fit : FIT.ALL
-  options.type = options.type || TYPE.HULL
-  options.minHalfExtent = options.hasOwnProperty('minHalfExtent') ? options.minHalfExtent : 0
-  options.maxHalfExtent = options.hasOwnProperty('maxHalfExtent') ? options.maxHalfExtent : Number.POSITIVE_INFINITY
-  options.cylinderAxis = options.cylinderAxis || 'y'
-  options.margin = options.hasOwnProperty('margin') ? options.margin : 0.01
-  options.includeInvisible = options.hasOwnProperty('includeInvisible') ? options.includeInvisible : false
+  // options.fit = options.hasOwnProperty('fit') ? options.fit : FIT.ALL
+  // options.type = options.type || TYPE.HULL
+  // options.minHalfExtent = options.hasOwnProperty('minHalfExtent') ? options.minHalfExtent : 0
+  // options.maxHalfExtent = options.hasOwnProperty('maxHalfExtent') ? options.maxHalfExtent : Number.POSITIVE_INFINITY
+  // options.cylinderAxis = options.cylinderAxis || 'y'
+  // options.margin = options.hasOwnProperty('margin') ? options.margin : 0.01
+  // options.includeInvisible = options.hasOwnProperty('includeInvisible') ? options.includeInvisible : false
 
-  if (!options.offset) {
-    options.offset = new Vector3()
-  }
+  // if (!options.offset) {
+  //   options.offset = new Vector3()
+  // }
 
-  if (!options.orientation) {
-    options.orientation = new Quaternion()
-  }
+  // if (!options.orientation) {
+  //   options.orientation = new Quaternion()
+  // }
 }
 
-const _finishCollisionShape = function (collisionShape, options, scale) {
+const _finishCollisionShape = function (collisionShape: any, options: any, scale?: any) {
   // MOD (yandeu): All of this will be done in physics.ts
   return
 
-  collisionShape.type = options.type
-  collisionShape.setMargin(options.margin)
-  collisionShape.destroy = () => {
-    for (let res of collisionShape.resources || []) {
-      Ammo.destroy(res)
-    }
-    if (collisionShape.heightfieldData) {
-      Ammo._free(collisionShape.heightfieldData)
-    }
-    Ammo.destroy(collisionShape)
-  }
+  // collisionShape.type = options.type
+  // collisionShape.setMargin(options.margin)
+  // collisionShape.destroy = () => {
+  //   for (let res of collisionShape.resources || []) {
+  //     Ammo.destroy(res)
+  //   }
+  //   if (collisionShape.heightfieldData) {
+  //     Ammo._free(collisionShape.heightfieldData)
+  //   }
+  //   Ammo.destroy(collisionShape)
+  // }
 
-  const localTransform = new Ammo.btTransform()
-  const rotation = new Ammo.btQuaternion()
-  localTransform.setIdentity()
+  // const localTransform = new Ammo.btTransform()
+  // const rotation = new Ammo.btQuaternion()
+  // localTransform.setIdentity()
 
-  localTransform.getOrigin().setValue(options.offset.x, options.offset.y, options.offset.z)
-  rotation.setValue(options.orientation.x, options.orientation.y, options.orientation.z, options.orientation.w)
+  // localTransform.getOrigin().setValue(options.offset.x, options.offset.y, options.offset.z)
+  // rotation.setValue(options.orientation.x, options.orientation.y, options.orientation.z, options.orientation.w)
 
-  localTransform.setRotation(rotation)
-  Ammo.destroy(rotation)
+  // localTransform.setRotation(rotation)
+  // Ammo.destroy(rotation)
 
-  if (scale) {
-    const localScale = new Ammo.btVector3(scale.x, scale.y, scale.z)
-    collisionShape.setLocalScaling(localScale)
-    Ammo.destroy(localScale)
-  }
+  // if (scale) {
+  //   const localScale = new Ammo.btVector3(scale.x, scale.y, scale.z)
+  //   collisionShape.setLocalScaling(localScale)
+  //   Ammo.destroy(localScale)
+  // }
 
-  collisionShape.localTransform = localTransform
+  // collisionShape.localTransform = localTransform
 }
 
 export const iterateGeometries = (function () {
   const inverse = new Matrix4()
-  return function (root, options, cb) {
+  return function (root: any, options: any, cb: any) {
     // MOD (yandeu): Update to three.js r123
     // compatibility fix for three.js >= r123 (Dezember 2020)
     if (parseInt(REVISION) >= 123) inverse.copy(root.matrixWorld).invert()
@@ -705,7 +712,7 @@ export const iterateGeometries = (function () {
 
     const scale = new Vector3()
     scale.setFromMatrixScale(root.matrixWorld)
-    root.traverse(mesh => {
+    root.traverse((mesh: any) => {
       const transform = new Matrix4()
       if (
         mesh.isMesh &&
@@ -733,7 +740,7 @@ export const iterateGeometries = (function () {
 
 const _computeScale = (function () {
   const matrix = new Matrix4()
-  return function (matrixWorld, options = {}) {
+  return function (matrixWorld: any, options: any = {}) {
     const scale = new Vector3(1, 1, 1)
     if (options.fit === FIT.ALL) {
       matrix.fromArray(matrixWorld)
@@ -745,11 +752,11 @@ const _computeScale = (function () {
 
 const _computeRadius = (function () {
   const center = new Vector3()
-  return function (vertices, matrices, bounds) {
+  return function (vertices: any, matrices: any, bounds: any) {
     let maxRadiusSq = 0
     let { x: cx, y: cy, z: cz } = bounds.getCenter(center)
 
-    _iterateVertices(vertices, matrices, v => {
+    _iterateVertices(vertices, matrices, (v: any) => {
       const dx = cx - v.x
       const dy = cy - v.y
       const dz = cz - v.z
@@ -759,18 +766,18 @@ const _computeRadius = (function () {
   }
 })()
 
-const _computeHalfExtents = function (bounds, minHalfExtent, maxHalfExtent) {
+const _computeHalfExtents = function (bounds: any, minHalfExtent: any, maxHalfExtent: any) {
   const halfExtents = new Vector3()
   return halfExtents.subVectors(bounds.max, bounds.min).multiplyScalar(0.5).clampScalar(minHalfExtent, maxHalfExtent)
 }
 
-const _computeLocalOffset = function (matrix, bounds, target) {
+const _computeLocalOffset = function (matrix: any, bounds: any, target: any) {
   target.addVectors(bounds.max, bounds.min).multiplyScalar(0.5).applyMatrix4(matrix)
   return target
 }
 
 // returns the bounding box for the geometries underneath `root`.
-const _computeBounds = function (vertices, matrices) {
+const _computeBounds = function (vertices: any, matrices: any) {
   const bounds = new Box3()
   let minX = +Infinity
   let minY = +Infinity
@@ -781,7 +788,7 @@ const _computeBounds = function (vertices, matrices) {
   bounds.min.set(0, 0, 0)
   bounds.max.set(0, 0, 0)
 
-  _iterateVertices(vertices, matrices, v => {
+  _iterateVertices(vertices, matrices, (v: any) => {
     if (v.x < minX) minX = v.x
     if (v.y < minY) minY = v.y
     if (v.z < minZ) minZ = v.z
@@ -798,7 +805,7 @@ const _computeBounds = function (vertices, matrices) {
 const _iterateVertices = (function () {
   const vertex = new Vector3()
   const matrix = new Matrix4()
-  return function (vertices, matrices, cb) {
+  return function (vertices: any, matrices: any, cb: any) {
     for (let i = 0; i < vertices.length; i++) {
       matrix.fromArray(matrices[i])
       for (let j = 0; j < vertices[i].length; j += 3) {
