@@ -208,6 +208,7 @@ export interface HeightMapConfig {
   material?: MaterialConfig
   // TODO add chrome types
   colorScale?: any // chroma.Scale<chroma.Color>
+  heightScale?: number
 }
 
 export type CustomCompoundShape = { shape: string; [property: string]: any }[]

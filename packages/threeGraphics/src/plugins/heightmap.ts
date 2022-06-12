@@ -4,7 +4,16 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { DoubleSide, MeshPhongMaterial, MeshPhongMaterialParameters, PlaneBufferGeometry, Scene, Texture } from 'three'
+import {
+  BufferAttribute,
+  Color,
+  DoubleSide,
+  MeshPhongMaterial,
+  MeshPhongMaterialParameters,
+  PlaneBufferGeometry,
+  Scene,
+  Texture
+} from 'three'
 import { ExtendedMesh } from '@enable3d/common/dist/extendedMesh'
 import { HeightMapConfig } from '@enable3d/common/dist/types'
 
@@ -23,7 +32,7 @@ export default class HeightMap {
   public make(texture: Texture, config: HeightMapConfig = {}) {
     const { image } = texture
     const { width, height } = image
-    const { colorScale } = config
+    const { colorScale, heightScale = 100 } = config
 
     const canvas = document.createElement('canvas')
     canvas.width = width
@@ -50,22 +59,27 @@ export default class HeightMap {
     // adjust all z values
     const vertices = geometry.attributes.position.array
     for (let i = 0; i < vertices.length; i++) {
-      const height = pixel.data[i * 4] / 120
+      const height = pixel.data[i * 4] / heightScale
       // @ts-expect-error
       vertices[i * 3 + 2] = height
     }
 
-    // helper function to get the highest point
-    // const getHighPoint = (geometry: Geometry, face: Face3) => {
-    //   var v1 = geometry.vertices[face.a].z
-    //   var v2 = geometry.vertices[face.b].z
-    //   var v3 = geometry.vertices[face.c].z
+    if (colorScale) {
+      const count = geometry.attributes.position.count
+      geometry.setAttribute('color', new BufferAttribute(new Float32Array(count * 3), 3))
+      const color = new Color()
+      const positions = geometry.attributes.position
+      const colors = geometry.attributes.color
+      let z
+      let hsl
 
-    //   return Math.max(v1, v2, v3)
-    // }
-
-    // apply color scale if available
-    // if (colorScale) geo.faces.forEach(face => (face.color = new Color(colorScale(getHighPoint(geo, face)).hex())))
+      for (let i = 0; i < count; i++) {
+        z = positions.getZ(i)
+        hsl = colorScale(z).hsl()
+        color.setHSL(hsl[0] / 360, hsl[1], hsl[2], hsl[3])
+        colors.setXYZ(i, color.r, color.g, color.b)
+      }
+    }
 
     mesh.rotateX(-Math.PI / 2)
     mesh.updateMatrix()
