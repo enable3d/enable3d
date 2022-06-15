@@ -20,6 +20,7 @@ class PhysicsBody {
   public name: string
   public errors: string[] = []
   public checkCollisions = false
+  public impact: { impulse: number; point: XYZ; normal: XYZ; name: string }[] = []
 
   public breakable = false
   public fractureImpulse = 1

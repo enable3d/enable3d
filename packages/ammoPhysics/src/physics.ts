@@ -286,6 +286,8 @@ class AmmoPhysics extends Events {
     // update rigid bodies
     for (let i = 0; i < this.rigidBodies.length; i++) {
       const objThree = this.rigidBodies[i]
+      // reset impact
+      objThree.body.impact = []
       const objPhys = objThree.body.ammo
       const ms = objPhys.getMotionState()
 
@@ -429,6 +431,13 @@ class AmmoPhysics extends Events {
 
             if (!detectedCollisions.find(el => el.combinedName === combinedName)) {
               detectedCollisions.push({ combinedName, collision: true })
+              // store impact in both bodies
+              const point = { x: impactPoint.x(), y: impactPoint.y(), z: impactPoint.z() }
+              const normal = { x: impactNormal.x(), y: impactNormal.y(), z: impactNormal.z() }
+              threeObject0.body.impact.push({ impulse, point, normal, name: threeObject1.name })
+              threeObject1.body.impact.push({ impulse, point, normal, name: threeObject0.name })
+
+              // emit collision event
               this.collisionEvents.emit('collision', { bodies: [threeObject0, threeObject1], event })
             }
           }
