@@ -4,6 +4,8 @@
 **/node_modules/**
 **/package-lock.json
 **/screenshots/**
+/REVISION
+/REVISION_HISTORY
 /node_modules
 /package-lock.json
 /test/**/*.tmp.test.js
