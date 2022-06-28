@@ -21,13 +21,7 @@ import Constraints from './constraints'
 import { Events } from '@yandeu/events'
 import { Geometry } from './externals'
 import { BufferGeometry, Euler, Matrix4, Quaternion, REVISION, Scene, Vector3 } from 'three'
-const {
-  createHACDShapes,
-  createHullShape,
-  createTriMeshShape,
-  createVHACDShapes,
-  iterateGeometries
-} = require('./three-to-ammo')
+import { createHACDShapes, createHullShape, createTriMeshShape, createVHACDShapes, iterateGeometries} from './three-to-ammo'
 import { createTorusShape } from './torusShape'
 import Factories from '@enable3d/common/dist/factories'
 import { CollisionEvents } from './collisionEvents'
