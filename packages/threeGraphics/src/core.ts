@@ -45,6 +45,8 @@ export class ThreeGraphics {
     // shadow
     this.renderer.shadowMap.enabled = true
     this.renderer.shadowMap.type = PCFSoftShadowMap
+    this.scene.background = null
+    this.renderer.setClearColor(0xffffff, 0)
 
     // enable cache
     this.cache = Cache
