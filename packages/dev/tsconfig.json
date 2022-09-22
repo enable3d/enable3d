@@ -4,7 +4,8 @@
     "outDir": "./dist",
     "rootDir": "./",
     "baseUrl": "./",
-    "paths": {}
+    "paths": {},
+    "resolveJsonModule": true
   },
   "include": ["src/**/*", "types/**/*"]
 }

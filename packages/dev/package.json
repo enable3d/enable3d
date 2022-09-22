@@ -11,11 +11,13 @@
   "author": "Yannick Deubel",
   "license": "GNU GPLv3",
   "dependencies": {
+    "@babel/runtime": "^7.19.0",
     "@enable3d/ammo-on-nodejs": "^0.25.2",
     "@enable3d/ammo-physics": "^0.25.2",
     "@enable3d/phaser-extension": "^0.25.2",
     "@enable3d/three-graphics": "^0.25.2",
-    "enable3d": "^0.25.2"
+    "enable3d": "^0.25.2",
+    "three-nebula": "^10.0.3"
   },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"

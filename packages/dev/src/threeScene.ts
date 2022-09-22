@@ -1,71 +1,25 @@
-import { ExtendedObject3D, FLAT, PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
-import { REVISION } from 'three'
-import { FlatArea } from '../../threeGraphics/jsm/flat'
+// base on https://codesandbox.io/s/three-nebula-quickstart-kz6uv
 
-const isTouchDevice = 'ontouchstart' in window
+import { PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
+
+// @ts-ignore
+import Nebula, { SpriteRenderer } from 'three-nebula'
+import json from './my-particle-system.json'
 
 class MainScene extends Scene3D {
-  ui!: FlatArea
+  nebulaRenderer = new SpriteRenderer(this.scene, THREE)
+  nebula: any
 
   preRender() {
-    FLAT.preRender(this.renderer)
-  }
-
-  postRender() {
-    FLAT.postRender(this.renderer, this.ui)
+    if (this.nebula) this.nebula.update()
   }
 
   async create() {
-    this.ui = FLAT.init(this.renderer)
+    await this.warpSpeed()
 
-    const size = new THREE.Vector2()
-    this.renderer.getSize(size)
-
-    const texture = new FLAT.TextTexture('hello')
-    const text = new FLAT.TextSprite(texture)
-    text.setPosition(size.x / 2, size.y - text.textureHeight)
-    this.ui.scene.add(text)
-
-    console.log('REVISION', THREE.REVISION)
-    console.log('REVISION', REVISION)
-
-    this.warpSpeed()
-    this.camera.position.set(2, 2, 4)
-
-    this.load.gltf('/assets/box_man.glb').then(gltf => {
-      const child = gltf.scene.children[0]
-
-      const boxMan = new ExtendedObject3D()
-      boxMan.add(child)
-      this.scene.add(boxMan)
-
-      let i = 0
-      const anims = ['run', 'sprint', 'jump_running', 'idle', 'driving', 'falling']
-
-      // ad the box man's animation mixer to the animationMixers array (for auto updates)
-      this.animationMixers.add(boxMan.animation.mixer)
-
-      gltf.animations.forEach(animation => {
-        if (animation.name) {
-          // add a new animation to the box man
-          boxMan.animation.add(animation.name, animation)
-        }
-      })
-
-      // play the run animation
-      boxMan.animation.play('idle')
-
-      const nextAnimation = (time: number) => {
-        setTimeout(() => {
-          i++
-          const next = anims[i % 5]
-          boxMan.animation.play(next, 200, next === 'jump_running' ? false : true)
-          console.log('current animation', boxMan.animation.current)
-          nextAnimation(next === 'jump_running' ? 650 : 2500)
-        }, time)
-      }
-
-      nextAnimation(2500)
+    Nebula.fromJSONAsync(json, THREE).then((loaded: any) => {
+      const nebulaRenderer = new SpriteRenderer(this.scene, THREE)
+      this.nebula = loaded.addRenderer(nebulaRenderer)
     })
   }
 }
