@@ -10,7 +10,7 @@ import {
   DoubleSide,
   MeshPhongMaterial,
   MeshPhongMaterialParameters,
-  PlaneBufferGeometry,
+  PlaneGeometry,
   Scene,
   Texture
 } from 'three'
@@ -44,7 +44,7 @@ export default class HeightMap {
     ctx.drawImage(texture.image, 0, 0)
     const pixel = ctx.getImageData(0, 0, width, height)
 
-    const geometry = new PlaneBufferGeometry(10, 10, width - 1, height - 1)
+    const geometry = new PlaneGeometry(10, 10, width - 1, height - 1)
 
     // material
     let materialConfig: MeshPhongMaterialParameters = { color: 0xcccccc, side: DoubleSide }

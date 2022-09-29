@@ -1,4 +1,4 @@
-import { Mesh, MeshStandardMaterial, PlaneBufferGeometry, Scene, Texture, Vector2, WebGLRenderer } from 'three'
+import { Mesh, MeshStandardMaterial, PlaneGeometry, Scene, Texture, Vector2, WebGLRenderer } from 'three'
 import { Water } from 'three/examples/jsm/objects/Water2.js'
 import type { Color } from '@enable3d/common/dist/types'
 
@@ -34,7 +34,7 @@ const addWater = (scene: Scene, renderer: WebGLRenderer, config: AddWaterConfig 
   } = config
 
   //ground
-  const groundGeometry = new PlaneBufferGeometry(width, height)
+  const groundGeometry = new PlaneGeometry(width, height)
   // #0077be (also known as Ocean Boat Blue)
   const groundMaterial = new MeshStandardMaterial({ color: 0x0077be, transparent: true, opacity: 0.8 })
   const ground = new Mesh(groundGeometry, groundMaterial)
@@ -43,7 +43,7 @@ const addWater = (scene: Scene, renderer: WebGLRenderer, config: AddWaterConfig 
   scene.add(ground)
 
   // water
-  const waterGeometry = new PlaneBufferGeometry(width, height)
+  const waterGeometry = new PlaneGeometry(width, height)
   const water = new Water(waterGeometry, {
     color: color,
     scale: scale,

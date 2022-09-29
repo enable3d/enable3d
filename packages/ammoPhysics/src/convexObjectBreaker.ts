@@ -25,7 +25,7 @@
  *  - Vertex normals must be planar (not smoothed)
  *
  *  - The geometry must be convex (this is not checked in the library). You can create convex
- *  geometries with ConvexBufferGeometry. The BoxBufferGeometry, SphereBufferGeometry and other convex primitives
+ *  geometries with ConvexBufferGeometry. The BoxBufferGeometry, SphereGeometry and other convex primitives
  *  can also be used.
  *
  * Note: This lib adds member variables to object's userData member (see prepareBreakableObject function)

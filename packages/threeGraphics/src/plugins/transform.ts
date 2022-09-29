@@ -5,7 +5,7 @@ import {
   MeshBasicMaterial,
   OrthographicCamera,
   PerspectiveCamera,
-  PlaneBufferGeometry,
+  PlaneGeometry,
   Raycaster,
   Shape,
   Vector2,
@@ -78,7 +78,7 @@ export default class Transform {
   public from2dto3d(x: number, y: number, distanceFromCamera: number): Vector3 | undefined {
     // initialize temporary variables
     if (!this.tmpPlane) {
-      const geo = new PlaneBufferGeometry(10_000, 10_000)
+      const geo = new PlaneGeometry(10_000, 10_000)
       const mat = new MeshBasicMaterial({ transparent: true, opacity: 0.25 })
       this.tmpPlane = new Mesh(geo, mat)
       this.tmpPlane.name = '_tmp_raycast_plane'

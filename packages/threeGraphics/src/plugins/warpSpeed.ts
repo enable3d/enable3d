@@ -10,7 +10,7 @@ import {
   RepeatWrapping,
   Scene,
   ShaderMaterial,
-  SphereBufferGeometry,
+  SphereGeometry,
   WebGLRenderer
 } from 'three'
 
@@ -137,7 +137,7 @@ export default class WarpSpeed {
         exponent: { value: 0.6 }
       }
 
-      var skyGeo = new SphereBufferGeometry(500, 32, 15)
+      var skyGeo = new SphereGeometry(500, 32, 15)
       var skyMat = new ShaderMaterial({
         uniforms: uniforms,
         vertexShader: vertexShader,

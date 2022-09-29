@@ -17,9 +17,9 @@ import {
   MeshLambertMaterial,
   OrthographicCamera,
   PerspectiveCamera,
-  RingBufferGeometry,
+  RingGeometry,
   Scene,
-  SphereBufferGeometry,
+  SphereGeometry,
   Vector3,
   WebGLRenderer
 } from 'three'
@@ -35,7 +35,7 @@ export default class WebXR {
   constructor(private _renderer: WebGLRenderer, private _scene: Scene) {
     // https://medium.com/samsung-internet-dev/vr-locomotion-740dafa85914
 
-    // const geo = new SphereBufferGeometry(0.5)
+    // const geo = new SphereGeometry(0.5)
     // const mat = new MeshLambertMaterial({ color: 0xff0000 })
     // const dot = new Mesh(geo, mat)
     // dot.position.set(0, 1, 0)
@@ -94,7 +94,7 @@ export default class WebXR {
     }
 
     if (targetRayMode === 'gaze') {
-      const geometry = new RingBufferGeometry(0.02, 0.04, 32).translate(0, 0, -1)
+      const geometry = new RingGeometry(0.02, 0.04, 32).translate(0, 0, -1)
       const material = new MeshBasicMaterial({ color: 'red', opacity: 0.5, transparent: true })
       return new Mesh(geometry, material)
     }

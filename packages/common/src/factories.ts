@@ -25,11 +25,7 @@ import {
   XYZ
 } from './types'
 import {
-  BoxBufferGeometry,
-  ConeBufferGeometry,
-  CylinderBufferGeometry,
   DoubleSide,
-  ExtrudeBufferGeometry,
   Line,
   LineBasicMaterial,
   Material,
@@ -42,13 +38,17 @@ import {
   MeshStandardMaterial,
   MeshToonMaterial,
   Object3D,
-  PlaneBufferGeometry,
   Points,
   PointsMaterial,
   Scene,
-  SphereBufferGeometry,
   MathUtils as THREE_Math,
-  TorusBufferGeometry
+  BoxGeometry,
+  ExtrudeGeometry,
+  PlaneGeometry,
+  SphereGeometry,
+  CylinderGeometry,
+  ConeGeometry,
+  TorusGeometry
 } from 'three'
 import { ExtendedObject3D } from './extendedObject3D'
 import { ExtendedMesh } from './extendedMesh'
@@ -173,7 +173,7 @@ export default class Factories {
     const { x, y, z, name, shape, autoCenter = true, breakable = false, ...rest } = extrudeConfig
     // @ts-expect-error ExtrudeGeometryOptions interface is missing since three.js r121.
     const { depth = 1, bevelEnabled = false } = rest
-    const geometry = new ExtrudeBufferGeometry(shape, { depth, bevelEnabled, ...rest })
+    const geometry = new ExtrudeGeometry(shape, { depth, bevelEnabled, ...rest })
     const material = this.addMaterial(materialConfig)
     const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
     // auto adjust the center for custom shapes
@@ -191,7 +191,7 @@ export default class Factories {
 
   private makePlane(planeConfig: PlaneConfig, materialConfig: MaterialConfig): ExtendedObject3D {
     const { x, y, z, name, breakable = false, ...rest } = planeConfig
-    const geometry = new PlaneBufferGeometry(
+    const geometry = new PlaneGeometry(
       rest.width || 1,
       rest.height || 1,
       rest.widthSegments || 1,
@@ -214,7 +214,7 @@ export default class Factories {
 
   private makeSphere(sphereConfig: SphereConfig, materialConfig: MaterialConfig): ExtendedObject3D {
     const { x, y, z, name, breakable = false, ...rest } = sphereConfig
-    const geometry = new SphereBufferGeometry(
+    const geometry = new SphereGeometry(
       rest.radius || 1,
       rest.widthSegments || 16,
       rest.heightSegments || 12,
@@ -239,7 +239,7 @@ export default class Factories {
 
   private makeBox(boxConfig: BoxConfig, materialConfig: MaterialConfig): ExtendedObject3D {
     const { x, y, z, name, breakable = false, ...rest } = boxConfig
-    const geometry = new BoxBufferGeometry(
+    const geometry = new BoxGeometry(
       rest.width || 1,
       rest.height || 1,
       rest.depth || 1,
@@ -270,7 +270,7 @@ export default class Factories {
 
   private makeCylinder(cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const { x, y, z, name, breakable = false, ...rest } = cylinderConfig
-    const geometry = new CylinderBufferGeometry(
+    const geometry = new CylinderGeometry(
       rest.radiusTop || 1,
       rest.radiusBottom || 1,
       rest.height || 1,
@@ -296,7 +296,7 @@ export default class Factories {
 
   private makeCone(coneConfig: ConeConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const { x, y, z, name, breakable = false, ...rest } = coneConfig
-    const geometry = new ConeBufferGeometry(
+    const geometry = new ConeGeometry(
       rest.radius || 1,
       rest.height || 1,
       rest.radiusSegments || 8,
@@ -322,7 +322,7 @@ export default class Factories {
   // https://threejs.org/docs/index.html#api/en/geometries/TorusBufferGeometry
   private makeTorus(torusConfig: TorusConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const { x, y, z, name, breakable = false, ...rest } = torusConfig
-    const geometry = new TorusBufferGeometry(
+    const geometry = new TorusGeometry(
       rest.radius || undefined,
       rest.tube || undefined,
       rest.radialSegments || undefined,

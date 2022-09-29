@@ -4,12 +4,12 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|GNU GPLv3}
  */
 
-import { Color, Mesh, MeshBasicMaterial, Object3D, Scene, SphereBufferGeometry } from 'three'
+import { Color, Mesh, MeshBasicMaterial, Object3D, Scene, SphereGeometry } from 'three'
 import { AmbientLight, DirectionalLight, HemisphereLight, PointLight, RectAreaLight, SpotLight } from 'three'
 import { DirectionalLightHelper, SpotLightHelper } from 'three'
 
 class PointLightHelper extends Object3D {
-  private geo: SphereBufferGeometry
+  private geo: SphereGeometry
   private mat: MeshBasicMaterial
   private mesh: Mesh
 
@@ -20,7 +20,7 @@ class PointLightHelper extends Object3D {
     public color?: string | number | Color | undefined
   ) {
     super()
-    this.geo = new SphereBufferGeometry(size || 0.2, 16, 8)
+    this.geo = new SphereGeometry(size || 0.2, 16, 8)
     this.mat = new MeshBasicMaterial({ color: color || light.color })
     this.mesh = new Mesh(this.geo, this.mat)
 

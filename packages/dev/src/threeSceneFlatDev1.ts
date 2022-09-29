@@ -261,7 +261,7 @@ class MainScene extends Scene3D {
     })
 
     const heroPlane = hero
-    const geometry = new THREE.PlaneBufferGeometry(heroPlane.textureWidth / 100, heroPlane.textureHeight / 100)
+    const geometry = new THREE.PlaneGeometry(heroPlane.textureWidth / 100, heroPlane.textureHeight / 100)
     const material = new THREE.MeshLambertMaterial({
       map: heroPlane.texture,
       transparent: false,
