@@ -30,12 +30,12 @@ export default class Transform {
   /**
    * Transforms your svg files to paths.
    */
-  public fromSVGtoShape(svg: string, isCCW: boolean = false, noHoles?: boolean) {
+  public fromSVGtoShape(svg: string) {
     if (svg) {
       const svgLoader = new SVGLoader()
       const shapes: Shape[] = []
       svgLoader.parse(svg).paths.forEach(path => {
-        path.toShapes(isCCW, noHoles).forEach(shape => {
+        SVGLoader.createShapes(path).forEach(shape => {
           shapes.push(shape)
         })
       })
