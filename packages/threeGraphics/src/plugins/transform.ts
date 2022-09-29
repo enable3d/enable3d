@@ -13,7 +13,6 @@ import {
   WebGLRenderer
 } from 'three'
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js'
-import { fromGeometry } from '../csg/_fromGeometry'
 
 /**
  * @author       Yannick Deubel (https://github.com/yandeu)
@@ -27,16 +26,6 @@ export default class Transform {
   tmpVector3!: Vector3
 
   constructor(private camera: PerspectiveCamera | OrthographicCamera, private renderer: WebGLRenderer) {}
-
-  static geometryToBufferGeometry(geometry: Geometry) {
-    if (geometry.isGeometry) return fromGeometry(new BufferGeometry(), geometry)
-    else return geometry as any
-  }
-
-  static bufferGeometryToGeometry(bufferGeometry: BufferGeometry) {
-    if (bufferGeometry.isBufferGeometry) return new Geometry().fromBufferGeometry(bufferGeometry)
-    else return bufferGeometry as any
-  }
 
   /**
    * Transforms your svg files to paths.
