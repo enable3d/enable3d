@@ -35,10 +35,10 @@
   },
   "peerDependencies": {
     "@types/matter-js": "0.17.6",
-    "@types/three": "0.141.0",
+    "@types/three": "0.144.0",
     "matter-js": "0.17.1",
     "poly-decomp": "^0.3.0",
-    "three": "0.141.0"
+    "three": "0.144.0"
   },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"
