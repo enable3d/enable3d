@@ -64,6 +64,7 @@ export default class Loaders {
         })
       } else {
         if (isModel) this.fileLoader.setResponseType('arraybuffer')
+        else this.fileLoader.setResponseType('undefined')
         this.fileLoader.load(url, file => {
           return resolve(file)
         })
