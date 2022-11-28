@@ -7,6 +7,7 @@
 import {
   AddExistingConfig,
   BoxConfig,
+  CapsuleConfig,
   ConeConfig,
   CylinderConfig,
   ExtendedObject3D,
@@ -48,6 +49,12 @@ class Shapes {
     const config = { ...groundConfig, mass: 0, collisionFlags: 1 }
     this.addExisting(ground, config)
     return ground
+  }
+
+  public addCapsule(capsuleConfig: CapsuleConfig = {}, materialConfig: MaterialConfig = {}) {
+    const capsule = this.factory.add.capsule(capsuleConfig, materialConfig)
+    this.addExisting(capsule, capsuleConfig)
+    return capsule
   }
 
   public addCylinder(cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}) {

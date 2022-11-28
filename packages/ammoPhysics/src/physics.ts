@@ -21,7 +21,13 @@ import Constraints from './constraints'
 import { Events } from '@yandeu/events'
 import { Geometry } from './externals'
 import { BufferGeometry, Euler, Matrix4, Quaternion, REVISION, Scene, Vector3 } from 'three'
-import { createHACDShapes, createHullShape, createTriMeshShape, createVHACDShapes, iterateGeometries} from './three-to-ammo'
+import {
+  createHACDShapes,
+  createHullShape,
+  createTriMeshShape,
+  createVHACDShapes,
+  iterateGeometries
+} from './three-to-ammo'
 import { createTorusShape } from './torusShape'
 import Factories from '@enable3d/common/dist/factories'
 import { CollisionEvents } from './collisionEvents'
@@ -589,6 +595,8 @@ class AmmoPhysics extends Events {
         this.shapes.addGround(groundConfig, materialConfig),
       box: (boxConfig: Types.BoxConfig = {}, materialConfig: Types.MaterialConfig = {}) =>
         this.shapes.addBox(boxConfig, materialConfig),
+      capsule: (capsuleConfig: Types.CapsuleConfig = {}, materialConfig: Types.MaterialConfig = {}) =>
+        this.shapes.addCapsule(capsuleConfig, materialConfig),
       cylinder: (cylinderConfig: Types.CylinderConfig = {}, materialConfig: Types.MaterialConfig = {}) =>
         this.shapes.addCylinder(cylinderConfig, materialConfig),
       cone: (coneConfig: Types.ConeConfig = {}, materialConfig: Types.MaterialConfig = {}) =>

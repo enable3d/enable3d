@@ -8,6 +8,8 @@ import {
   AddMaterial,
   BoxConfig,
   BoxObject,
+  CapsuleConfig,
+  CapsuleObject,
   ConeConfig,
   ConeObject,
   CylinderConfig,
@@ -48,7 +50,8 @@ import {
   SphereGeometry,
   CylinderGeometry,
   ConeGeometry,
-  TorusGeometry
+  TorusGeometry,
+  CapsuleGeometry
 } from 'three'
 import { ExtendedObject3D } from './extendedObject3D'
 import { ExtendedMesh } from './extendedMesh'
@@ -70,6 +73,7 @@ export default class Factories {
     plane: PlaneObject
     box: BoxObject
     sphere: SphereObject
+    capsule: CapsuleObject
     cylinder: CylinderObject
     cone: ConeObject
     torus: (torusConfig?: TorusConfig, materialConfig?: MaterialConfig) => ExtendedObject3D
@@ -80,6 +84,8 @@ export default class Factories {
       box: (boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}) => this.makeBox(boxConfig, materialConfig),
       sphere: (sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.makeSphere(sphereConfig, materialConfig),
+      capsule: (capsuleConfig: CapsuleConfig = {}, materialConfig: MaterialConfig = {}) =>
+        this.makeCapsule(capsuleConfig, materialConfig),
       cylinder: (cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.makeCylinder(cylinderConfig, materialConfig),
       cone: (coneConfig: ConeConfig = {}, materialConfig: MaterialConfig = {}) =>
@@ -101,6 +107,7 @@ export default class Factories {
     // geometries
     box: BoxObject
     sphere: SphereObject
+    capsule: CapsuleObject
     cylinder: CylinderObject
     cone: ConeObject
     torus: (torusConfig?: TorusConfig, materialConfig?: MaterialConfig) => ExtendedObject3D
@@ -119,6 +126,8 @@ export default class Factories {
       //...
       sphere: (sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.addSphere(sphereConfig, materialConfig),
+      capsule: (capsuleConfig: CapsuleConfig = {}, materialConfig: MaterialConfig = {}) =>
+        this.addCapsule(capsuleConfig, materialConfig),
       cylinder: (cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.addCylinder(cylinderConfig, materialConfig),
       cone: (coneConfig: ConeConfig = {}, materialConfig: MaterialConfig = {}) =>
@@ -264,6 +273,28 @@ export default class Factories {
   private addGround(groundConfig: GroundConfig, materialConfig: MaterialConfig = {}): ExtendedObject3D {
     const obj = this.makeBox(groundConfig, materialConfig)
     obj.rotateX(THREE_Math.degToRad(90))
+    this.addExisting(obj)
+    return obj
+  }
+
+  private makeCapsule(capsuleConfig: CapsuleConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+    const { x, y, z, name, breakable = false, ...rest } = capsuleConfig
+    const geometry = new CapsuleGeometry(
+      rest.radius || 0.5,
+      rest.length || 1,
+      rest.capSegments || 4,
+      rest.radialSegments || 16
+    )
+
+    const material = this.addMaterial(materialConfig)
+    const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
+    mesh.name = name || `body_id_${mesh.id}`
+    mesh.shape = 'capsule'
+    return mesh
+  }
+
+  private addCapsule(capsuleConfig: CapsuleConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+    const obj = this.makeCapsule(capsuleConfig, materialConfig)
     this.addExisting(obj)
     return obj
   }

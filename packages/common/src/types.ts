@@ -112,6 +112,9 @@ export interface BoxObject {
 export interface GroundObject {
   (groundConfig: GroundConfig, materialConfig?: MaterialConfig): ExtendedObject3D
 }
+export interface CapsuleObject {
+  (capsuleConfig?: CapsuleConfig, materialConfig?: MaterialConfig): ExtendedObject3D
+}
 export interface CylinderObject {
   (cylinderConfig?: CylinderConfig, materialConfig?: MaterialConfig): ExtendedObject3D
 }
@@ -167,6 +170,13 @@ export interface BoxConfig extends GeometryConfig, XYZ, WH {
 export interface GroundConfig extends BoxConfig {
   width?: number
   height?: number
+}
+
+export interface CapsuleConfig extends GeometryConfig, XYZ {
+  radius?: number
+  length?: number
+  capSegments?: number
+  radialSegments?: number
 }
 
 export interface CylinderConfig extends GeometryConfig, XYZ, WH {
