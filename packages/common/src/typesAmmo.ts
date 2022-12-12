@@ -656,6 +656,7 @@ declare module Ammo {
     enableMotor(enableMotor: boolean): void
     setMaxMotorImpulse(maxMotorImpulse: number): void
     setMotorTarget(targetAngle: number, dt: number): void
+    getHingeAngle(): number
   }
   class btSliderConstraint extends btTypedConstraint {
     constructor(
