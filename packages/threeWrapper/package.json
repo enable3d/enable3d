@@ -10,7 +10,7 @@
   },
   "keywords": [],
   "author": "Yannick Deubel",
-  "license": "GNU GPLv3",
+  "license": "LGPL-3.0",
   "peerDependencies": {
     "@types/three": "0.144.0",
     "three": "0.144.0"

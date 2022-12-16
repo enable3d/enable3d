@@ -85,4 +85,6 @@ Want to make a Real-Time Multiplayer Game? Check out [geckos.io](http://geckos.i
 
 ## License
 
-The GNU General Public License v3.0 (GNU GPLv3) 2019 - [Yannick Deubel](https://github.com/yandeu). Please have a look at the [LICENSE](LICENSE) for more details.
+Licensed under LGPL-3.0  
+Copyright (c) 2022, [Yannick Deubel](https://github.com/yandeu)  
+Please have a look at the [LICENSE](LICENSE) for more details.

@@ -9,7 +9,7 @@
   },
   "keywords": [],
   "author": "Yannick Deubel",
-  "license": "GNU GPLv3",
+  "license": "LGPL-3.0",
   "dependencies": {
     "@enable3d/ammo-on-nodejs": "^0.25.3",
     "@enable3d/ammo-physics": "^0.25.3",
