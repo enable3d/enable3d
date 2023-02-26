@@ -50,7 +50,7 @@ import {
   PointsMaterial,
   PropertyBinding,
   QuaternionKeyframeTrack,
-  RGBFormat,
+  RGBAFormat,
   RepeatWrapping,
   Skeleton,
   SkinnedMesh,
@@ -2279,8 +2279,8 @@ class GLTFParser {
 
         if (textureDef.name) texture.name = textureDef.name
 
-        // When there is definitely no alpha channel in the texture, set RGBFormat to save space.
-        if (!hasAlpha) texture.format = RGBFormat
+        // When there is definitely no alpha channel in the texture, set RGBAFormat to save space.
+        if (!hasAlpha) texture.format = RGBAFormat
 
         const samplers = json.samplers || {}
         const sampler = samplers[textureDef.sampler] || {}

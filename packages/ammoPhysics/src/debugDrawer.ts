@@ -126,13 +126,17 @@ class DebugDrawer {
     const fromX = heap[(from + 0) / 4]
     const fromY = heap[(from + 4) / 4]
     const fromZ = heap[(from + 8) / 4]
+    // @ts-expect-error: Some three.js type errors
     this.geometry.attributes.position.setXYZ(this.index, fromX, fromY, fromZ)
+    // @ts-expect-error: Some three.js type errors
     this.geometry.attributes.color.setXYZ(this.index++, r, g, b)
 
     const toX = heap[(to + 0) / 4]
     const toY = heap[(to + 4) / 4]
     const toZ = heap[(to + 8) / 4]
+    // @ts-expect-error: Some three.js type errors
     this.geometry.attributes.position.setXYZ(this.index, toX, toY, toZ)
+    // @ts-expect-error: Some three.js type errors
     this.geometry.attributes.color.setXYZ(this.index++, r, g, b)
   }
 
@@ -146,13 +150,17 @@ class DebugDrawer {
     const x = heap[(pointOnB + 0) / 4]
     const y = heap[(pointOnB + 4) / 4]
     const z = heap[(pointOnB + 8) / 4]
+    // @ts-expect-error: Some three.js type errors
     this.geometry.attributes.position.setXYZ(this.index, x, y, z)
+    // @ts-expect-error: Some three.js type errors
     this.geometry.attributes.color.setXYZ(this.index++, r, g, b)
 
     const dx = heap[(normalOnB + 0) / 4] * distance
     const dy = heap[(normalOnB + 4) / 4] * distance
     const dz = heap[(normalOnB + 8) / 4] * distance
+    // @ts-expect-error: Some three.js type errors
     this.geometry.attributes.position.setXYZ(this.index, x + dx, y + dy, z + dz)
+    // @ts-expect-error: Some three.js type errors
     this.geometry.attributes.color.setXYZ(this.index++, r, g, b)
   }
 
