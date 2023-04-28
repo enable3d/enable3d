@@ -23,7 +23,7 @@ export class Scene3D extends Phaser.Scene {
    * It takes took long to setup the third dimension your self? Get started with warp speed by using this function.
    * @param features Pass the features you want to setup.
    */
-  public async warpSpeesd(...features: WarpedStartFeatures[]) {
+  public async warpSpeed(...features: WarpedStartFeatures[]) {
     return await this.third.warpSpeed(...features)
   }
 
