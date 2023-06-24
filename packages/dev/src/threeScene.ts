@@ -124,7 +124,7 @@ class MainScene extends Scene3D {
     // this.miniMap.add(sprite1)
     // this.camera.add(sprite1)
 
-    this.camera.position.set(2, 2, 2)
+    this.camera.position.set(20, 20, 20)
     this.camera.lookAt(0, 0, 0)
 
     this.box = this.physics.add.box({ y: 5, x: 5 }, { phong: { color: 'red' } })
