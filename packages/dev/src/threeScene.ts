@@ -1,6 +1,8 @@
 import { DrawSprite, DrawTexture } from '@enable3d/three-graphics/jsm/flat'
 import { ExtendedObject3D, FLAT, PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
 import { Scene, Sprite } from 'three'
+import { loop } from './loop'
+import { Robot } from './robot'
 
 const isTouchDevice = 'ontouchstart' in window
 
@@ -13,6 +15,7 @@ class MainScene extends Scene3D {
   ui = new Scene()
   box!: ExtendedObject3D
   rli!: number
+  robot!: Robot
 
   preRender() {
     this.renderer.autoClear = false
@@ -98,8 +101,9 @@ class MainScene extends Scene3D {
       frustumSize / -1
     )
 
-    this.miniMap.position.set(0, 2, 0)
-    this.miniMap.lookAt(0, 0, 0)
+    // this.miniMap.rotateY(-Math.PI / 2)
+    this.miniMap.position.set(0, 1, -1)
+    this.miniMap.lookAt(0, 0, 0.01)
     this.miniMap.layers.enable(2)
     // this.camera.add(this.miniMap)
     this.scene.add(this.miniMap)
@@ -124,19 +128,22 @@ class MainScene extends Scene3D {
     // this.miniMap.add(sprite1)
     // this.camera.add(sprite1)
 
-    this.camera.position.set(20, 20, 20)
+    this.camera.position.set(0, 20, 20)
     this.camera.lookAt(0, 0, 0)
 
-    this.box = this.physics.add.cylinder({ y: 5, x: 5 }, { phong: { color: 'red' } })
+    this.box = this.add.box({ y: 2, x: 7, z: 5 }, { phong: { color: 'red' } })
     this.box.layers.set(3)
     this.box.add(sprite1)
     this.box.add(this.miniMap)
+    this.box.rotateY(Math.PI)
+    this.physics.add.existing(this.box)
+    this.robot = new Robot(this.box)
   }
 
   update() {
-    this.box.body.setVelocityX(0.4)
-    if (this.rli) {
-      console.log(this.rli)
+    if (this.rli && this.robot) {
+      loop({ rli: this.rli }, this.robot)
+      this.robot.update()
     }
   }
 }
