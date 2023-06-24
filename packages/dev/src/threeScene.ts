@@ -71,7 +71,7 @@ class MainScene extends Scene3D {
     this.camera.layers.enable(3)
 
     const svg = (await this.load.file('/assets/stroke-map.svg')) as string
-    console.log(svg)
+    // console.log(svg)
     const shape = this.transform.fromSVGtoShape(svg)
     const svgObj = this.make.extrude(
       {
@@ -89,7 +89,7 @@ class MainScene extends Scene3D {
 
     const frustumSize = 0.1
     const aspect = 1
-    console.log(aspect)
+    // console.log(aspect)
 
     this.miniMap = new THREE.OrthographicCamera(
       (frustumSize * aspect) / -1,
@@ -127,7 +127,7 @@ class MainScene extends Scene3D {
     this.camera.position.set(20, 20, 20)
     this.camera.lookAt(0, 0, 0)
 
-    this.box = this.physics.add.box({ y: 5, x: 5 }, { phong: { color: 'red' } })
+    this.box = this.physics.add.cylinder({ y: 5, x: 5 }, { phong: { color: 'red' } })
     this.box.layers.set(3)
     this.box.add(sprite1)
     this.box.add(this.miniMap)
