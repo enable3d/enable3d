@@ -3,6 +3,7 @@ import { ExtendedObject3D, FLAT, PhysicsLoader, Project, Scene3D, THREE } from '
 import { Scene, Sprite } from 'three'
 import { loop } from './loop'
 import { Robot } from './robot'
+import { LinearEncoding } from 'three/src/constants'
 
 const isTouchDevice = 'ontouchstart' in window
 
@@ -66,8 +67,8 @@ class MainScene extends Scene3D {
   }
 
   async create() {
-    await this.warpSpeed('-ground')
-    this.physics.add.ground({ width: 50, height: 50, y: -0.5 }, { phong: { color: 'white' } })
+    await this.warpSpeed()
+    // this.physics.add.ground({ width: 50, height: 50, y: -0.5 }, { phong: { color: 'white' } })
 
     // const y = await this.load.svg('/assets/stroke-map.svg')
     // console.log(y)
@@ -90,7 +91,7 @@ class MainScene extends Scene3D {
 
     this.add.existing(bla)
 
-    const frustumSize = 0.1
+    const frustumSize = 0.05
     const aspect = 1
     // console.log(aspect)
 
@@ -101,10 +102,35 @@ class MainScene extends Scene3D {
       frustumSize / -1
     )
 
+    // robot dog
+    const { animations, scenes } = await this.load.gltf('/assets/RobotDog_Animations.glb')
+    const child = scenes[0]
+    const dog = new ExtendedObject3D()
+    dog.name = 'dog'
+    dog.add(child)
+    console.log(child)
+    this.animationMixers.add(dog.anims.mixer)
+    dog.anims.mixer.timeScale = 0.5
+    animations.forEach(clip => {
+      // console.log('click', clip)
+      dog.anims.add(clip.name, clip)
+      console.log(clip.name)
+      if (clip.name === 'RobotDog@Walk') dog.anims.play('RobotDog@Walk')
+    })
+    // dog.rotateY(Math.PI)
+    child.traverse((child: any) => {
+      child.castShadow = true
+      if (child?.material?.map) child.material.map.encoding = LinearEncoding
+    })
+    const s = 2
+    dog.scale.set(s, s, s)
+    this.scene.add(dog)
+
     // this.miniMap.rotateY(-Math.PI / 2)
-    this.miniMap.position.set(0, 1, -1)
-    this.miniMap.lookAt(0, 0, 0.01)
+    this.miniMap.position.set(0, 0.5, 1.15)
+    this.miniMap.lookAt(0, 0, 1.16)
     this.miniMap.layers.enable(2)
+    this.miniMap.add(this.add.box({ width: 0.1, depth: 1, height: 0.1 }))
     // this.camera.add(this.miniMap)
     this.scene.add(this.miniMap)
     // this.renderer.setScissor(0.5, 0.5, 1, 1)
@@ -131,17 +157,20 @@ class MainScene extends Scene3D {
     this.camera.position.set(0, 20, 20)
     this.camera.lookAt(0, 0, 0)
 
-    this.box = this.add.box({ y: 2, x: 7, z: 5 }, { phong: { color: 'red' } })
+    this.box = this.add.box({ y: 2, x: 7, z: 5, depth: 2 }, { phong: { transparent: true, opacity: 0 } })
+    this.box.castShadow = false
     this.box.layers.set(3)
     this.box.add(sprite1)
     this.box.add(this.miniMap)
     this.box.rotateY(Math.PI)
+    this.box.add(dog)
+    dog.position.setY(-0.5)
     this.physics.add.existing(this.box)
     this.robot = new Robot(this.box)
   }
 
   update() {
-    if (this.rli && this.robot) {
+    if (this.rli !== undefined && this.robot) {
       loop({ rli: this.rli }, this.robot)
       this.robot.update()
     }
@@ -149,7 +178,7 @@ class MainScene extends Scene3D {
 }
 
 const startProject = () => {
-  PhysicsLoader('/lib', () => new Project({ scenes: [MainScene] }))
+  PhysicsLoader('/lib', () => new Project({ scenes: [MainScene], antialias: true }))
 }
 
 export default startProject

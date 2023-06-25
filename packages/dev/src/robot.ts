@@ -16,6 +16,10 @@ export class Robot {
     // this.obj.rotateY(Math.PI / 2)
   }
 
+  get dog() {
+    return this.obj.children.find(o => o && o.name === 'dog')
+  }
+
   get motor() {
     return {
       right: this.goRight.bind(this),
@@ -27,6 +31,12 @@ export class Robot {
   public update() {
     // console.log('r1', this.right)
     const rotate = this.right - this.left
+
+    if (this.forward === 0) {
+      if (this.dog?.anims.current !== 'RobotDog@IdleStand') this.dog?.anims.play('RobotDog@IdleStand')
+    } else {
+      if (this.dog?.anims.current !== 'RobotDog@Walk') this.dog?.anims.play('RobotDog@Walk')
+    }
 
     if (rotate > 0) this.obj.body.setAngularVelocityY(-0.5)
     else if (rotate < 0) this.obj.body.setAngularVelocityY(0.5)
