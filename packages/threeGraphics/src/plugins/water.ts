@@ -1,6 +1,14 @@
-import { Mesh, MeshStandardMaterial, PlaneGeometry, Scene, Texture, Vector2, WebGLRenderer } from 'three'
+import {
+  ColorRepresentation,
+  Mesh,
+  MeshStandardMaterial,
+  PlaneGeometry,
+  Scene,
+  Texture,
+  Vector2,
+  WebGLRenderer
+} from 'three'
 import { Water } from 'three/examples/jsm/objects/Water2.js'
-import type { Color } from '@enable3d/common/dist/types'
 
 // from this example:
 // https://threejs.org/examples/?q=water#webgl_water
@@ -10,7 +18,7 @@ interface AddWaterConfig {
   x?: number
   y?: number
   z?: number
-  color?: Color
+  color?: ColorRepresentation
   scale?: number
   flowX?: number
   flowY?: number

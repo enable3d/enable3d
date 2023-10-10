@@ -35,11 +35,11 @@ Enable3d now depends on the dependencies below.
 ```json
 {
   "@types/matter-js": "0.17.6",
-  "@types/three": "0.149.0",
+  "@types/three": "0.150.0",
   "matter-js": "0.17.1",
   "phaser": "^3.55.2",
   "poly-decomp": "^0.3.0",
-  "three": "0.149.0",
+  "three": "0.150.0",
   "three-csg-ts": "^3.1.10"
 }
 ```

@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|LGPL-3.0}
  */
 
-import { Color, Mesh, MeshBasicMaterial, Object3D, Scene, SphereGeometry } from 'three'
+import { Color, ColorRepresentation, Mesh, MeshBasicMaterial, Object3D, Scene, SphereGeometry } from 'three'
 import { AmbientLight, DirectionalLight, HemisphereLight, PointLight, RectAreaLight, SpotLight } from 'three'
 import { DirectionalLightHelper, SpotLightHelper } from 'three'
 
@@ -17,7 +17,7 @@ class PointLightHelper extends Object3D {
     private scene: Scene,
     public light: PointLight,
     public size?: number | undefined,
-    public color?: string | number | Color | undefined
+    public color?: ColorRepresentation
   ) {
     super()
     this.geo = new SphereGeometry(size || 0.2, 16, 8)
@@ -43,28 +43,22 @@ export default class Lights {
 
   public get helper() {
     return {
-      directionalLightHelper: (
-        light: DirectionalLight,
-        size?: number | undefined,
-        color?: string | number | Color | undefined
-      ) => {
+      directionalLightHelper: (light: DirectionalLight, size?: number | undefined, color?: ColorRepresentation) => {
         const helper = new DirectionalLightHelper(light, size, color)
         this.scene.add(helper)
         return helper
       },
-      spotLightHelper: (light: SpotLight, color?: string | number | Color | undefined) => {
+      spotLightHelper: (light: SpotLight, color?: ColorRepresentation) => {
         const helper = new SpotLightHelper(light, color)
         this.scene.add(helper)
         return helper
       },
-      pointLightHelper: (light: PointLight, size?: number | undefined, color?: string | number | Color | undefined) =>
+      pointLightHelper: (light: PointLight, size?: number | undefined, color?: ColorRepresentation) =>
         new PointLightHelper(this.scene, light, size, color)
     }
   }
 
-  public directionalLight(
-    options: { color?: string | number | Color | undefined; intensity?: number | undefined } = {}
-  ) {
+  public directionalLight(options: { color?: ColorRepresentation; intensity?: number | undefined } = {}) {
     const { color = 0xffffff, intensity = 1 } = options
     const light = new DirectionalLight(color, intensity)
     light.castShadow = true
@@ -74,8 +68,8 @@ export default class Lights {
 
   public hemisphereLight(
     options: {
-      skyColor?: string | number | Color | undefined
-      groundColor?: string | number | Color | undefined
+      skyColor?: ColorRepresentation
+      groundColor?: ColorRepresentation
       intensity?: number | undefined
     } = {}
   ) {
@@ -85,7 +79,7 @@ export default class Lights {
     return light
   }
 
-  public ambientLight(options: { color?: string | number | Color | undefined; intensity?: number | undefined } = {}) {
+  public ambientLight(options: { color?: ColorRepresentation; intensity?: number | undefined } = {}) {
     const { color = 0xffffff, intensity = 1 } = options
     const light = new AmbientLight(color, intensity)
     this.scene.add(light)
@@ -94,7 +88,7 @@ export default class Lights {
 
   public pointLight(
     options: {
-      color?: string | number | Color | undefined
+      color?: ColorRepresentation
       intensity?: number | undefined
       distance?: number | undefined
       decay?: number | undefined
@@ -109,7 +103,7 @@ export default class Lights {
 
   public spotLight(
     options: {
-      color?: string | number | Color | undefined
+      color?: ColorRepresentation
       intensity?: number | undefined
       distance?: number | undefined
       angle?: number | undefined
@@ -126,7 +120,7 @@ export default class Lights {
 
   public rectAreaLight(
     options: {
-      color?: string | number | Color | undefined
+      color?: ColorRepresentation
       intensity?: number | undefined
       width?: number | undefined
       height?: number | undefined

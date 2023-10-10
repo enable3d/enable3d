@@ -23,9 +23,13 @@ import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js'
 export default class Transform {
   tmpPlane!: Mesh
   tmpRaycaster!: Raycaster
+  tmpVector2 = new Vector2()
   tmpVector3!: Vector3
 
-  constructor(private camera: PerspectiveCamera | OrthographicCamera, private renderer: WebGLRenderer) {}
+  constructor(
+    private camera: PerspectiveCamera | OrthographicCamera,
+    private renderer: WebGLRenderer
+  ) {}
 
   /**
    * Transforms your svg files to paths.
@@ -90,7 +94,8 @@ export default class Transform {
     this.tmpPlane.updateMatrixWorld(true)
 
     // raycast
-    this.tmpRaycaster.setFromCamera({ x, y }, this.camera)
+    this.tmpVector2.set(x, y)
+    this.tmpRaycaster.setFromCamera(this.tmpVector2, this.camera)
 
     // check intersection with plane
     const intersects = this.tmpRaycaster.intersectObjects([this.tmpPlane])
