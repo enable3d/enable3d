@@ -57,10 +57,10 @@ export default class HeightMap {
     mesh.shape = 'concave'
 
     // adjust all z values
-    // @ts-expect-error: Some three.js type errors
     const vertices = geometry.attributes.position.array
     for (let i = 0; i < vertices.length; i++) {
       const height = pixel.data[i * 4] / heightScale
+      // @ts-expect-error: Some three.js type errors
       vertices[i * 3 + 2] = height
     }
 
@@ -74,11 +74,9 @@ export default class HeightMap {
       let hsl
 
       for (let i = 0; i < count; i++) {
-        // @ts-expect-error: Some three.js type errors
         z = positions.getZ(i)
         hsl = colorScale(z).hsl()
         color.setHSL(hsl[0] / 360, hsl[1], hsl[2], hsl[3])
-        // @ts-expect-error: Some three.js type errors
         colors.setXYZ(i, color.r, color.g, color.b)
       }
     }

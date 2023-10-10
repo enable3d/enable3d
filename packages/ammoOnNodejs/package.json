@@ -35,8 +35,8 @@
     "fflate": "^0.6.3"
   },
   "peerDependencies": {
-    "@types/three": "0.150.0",
-    "three": "0.150.0"
+    "@types/three": "0.153.0",
+    "three": "0.153.0"
   },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"
