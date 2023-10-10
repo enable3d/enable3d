@@ -20,7 +20,7 @@ import Shapes from './shapes'
 import Constraints from './constraints'
 import { Events } from '@yandeu/events'
 import { Geometry } from './externals'
-import { BufferGeometry, Euler, Matrix4, Quaternion, REVISION, Scene, Vector3 } from 'three'
+import { Box3, BufferGeometry, Euler, Matrix4, Quaternion, REVISION, Scene, Vector3 } from 'three'
 import {
   createHACDShapes,
   createHullShape,
@@ -661,7 +661,24 @@ class AmmoPhysics extends Events {
     })
 
     // auto adjust the center for custom shapes
-    if (autoCenter) object.geometry.center()
+    if (autoCenter) {
+      // mesh
+      if (object.isMesh && object.geometry) {
+        object.geometry.center()
+      }
+      // group
+      else if (object.isGroup) {
+        const box = new Box3()
+        const center = new Vector3()
+        box.setFromObject(object).getCenter(center)
+
+        object.traverse(child => {
+          if (child.isMesh) {
+            child.geometry.translate(-center.x, -center.y, -center.z)
+          }
+        })
+      }
+    }
 
     // adjust the cylinder radius for its physcis body
     if (shape === 'cylinder') params.radius = config.radius || params.radiusTop
