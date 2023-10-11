@@ -5,7 +5,11 @@ import { Factories } from '.'
 import { logger } from '@enable3d/common/dist/logger'
 
 export default class Misc {
-  constructor(private scene: Scene, private renderer: WebGLRenderer, private factories: Factories) {}
+  constructor(
+    private scene: Scene,
+    private renderer: WebGLRenderer,
+    private factories: Factories
+  ) {}
 
   public water(config: AddWaterConfig = {}) {
     addWater(this.scene, this.renderer, config)

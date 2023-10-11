@@ -1,3 +1,5 @@
+/* eslint-disable prefer-const */
+/* eslint-disable prefer-template */
 /* eslint-disable no-prototype-builtins */
 /**
  * @author       Yannick Deubel (https://github.com/yandeu)

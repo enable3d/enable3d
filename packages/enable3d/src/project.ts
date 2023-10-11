@@ -11,7 +11,7 @@ import { logger } from '@enable3d/common/dist/logger'
 
 interface Scene3DConfig extends Omit<ThreeGraphicsConfig, 'camera' | 'usePhysics' | 'enableXR'> {
   parent?: string
-  scenes: typeof Scene3D[]
+  scenes: (typeof Scene3D)[]
 }
 
 export class Project extends ThreeGraphics {

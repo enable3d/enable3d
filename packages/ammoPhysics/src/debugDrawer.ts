@@ -44,7 +44,11 @@ class DebugDrawer {
   enabled: boolean
   debugDrawer: Ammo.DebugDrawer
   warnedOnce!: boolean
-  constructor(public scene: Scene, public world: Ammo.btCollisionWorld, public options: any = {}) {
+  constructor(
+    public scene: Scene,
+    public world: Ammo.btCollisionWorld,
+    public options: any = {}
+  ) {
     this.debugDrawMode = options.debugDrawMode || AmmoDebugConstants.DrawWireframe
     const drawOnTop = this.debugDrawMode & AmmoDebugConstants.DrawOnTop || false
     const maxBufferSize = options.maxBufferSize || 1000000

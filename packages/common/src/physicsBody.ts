@@ -41,7 +41,10 @@ class PhysicsBody {
 
   private eventEmitter = new Events()
 
-  constructor(private physics: any, public ammo: Ammo.btRigidBody) {
+  constructor(
+    private physics: any,
+    public ammo: Ammo.btRigidBody
+  ) {
     // @ts-expect-error: Ammo.btRigidBody does not have a property name.
     this.name = ammo.name
   }

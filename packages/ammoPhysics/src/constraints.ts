@@ -12,7 +12,10 @@ import { XYZ } from '@enable3d/common/dist/types'
 export default class Constraints {
   public tmpBtVector3 = new Ammo.btVector3()
 
-  constructor(public worldTransform: Ammo.btTransform, public physicsWorld: Ammo.btDiscreteDynamicsWorld) {}
+  constructor(
+    public worldTransform: Ammo.btTransform,
+    public physicsWorld: Ammo.btDiscreteDynamicsWorld
+  ) {}
 
   private toAmmoV3(v?: XYZ, d: number = 0) {
     return new Ammo.btVector3(

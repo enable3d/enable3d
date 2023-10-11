@@ -20,7 +20,10 @@ export default class Loaders {
   private _gltfLoader!: GLTFLoader
   private _fbxLoader!: FBXLoader
 
-  constructor(private cache: typeof Cache, private textureAnisotropy: number) {}
+  constructor(
+    private cache: typeof Cache,
+    private textureAnisotropy: number
+  ) {}
 
   private get fileLoader() {
     if (!this._fileLoader) this._fileLoader = new FileLoader()

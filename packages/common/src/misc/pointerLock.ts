@@ -1,7 +1,10 @@
 class PointerLock {
   private _isRunning: boolean = false
 
-  constructor(private _element: HTMLElement, autoLock = true) {
+  constructor(
+    private _element: HTMLElement,
+    autoLock = true
+  ) {
     if (autoLock) this.request()
   }
 

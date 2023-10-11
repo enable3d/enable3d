@@ -84,7 +84,10 @@ class AmmoPhysics extends Events {
 
   private readonly complexShapes = ['plane', 'hull', 'hacd', 'vhacd', 'convexMesh', 'concaveMesh']
 
-  constructor(public scene: Scene | 'headless', public config: Types.ThreeGraphicsConfig = {}) {
+  constructor(
+    public scene: Scene | 'headless',
+    public config: Types.ThreeGraphicsConfig = {}
+  ) {
     super()
 
     this.gravity = config.gravity || { x: 0, y: -9.81, z: 0 }

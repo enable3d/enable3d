@@ -5,7 +5,10 @@ class PointerDrag {
   private _onMoveCallback: any = () => {}
   private _isPointerDown = false
 
-  constructor(private _element: HTMLElement, autoStart = true) {
+  constructor(
+    private _element: HTMLElement,
+    autoStart = true
+  ) {
     if (autoStart) this.start()
   }
 

@@ -32,7 +32,10 @@ export default class WebXR {
   cameraGroup: Group
   controllerModelFactory = new XRControllerModelFactory()
 
-  constructor(private _renderer: WebGLRenderer, private _scene: Scene) {
+  constructor(
+    private _renderer: WebGLRenderer,
+    private _scene: Scene
+  ) {
     // https://medium.com/samsung-internet-dev/vr-locomotion-740dafa85914
 
     // const geo = new SphereGeometry(0.5)
