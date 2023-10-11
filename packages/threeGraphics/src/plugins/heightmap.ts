@@ -60,7 +60,6 @@ export default class HeightMap {
     const vertices = geometry.attributes.position.array
     for (let i = 0; i < vertices.length; i++) {
       const height = pixel.data[i * 4] / heightScale
-      // @ts-expect-error: Some three.js type errors
       vertices[i * 3 + 2] = height
     }
 

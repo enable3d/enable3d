@@ -12,8 +12,8 @@
   "author": "Yannick Deubel",
   "license": "LGPL-3.0",
   "peerDependencies": {
-    "@types/three": "0.153.0",
-    "three": "0.153.0"
+    "@types/three": "0.156.0",
+    "three": "0.156.1"
   },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"
