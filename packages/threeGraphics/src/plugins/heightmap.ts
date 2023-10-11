@@ -32,7 +32,7 @@ export default class HeightMap {
   public make(texture: Texture, config: HeightMapConfig = {}) {
     const { image } = texture
     const { width, height } = image
-    const { colorScale, heightScale = 100 } = config
+    const { colorScale, heightScale = 100, colorSpace = '' } = config
 
     const canvas = document.createElement('canvas')
     canvas.width = width
@@ -75,7 +75,7 @@ export default class HeightMap {
       for (let i = 0; i < count; i++) {
         z = positions.getZ(i)
         hsl = colorScale(z).hsl()
-        color.setHSL(hsl[0] / 360, hsl[1], hsl[2], hsl[3])
+        color.setHSL(hsl[0] / 360, hsl[1], hsl[2], colorSpace)
         colors.setXYZ(i, color.r, color.g, color.b)
       }
     }

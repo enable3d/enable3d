@@ -5,6 +5,7 @@
  */
 
 import type {
+  ColorSpace,
   LineBasicMaterialParameters,
   Material,
   MeshBasicMaterialParameters,
@@ -219,6 +220,7 @@ export interface HeightMapConfig {
   // TODO add chrome types
   colorScale?: any // chroma.Scale<chroma.Color>
   heightScale?: number
+  colorSpace?: ColorSpace
 }
 
 export type CustomCompoundShape = { shape: string; [property: string]: any }[]
