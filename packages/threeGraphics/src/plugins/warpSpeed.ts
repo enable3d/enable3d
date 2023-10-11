@@ -155,7 +155,7 @@ export default class WarpSpeed {
     }
 
     if (features.includes('light')) {
-      const intensity = 0.4
+      const intensity = 1
       const hemisphereLight = this.lights.hemisphereLight({ skyColor: 0xffffff, groundColor: 0x000000, intensity })
       const ambientLight = this.lights.ambientLight({ color: 0xffffff, intensity })
       const directionalLight = this.lights.directionalLight({ color: 0xffffff, intensity })

@@ -29,11 +29,22 @@ class MainScene extends Scene3D {
     console.log('REVISION', THREE.REVISION)
     console.log('REVISION', REVISION)
 
-    this.warpSpeed()
+    const { lights } = await this.warpSpeed()
+    this.lights.helper.directionalLightHelper(lights?.directionalLight)
+
     this.camera.position.set(2, 2, 4)
 
     this.load.gltf('/assets/box_man.glb').then(gltf => {
-      const child = gltf.scene.children[0]
+      const child = gltf.scene
+
+      child.traverse(child => {
+        if (child.isMesh) {
+          child.castShadow = child.receiveShadow = true
+          // https://discourse.threejs.org/t/cant-export-material-from-blender-gltf/12258
+          child.material.metalness = 0
+          child.material.roughness = 1
+        }
+      })
 
       const boxMan = new ExtendedObject3D()
       boxMan.add(child)
