@@ -1,7 +1,7 @@
 {
   "name": "dev",
   "private": true,
-  "version": "0.25.3",
+  "version": "0.25.4",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -11,11 +11,11 @@
   "author": "Yannick Deubel",
   "license": "LGPL-3.0",
   "dependencies": {
-    "@enable3d/ammo-on-nodejs": "^0.25.3",
-    "@enable3d/ammo-physics": "^0.25.3",
-    "@enable3d/phaser-extension": "^0.25.3",
-    "@enable3d/three-graphics": "^0.25.3",
-    "enable3d": "^0.25.3"
+    "@enable3d/ammo-on-nodejs": "^0.25.4",
+    "@enable3d/ammo-physics": "^0.25.4",
+    "@enable3d/phaser-extension": "^0.25.4",
+    "@enable3d/three-graphics": "^0.25.4",
+    "enable3d": "^0.25.4"
   },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"

@@ -1,6 +1,6 @@
 {
   "name": "@enable3d/common",
-  "version": "0.25.3",
+  "version": "0.25.4",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "author": "Yannick Deubel",
   "license": "LGPL-3.0",
   "dependencies": {
-    "@enable3d/three-wrapper": "^0.25.3",
+    "@enable3d/three-wrapper": "^0.25.4",
     "@yandeu/events": "0.0.5"
   },
   "funding": {
