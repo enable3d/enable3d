@@ -43,6 +43,7 @@ Enable3d now depends on the dependencies below.
   "three-csg-ts": "^3.1.10"
 }
 ```
+(But it also works on latest Phaser versions like 3.60 & 3.70)
 
 ## Useful Packages
 
