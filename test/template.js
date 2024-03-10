@@ -3,6 +3,8 @@ const path = require('path')
 
 jest.setTimeout(30_000)
 
+const sleep = ms => new Promise(res => setTimeout(res, ms))
+
 describe.each([EXAMPLES_PLACEHOLDER])('Example: (%s)', example => {
   let err
   let injected
@@ -85,7 +87,7 @@ describe.each([EXAMPLES_PLACEHOLDER])('Example: (%s)', example => {
 
     if (injected) {
       // wait for the game to be started
-      await page.waitForTimeout(5000)
+      await sleep(5000)
       // await page.screenshot({ path: path.resolve(__dirname, `../screenshots/${example}.png`) })
       return
     } else {
