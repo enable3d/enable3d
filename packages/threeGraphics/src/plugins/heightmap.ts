@@ -23,6 +23,7 @@ export default class HeightMap {
   public add(texture: Texture, config: HeightMapConfig = {}) {
     const heightMap = this.make(texture, config)
 
+    // @ts-expect-error
     if (heightMap) this.scene.add(heightMap)
     else console.warn('Could not make heightmap')
 
@@ -44,7 +45,7 @@ export default class HeightMap {
     ctx.drawImage(texture.image, 0, 0)
     const pixel = ctx.getImageData(0, 0, width, height)
 
-    const geometry = new PlaneGeometry(10, 10, width - 1, height - 1)
+    const geometry = new PlaneGeometry(10, 10, width - 1, height - 1) as any
 
     // material
     let materialConfig: MeshPhongMaterialParameters = { color: 0xcccccc, side: DoubleSide }
@@ -52,7 +53,7 @@ export default class HeightMap {
     const material = new MeshPhongMaterial(materialConfig)
 
     // mesh
-    const mesh = new ExtendedMesh(geometry, material)
+    const mesh = new ExtendedMesh(geometry, material as any)
     mesh.receiveShadow = mesh.castShadow = true
     mesh.shape = 'concave'
 

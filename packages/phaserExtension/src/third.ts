@@ -51,10 +51,13 @@ class Third extends ThreeGraphics {
       }
 
     // add a custom renderer to ThreeGraphics
+
+    // @ts-expect-error
     config.renderer = new WebGLRenderer({ ...options, antialias: config.antialias || false })
 
     super(config)
 
+    // @ts-expect-error
     scene3D.sys.game.canvas.parentElement?.insertBefore(config.renderer.domElement, scene3D.sys.game.canvas)
     scene3D.sys.game.canvas.style.position = 'relative'
 
@@ -156,6 +159,7 @@ class Third extends ThreeGraphics {
     this.transform = new Plugins.Transform(this.camera, this.renderer)
     this.csg = CSG
     this.heightMap = new Plugins.HeightMap(this.scene)
+    // @ts-expect-error
     this.factories = new Plugins.Factories(this.scene)
     this.misc = new Plugins.Misc(this.scene, this.renderer, this.factories)
     this.cameras = new Plugins.Cameras()
@@ -188,6 +192,7 @@ class Third extends ThreeGraphics {
   /** Destroys a object and its body. */
   public destroy(obj: ExtendedObject3D | ExtendedMesh) {
     this.physics?.destroy(obj.body)
+    // @ts-expect-error
     this.scene.remove(obj)
     // @ts-expect-error: ExtendedObject3D and ExtendedMesh can't be null.
     obj = null

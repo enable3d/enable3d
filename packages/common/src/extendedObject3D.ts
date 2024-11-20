@@ -4,20 +4,40 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|LGPL-3.0}
  */
 
-import { AnimationClip, AnimationMixer, Line, LoopOnce, Mesh, Object3D, Points, Vector3 } from 'three'
+import {
+  AnimationClip,
+  AnimationMixer,
+  BufferGeometry,
+  Line,
+  LoopOnce,
+  Material,
+  Mesh,
+  Object3D,
+  Object3DEventMap,
+  Points,
+  Vector3
+} from 'three'
 import type PhysicsBody from './physicsBody'
 import { AnimationAction } from 'three'
 import { logger } from './logger'
 
-export interface ExtendedObject3D extends Line, Mesh, Points {
-  isLine: any
-  isPoints: any
-  isMesh: any
-  type: any
-}
+// export interface ExtendedObject3D extends Line, Mesh, Points {
+//   isLine: any
+//   isPoints: any
+//   isMesh: any
+//   type: any
+// }
 
-export class ExtendedObject3D extends Object3D {
+export class ExtendedObject3D<
+  TGeometry extends BufferGeometry = BufferGeometry,
+  TMaterial extends Material | Material[] = Material | Material[],
+  TEventMap extends Object3DEventMap = Object3DEventMap
+> extends Mesh {
   public ptr: any | undefined
+  public readonly isLine = false
+  public readonly isPoints = false
+  public readonly isMesh = true
+  public type: any
 
   public readonly isExtendedObject3D = true
   public readonly isGroup = false

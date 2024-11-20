@@ -24,6 +24,7 @@ export default class Misc {
 
     textures.forEach((texture, i) => {
       texture.wrapS = texture.wrapT = RepeatWrapping
+      // @ts-expect-error
       const material: Material = this.factories.add.material({ phong: { map: texture } }) as Material
       textureCube.materials[i] = material
     })

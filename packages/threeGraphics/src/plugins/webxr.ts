@@ -15,6 +15,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshLambertMaterial,
+  Object3D,
   OrthographicCamera,
   PerspectiveCamera,
   RingGeometry,
@@ -43,7 +44,7 @@ export default class WebXR {
     // const dot = new Mesh(geo, mat)
     // dot.position.set(0, 1, 0)
 
-    const dot = new ExtendedObject3D()
+    const dot = new Object3D()
     dot.name = 'dot'
 
     this.cameraGroup = new Group()

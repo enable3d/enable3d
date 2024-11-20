@@ -195,7 +195,7 @@ export default class WarpSpeed {
 
       // ground
       const geometry = { name: 'ground', width: 21, height: 21, depth: 1, y: -0.5 }
-      const material = {
+      const material: any = {
         phong: { map: addGrid ? texture : null, color: 0xffffff }
       }
 

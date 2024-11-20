@@ -32,11 +32,13 @@ export class ThreeGraphics {
     } = threeGraphicsConfig
 
     this.textureAnisotropy = anisotropy
+    // @ts-expect-error
     this.camera = camera
 
     this.scene = new Scene()
 
     // this.renderer.physicallyCorrectLights = true
+    // @ts-expect-error
     this.renderer = renderer || new WebGLRenderer({ antialias, alpha })
 
     // see https://threejs.org/docs/#examples/en/loaders/GLTFLoader

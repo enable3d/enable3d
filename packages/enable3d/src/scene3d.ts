@@ -22,12 +22,13 @@ export class Scene3D implements Partial<ThreeGraphics> {
   public camera!: ThreeGraphics['camera']
   public cache!: ThreeGraphics['cache']
   public physics!: AmmoPhysics
+
+  // @ts-expect-error
   public renderer!: WebGLRenderer
   public composer!: EffectComposer
   public parent!: HTMLElement
   public canvas!: HTMLCanvasElement
   public clock!: Clock
-
   // public plugins
   public load!: Plugins.Loaders
   public lights!: Plugins.Lights
@@ -92,10 +93,13 @@ export class Scene3D implements Partial<ThreeGraphics> {
     // plugins
     this.load = new Plugins.Loaders(this.cache, textureAnisotropy)
     this.lights = new Plugins.Lights(this.scene)
+    // @ts-expect-error
     this.transform = new Plugins.Transform(this.camera, this.renderer)
     this.csg = CSG
     this.heightMap = new Plugins.HeightMap(this.scene)
+    // @ts-expect-error
     this.factories = new Plugins.Factories(this.scene)
+    // @ts-expect-error
     this.misc = new Plugins.Misc(this.scene, this.renderer, this.factories)
     this.ws = new Plugins.WarpSpeed(scene, renderer, camera, this.lights, this.physics, this.load, this.factories)
     this.mixers = new Plugins.Mixers()
@@ -105,6 +109,7 @@ export class Scene3D implements Partial<ThreeGraphics> {
 
     // add vr camera
     if (this.__config.enableXR) {
+      // @ts-expect-error
       this.webXR = new Plugins.WebXR(this.renderer, this.scene)
     }
 
@@ -118,6 +123,7 @@ export class Scene3D implements Partial<ThreeGraphics> {
   /** Destroys a object and its body. */
   public destroy(obj: ExtendedObject3D | ExtendedMesh) {
     this.physics?.destroy(obj.body)
+    // @ts-expect-error
     this.scene.remove(obj)
     // @ts-expect-error: ExtendedObject3D and ExtendedMesh can't be null.
     obj = null
@@ -250,6 +256,7 @@ export class Scene3D implements Partial<ThreeGraphics> {
 
     this.preRender()
     if (this.composer) this.composer.render()
+    // @ts-expect-error
     else this.renderer.render(this.scene, this.camera)
     this.postRender()
   }

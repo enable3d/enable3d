@@ -197,6 +197,8 @@ class AmmoPhysics extends Events {
     }
 
     this.collisionEvents = new CollisionEvents()
+
+    // @ts-expect-error
     this.factory = new Factories(this.scene)
     this.shapes = new Shapes(this.factory, (object: ExtendedObject3D, config?: Types.AddExistingConfig) =>
       this.addExisting(object, config)
@@ -254,6 +256,7 @@ class AmmoPhysics extends Events {
     object.name = `${parent.name}__DEBRIS_${object.id}`
 
     // Add the object to the scene
+    // @ts-expect-error
     this.scene.add(object)
 
     // Add physics to the object
@@ -307,7 +310,9 @@ class AmmoPhysics extends Events {
         // update positions
         if (objThree.body.ammo.isKinematicObject() && objThree.body.needUpdate) {
           // get position and rotation
+          // @ts-expect-error
           objThree.getWorldQuaternion(this.tmpQuaternion)
+          // @ts-expect-error
           objThree.getWorldPosition(this.tmpVector3)
           // adjust tmp variables
           this.tmpBtVector3.setValue(this.tmpVector3.x, this.tmpVector3.y, this.tmpVector3.z)
@@ -344,12 +349,14 @@ class AmmoPhysics extends Events {
           this.tmpMatrix4.compose(this.tmpVector3, this.tmpQuaternion, this.tmpVector3a)
           if (objThree.parent) {
             // compatibility fix for three.js >= r123 (Dezember 2020)
+            // @ts-expect-error
             if (parseInt(REVISION) >= 123) this.tmpMatrix4a.copy(objThree.parent.matrixWorld).invert()
             else this.tmpMatrix4a.getInverse(objThree.parent.matrixWorld)
           } else {
             this.tmpMatrix4a.identity()
           }
           this.tmpMatrix4a.multiply(this.tmpMatrix4)
+          // @ts-expect-error
           this.tmpMatrix4a.decompose(objThree.position, objThree.quaternion, objThree.scale)
         }
       }
@@ -673,6 +680,7 @@ class AmmoPhysics extends Events {
       else if (object.isGroup) {
         const box = new Box3()
         const center = new Vector3()
+        // @ts-expect-error
         box.setFromObject(object).getCenter(center)
 
         object.traverse(child => {
@@ -785,6 +793,7 @@ class AmmoPhysics extends Events {
         }
         break
       case 'torus':
+        // @ts-expect-error
         collisionShape = createTorusShape(params, quat)
         break
       case 'plane':
@@ -866,8 +875,11 @@ class AmmoPhysics extends Events {
     const pos = new Vector3()
     const quat = new Quaternion()
     const scale = new Vector3()
+    // @ts-expect-error
     object.getWorldPosition(pos)
+    // @ts-expect-error
     object.getWorldQuaternion(quat)
+    // @ts-expect-error
     object.getWorldScale(scale)
 
     const isStaticObject = (config.collisionFlags || 0).toString(2).slice(-1) === '1'
