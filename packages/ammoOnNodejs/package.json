@@ -3,9 +3,9 @@
   "version": "0.25.4",
   "description": "Runs ammo.js on your node.js server",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
-    "build": "npm run bundle",
-    "bundle": "webpack --config webpack.config.js",
+    "build": "tsc",
     "update": "npm update",
     "fix": "npm audit fix"
   },
