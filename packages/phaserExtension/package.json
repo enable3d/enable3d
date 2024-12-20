@@ -34,7 +34,7 @@
     "@enable3d/common": "^0.25.4",
     "@enable3d/three-graphics": "^0.25.4",
     "@enable3d/three-wrapper": "^0.25.4",
-    "@yandeu/events": "0.0.5"
+    "@yandeu/events": "0.0.7"
   },
   "peerDependencies": {
     "@types/three": "0.161.2",

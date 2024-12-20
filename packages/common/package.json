@@ -13,7 +13,7 @@
   "license": "LGPL-3.0",
   "dependencies": {
     "@enable3d/three-wrapper": "^0.25.4",
-    "@yandeu/events": "0.0.5"
+    "@yandeu/events": "0.0.7"
   },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"
