@@ -4,9 +4,9 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|LGPL-3.0}
  */
 
-import { AmmoPhysics } from '../physics'
-import { ExtendedObject3D } from '@enable3d/common/dist/types'
-import { logger } from '@enable3d/common/dist/logger'
+import { AmmoPhysics } from '../physics.js'
+import { ExtendedObject3D } from '@enable3d/common/dist/types.js'
+import { logger } from '@enable3d/common/dist/logger.js'
 
 export default class AllHitsRayResultCallback {
   protected _btRayCallback!: Ammo.AllHitsRayResultCallback

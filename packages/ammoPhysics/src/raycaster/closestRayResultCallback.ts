@@ -4,8 +4,8 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|LGPL-3.0}
  */
 
-import { AmmoPhysics } from '../physics'
-import { ExtendedObject3D } from '@enable3d/common/dist/types'
+import { AmmoPhysics } from '../physics.js'
+import { ExtendedObject3D } from '@enable3d/common/dist/types.js'
 
 export default class ClosestRayResultCallback {
   protected _btRayCallback!: Ammo.ClosestRayResultCallback

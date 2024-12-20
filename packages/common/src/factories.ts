@@ -25,7 +25,7 @@ import {
   SphereObject,
   TorusConfig,
   XYZ
-} from './types'
+} from './types.js'
 import {
   DoubleSide,
   Line,
@@ -53,10 +53,10 @@ import {
   TorusGeometry,
   CapsuleGeometry
 } from 'three'
-import { ExtendedObject3D } from './extendedObject3D'
-import { ExtendedMesh } from './extendedMesh'
-import { logger } from './logger'
-import DefaultMaterial from './defaultMaterial'
+import { ExtendedObject3D } from './extendedObject3D.js'
+import { ExtendedMesh } from './extendedMesh.js'
+import { logger } from './logger.js'
+import DefaultMaterial from './defaultMaterial.js'
 
 export default class Factories {
   protected defaultMaterial: DefaultMaterial

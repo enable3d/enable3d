@@ -1,3 +1,4 @@
-import '@enable3d/common/dist/typesAmmo'
-import '@enable3d/common/dist/typesCustom'
-export * from './physics'
+/// <reference path=@enable3d/common/dist/typesAmmo.d.ts>
+import '@enable3d/common/dist/typesAmmo.d.ts'
+import '@enable3d/common/dist/typesCustoms'
+export * from './physics.js'

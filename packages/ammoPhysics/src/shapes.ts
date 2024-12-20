@@ -17,8 +17,8 @@ import {
   PlaneConfig,
   SphereConfig,
   TorusConfig
-} from '@enable3d/common/dist/types'
-import Factories from '@enable3d/common/dist/factories'
+} from '@enable3d/common/dist/types.js'
+import Factories from '@enable3d/common/dist/factories.js'
 
 class Shapes {
   constructor(

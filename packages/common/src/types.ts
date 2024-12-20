@@ -24,8 +24,8 @@ import type {
   WebGLRenderer
 } from 'three'
 
-import type { ExtendedObject3D } from './extendedObject3D'
-import type { ExtendedMesh } from './extendedMesh'
+import type { ExtendedObject3D } from './extendedObject3D.js'
+import type { ExtendedMesh } from './extendedMesh.js'
 
 export { ExtendedObject3D }
 export { ExtendedMesh }

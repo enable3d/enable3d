@@ -5,7 +5,7 @@
  */
 
 import { Group } from 'three'
-import type PhysicsBody from './physicsBody'
+import type PhysicsBody from './physicsBody.js'
 
 export class ExtendedGroup extends Group {
   public readonly isExtendedGroup = true

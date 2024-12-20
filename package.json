@@ -60,6 +60,7 @@
     "three-csg-ts": "^3.1.10"
   },
   "devDependencies": {
+    "@tsconfig/node18": "^18.2.4",
     "@types/node": "^20.11.25",
     "@yandeu/eslint-config": "^0.0.4",
     "@yandeu/keyboard": "^0.1.0",

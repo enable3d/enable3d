@@ -4,22 +4,22 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|LGPL-3.0}
  */
 
-import { logger } from '@enable3d/common/dist/logger'
-import PhysicsBody from '@enable3d/common/dist/physicsBody'
+import { logger } from '@enable3d/common/dist/logger.js'
+import PhysicsBody from '@enable3d/common/dist/physicsBody.js'
 
-import { ExtendedObject3D } from '@enable3d/common/dist/extendedObject3D'
+import { ExtendedObject3D } from '@enable3d/common/dist/extendedObject3D.js'
 export { ExtendedObject3D }
 
-import { ExtendedMesh } from '@enable3d/common/dist/extendedMesh'
+import { ExtendedMesh } from '@enable3d/common/dist/extendedMesh.js'
 export { ExtendedMesh }
 
-import { ExtendedGroup } from '@enable3d/common/dist/extendedGroup'
+import { ExtendedGroup } from '@enable3d/common/dist/extendedGroup.js'
 export { ExtendedGroup }
 
-import Shapes from './shapes'
-import Constraints from './constraints'
+import Shapes from './shapes.js'
+import Constraints from './constraints.js'
 import { Events } from '@yandeu/events'
-import { Geometry } from './externals'
+import { Geometry } from './externals.js'
 import { Box3, BufferGeometry, Euler, Matrix4, Quaternion, REVISION, Scene, Vector3 } from 'three'
 import {
   createHACDShapes,
@@ -27,25 +27,25 @@ import {
   createTriMeshShape,
   createVHACDShapes,
   iterateGeometries
-} from './three-to-ammo'
-import { createTorusShape } from './torusShape'
-import Factories from '@enable3d/common/dist/factories'
-import { CollisionEvents } from './collisionEvents'
+} from './three-to-ammo.js'
+import { createTorusShape } from './torusShape.js'
+import Factories from '@enable3d/common/dist/factories.js'
+import { CollisionEvents } from './collisionEvents.js'
 
-import DebugDrawer from './debugDrawer'
-import { ConvexObjectBreaker } from './convexObjectBreaker'
+import DebugDrawer from './debugDrawer.js'
+import { ConvexObjectBreaker } from './convexObjectBreaker.js'
 
-import { PhysicsLoader } from '@enable3d/common/dist/physicsLoader'
-import DefaultMaterial from '@enable3d/common/dist/defaultMaterial'
+import { PhysicsLoader } from '@enable3d/common/dist/physicsLoader.js'
+import DefaultMaterial from '@enable3d/common/dist/defaultMaterial.js'
 export { PhysicsLoader }
 
-import * as Types from '@enable3d/common/dist/types'
-import { AllHitsRaycaster, ClosestRaycaster } from './raycaster/raycaster'
+import * as Types from '@enable3d/common/dist/types.js'
+import { AllHitsRaycaster, ClosestRaycaster } from './raycaster/raycaster.js'
 export { ClosestRaycaster, AllHitsRaycaster }
 export { Types }
 
 // Export THREE.Clock
-export { Clock } from './lib/Clock'
+export { Clock } from './lib/Clock.js'
 
 class AmmoPhysics extends Events {
   public worldTransform!: Ammo.btTransform
@@ -156,7 +156,7 @@ class AmmoPhysics extends Events {
         obj.body.destructor()
 
         // reset properties
-        // @ts-expect-error: body (PhysicsBody) can't be undefined.
+        //// @ts-expect-error: body (PhysicsBody) can't be undefined.
         obj.body = undefined
         obj.hasBody = false
 
@@ -299,7 +299,7 @@ class AmmoPhysics extends Events {
 
         // check if object did an update since last call
         if (objThree.body.didUpdate) {
-          // @ts-expect-error: We access some private method here.
+          //// @ts-expect-error: We access some private method here.
           if (objThree.body._emitUpdateEvents) objThree.body.eventEmitter.emit('update')
           objThree.body.didUpdate = false
         }

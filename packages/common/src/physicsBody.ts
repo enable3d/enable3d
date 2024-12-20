@@ -4,11 +4,11 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|LGPL-3.0}
  */
 
-import { ExtendedObject3D, XYZ } from './types'
+import { ExtendedObject3D, XYZ } from './types.js'
 
 import { Events } from '@yandeu/events'
 import { Euler, Quaternion } from 'three'
-import { CollisionEvent } from './types'
+import { CollisionEvent } from './types.js'
 
 class PhysicsBody {
   public ptr: any | undefined
