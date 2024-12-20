@@ -3,7 +3,12 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
-    "lib": ["es2023", "dom"]
+    "lib": ["es2023", "dom"],
+
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "allowJs": true
   },
   "include": ["src/**/*"]
 }

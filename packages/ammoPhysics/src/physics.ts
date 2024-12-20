@@ -156,7 +156,7 @@ class AmmoPhysics extends Events {
         obj.body.destructor()
 
         // reset properties
-        //// @ts-expect-error: body (PhysicsBody) can't be undefined.
+        // @ts-expect-error: body (PhysicsBody) can't be undefined.
         obj.body = undefined
         obj.hasBody = false
 
@@ -299,7 +299,7 @@ class AmmoPhysics extends Events {
 
         // check if object did an update since last call
         if (objThree.body.didUpdate) {
-          //// @ts-expect-error: We access some private method here.
+          // @ts-expect-error: We access some private method here.
           if (objThree.body._emitUpdateEvents) objThree.body.eventEmitter.emit('update')
           objThree.body.didUpdate = false
         }
