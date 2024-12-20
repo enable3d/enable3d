@@ -3,8 +3,9 @@
   "version": "0.25.4",
   "description": "3D library wrapping three.js and ammo.js",
   "main": "jsm/index.js",
+  "type": "module",
   "scripts": {
-    "build": "node version.js && tsc",
+    "build": "node version.cjs && tsc",
     "update": "npm update",
     "fix": "npm audit fix"
   },

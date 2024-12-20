@@ -1,3 +1,8 @@
+/// <reference path=@enable3d/common/src/typesAmmo.d.ts>
+/// <reference path=@enable3d/common/src/typesCustoms.d.ts>
+import '@enable3d/common/src/typesAmmo.d.ts'
+import '@enable3d/common/src/typesCustoms.d.ts'
+
 import {
   AmbientLight,
   BackSide,
@@ -15,8 +20,9 @@ import {
 } from 'three'
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { Factories, Lights, Loaders } from '.'
+// import { Factories, Lights, Loaders } from '.'
 import { AmmoPhysics, ExtendedObject3D } from '@enable3d/ammo-physics'
+import { Factories, Lights, Loaders } from './index.js'
 
 export interface WarpSpeedOptions {
   camera?: PerspectiveCamera | OrthographicCamera | undefined
@@ -201,6 +207,7 @@ export default class WarpSpeed {
 
       let ground: ExtendedObject3D
 
+      // @ts-expect-error
       if (window.__loadPhysics) {
         ground = this.physics.add.ground(geometry, material)
         ground.body.setRestitution(1)

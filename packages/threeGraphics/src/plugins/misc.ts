@@ -1,8 +1,8 @@
 // misc
-import { AddWaterConfig, addWater } from './water'
+import { AddWaterConfig, addWater } from './water.js'
 import { Material, RepeatWrapping, Scene, Texture, WebGLRenderer } from 'three'
-import { Factories } from '.'
-import { logger } from '@enable3d/common/dist/logger'
+import { Factories } from './index.js'
+import { logger } from '@enable3d/common/dist/logger.js'
 
 export default class Misc {
   constructor(
