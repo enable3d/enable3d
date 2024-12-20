@@ -8,10 +8,10 @@ import type { WebGLRenderer } from 'three'
 import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 import { Scene, OrthographicCamera, Vector2 } from 'three'
-import Cameras from '../plugins/cameras'
-import { setOrbitControls, setParent } from './_misc'
-import { updateEvents, setSize } from './_misc'
-export { updateEvents, getParent, destroy, setSize } from './_misc'
+import Cameras from '../plugins/cameras.js'
+import { setOrbitControls, setParent } from './_misc.js'
+import { updateEvents, setSize } from './_misc.js'
+export { updateEvents, getParent, destroy, setSize } from './_misc.js'
 
 export interface FlatInitConfig {
   width?: number

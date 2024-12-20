@@ -10,5 +10,5 @@
     "sourceMap": true,
     "allowJs": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "../common/src/typesCustom.d.ts", "../common/src/typesAmmo.d.ts"]
 }

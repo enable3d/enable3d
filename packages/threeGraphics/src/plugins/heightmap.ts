@@ -14,8 +14,8 @@ import {
   Scene,
   Texture
 } from 'three'
-import { ExtendedMesh } from '@enable3d/common/dist/extendedMesh'
-import { HeightMapConfig } from '@enable3d/common/dist/types'
+import { ExtendedMesh } from '@enable3d/common/dist/extendedMesh.js'
+import { HeightMapConfig } from '@enable3d/common/dist/types.js'
 
 export default class HeightMap {
   constructor(private scene: Scene) {}

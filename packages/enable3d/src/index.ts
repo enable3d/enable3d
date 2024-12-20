@@ -4,27 +4,27 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|LGPL-3.0}
  */
 
-export { Scene3D } from './scene3d'
-export { Project } from './project'
-export { PhysicsLoader } from '@enable3d/common/dist/physicsLoader'
+export { Scene3D } from './scene3d.js'
+export { Project } from './project.js'
+export { PhysicsLoader } from '@enable3d/common/dist/physicsLoader.js'
 
-export { ExtendedMesh } from '@enable3d/common/dist/extendedMesh'
-export { ExtendedObject3D } from '@enable3d/common/dist/extendedObject3D'
-export { ExtendedGroup } from '@enable3d/common/dist/extendedGroup'
+export { ExtendedMesh } from '@enable3d/common/dist/extendedMesh.js'
+export { ExtendedObject3D } from '@enable3d/common/dist/extendedObject3D.js'
+export { ExtendedGroup } from '@enable3d/common/dist/extendedGroup.js'
 
 // experimental flat components
 export * as FLAT from '@enable3d/three-graphics/jsm/flat'
 
 // three.js
 export * as THREE from 'three'
-export * as Types from '@enable3d/common/dist/types'
+export * as Types from '@enable3d/common/dist/types.js'
 
 // misc
-export { JoyStick, JoyStickAxis, JoyStickButton } from '@enable3d/common/dist/misc/joystick'
-export { ThirdPersonControls, ThirdPersonControlsConfig } from '@enable3d/common/dist/misc/thirdPersonControls'
-export { FirstPersonControls, FirstPersonControlsConfig } from '@enable3d/common/dist/misc/firstPersonControls'
-export { PointerLock } from '@enable3d/common/dist/misc/pointerLock'
-export { PointerDrag } from '@enable3d/common/dist/misc/pointerDrag'
+export { JoyStick, JoyStickAxis, JoyStickButton } from '@enable3d/common/dist/misc/joystick.js'
+export { ThirdPersonControls, ThirdPersonControlsConfig } from '@enable3d/common/dist/misc/thirdPersonControls.js'
+export { FirstPersonControls, FirstPersonControlsConfig } from '@enable3d/common/dist/misc/firstPersonControls.js'
+export { PointerLock } from '@enable3d/common/dist/misc/pointerLock.js'
+export { PointerDrag } from '@enable3d/common/dist/misc/pointerDrag.js'
 
 // post-processing
 export { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'

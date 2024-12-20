@@ -9,7 +9,7 @@
 // https://github.com/felixmariotto/three-SpriteMixer/blob/master/examples/from_indexed_texture.html
 
 import { RepeatWrapping, Texture } from 'three'
-import { ActionSprite } from './actionSprite'
+import { ActionSprite } from './actionSprite.js'
 
 export interface SpriteSheetFrameOptions {
   width: number

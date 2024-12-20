@@ -1,7 +1,7 @@
 {
   "extends": "@tsconfig/node18/tsconfig.json",
   "compilerOptions": {
-    "outDir": "jsm",
+    "outDir": "dist",
     "rootDir": "src",
     "lib": ["es2023", "dom"],
 
@@ -10,5 +10,5 @@
     "sourceMap": true,
     "allowJs": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "../common/src/typesCustom.d.ts", "../common/src/typesAmmo.d.ts"]
 }

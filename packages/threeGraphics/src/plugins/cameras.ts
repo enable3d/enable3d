@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|LGPL-3.0}
  */
 
-import { OrthographicCameraConfig, PerspectiveCameraConfig } from '@enable3d/common/dist/types'
+import { OrthographicCameraConfig, PerspectiveCameraConfig } from '@enable3d/common/dist/types.js'
 import { OrthographicCamera, PerspectiveCamera } from 'three'
 
 export default class Cameras {

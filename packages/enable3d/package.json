@@ -3,6 +3,7 @@
   "version": "0.25.4",
   "description": "3D Framework for Web, Mobile and PC",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "update": "npm update",

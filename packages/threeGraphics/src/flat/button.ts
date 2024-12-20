@@ -5,7 +5,7 @@
  */
 
 import { Texture } from 'three'
-import { SpriteSheet, SpriteSheetFrameOptions } from './spriteSheet'
+import { SpriteSheet, SpriteSheetFrameOptions } from './spriteSheet.js'
 
 export class Button extends SpriteSheet {
   _onInputOver() {

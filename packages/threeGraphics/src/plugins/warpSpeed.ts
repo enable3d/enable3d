@@ -1,8 +1,3 @@
-/// <reference path=@enable3d/common/src/typesAmmo.d.ts>
-/// <reference path=@enable3d/common/src/typesCustoms.d.ts>
-import '@enable3d/common/src/typesAmmo.d.ts'
-import '@enable3d/common/src/typesCustoms.d.ts'
-
 import {
   AmbientLight,
   BackSide,
@@ -207,7 +202,6 @@ export default class WarpSpeed {
 
       let ground: ExtendedObject3D
 
-      // @ts-expect-error
       if (window.__loadPhysics) {
         ground = this.physics.add.ground(geometry, material)
         ground.body.setRestitution(1)

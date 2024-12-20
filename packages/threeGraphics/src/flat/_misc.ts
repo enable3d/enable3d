@@ -7,7 +7,7 @@
 import { Camera, LinearFilter, Raycaster, Texture, Vector2 } from 'three'
 import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { Tap } from '@yandeu/tap'
-import { SimpleSprite } from './simpleSprite'
+import { SimpleSprite } from './simpleSprite.js'
 
 // https://stackoverflow.com/a/7838871
 export const roundRect = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) => {

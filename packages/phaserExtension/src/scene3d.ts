@@ -4,12 +4,12 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|LGPL-3.0}
  */
 
-import Third from './third'
+import Third from './third.js'
 import * as Phaser from 'phaser'
-import { ThreeGraphicsConfig } from '@enable3d/common/dist/types'
+import { ThreeGraphicsConfig } from '@enable3d/common/dist/types.js'
 import { WarpedStartFeatures } from '@enable3d/three-graphics/jsm/plugins'
 import { Color } from 'three'
-import { logger } from '@enable3d/common/dist/logger'
+import { logger } from '@enable3d/common/dist/logger.js'
 
 export class Scene3D extends Phaser.Scene {
   constructor(config: string | Phaser.Types.Scenes.SettingsConfig) {

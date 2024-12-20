@@ -5,8 +5,8 @@
  */
 
 import { ThreeGraphics } from '@enable3d/three-graphics/jsm'
-import { ExtendedMesh, ExtendedObject3D, ThreeGraphicsConfig } from '@enable3d/common/dist/types'
-import { Scene3D } from './scene3d'
+import { ExtendedMesh, ExtendedObject3D, ThreeGraphicsConfig } from '@enable3d/common/dist/types.js'
+import { Scene3D } from './scene3d.js'
 
 import * as Plugins from '@enable3d/three-graphics/jsm/plugins'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'

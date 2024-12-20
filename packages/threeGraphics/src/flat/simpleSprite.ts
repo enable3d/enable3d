@@ -5,7 +5,7 @@
  */
 
 import { Sprite, SpriteMaterial, Texture } from 'three'
-import { addObject } from './_misc'
+import { addObject } from './_misc.js'
 
 export class SimpleSprite extends Sprite {
   protected _event: string = 'out'

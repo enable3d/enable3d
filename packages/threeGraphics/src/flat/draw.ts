@@ -5,8 +5,8 @@
  */
 
 import { LinearFilter, Texture } from 'three'
-import { SimpleSprite } from './simpleSprite'
-import { canvas, createNewTexture } from './_misc'
+import { SimpleSprite } from './simpleSprite.js'
+import { canvas, createNewTexture } from './_misc.js'
 
 type DrawCanvas = (ctx: CanvasRenderingContext2D) => void
 

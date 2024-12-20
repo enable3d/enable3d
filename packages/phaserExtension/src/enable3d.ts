@@ -1,4 +1,4 @@
-import loadAmmoModule from '@enable3d/common/dist/wasmLoader'
+import loadAmmoModule from '@enable3d/common/dist/wasmLoader.js'
 
 window.__loadPhysics = false
 window.__ammoPath = ''
