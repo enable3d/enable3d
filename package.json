@@ -2,6 +2,7 @@
   "name": "enable3d-project",
   "private": true,
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "start": "npm run dev",
     "dev": "npm-run-all --parallel start:*",

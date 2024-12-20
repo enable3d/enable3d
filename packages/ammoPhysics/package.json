@@ -8,7 +8,7 @@
     "build": "tsc",
     "update": "npm update",
     "fix": "npm audit fix",
-    "bundle": "cross-env-shell webpack --config ../../webpack/webpack.ammoPhysics.js --env path=../bundles --env packageVersion=${npm_package_version}"
+    "bundle": "cross-env-shell webpack --config ../../webpack/webpack.ammoPhysics.cjs --env path=../bundles --env packageVersion=${npm_package_version}"
   },
   "keywords": [
     "three",
