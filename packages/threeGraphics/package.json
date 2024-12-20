@@ -2,7 +2,7 @@
   "name": "@enable3d/three-graphics",
   "version": "0.25.4",
   "description": "3D library wrapping three.js and ammo.js",
-  "main": "jsm/index.js",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
     "build": "node version.cjs && tsc",

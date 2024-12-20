@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|LGPL-3.0}
  */
 
-import { ThreeGraphics } from '@enable3d/three-graphics/jsm'
+import { ThreeGraphics } from '@enable3d/three-graphics'
 import { Scene3D } from './scene3d.js'
 import { ThreeGraphicsConfig } from '@enable3d/common/dist/types.js'
 import { logger } from '@enable3d/common/dist/logger.js'

@@ -7,7 +7,7 @@
 import Third from './third.js'
 import * as Phaser from 'phaser'
 import { ThreeGraphicsConfig } from '@enable3d/common/dist/types.js'
-import { WarpedStartFeatures } from '@enable3d/three-graphics/jsm/plugins'
+import { WarpedStartFeatures } from '@enable3d/three-graphics/dist/plugins/index.js'
 import { Color } from 'three'
 import { logger } from '@enable3d/common/dist/logger.js'
 

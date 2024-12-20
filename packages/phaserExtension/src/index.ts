@@ -14,8 +14,8 @@ export { ExtendedMesh } from '@enable3d/common/dist/extendedMesh.js'
 export { ExtendedObject3D } from '@enable3d/common/dist/extendedObject3D.js'
 export { ExtendedGroup } from '@enable3d/common/dist/extendedGroup.js'
 
-// experimantal flat components
-export * as FLAT from '@enable3d/three-graphics/jsm/flat'
+// experimental flat components
+export * as FLAT from '@enable3d/three-graphics/dist/flat/index.js'
 
 // three.js
 export * as THREE from 'three'
