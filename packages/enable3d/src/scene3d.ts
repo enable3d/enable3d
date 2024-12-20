@@ -9,9 +9,8 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { Clock, WebGLRenderer } from 'three'
 import { ExtendedMesh, ExtendedObject3D } from '@enable3d/common/dist/types.js'
 import { AmmoPhysics } from '@enable3d/ammo-physics'
-import { CSG } from '@enable3d/three-graphics/dist/csg'
-
-import * as Plugins from '@enable3d/three-graphics/dist/plugins'
+import { CSG } from '@enable3d/three-graphics/dist/csg/index.js'
+import * as Plugins from '@enable3d/three-graphics/dist/plugins/index.js'
 
 // https://www.typescriptlang.org/docs/handbook/utility-types.html Pick<T,K>
 // export class Scene3D implements Partial<ThreeGraphics> {
