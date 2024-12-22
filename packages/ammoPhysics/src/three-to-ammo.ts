@@ -730,23 +730,23 @@ export const iterateGeometries = (function () {
         }
         // todo: might want to return null xform if this is the root so that callers can avoid multiplying
         // things by the identity matrix
-        let positions;
+        let positions
         if (mesh.geometry.isBufferGeometry) {
-          const bufferPositions = mesh.geometry.attributes.position;
+          const bufferPositions = mesh.geometry.attributes.position
 
           if (bufferPositions.isInterleavedBufferAttribute) {
-            positions = new Float32Array(bufferPositions.count * bufferPositions.itemSize);
-            let interleavedInd = bufferPositions.offset;
-            let positionInd = 0;
+            positions = new Float32Array(bufferPositions.count * bufferPositions.itemSize)
+            let interleavedInd = bufferPositions.offset
+            let positionInd = 0
 
             while (positionInd < positions.length) {
               for (let elemInd = 0; elemInd < bufferPositions.itemSize; elemInd++) {
                 positions[positionInd++] = bufferPositions.array[interleavedInd + elemInd]
               }
-              interleavedInd += bufferPositions.data.stride;
+              interleavedInd += bufferPositions.data.stride
             }
           } else {
-            positions = bufferPositions.array;
+            positions = bufferPositions.array
           }
         }
 
