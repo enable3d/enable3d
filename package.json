@@ -34,7 +34,7 @@
     "publish:threeGraphics": "cd packages/threeGraphics && npm publish",
     "publish:phaserExtension": "cd packages/phaserExtension && npm publish",
     "publish:enable3d": "cd packages/enable3d && npm publish",
-    "test:headless": "jest test/headless/*.test.js",
+    "test:headless": "node --experimental-vm-modules node_modules/jest/bin/jest.js test/headless/*.test.js",
     "test:pre": "npm run test:clean && node test/preTest.js",
     "test:jest": "jest test/*.test.js",
     "test:clean": "node test/cleanTest.js",
