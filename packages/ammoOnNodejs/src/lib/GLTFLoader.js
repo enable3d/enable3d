@@ -63,8 +63,7 @@ import {
   TriangleStripDrawMode,
   Vector2,
   Vector3,
-  VectorKeyframeTrack,
-  sRGBEncoding
+  VectorKeyframeTrack
 } from 'three'
 
 class GLTFLoader extends Loader {
@@ -732,7 +731,7 @@ class GLTFMaterialsSpecularExtension {
         parser
           .assignTexture(materialParams, 'specularTintMap', extension.specularColorTexture)
           .then(function (texture) {
-            texture.encoding = sRGBEncoding
+            // texture.encoding = sRGBEncoding
           })
       )
     }
@@ -1615,18 +1614,18 @@ function addMorphTargets(geometry, targets, parser) {
     }
   }
 
-  return Promise.all([Promise.all(pendingPositionAccessors), Promise.all(pendingNormalAccessors)]).then(function (
-    accessors
-  ) {
-    const morphPositions = accessors[0]
-    const morphNormals = accessors[1]
+  return Promise.all([Promise.all(pendingPositionAccessors), Promise.all(pendingNormalAccessors)]).then(
+    function (accessors) {
+      const morphPositions = accessors[0]
+      const morphNormals = accessors[1]
 
-    if (hasMorphPosition) geometry.morphAttributes.position = morphPositions
-    if (hasMorphNormal) geometry.morphAttributes.normal = morphNormals
-    geometry.morphTargetsRelative = true
+      if (hasMorphPosition) geometry.morphAttributes.position = morphPositions
+      if (hasMorphNormal) geometry.morphAttributes.normal = morphNormals
+      geometry.morphTargetsRelative = true
 
-    return geometry
-  })
+      return geometry
+    }
+  )
 }
 
 /**
@@ -2561,8 +2560,8 @@ class GLTFParser {
       if (materialDef.name) material.name = materialDef.name
 
       // baseColorTexture, emissiveTexture, and specularGlossinessTexture use sRGB encoding.
-      if (material.map) material.map.encoding = sRGBEncoding
-      if (material.emissiveMap) material.emissiveMap.encoding = sRGBEncoding
+      // if (material.map) material.map.encoding = sRGBEncoding
+      // if (material.emissiveMap) material.emissiveMap.encoding = sRGBEncoding
 
       assignExtrasToUserData(material, materialDef)
 
