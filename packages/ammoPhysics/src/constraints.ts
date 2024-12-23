@@ -6,8 +6,8 @@
 
 // Inspired by https://github.com/donmccurdy/aframe-physics-system/blob/master/src/components/ammo-constraint.js
 
-import PhysicsBody from '@enable3d/common/dist/physicsBody'
-import { XYZ } from '@enable3d/common/dist/types'
+import PhysicsBody from '@enable3d/common/dist/physicsBody.js'
+import { XYZ } from '@enable3d/common/dist/types.js'
 
 export default class Constraints {
   public tmpBtVector3 = new Ammo.btVector3()

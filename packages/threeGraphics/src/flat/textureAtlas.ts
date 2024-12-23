@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|LGPL-3.0}
  */
 
-import { ActionSprite } from './actionSprite'
+import { ActionSprite } from './actionSprite.js'
 import { RepeatWrapping, Texture } from 'three'
 
 interface JSONArrayFrame {

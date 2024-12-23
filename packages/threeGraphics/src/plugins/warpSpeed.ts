@@ -15,8 +15,9 @@ import {
 } from 'three'
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { Factories, Lights, Loaders } from '.'
+// import { Factories, Lights, Loaders } from '.'
 import { AmmoPhysics, ExtendedObject3D } from '@enable3d/ammo-physics'
+import { Factories, Lights, Loaders } from './index.js'
 
 export interface WarpSpeedOptions {
   camera?: PerspectiveCamera | OrthographicCamera | undefined

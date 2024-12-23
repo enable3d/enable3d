@@ -5,11 +5,11 @@
  */
 
 import { Cache, Scene, WebGLRenderer, PerspectiveCamera, OrthographicCamera, PCFSoftShadowMap } from 'three'
-import type * as Types from '@enable3d/common/dist/types'
-import Cameras from './plugins/cameras'
-import { AmmoPhysics } from '@enable3d/ammo-physics/dist/index'
+import type * as Types from '@enable3d/common/dist/types.js'
+import Cameras from './plugins/cameras.js'
+import { AmmoPhysics } from '@enable3d/ammo-physics/dist/index.js'
 import { sRGBEncoding } from 'three'
-import { logger } from '@enable3d/common/dist/logger'
+import { logger } from '@enable3d/common/dist/logger.js'
 
 export class ThreeGraphics {
   public cache: typeof Cache

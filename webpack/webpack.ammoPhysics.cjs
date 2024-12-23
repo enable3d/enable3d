@@ -17,7 +17,11 @@ module.exports = env => {
       libraryTarget: 'umd'
     },
     resolve: {
-      extensions: ['.ts', '.js']
+      extensions: ['.ts', '.js'],
+      extensionAlias: {
+        '.js': ['.ts', '.js'],
+        '.mjs': ['.mts', '.mjs']
+      }
     },
     externals: {
       three: 'THREE',
@@ -34,7 +38,7 @@ module.exports = env => {
           test: /\.tsx?$/,
           loader: 'ts-loader',
           options: {
-            configFile: 'packages/ammoPhysics/tsconfig.bundle.json'
+            configFile: 'packages/ammoPhysics/tsconfig.json'
           }
         }
       ]

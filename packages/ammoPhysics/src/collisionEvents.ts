@@ -5,8 +5,8 @@
  */
 
 import { Events } from '@yandeu/events'
-import { CollisionEvent, ExtendedObject3D } from '@enable3d/common/dist/types'
-import { Types } from './physics'
+import { CollisionEvent, ExtendedObject3D } from '@enable3d/common/dist/types.js'
+import { Types } from './physics.js'
 
 export class CollisionEvents extends Events {
   public worldTransform!: Ammo.btTransform

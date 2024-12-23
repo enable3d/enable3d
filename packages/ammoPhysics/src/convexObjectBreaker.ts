@@ -37,8 +37,8 @@
  */
 
 import { Line3, Mesh, Plane, Vector3 } from 'three'
-import { ConvexGeometry } from './externals'
-import { logger } from '@enable3d/common/dist/logger'
+import { ConvexGeometry } from './externals.js'
+import { logger } from '@enable3d/common/dist/logger.js'
 
 const newConvexGeometry = (points: Vector3[]) => {
   // @ts-ignore

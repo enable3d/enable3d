@@ -4,14 +4,13 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|LGPL-3.0}
  */
 
-import { ThreeGraphics } from '@enable3d/three-graphics/jsm'
+import { ThreeGraphics } from '@enable3d/three-graphics'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { Clock, WebGLRenderer } from 'three'
-import { ExtendedMesh, ExtendedObject3D } from '@enable3d/common/dist/types'
+import { ExtendedMesh, ExtendedObject3D } from '@enable3d/common/dist/types.js'
 import { AmmoPhysics } from '@enable3d/ammo-physics'
-import { CSG } from '@enable3d/three-graphics/jsm/csg'
-
-import * as Plugins from '@enable3d/three-graphics/jsm/plugins'
+import { CSG } from '@enable3d/three-graphics/dist/csg/index.js'
+import * as Plugins from '@enable3d/three-graphics/dist/plugins/index.js'
 
 // https://www.typescriptlang.org/docs/handbook/utility-types.html Pick<T,K>
 // export class Scene3D implements Partial<ThreeGraphics> {

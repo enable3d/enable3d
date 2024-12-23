@@ -5,7 +5,7 @@
  */
 
 import { BufferGeometry, Material, Mesh, Vector3 } from 'three'
-import type PhysicsBody from './physicsBody'
+import type PhysicsBody from './physicsBody.js'
 
 export class ExtendedMesh extends Mesh {
   public readonly isExtendedMesh = true

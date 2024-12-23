@@ -1,8 +1,8 @@
-export { ThreeGraphics } from './core'
-export { PhysicsLoader } from '@enable3d/common/dist/physicsLoader'
-export * as Types from '@enable3d/common/dist/types'
+export { ThreeGraphics } from './core.js'
+export { PhysicsLoader } from '@enable3d/common/dist/physicsLoader.js'
+export * as Types from '@enable3d/common/dist/types.js'
 
-import { VERSION } from './version'
+import { VERSION } from './version.js'
 
 const info = `Powered by enable3d v${VERSION}`
 console.log(

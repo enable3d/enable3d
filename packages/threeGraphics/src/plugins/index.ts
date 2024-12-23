@@ -2,17 +2,17 @@
  * These Plugins are not included in the Core three-graphics package
  */
 
-import Loaders from './loaders'
-import Lights from './lights'
-import Factories from '@enable3d/common/dist/factories'
-import HeightMap from './heightmap'
-import WarpSpeed, { WarpSpeedOptions, WarpedStartFeatures } from './warpSpeed'
-import Mixers from './mixers'
-import Misc, { TextureCube } from './misc'
-import Transform from './transform'
-import WebXR from './webxr'
-import HaveSomeFun from './haveSomeFun'
-import Cameras from './cameras'
+import Loaders from './loaders.js'
+import Lights from './lights.js'
+import Factories from '@enable3d/common/dist/factories.js'
+import HeightMap from './heightmap.js'
+import WarpSpeed, { WarpSpeedOptions, WarpedStartFeatures } from './warpSpeed.js'
+import Mixers from './mixers.js'
+import Misc, { TextureCube } from './misc.js'
+import Transform from './transform.js'
+import WebXR from './webxr.js'
+import HaveSomeFun from './haveSomeFun.js'
+import Cameras from './cameras.js'
 
 export {
   Loaders,

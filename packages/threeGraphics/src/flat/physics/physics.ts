@@ -6,8 +6,8 @@
 
 import { Bodies, Body, Engine, Events, Render, Runner, Vector, Vertices, World } from 'matter-js'
 import { Vector2 } from 'three'
-import { SimpleSprite } from '../simpleSprite'
-import { adjustDebugColor } from './_misc'
+import { SimpleSprite } from '../simpleSprite.js'
+import { adjustDebugColor } from './_misc.js'
 
 // manually update circle radius for debugging (bug in matter-js ??)
 // copied from Body.js

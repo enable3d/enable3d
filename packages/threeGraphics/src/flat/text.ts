@@ -5,8 +5,8 @@
  */
 
 import { LinearFilter, Texture } from 'three'
-import { SimpleSprite } from './simpleSprite'
-import { calcHeight, calcWidth, canvas, clearObjects, createNewTexture, roundRect } from './_misc'
+import { SimpleSprite } from './simpleSprite.js'
+import { calcHeight, calcWidth, canvas, clearObjects, createNewTexture, roundRect } from './_misc.js'
 
 export interface TextStyles {
   align?: 'center' | 'left' | 'right'

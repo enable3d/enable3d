@@ -12,9 +12,9 @@ module.exports = env => {
     mode: 'production',
     stats: 'errors-warnings',
     // devtool: 'source-map',
-    entry: path.resolve(__dirname, '../packages/enable3d/src/bundle.ts'),
+    entry: path.resolve(__dirname, '../packages/phaserExtension/src/bundle.ts'),
     output: {
-      filename: `enable3d.framework.${env.packageVersion}.min.js`,
+      filename: `enable3d.phaserExtension.${env.packageVersion}.min.js`,
       path: path.resolve(__dirname, `${env.path}`),
       library: 'ENABLE3D',
       libraryTarget: 'umd'
@@ -26,7 +26,11 @@ module.exports = env => {
         three: resolve('../../node_modules/three')
       },
       // Add `.ts` and `.tsx` as a resolvable extension.
-      extensions: ['.ts', '.tsx', '.js']
+      extensions: ['.ts', '.tsx', '.js'],
+      extensionAlias: {
+        '.js': ['.ts', '.js'],
+        '.mjs': ['.mts', '.mjs']
+      }
     },
     externals: {
       // three: 'THREE',
@@ -43,7 +47,7 @@ module.exports = env => {
           test: /\.tsx?$/,
           loader: 'ts-loader',
           options: {
-            configFile: 'packages/enable3d/tsconfig.bundle.json'
+            configFile: 'packages/phaserExtension/tsconfig.json'
           }
         }
       ]

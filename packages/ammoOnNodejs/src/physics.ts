@@ -4,7 +4,7 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|LGPL-3.0}
  */
 
-import { AmmoPhysics, Types } from '@enable3d/ammo-physics/dist/index'
+import { AmmoPhysics, Types } from '@enable3d/ammo-physics/dist/index.js'
 
 type PhysicsConfig = Omit<Types.ThreeGraphicsConfig, 'anisotropy' | 'antialias' | 'camera' | 'enableXR' | 'renderer'>
 

@@ -9,7 +9,7 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
 import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { SVGLoader, SVGResult } from 'three/examples/jsm/loaders/SVGLoader.js'
 
-import type { Atlas, JSONArrayFrames, JSONHash } from '../flat/textureAtlas'
+import type { Atlas, JSONArrayFrames, JSONHash } from '../flat/textureAtlas.js'
 
 export default class Loaders {
   private _fileLoader!: FileLoader
@@ -85,7 +85,7 @@ export default class Loaders {
 
       let jsonHash: JSONHash = { frames: {} }
 
-      frames.forEach(frame => {
+      frames.forEach((frame: any) => {
         jsonHash = {
           ...jsonHash,
           frames: {

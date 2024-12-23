@@ -5,9 +5,9 @@
  */
 
 import { AnimationClip, AnimationMixer, Line, LoopOnce, Mesh, Object3D, Points, Vector3 } from 'three'
-import type PhysicsBody from './physicsBody'
+import type PhysicsBody from './physicsBody.js'
 import { AnimationAction } from 'three'
-import { logger } from './logger'
+import { logger } from './logger.js'
 
 export interface ExtendedObject3D extends Line, Mesh, Points {
   isLine: any
@@ -33,8 +33,8 @@ export class ExtendedObject3D extends Object3D {
   public fragmentDepth = 0
   public breakable = false
   public fractureImpulse = 1
-  public children!: ExtendedObject3D[]
-  public parent!: ExtendedObject3D | null
+  public children: any = [] //ExtendedObject3D[]
+  public parent: any = null //ExtendedObject3D | null
 
   private _currentAnimation: string = ''
   private _animationActions: Map<string, AnimationAction> = new Map()

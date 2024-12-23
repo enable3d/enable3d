@@ -3,11 +3,12 @@
   "version": "0.25.4",
   "description": "Physics Plugin for three.js",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "update": "npm update",
     "fix": "npm audit fix",
-    "bundle": "cross-env-shell webpack --config ../../webpack/webpack.ammoPhysics.js --env path=../bundles --env packageVersion=${npm_package_version}"
+    "bundle": "cross-env-shell webpack --config ../../webpack/webpack.ammoPhysics.cjs --env path=../bundles --env packageVersion=${npm_package_version}"
   },
   "keywords": [
     "three",

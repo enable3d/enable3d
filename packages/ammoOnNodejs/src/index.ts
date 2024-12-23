@@ -5,12 +5,12 @@
  */
 
 // export { Ammo } from './ammo'
-export { Physics } from './physics'
+export { Physics } from './physics.js'
 
-import { FBXLoader, GLTFLoader } from './loaders'
+import { FBXLoader, GLTFLoader } from './loaders.js'
 export const Loaders = { GLTFLoader, FBXLoader }
 
-export { ServerClock } from '@enable3d/common/dist/serverClock'
+export { ServerClock } from '@enable3d/common/dist/serverClock.js'
 
-export { ExtendedMesh } from '@enable3d/common/dist/extendedMesh'
-export { ExtendedObject3D } from '@enable3d/common/dist/extendedObject3D'
+export { ExtendedMesh } from '@enable3d/common/dist/extendedMesh.js'
+export { ExtendedObject3D } from '@enable3d/common/dist/extendedObject3D.js'

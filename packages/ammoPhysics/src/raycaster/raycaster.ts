@@ -4,10 +4,10 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|LGPL-3.0}
  */
 
-import applyMixins from '@enable3d/common/dist/applyMixins'
-import ClosestRayResultCallback from './closestRayResultCallback'
-import AllHitsRayResultCallback from './allHitsRayResultCallback'
-import { AmmoPhysics } from '../physics'
+import applyMixins from '@enable3d/common/dist/applyMixins.js'
+import ClosestRayResultCallback from './closestRayResultCallback.js'
+import AllHitsRayResultCallback from './allHitsRayResultCallback.js'
+import { AmmoPhysics } from '../physics.js'
 
 class Raycaster {
   public readonly type!: string

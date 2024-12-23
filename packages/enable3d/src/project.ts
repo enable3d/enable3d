@@ -4,10 +4,10 @@
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE|LGPL-3.0}
  */
 
-import { ThreeGraphics } from '@enable3d/three-graphics/jsm'
-import { Scene3D } from './scene3d'
-import { ThreeGraphicsConfig } from '@enable3d/common/dist/types'
-import { logger } from '@enable3d/common/dist/logger'
+import { ThreeGraphics } from '@enable3d/three-graphics'
+import { Scene3D } from './scene3d.js'
+import { ThreeGraphicsConfig } from '@enable3d/common/dist/types.js'
+import { logger } from '@enable3d/common/dist/logger.js'
 
 interface Scene3DConfig extends Omit<ThreeGraphicsConfig, 'camera' | 'usePhysics' | 'enableXR'> {
   parent?: string

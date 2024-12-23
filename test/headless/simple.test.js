@@ -1,6 +1,15 @@
-const path = require('path')
+import Module from 'node:module'
+import path from 'path'
+import { Physics, ServerClock, Loaders, ExtendedObject3D } from '../../packages/ammoOnNodejs/dist/index.js'
+import { dirname } from 'path'
+import { fileURLToPath } from 'url'
+import { jest } from '@jest/globals'
 
-var _ammo = require(path.resolve(__dirname, '../../packages/ammoOnNodejs/ammo/ammo.js'))
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+const require = Module.createRequire(import.meta.url)
+
+var _ammo = require(path.resolve(__dirname, '../../packages/ammoOnNodejs/ammo/ammo.cjs'))
 
 global.console = {
   log: console.log,
@@ -10,11 +19,6 @@ global.console = {
   info: console.info,
   debug: console.debug
 }
-
-const { Physics, ServerClock, Loaders, ExtendedObject3D, ExtendedMesh } = require(path.resolve(
-  __dirname,
-  '../../packages/ammoOnNodejs/dist/index.js'
-))
 
 it('should work correctly', done => {
   const MainScene = () => {
@@ -45,9 +49,10 @@ it('should work correctly', done => {
         }, 100)
     })
 
+    let robot
     const FBXLoader = new Loaders.FBXLoader()
     FBXLoader.load(path.join(__dirname, '../../packages/dev/public/assets/Idle.fbx')).then(fbx => {
-      const robot = new ExtendedObject3D()
+      robot = new ExtendedObject3D()
       robot.name = 'robot'
 
       robot.add(fbx)
@@ -60,14 +65,15 @@ it('should work correctly', done => {
       }
 
       physics.add.existing(robot, physicsOptions)
-      this.robot = robot
+      //  this.robot = robot
     })
 
+    let hero
     const GLTFLoader = new Loaders.GLTFLoader()
     GLTFLoader.load(path.resolve(__dirname, '../../packages/dev/public/assets/hero.glb')).then(gltf => {
       const child = gltf.scene.children[0]
 
-      const hero = new ExtendedObject3D()
+      hero = new ExtendedObject3D()
       hero.name = 'hero'
 
       hero.add(child)
@@ -80,7 +86,7 @@ it('should work correctly', done => {
 
       physics.add.existing(hero, physicsOptions)
 
-      this.hero = hero
+      // this.hero = hero
     })
 
     // for debugging I disable high accuracy
@@ -91,13 +97,13 @@ it('should work correctly', done => {
     const animate = delta => {
       physics.update(delta * 1000)
 
-      if (this.hero && this.hero.body) {
-        const pos = this.hero.position.y.toFixed(2)
+      if (hero && hero.body) {
+        const pos = hero.position.y.toFixed(2)
         // if (pos > 10) console.log(this.hero.name, pos)
       }
 
-      if (this.robot && this.robot.body) {
-        const pos = this.robot.position.y.toFixed(2)
+      if (robot && robot.body) {
+        const pos = robot.position.y.toFixed(2)
         // if (pos > 10) console.log(this.robot.name, pos)
       }
     }
