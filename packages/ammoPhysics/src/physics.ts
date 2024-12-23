@@ -894,7 +894,7 @@ class AmmoPhysics extends Events {
 
     if (ignoreScale) scale.set(1, 1, 1)
 
-    if (compound.length >= 1 && object.isMesh) {
+    if (compound.length >= 1) {
       // if we want a custom compound shape, we simply do
       const collisionShapes = compound.map((s: any) => this.createCollisionShape(s.shape, s))
       const compoundShape = this.mergeCollisionShapesToCompoundShape(collisionShapes)
