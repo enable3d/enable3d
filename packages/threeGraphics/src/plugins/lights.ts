@@ -111,7 +111,7 @@ export default class Lights {
       decay?: number | undefined
     } = {}
   ) {
-    const { color = 0xffffff, intensity = 1, distance = 0, angle = Math.PI / 8, penumbra = 0, decay = 1 } = options
+    const { color = 0xffffff, intensity = 10, distance = 0, angle = Math.PI / 8, penumbra = 0, decay = 1 } = options
     const light = new SpotLight(color, intensity, distance, angle, penumbra, decay)
     light.castShadow = true
     this.scene.add(light)
