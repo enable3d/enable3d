@@ -710,6 +710,7 @@ export const iterateGeometries = (function () {
     // MOD (yandeu): Update to three.js r123
     // compatibility fix for three.js >= r123 (Dezember 2020)
     if (parseInt(REVISION) >= 123) inverse.copy(root.matrixWorld).invert()
+    // @ts-expect-error getInverse has been deprecated
     else inverse.getInverse(root.matrixWorld)
 
     const scale = new Vector3()

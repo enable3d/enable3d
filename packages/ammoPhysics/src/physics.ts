@@ -344,6 +344,7 @@ class AmmoPhysics extends Events {
           if (objThree.parent) {
             // compatibility fix for three.js >= r123 (Dezember 2020)
             if (parseInt(REVISION) >= 123) this.tmpMatrix4a.copy(objThree.parent.matrixWorld).invert()
+            // @ts-expect-error getInverse has been deprecated
             else this.tmpMatrix4a.getInverse(objThree.parent.matrixWorld)
           } else {
             this.tmpMatrix4a.identity()
