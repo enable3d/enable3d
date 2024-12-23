@@ -52,7 +52,7 @@ class AmmoPhysics extends Events {
   public factory!: Factories
   public isHeadless: boolean
 
-  public rigidBodies: ExtendedMesh[] = []
+  public rigidBodies: Array<ExtendedMesh | ExtendedGroup> = []
   protected earlierDetectedCollisions: { combinedName: string; collision: boolean }[] = []
   protected gravity: { x: number; y: number; z: number }
 
@@ -136,9 +136,8 @@ class AmmoPhysics extends Events {
   }
 
   /** Destroys a physics body. */
-  public destroy(body: PhysicsBody | ExtendedMesh | ExtendedMesh) {
-    const b: PhysicsBody = Object.keys(body).includes('body') ? body.body : body
-
+  public destroy(body: ExtendedMesh | ExtendedGroup) {
+    const b = Object.keys(body).includes('body') ? (body.body as PhysicsBody) : (body as unknown as PhysicsBody)
     if (typeof b?.ammo === 'undefined') return
 
     // @ts-expect-error: threeObject does not exist on btRigidBody.
@@ -586,7 +585,8 @@ class AmmoPhysics extends Events {
       collider: (object1: ExtendedMesh, object2: ExtendedMesh, eventCallback: (event: Types.CollisionEvent) => void) =>
         this.collisionEvents.addCollider(object1, object2, eventCallback),
       constraints: this.constraints.addConstraints,
-      existing: (object: ExtendedMesh, config?: Types.AddExistingConfig) => this.addExisting(object, config),
+      existing: (object: ExtendedMesh | ExtendedGroup, config?: Types.AddExistingConfig) =>
+        this.addExisting(object, config),
       plane: (planeConfig: Types.PlaneConfig = {}, materialConfig: Types.MaterialConfig = {}) =>
         this.shapes.addPlane(planeConfig, materialConfig),
       sphere: (sphereConfig: Types.SphereConfig = {}, materialConfig: Types.MaterialConfig = {}) =>
@@ -616,7 +616,10 @@ class AmmoPhysics extends Events {
     }
   }
 
-  private prepareThreeObjectForCollisionShape(object: ExtendedMesh, config: Types.AddExistingConfig = {}) {
+  private prepareThreeObjectForCollisionShape(
+    object: ExtendedMesh | ExtendedGroup,
+    config: Types.AddExistingConfig = {}
+  ) {
     const { autoCenter = false } = config
 
     // set default params
@@ -634,7 +637,7 @@ class AmmoPhysics extends Events {
     // determine the shape (fallback to hacd)
     let shape: string = 'unknown'
     // retrieve the shape from the geometry
-    const type = object.geometry?.type || 'unknown'
+    const type = object.isMesh ? object.geometry?.type : 'unknown'
     if (/box/i.test(type)) shape = 'box'
     else if (/cone/i.test(type)) shape = 'cone'
     else if (/cylinder/i.test(type)) shape = 'cylinder'
@@ -697,7 +700,11 @@ class AmmoPhysics extends Events {
     return { shape, params, object }
   }
 
-  public createCollisionShape(shape: string, params: any, object?: ExtendedMesh): Ammo.btCollisionShape {
+  public createCollisionShape(
+    shape: string,
+    params: any,
+    object?: ExtendedMesh | ExtendedGroup
+  ): Ammo.btCollisionShape {
     const quat = object?.quaternion ? object?.quaternion : new Quaternion(0, 0, 0, 1)
     const { axis = 'y' } = params
 
@@ -853,7 +860,7 @@ class AmmoPhysics extends Events {
     return compoundShape
   }
 
-  protected addExisting(object: ExtendedMesh, config: Types.AddExistingConfig = {}): any {
+  protected addExisting(object: ExtendedMesh | ExtendedGroup, config: Types.AddExistingConfig = {}): any {
     const { hasBody } = object
     if (hasBody) {
       logger(`Object "${object.name}" already has a physical body!`)
@@ -887,7 +894,7 @@ class AmmoPhysics extends Events {
 
     if (ignoreScale) scale.set(1, 1, 1)
 
-    if (compound.length >= 1) {
+    if (compound.length >= 1 && object.isMesh) {
       // if we want a custom compound shape, we simply do
       const collisionShapes = compound.map((s: any) => this.createCollisionShape(s.shape, s))
       const compoundShape = this.mergeCollisionShapesToCompoundShape(collisionShapes)
@@ -954,7 +961,7 @@ class AmmoPhysics extends Events {
   }
 
   public addRigidBodyToWorld(
-    object: ExtendedMesh,
+    object: ExtendedMesh | ExtendedGroup,
     rigidBody: Ammo.btRigidBody,
     collisionFlags: number,
     collisionGroup: number,

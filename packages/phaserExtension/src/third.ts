@@ -12,6 +12,7 @@ import * as Plugins from '@enable3d/three-graphics/dist/plugins/index.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { WebGLRenderer } from 'three'
 import { CSG } from '@enable3d/three-graphics/dist/csg/index.js'
+import type { ExtendedGroup } from '@enable3d/ammo-physics'
 
 /**
  * The phaser wrapper for ThreeGraphics, which is a separate module
@@ -186,10 +187,10 @@ class Third extends ThreeGraphics {
   public postRender() {}
 
   /** Destroys a object and its body. */
-  public destroy(obj: ExtendedObject3D | ExtendedMesh) {
-    this.physics?.destroy(obj.body)
+  public destroy(obj: ExtendedMesh | ExtendedGroup) {
+    this.physics.destroy(obj)
     this.scene.remove(obj)
-    // @ts-expect-error: ExtendedObject3D and ExtendedMesh can't be null.
+    // @ts-expect-error: ExtendedMesh and ExtendedGroup can't be null.
     obj = null
   }
   public async warpSpeed(...features: Plugins.WarpedStartFeatures[]) {

@@ -1,5 +1,5 @@
 import { ExtendedObject3D, FLAT, PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
-import { REVISION } from 'three'
+import { MeshStandardMaterial, REVISION } from 'three'
 import { FlatArea } from '../../threeGraphics/jsm/flat'
 
 const isTouchDevice = 'ontouchstart' in window
@@ -29,20 +29,26 @@ class MainScene extends Scene3D {
     console.log('REVISION', THREE.REVISION)
     console.log('REVISION', REVISION)
 
-    const { lights } = await this.warpSpeed()
-    this.lights.helper.directionalLightHelper(lights?.directionalLight)
+    const { lights, orbitControls } = await this.warpSpeed()
+
+    if (lights?.directionalLight) {
+      this.lights.helper.directionalLightHelper(lights.directionalLight)
+    }
 
     this.camera.position.set(2, 2, 4)
+    this.camera.lookAt(0, 1, 0)
+    orbitControls?.target.set(0, 1, 0)
 
     this.load.gltf('/assets/box_man.glb').then(gltf => {
       const child = gltf.scene
 
-      child.traverse(child => {
+      child.traverse(c => {
+        let child = c as unknown as THREE.Mesh
         if (child.isMesh) {
           child.castShadow = child.receiveShadow = true
           // https://discourse.threejs.org/t/cant-export-material-from-blender-gltf/12258
-          child.material.metalness = 0
-          child.material.roughness = 1
+          ;(child.material as MeshStandardMaterial).metalness = 0
+          ;(child.material as MeshStandardMaterial).roughness = 1
         }
       })
 

@@ -8,6 +8,7 @@ import { Group } from 'three'
 import type PhysicsBody from './physicsBody.js'
 
 export class ExtendedGroup extends Group {
+  public ptr: any | undefined
   public readonly isExtendedGroup = true
   public readonly isMesh = false
 

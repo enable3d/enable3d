@@ -8,7 +8,7 @@ import { ThreeGraphics } from '@enable3d/three-graphics'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { Clock, WebGLRenderer } from 'three'
 import { ExtendedMesh, ExtendedObject3D } from '@enable3d/common/dist/types.js'
-import { AmmoPhysics } from '@enable3d/ammo-physics'
+import { AmmoPhysics, ExtendedGroup } from '@enable3d/ammo-physics'
 import { CSG } from '@enable3d/three-graphics/dist/csg/index.js'
 import * as Plugins from '@enable3d/three-graphics/dist/plugins/index.js'
 import type { PerspectiveCamera } from 'three'
@@ -116,8 +116,8 @@ export class Scene3D implements Partial<ThreeGraphics> {
   }
 
   /** Destroys a object and its body. */
-  public destroy(obj: ExtendedObject3D | ExtendedMesh) {
-    this.physics?.destroy(obj.body)
+  public destroy(obj: ExtendedMesh | ExtendedGroup) {
+    this.physics.destroy(obj)
     this.scene.remove(obj)
     // @ts-expect-error: ExtendedObject3D and ExtendedMesh can't be null.
     obj = null
