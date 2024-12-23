@@ -1,6 +1,9 @@
 {
   "name": "enable3d-project",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "version": "1.0.0",
   "type": "module",
   "scripts": {
@@ -17,7 +20,6 @@
     "clean:dist": "npx rimraf -y packages/**/dist",
     "clean:bundles": "npx rimraf -y bundles",
     "prune": "node scripts/prune.mjs",
-    "postinstall": "lerna bootstrap --no-ci",
     "lerna-version": "lerna version --no-commit-hooks --no-git-tag-version && npm run build && npm run bundle",
     "start:common": "cd packages/common && tsc --watch",
     "start:threeWrapper": "cd packages/threeWrapper && tsc --watch",
@@ -73,7 +75,7 @@
     "html-webpack-plugin": "^5.3.1",
     "jest": "^29.0.3",
     "jest-puppeteer": "^10.0.1",
-    "lerna": "^5.1.4",
+    "lerna": "^7.4.2",
     "nodemon": "^3.1.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.0.3",

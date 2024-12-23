@@ -1,18 +1,5 @@
 {
-  "packages": [
-    "packages/*"
-  ],
+  "packages": ["packages/*"],
   "version": "0.25.4",
-  "command": {
-    "bootstrap": {
-      "npmClientArgs": [
-        "--no-package-lock"
-      ]
-    },
-    "ignoreChanges": [
-      "**/node_modules/**",
-      "*/tsconfig.json"
-    ]
-  },
-  "useNx": false
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
 }
