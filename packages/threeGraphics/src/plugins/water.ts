@@ -59,8 +59,8 @@ const addWater = (scene: Scene, renderer: WebGLRenderer, config: AddWaterConfig 
     textureWidth: 1024,
     textureHeight: 1024,
     normalMap0: normalMap0,
-    normalMap1: normalMap1,
-    encoding: renderer.outputEncoding
+    normalMap1: normalMap1
+    // encoding: renderer.outputEncoding
   })
   water.position.set(x, y + 0.1, z)
   water.rotation.x = Math.PI * -0.5

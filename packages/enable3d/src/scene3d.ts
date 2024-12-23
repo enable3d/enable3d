@@ -11,6 +11,7 @@ import { ExtendedMesh, ExtendedObject3D } from '@enable3d/common/dist/types.js'
 import { AmmoPhysics } from '@enable3d/ammo-physics'
 import { CSG } from '@enable3d/three-graphics/dist/csg/index.js'
 import * as Plugins from '@enable3d/three-graphics/dist/plugins/index.js'
+import type { PerspectiveCamera } from 'three'
 
 // https://www.typescriptlang.org/docs/handbook/utility-types.html Pick<T,K>
 // export class Scene3D implements Partial<ThreeGraphics> {
@@ -201,8 +202,8 @@ export class Scene3D implements Partial<ThreeGraphics> {
   public setSize(width: number, height: number) {
     this.renderer.setSize(width, height)
 
-    if (typeof (this.camera as THREE.PerspectiveCamera).aspect !== 'undefined')
-      (this.camera as THREE.PerspectiveCamera).aspect = width / height
+    if (typeof (this.camera as PerspectiveCamera).aspect !== 'undefined')
+      (this.camera as PerspectiveCamera).aspect = width / height
     this.camera.updateProjectionMatrix()
   }
 

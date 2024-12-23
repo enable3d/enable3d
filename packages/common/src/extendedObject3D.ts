@@ -9,15 +9,9 @@ import type PhysicsBody from './physicsBody.js'
 import { AnimationAction } from 'three'
 import { logger } from './logger.js'
 
-export interface ExtendedObject3D extends Line, Mesh, Points {
-  isLine: any
-  isPoints: any
-  isMesh: any
-  type: any
-}
-
 export class ExtendedObject3D extends Object3D {
   public ptr: any | undefined
+  public readonly isMesh = false
 
   public readonly isExtendedObject3D = true
   public readonly isGroup = false

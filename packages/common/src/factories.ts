@@ -76,7 +76,7 @@ export default class Factories {
     capsule: CapsuleObject
     cylinder: CylinderObject
     cone: ConeObject
-    torus: (torusConfig?: TorusConfig, materialConfig?: MaterialConfig) => ExtendedObject3D
+    torus: (torusConfig?: TorusConfig, materialConfig?: MaterialConfig) => ExtendedMesh
   } {
     return {
       plane: (planeConfig: PlaneConfig = {}, materialConfig: MaterialConfig = {}) =>
@@ -110,13 +110,13 @@ export default class Factories {
     capsule: CapsuleObject
     cylinder: CylinderObject
     cone: ConeObject
-    torus: (torusConfig?: TorusConfig, materialConfig?: MaterialConfig) => ExtendedObject3D
+    torus: (torusConfig?: TorusConfig, materialConfig?: MaterialConfig) => ExtendedMesh
   } {
     return {
       // effectComposer: () => this.addEffectComposer(),
       mesh: (mesh: any) => this.addMesh(mesh),
       // group: (...children) => this.addGroup(children),
-      existing: (object: ExtendedObject3D | Mesh | Line | Points) => this.addExisting(object),
+      existing: (object: ExtendedObject3D | ExtendedMesh | Mesh | Line | Points) => this.addExisting(object),
       //  Geometry
       plane: (planeConfig: PlaneConfig = {}, materialConfig: MaterialConfig = {}) =>
         this.addPlane(planeConfig, materialConfig),
@@ -157,7 +157,7 @@ export default class Factories {
     return this
   }
 
-  private createMesh(geometry: any, material: Material | Material[], position: XYZ): Line | Points | Mesh {
+  private createMesh(geometry: any, material: Material | Material[], position: XYZ): ExtendedMesh {
     const { x = 0, y = 0, z = 0 } = position
 
     let obj
@@ -175,7 +175,7 @@ export default class Factories {
     obj.position.set(x, y, z)
     obj.castShadow = obj.receiveShadow = true
 
-    return obj
+    return obj as ExtendedMesh
   }
 
   private makeExtrude(extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig) {
@@ -184,7 +184,7 @@ export default class Factories {
     const { depth = 1, bevelEnabled = false } = rest
     const geometry = new ExtrudeGeometry(shape, { depth, bevelEnabled, ...rest })
     const material = this.addMaterial(materialConfig)
-    const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
+    const mesh = this.createMesh(geometry, material, { x, y, z })
     // auto adjust the center for custom shapes
     if (autoCenter) mesh.geometry.center()
     mesh.name = name || `body_id_${mesh.id}`
@@ -192,13 +192,13 @@ export default class Factories {
     return mesh
   }
 
-  private addExtrude(extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+  private addExtrude(extrudeConfig: ExtrudeConfig, materialConfig: MaterialConfig = {}): ExtendedMesh {
     const obj = this.makeExtrude(extrudeConfig, materialConfig)
     this.addExisting(obj)
     return obj
   }
 
-  private makePlane(planeConfig: PlaneConfig, materialConfig: MaterialConfig): ExtendedObject3D {
+  private makePlane(planeConfig: PlaneConfig, materialConfig: MaterialConfig): ExtendedMesh {
     const { x, y, z, name, breakable = false, ...rest } = planeConfig
     const geometry = new PlaneGeometry(
       rest.width || 1,
@@ -209,19 +209,19 @@ export default class Factories {
 
     const material = this.addMaterial(materialConfig) as Material
     material.side = DoubleSide
-    const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
+    const mesh = this.createMesh(geometry, material, { x, y, z })
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'plane'
     return mesh
   }
 
-  private addPlane(planeConfig: PlaneConfig, materialConfig: MaterialConfig): ExtendedObject3D {
+  private addPlane(planeConfig: PlaneConfig, materialConfig: MaterialConfig): ExtendedMesh {
     const obj = this.makePlane(planeConfig, materialConfig)
     this.addExisting(obj)
     return obj
   }
 
-  private makeSphere(sphereConfig: SphereConfig, materialConfig: MaterialConfig): ExtendedObject3D {
+  private makeSphere(sphereConfig: SphereConfig, materialConfig: MaterialConfig): ExtendedMesh {
     const { x, y, z, name, breakable = false, ...rest } = sphereConfig
     const geometry = new SphereGeometry(
       rest.radius || 1,
@@ -234,19 +234,19 @@ export default class Factories {
     )
 
     const material = this.addMaterial(materialConfig)
-    const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
+    const mesh = this.createMesh(geometry, material, { x, y, z })
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'sphere'
     return mesh
   }
 
-  private addSphere(sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+  private addSphere(sphereConfig: SphereConfig = {}, materialConfig: MaterialConfig = {}): ExtendedMesh {
     const obj = this.makeSphere(sphereConfig, materialConfig)
     this.addExisting(obj)
     return obj
   }
 
-  private makeBox(boxConfig: BoxConfig, materialConfig: MaterialConfig): ExtendedObject3D {
+  private makeBox(boxConfig: BoxConfig, materialConfig: MaterialConfig): ExtendedMesh {
     const { x, y, z, name, breakable = false, ...rest } = boxConfig
     const geometry = new BoxGeometry(
       rest.width || 1,
@@ -258,26 +258,26 @@ export default class Factories {
     )
 
     const material = this.addMaterial(materialConfig)
-    const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
+    const mesh = this.createMesh(geometry, material, { x, y, z })
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'box'
     return mesh
   }
 
-  private addBox(boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+  private addBox(boxConfig: BoxConfig = {}, materialConfig: MaterialConfig = {}): ExtendedMesh {
     const obj = this.makeBox(boxConfig, materialConfig)
     this.addExisting(obj)
     return obj
   }
 
-  private addGround(groundConfig: GroundConfig, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+  private addGround(groundConfig: GroundConfig, materialConfig: MaterialConfig = {}): ExtendedMesh {
     const obj = this.makeBox(groundConfig, materialConfig)
     obj.rotateX(THREE_Math.degToRad(90))
     this.addExisting(obj)
     return obj
   }
 
-  private makeCapsule(capsuleConfig: CapsuleConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+  private makeCapsule(capsuleConfig: CapsuleConfig = {}, materialConfig: MaterialConfig = {}): ExtendedMesh {
     const { x, y, z, name, breakable = false, ...rest } = capsuleConfig
     const geometry = new CapsuleGeometry(
       rest.radius || 0.5,
@@ -287,19 +287,19 @@ export default class Factories {
     )
 
     const material = this.addMaterial(materialConfig)
-    const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
+    const mesh = this.createMesh(geometry, material, { x, y, z })
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'capsule'
     return mesh
   }
 
-  private addCapsule(capsuleConfig: CapsuleConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+  private addCapsule(capsuleConfig: CapsuleConfig = {}, materialConfig: MaterialConfig = {}): ExtendedMesh {
     const obj = this.makeCapsule(capsuleConfig, materialConfig)
     this.addExisting(obj)
     return obj
   }
 
-  private makeCylinder(cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+  private makeCylinder(cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}): ExtendedMesh {
     const { x, y, z, name, breakable = false, ...rest } = cylinderConfig
     const geometry = new CylinderGeometry(
       rest.radiusTop || 1,
@@ -313,19 +313,19 @@ export default class Factories {
     )
 
     const material = this.addMaterial(materialConfig)
-    const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
+    const mesh = this.createMesh(geometry, material, { x, y, z })
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'cylinder'
     return mesh
   }
 
-  private addCylinder(cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+  private addCylinder(cylinderConfig: CylinderConfig = {}, materialConfig: MaterialConfig = {}): ExtendedMesh {
     const obj = this.makeCylinder(cylinderConfig, materialConfig)
     this.addExisting(obj)
     return obj
   }
 
-  private makeCone(coneConfig: ConeConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+  private makeCone(coneConfig: ConeConfig = {}, materialConfig: MaterialConfig = {}): ExtendedMesh {
     const { x, y, z, name, breakable = false, ...rest } = coneConfig
     const geometry = new ConeGeometry(
       rest.radius || 1,
@@ -338,20 +338,20 @@ export default class Factories {
     )
 
     const material = this.addMaterial(materialConfig)
-    const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
+    const mesh = this.createMesh(geometry, material, { x, y, z })
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'cone'
     return mesh
   }
 
-  private addCone(coneConfig: ConeConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+  private addCone(coneConfig: ConeConfig = {}, materialConfig: MaterialConfig = {}): ExtendedMesh {
     const obj = this.makeCone(coneConfig, materialConfig)
     this.addExisting(obj)
     return obj
   }
 
   // https://threejs.org/docs/index.html#api/en/geometries/TorusBufferGeometry
-  private makeTorus(torusConfig: TorusConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+  private makeTorus(torusConfig: TorusConfig = {}, materialConfig: MaterialConfig = {}): ExtendedMesh {
     const { x, y, z, name, breakable = false, ...rest } = torusConfig
     const geometry = new TorusGeometry(
       rest.radius || undefined,
@@ -362,13 +362,13 @@ export default class Factories {
     )
 
     const material = this.addMaterial(materialConfig)
-    const mesh = this.createMesh(geometry, material, { x, y, z }) as ExtendedObject3D
+    const mesh = this.createMesh(geometry, material, { x, y, z })
     mesh.name = name || `body_id_${mesh.id}`
     mesh.shape = 'torus'
     return mesh
   }
 
-  private addTorus(torusConfig: TorusConfig = {}, materialConfig: MaterialConfig = {}): ExtendedObject3D {
+  private addTorus(torusConfig: TorusConfig = {}, materialConfig: MaterialConfig = {}): ExtendedMesh {
     const obj = this.makeTorus(torusConfig, materialConfig)
     this.addExisting(obj)
     return obj

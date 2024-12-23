@@ -8,7 +8,6 @@ import { Cache, Scene, WebGLRenderer, PerspectiveCamera, OrthographicCamera, PCF
 import type * as Types from '@enable3d/common/dist/types.js'
 import Cameras from './plugins/cameras.js'
 import { AmmoPhysics } from '@enable3d/ammo-physics/dist/index.js'
-import { sRGBEncoding } from 'three'
 import { logger } from '@enable3d/common/dist/logger.js'
 
 export class ThreeGraphics {

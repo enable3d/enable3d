@@ -8,6 +8,7 @@ import { BufferGeometry, Material, Mesh, Vector3 } from 'three'
 import type PhysicsBody from './physicsBody.js'
 
 export class ExtendedMesh extends Mesh {
+  public ptr: any | undefined
   public readonly isExtendedMesh = true
   public readonly isGroup = false
 

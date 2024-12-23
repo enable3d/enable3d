@@ -102,28 +102,28 @@ export interface MaterialConfig {
 }
 
 export interface PlaneObject {
-  (sphereConfig?: PlaneConfig, materialConfig?: MaterialConfig): ExtendedObject3D
+  (sphereConfig?: PlaneConfig, materialConfig?: MaterialConfig): ExtendedMesh
 }
 export interface SphereObject {
-  (sphereConfig?: SphereConfig, materialConfig?: MaterialConfig): ExtendedObject3D
+  (sphereConfig?: SphereConfig, materialConfig?: MaterialConfig): ExtendedMesh
 }
 export interface BoxObject {
-  (boxConfig?: BoxConfig, materialConfig?: MaterialConfig): ExtendedObject3D
+  (boxConfig?: BoxConfig, materialConfig?: MaterialConfig): ExtendedMesh
 }
 export interface GroundObject {
-  (groundConfig: GroundConfig, materialConfig?: MaterialConfig): ExtendedObject3D
+  (groundConfig: GroundConfig, materialConfig?: MaterialConfig): ExtendedMesh
 }
 export interface CapsuleObject {
-  (capsuleConfig?: CapsuleConfig, materialConfig?: MaterialConfig): ExtendedObject3D
+  (capsuleConfig?: CapsuleConfig, materialConfig?: MaterialConfig): ExtendedMesh
 }
 export interface CylinderObject {
-  (cylinderConfig?: CylinderConfig, materialConfig?: MaterialConfig): ExtendedObject3D
+  (cylinderConfig?: CylinderConfig, materialConfig?: MaterialConfig): ExtendedMesh
 }
 export interface ConeObject {
-  (coneConfig?: ConeConfig, materialConfig?: MaterialConfig): ExtendedObject3D
+  (coneConfig?: ConeConfig, materialConfig?: MaterialConfig): ExtendedMesh
 }
 export interface ExtrudeObject {
-  (extrudeConfig: ExtrudeConfig, materialConfig?: MaterialConfig): ExtendedObject3D
+  (extrudeConfig: ExtrudeConfig, materialConfig?: MaterialConfig): ExtendedMesh
 }
 export interface HeightMapObject {
   (texture: Texture, config?: HeightMapConfig): ExtendedObject3D | undefined

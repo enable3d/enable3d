@@ -5,18 +5,14 @@
  */
 
 import { Events } from '@yandeu/events'
-import { CollisionEvent, ExtendedObject3D } from '@enable3d/common/dist/types.js'
+import { CollisionEvent, ExtendedObject3D, ExtendedMesh } from '@enable3d/common/dist/types.js'
 import { Types } from './physics.js'
 
 export class CollisionEvents extends Events {
   public worldTransform!: Ammo.btTransform
   public physicsWorld!: Ammo.btDiscreteDynamicsWorld
 
-  public addCollider(
-    object1: ExtendedObject3D,
-    object2: ExtendedObject3D,
-    eventCallback: (event: CollisionEvent) => void
-  ) {
+  public addCollider(object1: ExtendedMesh, object2: ExtendedMesh, eventCallback: (event: CollisionEvent) => void) {
     if (!object1.body || !object2.body) return
 
     object1.body.checkCollisions = true

@@ -52,7 +52,7 @@ class AmmoPhysics extends Events {
   public factory!: Factories
   public isHeadless: boolean
 
-  public rigidBodies: ExtendedObject3D[] = []
+  public rigidBodies: ExtendedMesh[] = []
   protected earlierDetectedCollisions: { combinedName: string; collision: boolean }[] = []
   protected gravity: { x: number; y: number; z: number }
 
@@ -68,7 +68,7 @@ class AmmoPhysics extends Events {
   public physicsWorld!: Ammo.btSoftRigidDynamicsWorld
   protected debugDrawer!: DebugDrawer
   private convexBreaker: any
-  protected addRigidBody!: (threeObject: ExtendedObject3D, physicsShape: any, mass: any, pos: any, quat: any) => void
+  protected addRigidBody!: (threeObject: ExtendedMesh, physicsShape: any, mass: any, pos: any, quat: any) => void
   private objectsToRemove!: any[]
   private numObjectsToRemove!: number
 
@@ -136,13 +136,13 @@ class AmmoPhysics extends Events {
   }
 
   /** Destroys a physics body. */
-  public destroy(body: PhysicsBody | ExtendedObject3D | ExtendedMesh) {
+  public destroy(body: PhysicsBody | ExtendedMesh | ExtendedMesh) {
     const b: PhysicsBody = Object.keys(body).includes('body') ? body.body : body
 
     if (typeof b?.ammo === 'undefined') return
 
     // @ts-expect-error: threeObject does not exist on btRigidBody.
-    let obj: ExtendedObject3D | null = b.ammo.threeObject as ExtendedObject3D
+    let obj: ExtendedMesh | null = b.ammo.threeObject as ExtendedMesh
     const name = obj.name
 
     if (name && obj) {
@@ -198,7 +198,7 @@ class AmmoPhysics extends Events {
 
     this.collisionEvents = new CollisionEvents()
     this.factory = new Factories(this.scene)
-    this.shapes = new Shapes(this.factory, (object: ExtendedObject3D, config?: Types.AddExistingConfig) =>
+    this.shapes = new Shapes(this.factory, (object: ExtendedMesh, config?: Types.AddExistingConfig) =>
       this.addExisting(object, config)
     )
     this.constraints = new Constraints(this.worldTransform, this.physicsWorld)
@@ -245,7 +245,7 @@ class AmmoPhysics extends Events {
     return physicsWorld
   }
 
-  private createDebrisFromBreakableObject(object: ExtendedObject3D, parent: ExtendedObject3D) {
+  private createDebrisFromBreakableObject(object: ExtendedMesh, parent: ExtendedMesh) {
     if (this.scene === 'headless') return
 
     object.material = parent.material
@@ -376,8 +376,8 @@ class AmmoPhysics extends Events {
       // @ts-expect-error: castObject is not yet defined in the Ammo.js types.
       const rb1 = Ammo.castObject(contactManifold.getBody1(), Ammo.btRigidBody)
 
-      const threeObject0 = rb0.threeObject as ExtendedObject3D
-      const threeObject1 = rb1.threeObject as ExtendedObject3D
+      const threeObject0 = rb0.threeObject as ExtendedMesh
+      const threeObject1 = rb1.threeObject as ExtendedMesh
 
       if (!threeObject0 || !threeObject1) {
         continue
@@ -498,7 +498,7 @@ class AmmoPhysics extends Events {
         for (let j = 0; j < numObjects; j++) {
           const vel = rb0.getLinearVelocity()
           const angVel = rb0.getAngularVelocity()
-          const fragment = debris[j] as ExtendedObject3D
+          const fragment = debris[j] as ExtendedMesh
           fragment.userData.ammoPhysicsData.velocity.set(vel.x(), vel.y(), vel.z())
           fragment.userData.ammoPhysicsData.angularVelocity.set(angVel.x(), angVel.y(), angVel.z())
 
@@ -516,7 +516,7 @@ class AmmoPhysics extends Events {
         for (let j = 0; j < numObjects; j++) {
           const vel = rb1.getLinearVelocity()
           const angVel = rb1.getAngularVelocity()
-          const fragment = debris[j] as ExtendedObject3D
+          const fragment = debris[j] as ExtendedMesh
           fragment.userData.ammoPhysicsData.velocity.set(vel.x(), vel.y(), vel.z())
           fragment.userData.ammoPhysicsData.angularVelocity.set(angVel.x(), angVel.y(), angVel.z())
 
@@ -583,13 +583,10 @@ class AmmoPhysics extends Events {
 
   public get add() {
     return {
-      collider: (
-        object1: ExtendedObject3D,
-        object2: ExtendedObject3D,
-        eventCallback: (event: Types.CollisionEvent) => void
-      ) => this.collisionEvents.addCollider(object1, object2, eventCallback),
+      collider: (object1: ExtendedMesh, object2: ExtendedMesh, eventCallback: (event: Types.CollisionEvent) => void) =>
+        this.collisionEvents.addCollider(object1, object2, eventCallback),
       constraints: this.constraints.addConstraints,
-      existing: (object: ExtendedObject3D, config?: Types.AddExistingConfig) => this.addExisting(object, config),
+      existing: (object: ExtendedMesh, config?: Types.AddExistingConfig) => this.addExisting(object, config),
       plane: (planeConfig: Types.PlaneConfig = {}, materialConfig: Types.MaterialConfig = {}) =>
         this.shapes.addPlane(planeConfig, materialConfig),
       sphere: (sphereConfig: Types.SphereConfig = {}, materialConfig: Types.MaterialConfig = {}) =>
@@ -619,7 +616,7 @@ class AmmoPhysics extends Events {
     }
   }
 
-  private prepareThreeObjectForCollisionShape(object: ExtendedObject3D, config: Types.AddExistingConfig = {}) {
+  private prepareThreeObjectForCollisionShape(object: ExtendedMesh, config: Types.AddExistingConfig = {}) {
     const { autoCenter = false } = config
 
     // set default params
@@ -675,9 +672,9 @@ class AmmoPhysics extends Events {
         const center = new Vector3()
         box.setFromObject(object).getCenter(center)
 
-        object.traverse(child => {
-          if (child.isMesh) {
-            child.geometry.translate(-center.x, -center.y, -center.z)
+        object.traverse((child: unknown) => {
+          if ((child as ExtendedMesh).isMesh) {
+            ;(child as ExtendedMesh).geometry.translate(-center.x, -center.y, -center.z)
           }
         })
       }
@@ -700,7 +697,7 @@ class AmmoPhysics extends Events {
     return { shape, params, object }
   }
 
-  public createCollisionShape(shape: string, params: any, object?: ExtendedObject3D): Ammo.btCollisionShape {
+  public createCollisionShape(shape: string, params: any, object?: ExtendedMesh): Ammo.btCollisionShape {
     const quat = object?.quaternion ? object?.quaternion : new Quaternion(0, 0, 0, 1)
     const { axis = 'y' } = params
 
@@ -856,7 +853,7 @@ class AmmoPhysics extends Events {
     return compoundShape
   }
 
-  protected addExisting(object: ExtendedObject3D, config: Types.AddExistingConfig = {}): any {
+  protected addExisting(object: ExtendedMesh, config: Types.AddExistingConfig = {}): any {
     const { hasBody } = object
     if (hasBody) {
       logger(`Object "${object.name}" already has a physical body!`)
@@ -957,7 +954,7 @@ class AmmoPhysics extends Events {
   }
 
   public addRigidBodyToWorld(
-    object: ExtendedObject3D,
+    object: ExtendedMesh,
     rigidBody: Ammo.btRigidBody,
     collisionFlags: number,
     collisionGroup: number,

@@ -22,7 +22,7 @@
     "start:common": "cd packages/common && tsc --watch",
     "start:threeWrapper": "cd packages/threeWrapper && tsc --watch",
     "start:ammoPhysics": "cd packages/ammoPhysics && tsc --watch",
-    "start:ammoOnNodejs": "cd packages/ammoOnNodejs && npm run bundle",
+    "start:ammoOnNodejs": "cd packages/ammoOnNodejs && tsc --watch",
     "start:threeGraphics": "cd packages/threeGraphics && tsc --watch",
     "start:phaserExtension": "cd packages/phaserExtension && tsc --watch",
     "start:enable3d": "cd packages/enable3d && tsc --watch",
@@ -53,11 +53,11 @@
   "homepage": "https://github.com/enable3d/enable3d#readme",
   "dependencies": {
     "@types/matter-js": "0.17.6",
-    "@types/three": "0.161.2",
+    "@types/three": "0.162.0",
     "matter-js": "0.17.1",
     "phaser": "^3.55.2",
     "poly-decomp": "^0.3.0",
-    "three": "0.161.0",
+    "three": "0.162.0",
     "three-csg-ts": "^3.1.10"
   },
   "devDependencies": {

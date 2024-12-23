@@ -10,7 +10,7 @@ import {
   CapsuleConfig,
   ConeConfig,
   CylinderConfig,
-  ExtendedObject3D,
+  ExtendedMesh,
   ExtrudeConfig,
   GroundConfig,
   MaterialConfig,
@@ -23,7 +23,7 @@ import Factories from '@enable3d/common/dist/factories.js'
 class Shapes {
   constructor(
     private factory: Factories,
-    private addExisting: (object: ExtendedObject3D, config?: AddExistingConfig) => void
+    private addExisting: (object: ExtendedMesh, config?: AddExistingConfig) => void
   ) {}
 
   public addPlane(planeConfig: PlaneConfig = {}, materialConfig: MaterialConfig = {}) {

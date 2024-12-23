@@ -16,7 +16,7 @@ import {
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 // import { Factories, Lights, Loaders } from '.'
-import { AmmoPhysics, ExtendedObject3D } from '@enable3d/ammo-physics'
+import { AmmoPhysics, ExtendedMesh } from '@enable3d/ammo-physics'
 import { Factories, Lights, Loaders } from './index.js'
 
 export interface WarpSpeedOptions {
@@ -28,7 +28,7 @@ export interface WarpSpeedOptions {
         hemisphereLight: HemisphereLight
       }
     | undefined
-  ground?: ExtendedObject3D | undefined
+  ground?: ExtendedMesh | undefined
   orbitControls?: OrbitControls | undefined
 }
 
@@ -72,7 +72,7 @@ export default class WarpSpeed {
         directionalLight: DirectionalLight
         hemisphereLight: HemisphereLight
       }
-      ground?: ExtendedObject3D
+      ground?: ExtendedMesh
       orbitControls?: OrbitControls
     } = {}
 
@@ -200,7 +200,7 @@ export default class WarpSpeed {
         phong: { map: addGrid ? texture : null, color: 0xffffff }
       }
 
-      let ground: ExtendedObject3D
+      let ground: ExtendedMesh
 
       if (window.__loadPhysics) {
         ground = this.physics.add.ground(geometry, material)
