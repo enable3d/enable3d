@@ -32,7 +32,7 @@ const get = url => {
 
 // get the regex match for all example names
 const getExamples = async () => {
-  const re = /\.\/examples\/([a-z0-9-]+)\.html/g
+  const re = /\.\/examples\/([a-z0-9-/]+)\.html/g
   const html = await get('https://enable3d.io/examples.html')
 
   let examples = []
@@ -59,12 +59,12 @@ const createScreenshotsDirectory = () => {
 const removeAllExistingScreenshots = () => {
   // remove all screenshots
   const screenshotsPath = path.resolve(__dirname, '../screenshots')
-  fs.readdir(screenshotsPath, function(err, files) {
+  fs.readdir(screenshotsPath, function (err, files) {
     if (err) {
       return console.log('Unable to scan directory: ' + err)
     }
 
-    files.forEach(function(file) {
+    files.forEach(function (file) {
       if (/\.png$/.test(file)) {
         fs.unlink(path.join(screenshotsPath, file), err => {
           if (err) {
@@ -88,7 +88,7 @@ const main = async () => {
   examples.forEach((e, i) => {
     // if (i >= 4) return
     const t = template.replace('EXAMPLES_PLACEHOLDER', `'${e}'`)
-    fs.writeFileSync(path.resolve(__dirname, `${e.trim()}.tmp.test.js`), t)
+    fs.writeFileSync(path.resolve(__dirname, `${e.trim().replace('/', '-')}.tmp.test.js`), t)
   })
 }
 
