@@ -10,7 +10,7 @@
     "start": "npm run dev",
     "dev": "npm-run-all --parallel start:*",
     "build": "node scripts/build.mjs",
-    "bundle": "node scripts/webpack.mjs",
+    "bundle": "node scripts/webpack.mjs && node scripts/esbuild.mjs",
     "format": "prettier --write packages/**/*.ts",
     "headless": "nodemon packages/dev/src/headless-node.js",
     "lint": "eslint packages/**/*.ts",
