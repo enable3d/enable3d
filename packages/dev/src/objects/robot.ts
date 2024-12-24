@@ -1,17 +1,18 @@
-import MainScene from '../scenes/mainScene'
+import { ExtendedMesh, ExtendedObject3D } from 'enable3d'
+import MainScene from '../scenes/mainScene.js'
 
-const Robot = (scene: MainScene) => {
-  const robot = scene.third.new.extendedObject3D()
+const addRobot = (scene: MainScene, ground: ExtendedMesh) => {
+  let robot = new ExtendedObject3D()
+
   const pos = { x: 3, y: 2, z: -19 }
 
-  scene.third.load.fbx('assets/Idle.fbx', (object: any) => {
+  scene.third.load.fbx('assets/Idle.fbx').then(object => {
     robot.add(object)
 
-    robot.mixer = scene.third.new.animationMixer(robot)
+    scene.third.animationMixers.add(robot.animation.mixer)
 
-    robot.anims['Idle'] = object.animations[0]
-    robot.action = robot.mixer.clipAction(object.animations[0])
-    robot.action.play()
+    robot.anims.add('Idle', object.animations[0])
+    robot.anims.play('Idle')
     robot.traverse(child => {
       // @ts-ignore
       if (child.isMesh) {
@@ -24,7 +25,7 @@ const Robot = (scene: MainScene) => {
     robot.position.set(pos.x, pos.y, pos.z)
     robot.rotation.set(0, -Math.PI / 2, 0)
     scene.third.add.existing(robot)
-    scene.third.physics.add.existing(robot, { width: 3, depth: 3 })
+    scene.third.physics.add.existing(robot as any, { width: 3, depth: 3 })
 
     // not 100% sure how this works :/
     // robot.body.setAngularFactor(0, 1, 0)
@@ -38,7 +39,7 @@ const Robot = (scene: MainScene) => {
         z: pos.z - 4,
         height: 5,
         name: 'ghost',
-        collisionFlag: 4,
+        collisionFlags: 4,
         mass: 0.0001
       },
       { standard: { transparent: true, opacity: 0.2 } }
@@ -49,7 +50,7 @@ const Robot = (scene: MainScene) => {
     // sensor.body.ammo.setAngularUpperLimit(0, 0, 0)
 
     scene.third.physics.add.constraints.lock(robot.body, sensor.body)
-    scene.third.physics.add.collider(sensor, scene.third.ground, event => {
+    scene.third.physics.add.collider(sensor, ground, event => {
       if (event === 'end') robot.body.setAngularVelocityY(5)
       else robot.body.setAngularVelocityY(0)
     })
@@ -57,9 +58,9 @@ const Robot = (scene: MainScene) => {
     // load more animations
     const animations = ['Walking']
     animations.forEach(key => {
-      scene.third.load.fbx(`assets/${key}.fbx`, (object: any) => {
-        robot.anims[key] = object.animations[0]
-        robot.setAction('Walking')
+      scene.third.load.fbx(`assets/${key}.fbx`).then((object: any) => {
+        robot.anims.add('Walking', object.animations[0])
+        robot.anims.play('Walking')
       })
     })
   })
@@ -67,4 +68,4 @@ const Robot = (scene: MainScene) => {
   return robot
 }
 
-export default Robot
+export { addRobot }

@@ -1,10 +1,10 @@
-import startPhaserGame from './phaserGame'
-import startProject from './threeScene'
-import startProjectFlatDev0 from './threeSceneFlatDev0'
-import startProjectFlatDev1 from './threeSceneFlatDev1'
-import startProjectFlatDev2 from './threeSceneFlatDev2'
-import startPhysics from './physics'
-import startHeadless from './headless'
+import startPhaserGame from './phaserGame.js'
+import startProject from './threeScene.js'
+import startProjectFlatDev0 from './threeSceneFlatDev0.js'
+import startProjectFlatDev1 from './threeSceneFlatDev1.js'
+import startProjectFlatDev2 from './threeSceneFlatDev2.js'
+import startPhysics from './physics.js'
+import startHeadless from './headless.js'
 
 // uncomment the one you want to debug
 

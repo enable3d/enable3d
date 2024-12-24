@@ -3,11 +3,11 @@ import { Camera, NearestFilter, Scene } from 'three'
 import { Mesh, PlaneGeometry, MeshLambertMaterial, DoubleSide } from 'three'
 
 class MainScene extends Scene3D {
-  ui: FLAT.FlatArea
+  ui!: FLAT.FlatArea
 
   // get an instance of matter.js if you need 2d physics.
   matter = new FLAT.physics()
-  ball: FLAT.SimpleSprite
+  ball!: FLAT.SimpleSprite
 
   async init() {}
 

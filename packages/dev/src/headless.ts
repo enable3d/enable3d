@@ -1,5 +1,5 @@
 // import { THREE } from '@enable3d/phaser-extension'
-import { AmmoPhysics, Clock, PhysicsLoader } from '@enable3d/phaser-extension/node_modules/@enable3d/ammo-physics'
+import { AmmoPhysics, Clock, PhysicsLoader } from '@enable3d/ammo-physics'
 
 const MainScene = () => {
   const physics = new AmmoPhysics('headless')

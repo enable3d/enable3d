@@ -23,7 +23,11 @@ module.exports = {
       three: resolve('../../node_modules/three')
     },
     // Add `.ts` and `.tsx` as a resolvable extension.
-    extensions: ['.ts', '.tsx', '.js']
+    extensions: ['.ts', '.tsx', '.js'],
+    extensionAlias: {
+      '.js': ['.ts', '.js'],
+      '.mjs': ['.mts', '.mjs']
+    }
   },
   module: {
     rules: [

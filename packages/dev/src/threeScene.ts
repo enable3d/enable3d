@@ -1,11 +1,10 @@
 import { ExtendedObject3D, FLAT, PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
 import { MeshStandardMaterial, REVISION } from 'three'
-import { FlatArea } from '../../threeGraphics/jsm/flat'
 
 const isTouchDevice = 'ontouchstart' in window
 
 class MainScene extends Scene3D {
-  ui!: FlatArea
+  ui!: FLAT.FlatArea
 
   preRender() {
     FLAT.preRender(this.renderer)

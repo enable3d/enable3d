@@ -5,13 +5,13 @@ import * as Matter from 'matter-js'
 import { Keyboard } from '@yandeu/keyboard'
 
 class MainScene extends Scene3D {
-  ui: FLAT.FlatArea
+  ui!: FLAT.FlatArea
 
   matter = new FLAT.physics()
-  ball: FLAT.SimpleSprite
+  ball!: FLAT.SimpleSprite
 
-  atlas: FLAT.Atlas
-  shapes: string
+  atlas!: FLAT.Atlas
+  shapes!: string
 
   async preload() {
     // physics (fruits) TextureAtlas + Shapes

@@ -2,7 +2,7 @@ import { FLAT, PhysicsLoader, Project, Scene3D } from 'enable3d'
 import { Camera, Scene, OrthographicCamera } from 'three'
 
 class MainScene extends Scene3D {
-  ui: FLAT.FlatArea
+  ui!: FLAT.FlatArea
   matter = new FLAT.physics()
 
   async create() {

@@ -1,10 +1,16 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "@tsconfig/node18/tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./",
-    "baseUrl": "./",
-    "paths": {}
+    "outDir": "dist",
+    "rootDir": "src",
+
+    "lib": ["es2023", "dom"],
+
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    "allowJs": true
   },
   "include": ["src/**/*", "types/**/*"]
 }

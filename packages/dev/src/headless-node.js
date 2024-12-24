@@ -1,8 +1,14 @@
-var _ammo = require('@enable3d/ammo-on-nodejs/ammo/ammo.js')
+import Module from 'node:module'
+import path from 'path'
+import { Physics, ServerClock, Loaders, ExtendedObject3D } from '../../ammoOnNodejs/dist/index.js'
+import { dirname } from 'path'
+import { fileURLToPath } from 'url'
 
-const { Physics, ServerClock, Loaders, ExtendedObject3D, ExtendedMesh } = require('@enable3d/ammo-on-nodejs')
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+const require = Module.createRequire(import.meta.url)
 
-const path = require('path')
+var _ammo = require(path.resolve(__dirname, '../../ammoOnNodejs/ammo/ammo.cjs'))
 
 const MainScene = () => {
   const physics = new Physics()
@@ -22,9 +28,11 @@ const MainScene = () => {
       }, 100)
   })
 
+  let hero, robot
+
   const FBXLoader = new Loaders.FBXLoader()
   FBXLoader.load(path.resolve(__dirname, '../public/assets/Idle.fbx')).then(fbx => {
-    const robot = new ExtendedObject3D()
+    robot = new ExtendedObject3D()
     robot.name = 'robot'
 
     robot.add(fbx)
@@ -37,14 +45,13 @@ const MainScene = () => {
     }
 
     physics.add.existing(robot, physicsOptions)
-    this.robot = robot
   })
 
   const GLTFLoader = new Loaders.GLTFLoader()
   GLTFLoader.load(path.resolve(__dirname, '../public/assets/hero.glb')).then(gltf => {
     const child = gltf.scene.children[0]
 
-    const hero = new ExtendedObject3D()
+    hero = new ExtendedObject3D()
     hero.name = 'hero'
 
     hero.add(child)
@@ -57,7 +64,7 @@ const MainScene = () => {
 
     physics.add.existing(hero, physicsOptions)
 
-    this.hero = hero
+    hero = hero
   })
 
   // clock
@@ -71,14 +78,14 @@ const MainScene = () => {
   const animate = delta => {
     physics.update(delta * 1000)
 
-    if (this.hero && this.hero.body) {
-      const pos = this.hero.position.y.toFixed(2)
-      if (pos > 10) console.log(this.hero.name, pos)
+    if (hero && hero.body) {
+      const pos = hero.position.y.toFixed(2)
+      if (pos > 10) console.log(hero.name, pos)
     }
 
-    if (this.robot && this.robot.body) {
-      const pos = this.robot.position.y.toFixed(2)
-      if (pos > 10) console.log(this.robot.name, pos)
+    if (robot && robot.body) {
+      const pos = robot.position.y.toFixed(2)
+      if (pos > 10) console.log(robot.name, pos)
     }
   }
   clock.onTick(delta => {

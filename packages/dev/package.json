@@ -4,8 +4,9 @@
   "version": "0.25.4",
   "description": "",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
-    "start": "webpack serve --config webpack.dev.js"
+    "start": "webpack serve --config webpack.dev.cjs"
   },
   "keywords": [],
   "author": "Yannick Deubel",

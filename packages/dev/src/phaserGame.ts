@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser'
-import MainScene from './scenes/mainScene'
-import PreloadScene from './scenes/preloadScene'
+import MainScene from './scenes/mainScene.js'
+import PreloadScene from './scenes/preloadScene.js'
 import { Canvas, ExtendedObject3D, enable3d } from '@enable3d/phaser-extension'
 
 const startPhaserGame = () => {
