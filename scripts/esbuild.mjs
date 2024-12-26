@@ -31,3 +31,12 @@ await esbuild.build({
   minify: true,
   plugins: [threeAsExtern()]
 })
+
+await esbuild.build({
+  entryPoints: ['packages/enable3d/src/index.ts'],
+  bundle: true,
+  outfile: 'bundles/enable3d.framework.' + PKG_VERSION + '.module.min.js',
+  platform: 'browser',
+  format: 'esm',
+  minify: true
+})
