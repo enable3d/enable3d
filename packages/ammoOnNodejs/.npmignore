@@ -2,5 +2,5 @@
 
 !/README.md
 !/ammo
-!/dist
+!/dist/**/*
 !/package.json
