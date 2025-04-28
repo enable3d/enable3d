@@ -113,77 +113,98 @@ export default class Loaders {
   }
 
   public file(url: string) {
-    const key = this.cache.get(url)
-    url = key ? key : url
+    const cachedPayload = this.cache.get(url);
+    if (cachedPayload) {
+      return Promise.resolve(cachedPayload);
+    }
 
     return new Promise(resolve => {
       this.fileLoader.load(url, file => {
-        return resolve(file)
-      })
-    })
+        this.cache.add(url, file); // Cache the loaded file
+        resolve(file);
+      });
+    });
   }
 
   public svg(url: string): Promise<SVGResult> {
-    const key = this.cache.get(url)
-    url = key ? key : url
+    const cachedPayload = this.cache.get(url);
+    if (cachedPayload) {
+      return Promise.resolve(cachedPayload);
+    }
 
     return new Promise(resolve => {
       this.svgLoader.load(url, svg => {
-        return resolve(svg)
-      })
-    })
+        this.cache.add(url, svg); // Cache the loaded SVG
+        resolve(svg);
+      });
+    });
   }
 
   public texture(url: string): Promise<Texture> {
-    const isBase64 = /^data:image\/[\S]+;base64,/gm.test(url)
+    const isBase64 = /^data:image\/[\S]+;base64,/gm.test(url);
 
-    // we do not want to cache base64 images
+    // We do not want to cache base64 images
     if (!isBase64) {
-      const key = this.cache.get(url)
-      url = key ? key : url
+      const cachedPayload = this.cache.get(url);
+      if (cachedPayload) {
+        return Promise.resolve(cachedPayload);
+      }
     }
 
     return new Promise(resolve => {
       this.textureLoader.load(url, (texture: Texture) => {
-        texture.anisotropy = this.textureAnisotropy
-        texture.needsUpdate = true
+        texture.anisotropy = this.textureAnisotropy;
+        texture.needsUpdate = true;
 
-        resolve(texture)
-      })
-    })
+        if (!isBase64) {
+          this.cache.add(url, texture); // Cache the loaded texture
+        }
+
+        resolve(texture);
+      });
+    });
   }
 
   // examples: https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4
   public object(url: string): Promise<any> {
-    const key = this.cache.get(url)
-    url = key ? key : url
+    const cachedPayload = this.cache.get(url);
+    if (cachedPayload) {
+      return Promise.resolve(cachedPayload);
+    }
 
     return new Promise(resolve => {
       this.objectLoader.load(url, (json: any) => {
-        resolve(json)
-      })
-    })
+        this.cache.add(url, json); // Cache the loaded object
+        resolve(json);
+      });
+    });
   }
 
   public gltf(url: string): Promise<GLTF> {
-    const key = this.cache.get(url)
-    url = key ? key : url
+    const cachedPayload = this.cache.get(url);
+    if (cachedPayload) {
+      return Promise.resolve(cachedPayload);
+    }
 
     return new Promise(resolve => {
       this.gltfLoader.load(url, (gltf: GLTF) => {
-        resolve(gltf)
-      })
-    })
+        this.cache.add(url, gltf); // Cache the loaded GLTF
+        resolve(gltf);
+      });
+    });
   }
 
   public fbx(url: string): Promise<Group> {
-    const key = this.cache.get(url)
-    url = key ? key : url
+    const cachedPayload = this.cache.get(url);
+    if (cachedPayload) {
+      return Promise.resolve(cachedPayload);
+    }
 
     return new Promise(resolve => {
       this.fbxLoader.load(url, (fbx: Group) => {
-        resolve(fbx)
-      })
-    })
+        this.cache.add(url, fbx); // Cache the loaded FBX
+        resolve(fbx);
+      });
+    });
   }
 }
