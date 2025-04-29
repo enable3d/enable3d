@@ -1,6 +1,6 @@
 {
   "name": "enable3d",
-  "version": "0.26.1",
+  "version": "0.26.2",
   "description": "3D Framework for Web, Mobile and PC",
   "main": "dist/index.js",
   "type": "module",
@@ -32,10 +32,10 @@
   },
   "homepage": "https://enable3d.io",
   "dependencies": {
-    "@enable3d/ammo-physics": "^0.26.1",
-    "@enable3d/common": "^0.26.1",
-    "@enable3d/three-graphics": "^0.26.1",
-    "@enable3d/three-wrapper": "^0.26.1"
+    "@enable3d/ammo-physics": "^0.26.2",
+    "@enable3d/common": "^0.26.2",
+    "@enable3d/three-graphics": "^0.26.2",
+    "@enable3d/three-wrapper": "^0.26.2"
   },
   "funding": {
     "url": "https://github.com/sponsors/yandeu"

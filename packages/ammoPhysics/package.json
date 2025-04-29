@@ -1,6 +1,6 @@
 {
   "name": "@enable3d/ammo-physics",
-  "version": "0.26.1",
+  "version": "0.26.2",
   "description": "Physics Plugin for three.js",
   "main": "dist/index.js",
   "type": "module",
@@ -30,8 +30,8 @@
   },
   "homepage": "https://enable3d.io",
   "dependencies": {
-    "@enable3d/common": "^0.26.1",
-    "@enable3d/three-wrapper": "^0.26.1",
+    "@enable3d/common": "^0.26.2",
+    "@enable3d/three-wrapper": "^0.26.2",
     "@yandeu/events": "0.0.7"
   },
   "peerDependencies": {
