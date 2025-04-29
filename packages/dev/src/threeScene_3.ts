@@ -8,6 +8,7 @@ import { ConvexHull, VertexNode } from 'three/examples/jsm/math/ConvexHull.js'
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import { getDataFromGeometry } from './threeScene_2.js'
 import { count } from 'console'
+import { SimplifyModifier } from 'three/examples/jsm/modifiers/SimplifyModifier.js'
 
 const isTouchDevice = 'ontouchstart' in window
 
@@ -71,94 +72,104 @@ class MainScene extends Scene3D {
     const meshes: Array<Mesh> = []
 
     const add_gltf_model = true
-    const compound_of_hull = true
-    const one_big_hull_2 = true
+    const BvhTriangleMesh = true
+    const GimpactTriangleMesh = false
 
     if (add_gltf_model) {
       const gltf = await this.load.gltf('tank')
       const m = gltf.scene
-      m.position.setZ(-2)
+      m.position.setZ(-0.5)
+      m.position.setY(-1)
+      m.position.set(-1, -1, 1)
       m.scale.set(0.5, 0.5, 0.5)
-      this.add.existing(m)
-      this.physics.add.existing(m, { shape: 'mesh' })
+      // this.add.existing(m)
+      // this.physics.add.existing(m, { shape: 'hacd', width: 5, depth: 5, collisionFlags: 1, mass: 0 })
       gltf.scene.position.x - 2
     }
 
-    if (compound_of_hull) {
+    if (BvhTriangleMesh) {
       const gltf = await this.load.gltf('tank')
-      const m = gltf.scene.clone(true)
-      // const m = new ExtendedGroup()
-      // m.add(this.make.box({ width: 0.5, height: 0.8 }))
+      let m = gltf.scene.clone(true)
 
       m.position.set(-1, 3, 1)
-      m.scale.set(0.5, 0.5, 0.5)
+      //m.scale.set(0.5, 0.5, 0.5)
       m.rotateX(1)
 
-      const data: Array<{ vertices: Array<number>; indices: Array<number>; matrixWorld: Array<number> }> = []
+      //---
 
-      setTimeout(() => {
-        m.traverse(child => {
-          if (child instanceof Mesh) {
-            const geo = child.geometry.clone()
-            geo.applyMatrix4(child.matrixWorld)
-            const d = { ...getDataFromGeometry(geo), matrixWorld: Array.from(child.matrixWorld.toArray()) }
-            data.push(d)
-          }
-        })
+      const data: Array<{ vertices: Array<number>; indices: Array<number> }> = []
 
-        const btVertex = new Ammo.btVector3()
+      m.traverse(child => {
+        if (child instanceof Mesh) {
+          const geo = child.geometry.clone()
+          // const modifier = new SimplifyModifier()
+          // const count = Math.floor(geo.attributes.position.count * 0.875) // number of vertices to remove
+          // const geo_simplified = modifier.modify(geo, count)
 
-        const hull_array: Array<Ammo.btCollisionShape> = []
-        data.forEach((d, i) => {
-          const originalHull = new Ammo.btConvexHullShape()
-          originalHull.setMargin(MARGIN)
+          geo.applyMatrix4(child.matrixWorld)
+          const d = getDataFromGeometry(geo)
+          data.push(d)
+        }
+      })
 
-          for (let i = 0; i < d.vertices.length; i += 3) {
-            btVertex.setValue(d.vertices[i], d.vertices[i + 1], d.vertices[i + 2])
-            originalHull.addPoint(btVertex)
-          }
+      const btVertex = new Ammo.btVector3()
 
-          originalHull.recalcLocalAabb()
+      const hull_array: Array<Ammo.btCollisionShape> = []
+      data.forEach((d, i) => {
+        const bta = new Ammo.btVector3()
+        const btb = new Ammo.btVector3()
+        const btc = new Ammo.btVector3()
+        const triMesh = new Ammo.btTriangleMesh(true, false)
 
-          let collisionShape = originalHull
+        const va = new Vector3()
+        const vb = new Vector3()
+        const vc = new Vector3()
+        const matrix = new Matrix4()
 
-          //Bullet documentation says don't use convexHulls with 100 verts or more
-          if (originalHull.getNumVertices() >= 100) {
-            const shapeHull = new Ammo.btShapeHull(originalHull)
-            shapeHull.buildHull(MARGIN)
-            Ammo.destroy(originalHull)
+        const { indices: faces, vertices } = d
+        for (let j = 0; j < faces.length; j += 3) {
+          const ai = faces[j] * 3
+          const bi = faces[j + 1] * 3
+          const ci = faces[j + 2] * 3
+          va.set(vertices[ai], vertices[ai + 1], vertices[ai + 2]).applyMatrix4(matrix)
+          vb.set(vertices[bi], vertices[bi + 1], vertices[bi + 2]).applyMatrix4(matrix)
+          vc.set(vertices[ci], vertices[ci + 1], vertices[ci + 2]).applyMatrix4(matrix)
+          bta.setValue(va.x, va.y, va.z)
+          btb.setValue(vb.x, vb.y, vb.z)
+          btc.setValue(vc.x, vc.y, vc.z)
+          triMesh.addTriangle(bta, btb, btc, false)
+        }
+        let collisionShape
+        collisionShape = new Ammo.btGImpactMeshShape(triMesh)
+        collisionShape.setLocalScaling(new Ammo.btVector3(1, 1, 1))
+        collisionShape.setMargin(0.01)
+        collisionShape.updateBound()
 
-            collisionShape = new Ammo.btConvexHullShape(
-              // @ts-expect-error
-              Ammo.getPointer(shapeHull.getVertexPointer()),
-              shapeHull.numVertices()
-            )
-            Ammo.destroy(shapeHull) // btConvexHullShape makes a copy
-          }
+        //collisionShape.child
 
-          // https://github.com/bulletphysics/bullet3/issues/1970
-          // collisionShape.initializePolyhedralFeatures(0)
-          // this.physics.physicsWorld.getDispatchInfo().m_enableSatConvex = true
+        // https://github.com/bulletphysics/bullet3/issues/1970
+        // collisionShape.initializePolyhedralFeatures(0)
+        // this.physics.physicsWorld.getDispatchInfo().m_enableSatConvex = true
 
-          hull_array.push(collisionShape)
-        })
+        hull_array.push(collisionShape)
+      })
 
-        Ammo.destroy(btVertex)
+      Ammo.destroy(btVertex)
 
-        this.add.existing(m)
+      this.add.existing(m)
 
-        const compoundShape = this.physics.mergeCollisionShapesToCompoundShape(hull_array)
-        const localTransform = this.physics.applyPosQuatScaleMargin(compoundShape, m.position, m.quaternion, m.scale)
-        //const localTransform = this.physics.applyPosQuatScaleMargin(compoundShape)
-        const rigidBody = this.physics.collisionShapeToRigidBody(compoundShape, localTransform, 1, false)
+      const compoundShape = this.physics.mergeCollisionShapesToCompoundShape(hull_array)
+      compoundShape.setLocalScaling
+      const localTransform = this.physics.applyPosQuatScaleMargin(compoundShape, m.position, m.quaternion, m.scale)
+      //const localTransform = this.physics.applyPosQuatScaleMargin(compoundShape)
+      const rigidBody = this.physics.collisionShapeToRigidBody(compoundShape, localTransform, 1, false)
 
-        Ammo.destroy(localTransform)
+      Ammo.destroy(localTransform)
 
-        this.physics.addRigidBodyToWorld(m, rigidBody)
-      }, 500)
+      this.physics.addRigidBodyToWorld(m, rigidBody)
     }
 
-    if (one_big_hull_2) {
+    if (GimpactTriangleMesh) {
       const gltf = await this.load.gltf('tank')
       const m = gltf.scene.clone(true)
       m.position.set(1, 3, 1)

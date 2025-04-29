@@ -32,7 +32,7 @@ export function getDataFromGeometry(geometry: THREE.BufferGeometry) {
       indices.push(i)
     }
   }
-  return { vertices, indices }
+  return { vertices: Array.from(position.array), indices }
 }
 
 class MainScene extends Scene3D {
@@ -120,8 +120,8 @@ class MainScene extends Scene3D {
 
           const hacd = new Ammo.HACD()
 
-          let vertexCount = vertices.length
-          let triCount = indexes.length
+          let vertexCount = vertices.length / 3
+          let triCount = indexes.length / 3
 
           console.log(vertexCount, triCount)
 
@@ -136,10 +136,12 @@ class MainScene extends Scene3D {
             tptr = triangles / 4
 
           {
-            const components = vertices
             matrix.fromArray(new Matrix4().scale(new Vector3(1, 1, 1)).toArray())
-            for (let j = 0; j < components.length; j++) {
-              vector.set(components[j].x, components[j].y, components[j].z).applyMatrix4(matrix).sub(center)
+            for (let j = 0; j < vertices.length; j += 3) {
+              vector
+                .set(vertices[j], vertices[j + 1], vertices[j + 2])
+                .applyMatrix4(matrix)
+                .sub(center)
               Ammo.HEAPF64[pptr + 0] = vector.x
               Ammo.HEAPF64[pptr + 1] = vector.y
               Ammo.HEAPF64[pptr + 2] = vector.z
@@ -152,7 +154,8 @@ class MainScene extends Scene3D {
                 tptr++
               }
             } else {
-              for (let j = 0; j < components.length; j++) {
+              throw 'no indices'
+              for (let j = 0; j < vertices.length; j++) {
                 Ammo.HEAP32[tptr] = j
                 tptr++
               }
@@ -187,7 +190,6 @@ class MainScene extends Scene3D {
               Ammo.destroy(btVertex)
             }
 
-            //_finishCollisionShape(hull, options, scale)
             hull_array.push(hull)
           }
           g.dispose()
