@@ -701,6 +701,23 @@ class AmmoPhysics extends Events {
     return { shape, params, object }
   }
 
+  // prepare data to pass to three-to-ammo.js
+  extractData = (object: any) => {
+    console.log('extract dat')
+
+    const matrixWorld = new Matrix4().elements
+    const vertices: any[] = []
+    const matrices: any[] = []
+    const indexes: any[] = []
+    iterateGeometries(object, {}, (vertexArray: any, matrixArray: any, indexArray: any) => {
+      vertices.push(vertexArray)
+      matrices.push(matrixArray)
+      indexes.push(indexArray)
+    })
+
+    return { vertices, matrices, indexes, matrixWorld }
+  }
+
   public createCollisionShape(
     shape: string,
     params: any,
@@ -708,6 +725,11 @@ class AmmoPhysics extends Events {
   ): Ammo.btCollisionShape {
     const quat = object?.quaternion ? object?.quaternion : new Quaternion(0, 0, 0, 1)
     const { axis = 'y' } = params
+
+    // some aliases
+    if (shape === 'extrude') shape = 'hacd'
+    if (shape === 'mesh' || shape === 'convex') shape = 'convexMesh'
+    if (shape === 'concave') shape = 'concaveMesh'
 
     const btHalfExtents = new Ammo.btVector3()
 
@@ -719,24 +741,9 @@ class AmmoPhysics extends Events {
       object.geometry = new BufferGeometry().fromGeometry(geometry)
     }
 
-    // prepare data to pass to three-to-ammo.js
-    const extractData = (object: any) => {
-      const matrixWorld = new Matrix4().elements
-      const vertices: any[] = []
-      const matrices: any[] = []
-      const indexes: any[] = []
-      iterateGeometries(object, {}, (vertexArray: any, matrixArray: any, indexArray: any) => {
-        vertices.push(vertexArray)
-        matrices.push(matrixArray)
-        indexes.push(indexArray)
-      })
-
-      return { vertices, matrices, indexes, matrixWorld }
-    }
-
     let d = {} as any
     // extract data for complex shapes generated with three-to-ammo.js
-    if (this.complexShapes.indexOf(shape) !== -1) d = extractData(object)
+    if (this.complexShapes.indexOf(shape) !== -1) d = this.extractData(object)
 
     let collisionShape
     switch (shape) {
@@ -964,9 +971,9 @@ class AmmoPhysics extends Events {
   public addRigidBodyToWorld(
     object: ExtendedMesh | ExtendedGroup,
     rigidBody: Ammo.btRigidBody,
-    collisionFlags: number,
-    collisionGroup: number,
-    collisionMask: number,
+    collisionFlags = 0,
+    collisionGroup = 1,
+    collisionMask = -1,
     offset?: { x?: number; y?: number; z?: number }
   ) {
     this.rigidBodies.push(object)
@@ -989,9 +996,9 @@ class AmmoPhysics extends Events {
 
   public applyPosQuatScaleMargin(
     collisionShape: Ammo.btCollisionShape,
-    pos: Vector3 = new Vector3(),
-    quat: Quaternion = new Quaternion(),
-    scale: Vector3 = new Vector3(),
+    pos: Vector3 = new Vector3(1, 1, 1),
+    quat: Quaternion = new Quaternion(0, 0, 0, 1),
+    scale: Vector3 = new Vector3(1, 1, 1),
     margin: number = 0.01
   ) {
     collisionShape.setMargin(margin)
