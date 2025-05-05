@@ -2,13 +2,16 @@ import { MeshStandardMaterial } from 'three'
 import { extendToGridPrototypeMaterial } from './proceduralPrototypeGridShader.js'
 
 class DefaultMaterial {
-  private _defaultMaterial: MeshStandardMaterial
-  private _defaultMaterialDynamic: MeshStandardMaterial
-  private _defaultMaterialStatic: MeshStandardMaterial
-  private _defaultMaterialKinematic: MeshStandardMaterial
+  private _defaultMaterial = new MeshStandardMaterial()
+  private _defaultMaterialDynamic = new MeshStandardMaterial()
+  private _defaultMaterialStatic = new MeshStandardMaterial()
+  private _defaultMaterialKinematic = new MeshStandardMaterial()
 
-  constructor() {
-    this._defaultMaterial = new MeshStandardMaterial()
+  constructor(isHeadless: boolean = false) {
+    if (isHeadless) {
+      return
+    }
+
     this._defaultMaterial.metalness = 0
     this._defaultMaterial.roughness = 0
     this._defaultMaterial.userData = { defaultMaterial: true }
@@ -23,7 +26,6 @@ class DefaultMaterial {
       color2: '#d4d4d4'
     })
 
-    this._defaultMaterialDynamic = new MeshStandardMaterial()
     this._defaultMaterialDynamic.metalness = 0
     this._defaultMaterialDynamic.roughness = 0
     this._defaultMaterialDynamic.userData = { defaultMaterial: true }
@@ -38,7 +40,6 @@ class DefaultMaterial {
       color2: '#0b9ffc'
     })
 
-    this._defaultMaterialStatic = new MeshStandardMaterial()
     this._defaultMaterialStatic.metalness = 0
     this._defaultMaterialStatic.roughness = 0
     this._defaultMaterialStatic.userData = { defaultMaterial: true }
@@ -53,7 +54,6 @@ class DefaultMaterial {
       color2: '#00c204'
     })
 
-    this._defaultMaterialKinematic = new MeshStandardMaterial()
     this._defaultMaterialKinematic.metalness = 0
     this._defaultMaterialKinematic.roughness = 0
     this._defaultMaterialKinematic.userData = { defaultMaterial: true }

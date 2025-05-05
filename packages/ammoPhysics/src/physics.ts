@@ -894,32 +894,34 @@ class AmmoPhysics extends Events {
     const isDynamicObject = !isStaticObject && !isKinematicObject
 
     // add default materials
-    if (object instanceof Group) {
-      object.traverse(child => {
-        if (
-          child instanceof Mesh &&
-          child.material instanceof MeshStandardMaterial &&
-          child.material?.userData?.defaultMaterial === true
-        ) {
-          child.material = isStaticObject
-            ? this.defaultMaterial.getStatic()
-            : isKinematicObject
-              ? this.defaultMaterial.getKinematic()
-              : this.defaultMaterial.getDynamic()
-          child.material.needsUpdate = true
-        }
-      })
-    } else if (
-      object instanceof Mesh &&
-      object.material instanceof MeshStandardMaterial &&
-      object.material?.userData?.defaultMaterial === true
-    ) {
-      object.material = isStaticObject
-        ? this.defaultMaterial.getStatic()
-        : isKinematicObject
-          ? this.defaultMaterial.getKinematic()
-          : this.defaultMaterial.getDynamic()
-      object.material.needsUpdate = true
+    if (!this.isHeadless) {
+      if (object instanceof Group) {
+        object.traverse(child => {
+          if (
+            child instanceof Mesh &&
+            child.material instanceof MeshStandardMaterial &&
+            child.material?.userData?.defaultMaterial === true
+          ) {
+            child.material = isStaticObject
+              ? this.defaultMaterial.getStatic()
+              : isKinematicObject
+                ? this.defaultMaterial.getKinematic()
+                : this.defaultMaterial.getDynamic()
+            child.material.needsUpdate = true
+          }
+        })
+      } else if (
+        object instanceof Mesh &&
+        object.material instanceof MeshStandardMaterial &&
+        object.material?.userData?.defaultMaterial === true
+      ) {
+        object.material = isStaticObject
+          ? this.defaultMaterial.getStatic()
+          : isKinematicObject
+            ? this.defaultMaterial.getKinematic()
+            : this.defaultMaterial.getDynamic()
+        object.material.needsUpdate = true
+      }
     }
 
     const {

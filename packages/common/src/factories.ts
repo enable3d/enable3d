@@ -64,7 +64,7 @@ export default class Factories {
 
   constructor(private scene: Scene | 'headless') {
     this.isHeadless = scene === 'headless' ? true : false
-    this.defaultMaterial = new DefaultMaterial()
+    this.defaultMaterial = new DefaultMaterial(this.isHeadless)
   }
 
   public get make(): {
