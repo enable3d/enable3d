@@ -7,6 +7,7 @@ import {
   Mesh,
   OrthographicCamera,
   PerspectiveCamera,
+  PlaneGeometry,
   RepeatWrapping,
   Scene,
   ShaderMaterial,
@@ -15,9 +16,10 @@ import {
 } from 'three'
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-// import { Factories, Lights, Loaders } from '.'
 import { AmmoPhysics, ExtendedMesh } from '@enable3d/ammo-physics'
 import { Factories, Lights, Loaders } from './index.js'
+import { MaterialConfig } from '@enable3d/common/dist/types.js'
+import { Reflector } from 'three/examples/jsm/objects/Reflector.js'
 
 export interface WarpSpeedOptions {
   camera?: PerspectiveCamera | OrthographicCamera | undefined
@@ -183,20 +185,44 @@ export default class WarpSpeed {
     }
 
     if (features.includes('ground')) {
+      const SIZE = 21
+
       // grid (texture)
       const addGrid = features.includes('grid')
+      // const gridData =
+      //   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOnAAADusBZ+q87AAAAJtJREFUeJzt0EENwDAAxLDbNP6UOxh+NEYQ5dl2drFv286598GrA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAu37AD8eaBH5JQdVbAAAAAElFTkSuQmCC'
+
       const gridData =
-        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOnAAADusBZ+q87AAAAJtJREFUeJzt0EENwDAAxLDbNP6UOxh+NEYQ5dl2drFv286598GrA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAa4AO0BqgA7QG6ACtATpAu37AD8eaBH5JQdVbAAAAAElFTkSuQmCC'
+        'data:image/png;base64,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'
 
       const texture = await this.load.texture(gridData)
 
       texture.wrapS = texture.wrapT = RepeatWrapping
-      texture.repeat.set(21, 21)
+      texture.repeat.set(SIZE, SIZE)
+
+      // mirror
+      const plane = new PlaneGeometry(SIZE, SIZE)
+      const mirror = new Reflector(plane, {
+        clipBias: 0.003,
+        textureWidth: window.innerWidth * window.devicePixelRatio,
+        textureHeight: window.innerHeight * window.devicePixelRatio,
+        color: 0xffffff
+      })
+      mirror.position.set(0, -0.01, 0)
+      mirror.rotateX(-Math.PI / 2)
+      this.scene.add(mirror)
 
       // ground
-      const geometry = { name: 'ground', width: 21, height: 21, depth: 1, y: -0.5 }
-      const material = {
-        phong: { map: addGrid ? texture : null, color: 0xffffff }
+      const geometry = { name: 'ground', width: SIZE, height: SIZE, depth: 1, y: -0.5 }
+      const material: MaterialConfig = {
+        standard: {
+          map: addGrid ? texture : null,
+          color: 0xffffff,
+          roughness: 0,
+          metalness: 0,
+          transparent: true,
+          opacity: 0.9
+        }
       }
 
       let ground: ExtendedMesh
