@@ -20,7 +20,20 @@ import Shapes from './shapes.js'
 import Constraints from './constraints.js'
 import { Events } from '@yandeu/events'
 import { Geometry } from './externals.js'
-import { Box3, BufferGeometry, Euler, Matrix4, Quaternion, REVISION, Scene, Vector3 } from 'three'
+import {
+  Box3,
+  BufferGeometry,
+  Euler,
+  Group,
+  Material,
+  Matrix4,
+  Mesh,
+  MeshStandardMaterial,
+  Quaternion,
+  REVISION,
+  Scene,
+  Vector3
+} from 'three'
 import {
   createHACDShapes,
   createHullShape,
@@ -875,8 +888,39 @@ class AmmoPhysics extends Events {
     object.getWorldQuaternion(quat)
     object.getWorldScale(scale)
 
-    const isStaticObject = (config.collisionFlags || 0).toString(2).slice(-1) === '1'
-    const isKinematicObject = (config.collisionFlags || 0).toString(2).slice(-2, -1) === '1'
+    const isStaticObject = ((config.collisionFlags || 0) & 1) === 1
+    const isKinematicObject = ((config.collisionFlags || 0) & 2) === 2
+    const isGhostObject = ((config.collisionFlags || 0) & 4) === 4
+    const isDynamicObject = !isStaticObject && !isKinematicObject
+
+    // add default materials
+    if (object instanceof Group) {
+      object.traverse(child => {
+        if (
+          child instanceof Mesh &&
+          child.material instanceof MeshStandardMaterial &&
+          child.material?.userData?.defaultMaterial === true
+        ) {
+          child.material = isStaticObject
+            ? this.defaultMaterial.getStatic()
+            : isKinematicObject
+              ? this.defaultMaterial.getKinematic()
+              : this.defaultMaterial.getDynamic()
+          child.material.needsUpdate = true
+        }
+      })
+    } else if (
+      object instanceof Mesh &&
+      object.material instanceof MeshStandardMaterial &&
+      object.material?.userData?.defaultMaterial === true
+    ) {
+      object.material = isStaticObject
+        ? this.defaultMaterial.getStatic()
+        : isKinematicObject
+          ? this.defaultMaterial.getKinematic()
+          : this.defaultMaterial.getDynamic()
+      object.material.needsUpdate = true
+    }
 
     const {
       shape = 'unknown',
