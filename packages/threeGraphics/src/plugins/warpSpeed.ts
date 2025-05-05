@@ -167,9 +167,8 @@ export default class WarpSpeed {
       directionalLight.shadow.camera.bottom = -d
       directionalLight.shadow.camera.left = -d
       directionalLight.shadow.camera.right = d
+      directionalLight.shadow.mapSize.set(2048, 2048)
 
-      directionalLight.shadow.mapSize.set(1024, 1024)
-      // this.directionalLight = light
       const lights = {
         ambientLight,
         directionalLight,
