@@ -354,7 +354,8 @@ class AmmoPhysics extends Events {
             this.tmpVector3a.set(objThree.scale.x, objThree.scale.y, objThree.scale.z)
           } else {
             const scale = objThree.body.ammo.getCollisionShape().getLocalScaling()
-            this.tmpVector3a.set(scale.x(), scale.y(), scale.z())
+            // this.tmpVector3a.set(scale.x(), scale.y(), scale.z())
+            this.tmpVector3a.copy(objThree.scale)
           }
           this.tmpVector3.set(p.x() + o.x, p.y() + o.y, p.z() + o.z)
           this.tmpQuaternion.set(q.x(), q.y(), q.z(), q.w())
