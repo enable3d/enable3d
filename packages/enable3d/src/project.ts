@@ -23,6 +23,7 @@ export class Project extends ThreeGraphics {
     super(projectConfig)
 
     this.renderer.setSize(window.innerWidth, window.innerHeight)
+    this.renderer.setPixelRatio(Math.min(2, window.devicePixelRatio))
 
     if (this.projectConfig.parent) this.parent = document.getElementById(this.projectConfig.parent) as HTMLElement
     else this.parent = document.body
