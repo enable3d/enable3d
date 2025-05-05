@@ -1,3 +1,5 @@
+/// <reference types="../../common/src/typesAmmo.d.ts" />
+
 /* eslint-disable prefer-const */
 /* eslint-disable prefer-template */
 /* eslint-disable no-prototype-builtins */
@@ -16,7 +18,7 @@
 
 import { Vector3, Matrix4, Quaternion, Box3, REVISION } from 'three'
 
-declare const Ammo: any
+// declare const Ammo: any
 
 export const TYPE = {
   BOX: 'box',
@@ -266,6 +268,8 @@ export const createHullShape = (function () {
 
     Ammo.destroy(btVertex)
 
+    // https://github.com/bulletphysics/bullet3/issues/1970
+    //  collisionShape.initializePolyhedralFeatures(0)
     _finishCollisionShape(collisionShape, options, _computeScale(matrixWorld, options))
     return collisionShape
   }

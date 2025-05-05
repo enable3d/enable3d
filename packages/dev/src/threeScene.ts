@@ -1,3 +1,4 @@
+/// <reference types="../../common/src/typesAmmo.d.ts" />
 import { ExtendedObject3D, FLAT, PhysicsLoader, Project, Scene3D, THREE } from 'enable3d'
 import { MeshStandardMaterial, REVISION } from 'three'
 
@@ -16,6 +17,8 @@ class MainScene extends Scene3D {
 
   async create() {
     this.ui = FLAT.init(this.renderer)
+
+    this.physics.debug?.enable()
 
     const size = new THREE.Vector2()
     this.renderer.getSize(size)

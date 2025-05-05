@@ -56,5 +56,8 @@ module.exports = {
     //     { from: 'lib', to: 'lib' }
     //   ]
     // })
-  ]
+  ],
+  experiments: {
+    asyncWebAssembly: true
+  }
 }

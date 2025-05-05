@@ -236,6 +236,11 @@ class AmmoPhysics extends Events {
         broadphase = new Ammo.btDbvtBroadphase(),
         solver = new Ammo.btSequentialImpulseConstraintSolver()
       physicsWorld = new Ammo.btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration)
+
+      // const gimpact = Ammo.btGImpactCollisionAlgorithm.prototype.registerAlgorithm(physicsWorld.getDispatcher())
+
+      // https://github.com/AndresTraks/BulletSharp/wiki/Collision-Callbacks-and-Triggers
+      // physicsWorld.getPairCache().setInternalGhostPairCallback(new Ammo.btGhostPairCallback())
     }
 
     if (softBodies) {
