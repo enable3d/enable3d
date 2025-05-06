@@ -35,6 +35,10 @@ export type Data = { top: number; right: number }
 export class JoyStick extends Events {
   id = -1
 
+  constructor(public parent: HTMLElement = document.body) {
+    super()
+  }
+
   get add() {
     return {
       axis: (config: any = {}) => this.addAxis(config),
@@ -49,7 +53,7 @@ export class JoyStick extends Events {
     const thumb = this.thumb({ styles })
 
     circle.appendChild(thumb)
-    document.body.appendChild(circle)
+    this.parent.appendChild(circle)
 
     const { maxRadius = 40, rotationDamping = 0.06, moveDamping = 0.01 } = config
 
@@ -98,7 +102,7 @@ export class JoyStick extends Events {
     const letter = this.letter({ letter: l })
 
     circle.appendChild(letter)
-    document.body.appendChild(circle)
+    this.parent.appendChild(circle)
 
     // element
     const element: JoyStickButton = {
@@ -131,7 +135,7 @@ export class JoyStick extends Events {
 
     const circle = document.createElement('div')
 
-    let css = `position:absolute; width:${size}px; height:${size}px; background:rgba(126, 126, 126, 0.5); border:#444 solid medium; border-radius:50%; cursor: pointer; `
+    let css = `user-select:none ;display:flex; align-items:center; justify-content:center; position:absolute; width:${size}px; height:${size}px; background:rgba(126, 126, 126, 0.5); border:#444 solid medium; border-radius:50%; cursor: pointer; `
 
     if (top) css += `top:${top}px; `
     if (right) css += `right:${right}px; `
@@ -157,8 +161,7 @@ export class JoyStick extends Events {
     const { letter: l } = config
     const letter = document.createElement('span')
     letter.innerText = l
-    letter.style.cssText =
-      'position: absolute; text-align: center; top: 4px; width: 80px; height: 80px; font-size: 64px; color: #fff; '
+    letter.style.cssText = 'font-size: 64px; color: #fff; font-family: system-ui,sans-serif;'
     return letter
   }
 
