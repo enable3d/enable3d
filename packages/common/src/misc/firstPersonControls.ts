@@ -1,12 +1,12 @@
 /**
- * @description  This code has originally been copied from Sketchbook
+ * @description  This code has originally been copied from Sketchbook (https://github.com/swift502/Sketchbook/blob/master/src/ts/core/CameraOperator.ts)
  *
  * @author       swift502 <blaha.j502@gmail.com> (http://jblaha.art/)
- * @copyright    Copyright (c) 2018 swift502; Project Url: https://github.com/swift502/Sketchbook
- * @license      {@link https://github.com/swift502/Sketchbook/blob/master/LICENSE GPL-3.0}
+ * @copyright    Copyright (c) 2020 swift502; Project Url: https://github.com/swift502/Sketchbook
+ * @license      {@link https://github.com/swift502/Sketchbook/blob/master/LICENSE MIT}
  *
  * @author       Yannick Deubel (https://github.com/yandeu)
- * @copyright    Copyright (c) 2021 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
+ * @copyright    Copyright (c) 2025 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE LGPL-3.0}
  */
 
@@ -22,8 +22,10 @@ export interface FirstPersonControlsConfig {
   radius?: number
   targetRadius?: number
   interpolationFactor?: number
-  pointerLock?: boolean
-  autoUpdate?: boolean
+  /** Theta in deg */
+  theta?: number
+  /** Phi in deg */
+  phi?: number
 }
 
 class FirstPersonControls {
@@ -32,13 +34,13 @@ class FirstPersonControls {
   public targetRadius: number
   public offset: Vector3
   public interpolationFactor: number
-  private theta: number
-  private phi: number
+  protected theta: number
+  protected phi: number
 
   constructor(
-    private camera: PerspectiveCamera | OrthographicCamera,
-    private target: Object3D,
-    private config: FirstPersonControlsConfig
+    protected camera: PerspectiveCamera | OrthographicCamera,
+    protected target: Object3D,
+    protected config: FirstPersonControlsConfig
   ) {
     const {
       offset = new Vector3(0, 0, 0),
@@ -46,8 +48,8 @@ class FirstPersonControls {
       radius = 8,
       targetRadius = 10,
       interpolationFactor = 0.05,
-      pointerLock = true,
-      autoUpdate = true
+      theta = 0,
+      phi = 0
     } = config
 
     this.offset = offset
@@ -56,25 +58,8 @@ class FirstPersonControls {
     this.targetRadius = targetRadius
     this.interpolationFactor = interpolationFactor
 
-    this.theta = 0
-    this.phi = 0
-
-    // if (pointerLock) {
-    //   scene.input.on('pointerdown', () => {
-    //     scene.input.mouse.requestPointerLock()
-    //   })
-    //   scene.input.on('pointermove', (pointer: PointerEvent) => {
-    //     if (scene.input.mouse.locked) {
-    //       this.update(pointer.movementX, pointer.movementY)
-    //     }
-    //   })
-    // }
-
-    // if (autoUpdate) {
-    //   scene.events.on('update', () => {
-    //     this.update(0, 0)
-    //   })
-    // }
+    this.theta = theta
+    this.phi = phi
   }
 
   update(deltaX: number, deltaY: number) {

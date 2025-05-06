@@ -31,7 +31,7 @@
     "@enable3d/common": "^0.26.1",
     "@enable3d/three-wrapper": "^0.26.1",
     "@yandeu/events": "0.0.7",
-    "@yandeu/tap": "0.0.3",
+    "@yandeu/tap": "^0.1.2",
     "three-csg-ts": "^3.1.10"
   },
   "peerDependencies": {

@@ -1,12 +1,12 @@
 /**
- * @description  This code has originally been copied from Sketchbook
+ * @description  This code has originally been copied from Sketchbook (https://github.com/swift502/Sketchbook/blob/master/src/ts/core/CameraOperator.ts)
  *
  * @author       swift502 <blaha.j502@gmail.com> (http://jblaha.art/)
- * @copyright    Copyright (c) 2018 swift502; Project Url: https://github.com/swift502/Sketchbook
- * @license      {@link https://github.com/swift502/Sketchbook/blob/master/LICENSE GPL-3.0}
+ * @copyright    Copyright (c) 2020 swift502; Project Url: https://github.com/swift502/Sketchbook
+ * @license      {@link https://github.com/swift502/Sketchbook/blob/master/LICENSE MIT}
  *
  * @author       Yannick Deubel (https://github.com/yandeu)
- * @copyright    Copyright (c) 2021 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
+ * @copyright    Copyright (c) 2025 Yannick Deubel; Project Url: https://github.com/enable3d/enable3d
  * @license      {@link https://github.com/enable3d/enable3d/blob/master/LICENSE LGPL-3.0}
  */
 
@@ -60,8 +60,6 @@ class ThirdPersonControls {
       radius = 8,
       targetRadius = 10,
       interpolationFactor = 0.05,
-      pointerLock = true,
-      autoUpdate = true,
       theta = 0,
       phi = 0,
       /** Max Phi in deg */
@@ -79,23 +77,6 @@ class ThirdPersonControls {
     this.phi = phi
     this.maxPhi = maxPhi
     this.minPhi = minPhi
-
-    // if (pointerLock) {
-    //   scene.input.on('pointerdown', () => {
-    //     scene.input.mouse.requestPointerLock()
-    //   })
-    //   scene.input.on('pointermove', (pointer: PointerEvent) => {
-    //     if (scene.input.mouse.locked) {
-    //       this.update(pointer.movementX, pointer.movementY)
-    //     }
-    //   })
-    // }
-
-    // if (autoUpdate) {
-    //   scene.events.on('update', () => {
-    //     this.update(0, 0)
-    //   })
-    // }
   }
 
   update(deltaX: number, deltaY: number) {

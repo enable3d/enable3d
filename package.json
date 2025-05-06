@@ -68,6 +68,7 @@
     "@yandeu/eslint-config": "^0.0.4",
     "@yandeu/keyboard": "^0.1.0",
     "@yandeu/prettier-config": "^0.0.4",
+    "@yandeu/tap": "^0.1.2",
     "copy-webpack-plugin": "^11.0.0",
     "cross-env": "^7.0.3",
     "esbuild": "^0.24.2",
