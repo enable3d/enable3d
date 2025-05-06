@@ -6,7 +6,7 @@
 
 import { Events } from '@yandeu/events'
 
-export interface JoyStickButton {
+interface JoyStickButton {
   id: number
   domElement: HTMLElement
   offset: {
@@ -15,7 +15,7 @@ export interface JoyStickButton {
   }
 }
 
-export interface JoyStickAxis extends JoyStickButton {
+interface JoyStickAxis extends JoyStickButton {
   maxRadius: number
   maxRadiusSquared: number
   origin: {
@@ -24,6 +24,26 @@ export interface JoyStickAxis extends JoyStickButton {
   }
   rotationDamping: number
   moveDamping: number
+}
+
+type Styles = {
+  top: number
+  bottom: number
+  right: number
+  left: number
+  size: number
+}
+
+export type AddAxisConfig = {
+  styles?: Partial<Styles>
+  maxRadius?: number
+  rotationDamping?: number
+  moveDamping?: number
+}
+
+export type AddButtonConfig = {
+  styles?: Partial<Styles>
+  letter?: string
 }
 
 export type Delta = { x: number; y: number }
@@ -41,16 +61,20 @@ export class JoyStick extends Events {
 
   get add() {
     return {
-      axis: (config: any = {}) => this.addAxis(config),
-      button: (config: any = {}) => this.addButton(config)
+      axis: (config: AddAxisConfig) => this.addAxis(config),
+      button: (config: AddButtonConfig) => this.addButton(config)
     }
   }
 
-  private addAxis(config: any = {}) {
+  private addAxis(config: AddAxisConfig) {
     this.id++
-    const { styles = { left: 35, bottom: 35, size: 100 } } = config
-    const circle = this.circle({ styles })
-    const thumb = this.thumb({ styles })
+
+    if (!config.styles) {
+      config.styles = { left: 20, bottom: 20, size: 100 }
+    }
+
+    const circle = this.circle(config.styles)
+    const thumb = this.thumb(config?.styles?.size)
 
     circle.appendChild(thumb)
     this.parent.appendChild(circle)
@@ -95,11 +119,15 @@ export class JoyStick extends Events {
     }
   }
 
-  private addButton(config: any = {}) {
+  private addButton(config: AddButtonConfig) {
     this.id++
-    const { styles = { right: 35, bottom: 35, size: 80 }, letter: l = 'A' } = config
-    const circle = this.circle({ styles })
-    const letter = this.letter({ letter: l })
+
+    if (!config.styles) {
+      config.styles = { right: 20, bottom: 20, size: 80 }
+    }
+
+    const circle = this.circle(config.styles)
+    const letter = this.letter(config.letter)
 
     circle.appendChild(letter)
     this.parent.appendChild(circle)
@@ -129,27 +157,23 @@ export class JoyStick extends Events {
     }
   }
 
-  private circle(config: any = {}) {
-    const { styles } = config
-    const { top, right, bottom, left, size } = styles
+  private circle(styles: Partial<Styles> = {}) {
+    const { top, right, bottom, left, size = 100 } = styles
 
     const circle = document.createElement('div')
 
     let css = `user-select:none ;display:flex; align-items:center; justify-content:center; position:absolute; width:${size}px; height:${size}px; background:rgba(126, 126, 126, 0.5); border:#444 solid medium; border-radius:50%; cursor: pointer; `
 
-    if (top) css += `top:${top}px; `
-    if (right) css += `right:${right}px; `
-    if (bottom) css += `bottom:${bottom}px; `
-    if (left) css += `left:${left}px; `
+    if (typeof top === 'number') css += `top:${top}px; `
+    if (typeof right === 'number') css += `right:${right}px; `
+    if (typeof bottom === 'number') css += `bottom:${bottom}px; `
+    if (typeof left === 'number') css += `left:${left}px; `
 
     circle.style.cssText = css
     return circle
   }
 
-  private thumb(config: any = {}) {
-    const { styles } = config
-    const { size } = styles
-
+  private thumb(size: number = 100) {
     const thumb = document.createElement('div')
     thumb.style.cssText = `position: absolute; left: ${size / 4}px; top: ${size / 4}px; width: ${size / 2}px; height: ${
       size / 2
@@ -157,12 +181,11 @@ export class JoyStick extends Events {
     return thumb
   }
 
-  private letter(config: any = {}) {
-    const { letter: l } = config
-    const letter = document.createElement('span')
-    letter.innerText = l
-    letter.style.cssText = 'font-size: 64px; color: #fff; font-family: system-ui,sans-serif;'
-    return letter
+  private letter(letter: string = 'A') {
+    const el = document.createElement('span')
+    el.innerText = letter
+    el.style.cssText = 'font-size: 64px; color: #fff; font-family: system-ui,sans-serif;'
+    return el
   }
 
   private click(element: JoyStickButton) {
